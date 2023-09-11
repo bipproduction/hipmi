@@ -10,6 +10,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Warna } from "@/app/lib/warna";
 
 
+
 export default function Logout() {
   const router = useRouter();
   const [dataUser, setDataUser] = useAtom(s_getOneUser);
