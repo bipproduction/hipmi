@@ -2,9 +2,27 @@
 
 import prisma from "@/app/lib/prisma";
 
+/**
+ * 
+ * @param id 
+ * @function get data profile dan user
+ * @returns data profile dan user
+ */
 export async function getDataProfile(id: string) {
-  //   console.log(id);
-  const data = await prisma.profile.findUnique({
+  const dataUser = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      username: true,
+      nomor: true,
+      active: true,
+      masterUserRoleId: true,
+    },
+  });
+
+  const dataProfile = await prisma.profile.findUnique({
     where: {
       userId: id,
     },
@@ -16,11 +34,11 @@ export async function getDataProfile(id: string) {
       jenisKelamin: true,
       active: true,
       Images: true,
-      User: true,
     },
   });
 
-  // console.log(data);
-
-  return data;
+  return {
+    dataUser,
+    dataProfile,
+  };
 }

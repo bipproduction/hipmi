@@ -25,11 +25,14 @@ export default function Login() {
   const [otp, setOtp] = useAtom(valueOtp);
   const [inputNomor, setInputNomor] = useAtom(valueNomor);
 
+
   async function onLogin() {
     const body = {
       nomor: nomor,
       otp: randomOTP(),
     };
+
+    // return 
 
     if (_.values(body).includes("")) return toast("Masukan nomor anda");
     setInputNomor(body.nomor);
@@ -43,7 +46,7 @@ export default function Login() {
     })
       .then((res) => res.json())
       .then((val) => {
-        console.log(val);
+        // console.log(val);
         setOtp(val.body.otp);
 
         return setTimeout(() => router.push("/dev/auth/validasi"), 2000);
@@ -67,7 +70,7 @@ export default function Login() {
           label="Phone Number"
           w={250}
           type="number"
-          placeholder="Nomor"
+          placeholder="62"
           onChange={(val) => {
             setNomor(val.target.value);
           }}

@@ -8,7 +8,7 @@ export  default async function Page() {
 
 
     return <>
-    {JSON.stringify(token)}
+    {/* {JSON.stringify(token)} */}
     <SplashScreen token={token}/>
     </>
     
