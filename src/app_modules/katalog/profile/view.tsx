@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
 import { getDataProfile } from "./fun/get-profile";
 import {
+  IconAddressBook,
   IconCamera,
   IconEditCircle,
   IconFile,
@@ -26,26 +27,54 @@ import {
   IconGenderMale,
   IconHome,
   IconMail,
+  IconNumber,
   IconUpload,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Warna } from "@/app/lib/warna";
+import { MyConsole } from "@/app_modules/fun";
+import { gs_Profile, gs_User } from "./state/s_profile";
+import { loadDataProfile } from "./load/load_profile";
+import getFotoProfile from "./fun/get-foto";
 
-export default function ViewProfile({ data }: { data: any }) {
+export default function ViewProfile({
+  dataUser,
+  dataProfile,
+}: {
+  dataUser: any;
+  dataProfile: any;
+}) {
   const router = useRouter();
-  const [token, setToken] = useAtom(valueCookies);
-  const [dataProfile, setProfile] = useState(data);
-  const [foto, setFoto] = useState<File | null>(null);
+  const [valUser, setUser] = useAtom(gs_User);
+  const [valProfile, setProfile] = useAtom(gs_Profile);
+  const [foto, setFoto] = useState<any | null>(null);
+
+  useShallowEffect(() => {
+    loadDataProfile(dataUser.id, setUser, setProfile);
+  }, []);
+
+  useShallowEffect(() => {
+    getFoto(valProfile?.imagesId);
+  }, [valProfile?.imagesId]);
+
+  const getFoto = async (id: string) => {
+    const data = await getFotoProfile(id).then((res) => res?.url);
+    setFoto(data);
+  };
 
   return (
     <>
-      {/* {JSON.stringify(foto)} */}
+      {/* {JSON.stringify(valUser,null,2)}
+      <pre/>
+      {JSON.stringify(valProfile,null,2)} */}
+
       <Center>
         <Image
+        radius={50}
           height={100}
           width={100}
           alt="foto"
-          src={foto == null ? "/aset/avatar.png" : ""}
+          src={foto ? `/img/${foto}` : "/aset/avatar.png"}
         />
       </Center>
 
@@ -67,17 +96,34 @@ export default function ViewProfile({ data }: { data: any }) {
       <Group position="apart">
         <Flex direction={"column"} mt={"lg"}>
           <Text fz={"lg"} fw={"bold"}>
-            {dataProfile?.name}
+            {valProfile?.name}
           </Text>
-          <Text fz={"xs"}>@{dataProfile?.User?.username}</Text>
+          <Text fz={"xs"}>@{valUser?.username}</Text>
         </Flex>
-        <ActionIcon variant="transparent" onClick={() => router.push("/dev/katalog/profile/edit")}>
+        <ActionIcon
+          variant="transparent"
+          onClick={() => {
+            router.push("/dev/katalog/profile/edit");
+          }}
+        >
           <IconEditCircle color={Warna.hijau_muda} size={20} />
         </ActionIcon>
       </Group>
 
       {/* Data Profile */}
-      <Group spacing={5} pt={"lg"}>
+      <Flex direction={"column"} pt={"lg"}>
+        <Grid>
+          <Grid.Col span={"content"}>
+            <IconAddressBook />
+          </Grid.Col>
+          <Grid.Col span={"auto"}>
+            <Text>
+              {" "}
+              <Text> {valUser?.nomor}</Text>
+            </Text>
+          </Grid.Col>
+        </Grid>
+
         <Grid>
           <Grid.Col span={"content"}>
             <IconMail />
@@ -85,22 +131,22 @@ export default function ViewProfile({ data }: { data: any }) {
           <Grid.Col span={"auto"}>
             <Text>
               {" "}
-              <Text> {dataProfile?.email}</Text>
+              <Text> {valProfile?.email}</Text>
             </Text>
           </Grid.Col>
         </Grid>
 
         <Grid>
-          <Grid.Col span={"content"} >
+          <Grid.Col span={"content"}>
             <IconHome />
           </Grid.Col>
           <Grid.Col span={"auto"}>
-            <Text> {dataProfile?.alamat}</Text>
+            <Text> {valProfile?.alamat}</Text>
           </Grid.Col>
         </Grid>
 
         {(() => {
-          if (dataProfile?.jenisKelamin === "Laki - laki") {
+          if (valProfile?.jenisKelamin === "Laki - laki") {
             return (
               <>
                 <Grid>
@@ -108,7 +154,7 @@ export default function ViewProfile({ data }: { data: any }) {
                     <IconGenderMale />
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Text> {dataProfile?.jenisKelamin}</Text>
+                    <Text> {valProfile?.jenisKelamin}</Text>
                   </Grid.Col>
                 </Grid>
               </>
@@ -121,14 +167,14 @@ export default function ViewProfile({ data }: { data: any }) {
                     <IconGenderFemale />
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Text> {dataProfile?.jenisKelamin}</Text>
+                    <Text> {valProfile?.jenisKelamin}</Text>
                   </Grid.Col>
                 </Grid>
               </>
             );
           }
         })()}
-      </Group>
+      </Flex>
     </>
   );
 }

@@ -7,11 +7,12 @@ import { useState } from "react";
 import _ from "lodash";
 import toast from "react-simple-toasts";
 import { useAtom } from "jotai";
-import { valueNomor } from "../state/s_login";
+import { gs_Nomor } from "../state/s_login";
 import { IconCircleLetterH } from "@tabler/icons-react";
+import { Warna } from "@/app/lib/warna";
 
 export default function Register() {
-  const [nomor, setNomor] = useAtom(valueNomor);
+  const [nomor, setNomor] = useAtom(gs_Nomor);
   const [value, setValue] = useState({
     // nomor: nomor,
     username: "",
@@ -98,9 +99,13 @@ export default function Register() {
                 });
               }}
             />
+            
             <Text>Nomor : {nomor}</Text>
           </Flex>
           <Button
+          radius={50}
+          bg={Warna.biru}
+          color="cyan"
             compact
             onClick={() => {
               onRegister();

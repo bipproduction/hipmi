@@ -1,6 +1,7 @@
 "use client";
 import {
   ActionIcon,
+  AspectRatio,
   Box,
   Button,
   Center,
@@ -9,6 +10,7 @@ import {
   Group,
   Header,
   Image,
+  Paper,
   Stack,
   Text,
   Title,
@@ -21,6 +23,10 @@ import toast from "react-simple-toasts";
 import { funUploadFoto } from "../fun/upload_foto";
 import { useRouter } from "next/navigation";
 import { IconChevronLeft } from "@tabler/icons-react";
+import { useAtom } from "jotai";
+import { gs_Profile } from "../state/s_profile";
+import { useShallowEffect } from "@mantine/hooks";
+import getFotoProfile from "../fun/get-foto";
 
 export default function UploadFoto() {
   const [file, setFile] = useState<File | null>(null);
@@ -29,53 +35,27 @@ export default function UploadFoto() {
   const [hasilGambar, setHasilGambar] = useState<string | null>(null);
   const router = useRouter();
 
+  const [valProfile, setProfile] = useAtom(gs_Profile);
+  const [foto, setFoto] = useState<any | null>(null)
+
+  useShallowEffect(() => {
+    getFoto(valProfile?.imagesId);
+  }, [valProfile?.imagesId]);
+
+  const getFoto = async (id: string) => {
+    const data = await getFotoProfile(id).then((res) => res?.url);
+    setFoto(data);
+  };
+
   return (
     <>
-      <Header height={50} px={"sm"}>
-        <Group position="apart" align="center" h={50}>
-          <ActionIcon onClick={() => router.push("/dev/katalog/view")}>
-            <IconChevronLeft size={20} />
-          </ActionIcon>
-          <Title order={4}>Upload Foto</Title>
-          &nbsp; &nbsp; &nbsp; &nbsp; 
-        </Group>
-      </Header>
-    
+      {/* {JSON.stringify(valProfile, null,2)} */}
 
-      <Stack spacing={"xl"} pt={100}>
-        <Center>
-          <Dropzone
-            w={130}
-            openRef={openRef}
-            onDrop={async (files) => {
-              setLoading(true);
-              // console.log("accepted files", files)
-              if (!files || _.isEmpty(files)) return toast("File kosong");
-              const fd = new FormData();
-              fd.append("file", files[0]);
-
-              const upFoto = await funUploadFoto(fd);
-              if (upFoto.success) {
-                setHasilGambar(`/img/${upFoto.data.url}`);
-                return setLoading(false), toast("success");
-              }
-            }}
-            activateOnClick={false}
-            styles={{ inner: { pointerEvents: "all" } }}
-          >
-            <Group position="center" align="center">
-              <Button radius={50} compact onClick={() => openRef.current()}>
-                Select files
-              </Button>
-            </Group>
-          </Dropzone>
-        </Center>
-        <Center>
-          <Box miw={300} pos={"relative"}>
-            {hasilGambar && <Image src={hasilGambar ? hasilGambar: "/aset/avatar.png" } alt="" width={300} />}
-          </Box>
-        </Center>
-      </Stack>
+      <Paper radius={"md"} >
+        <AspectRatio ratio={16 / 10} maw={500} mah={500} mx="auto">
+          <Image alt="Foto" src={foto ? `/img/${foto}` : "/aset/avatar.png"} height={200} radius={"lg"}  />
+        </AspectRatio>
+      </Paper>
     </>
   );
 }

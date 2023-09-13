@@ -31,6 +31,7 @@ export default function CreateProfile() {
     jenisKelamin: "",
   });
 
+  // Cek data dan kirim data ke database
   async function onCreated() {
     const body = {
       name: dataProfile.name,
