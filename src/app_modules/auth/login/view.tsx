@@ -15,15 +15,15 @@ import { useState } from "react";
 import toast from "react-simple-toasts";
 import { atom, useAtom } from "jotai";
 import { randomOTP } from "../fun/fun-rondom-otp";
-import { valueNomor, valueOtp, valueStatus } from "../state/s_login";
+import { gs_Nomor, gs_Otp, valueStatus } from "../state/s_login";
 import { IconCircleLetterH } from "@tabler/icons-react";
 import { Warna } from "@/app/lib/warna";
 
 export default function Login() {
   const [nomor, setNomor] = useState("");
   const router = useRouter();
-  const [otp, setOtp] = useAtom(valueOtp);
-  const [inputNomor, setInputNomor] = useAtom(valueNomor);
+  const [otp, setOtp] = useAtom(gs_Otp);
+  const [inputNomor, setInputNomor] = useAtom(gs_Nomor);
 
 
   async function onLogin() {
@@ -36,6 +36,7 @@ export default function Login() {
 
     if (_.values(body).includes("")) return toast("Masukan nomor anda");
     setInputNomor(body.nomor);
+
 
     await fetch("/api/auth/login", {
       method: "POST",
@@ -70,7 +71,7 @@ export default function Login() {
           label="Phone Number"
           w={250}
           type="number"
-          placeholder="62"
+          placeholder="62 xx xxx xxx xxx"
           onChange={(val) => {
             setNomor(val.target.value);
           }}

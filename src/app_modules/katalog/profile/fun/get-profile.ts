@@ -33,7 +33,8 @@ export async function getDataProfile(id: string) {
       alamat: true,
       jenisKelamin: true,
       active: true,
-      Images: true,
+      imagesId: true,
+      
     },
   });
 

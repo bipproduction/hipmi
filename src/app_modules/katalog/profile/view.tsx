@@ -35,6 +35,7 @@ import { Warna } from "@/app/lib/warna";
 import { MyConsole } from "@/app_modules/fun";
 import { gs_Profile, gs_User } from "./state/s_profile";
 import { loadDataProfile } from "./load/load_profile";
+import getFotoProfile from "./fun/get-foto";
 
 export default function ViewProfile({
   dataUser,
@@ -46,11 +47,20 @@ export default function ViewProfile({
   const router = useRouter();
   const [valUser, setUser] = useAtom(gs_User);
   const [valProfile, setProfile] = useAtom(gs_Profile);
-  const [foto, setFoto] = useState<File | null>(null);
+  const [foto, setFoto] = useState<any | null>(null);
 
   useShallowEffect(() => {
     loadDataProfile(dataUser.id, setUser, setProfile);
   }, []);
+
+  useShallowEffect(() => {
+    getFoto(valProfile?.imagesId);
+  }, [valProfile?.imagesId]);
+
+  const getFoto = async (id: string) => {
+    const data = await getFotoProfile(id).then((res) => res?.url);
+    setFoto(data);
+  };
 
   return (
     <>
@@ -60,10 +70,11 @@ export default function ViewProfile({
 
       <Center>
         <Image
+        radius={50}
           height={100}
           width={100}
           alt="foto"
-          src={foto == null ? "/aset/avatar.png" : ""}
+          src={foto ? `/img/${foto}` : "/aset/avatar.png"}
         />
       </Center>
 

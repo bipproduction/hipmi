@@ -12,7 +12,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useAtom } from "jotai";
-import { valueNomor, valueOtp, valueStatus } from "../state/s_login";
+import { gs_Nomor, gs_Otp, valueStatus } from "../state/s_login";
 import _ from "lodash";
 import toast from "react-simple-toasts";
 import { useState } from "react";
@@ -23,8 +23,8 @@ import { Warna } from "@/app/lib/warna";
 
 export default function Validasi() {
   const [inputOtp, setInputOtp] = useState("");
-  const [otp, setOtp] = useAtom(valueOtp);
-  const [nomor, setNomor] = useAtom(valueNomor);
+  const [otp, setOtp] = useAtom(gs_Otp);
+  const [nomor, setNomor] = useAtom(gs_Nomor);
   const [valToken, setToken] = useAtom(valueCookies);
 
   const router = useRouter();
@@ -48,6 +48,7 @@ export default function Validasi() {
       .then((val) => {
         if (val.status == 200) {
           toast("Selamat datang");
+          
           return setTimeout(() => router.push("/dev/home"), 2000);
         } else {
           toast("Regis dulu");

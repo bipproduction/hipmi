@@ -8,24 +8,35 @@ import { deleteCookies } from "../fun/fun-logout";
 import { IconLogout } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { Warna } from "@/app/lib/warna";
-
-
+import { gs_Nomor } from "../state/s_login";
+import {
+  gs_Profile,
+  gs_User,
+} from "@/app_modules/katalog/profile/state/s_profile";
 
 export default function Logout() {
   const router = useRouter();
   const [dataUser, setDataUser] = useAtom(s_getOneUser);
   const [open, setOpen] = useDisclosure(false);
+  const [nomor, setNomor] = useAtom(gs_Nomor);
+  const [user, setUser] = useAtom(gs_User);
+  const [profile, setProfile] = useAtom(gs_Profile);
 
   async function onOut() {
     await fetch("/api/auth/logout").then((res) =>
       res.json().then((val) => {
         // console.log(val);
         if (val.status == 200) {
-          toast("Logout")
+          toast("Logout");
           router.push("/dev/auth/login");
+          setTimeout(() => {
+            setNomor("");
+            setUser("");
+            setProfile("");
+          }, 2000)
         }
       })
-    )
+    );
     // await deleteCookies()
   }
   return (

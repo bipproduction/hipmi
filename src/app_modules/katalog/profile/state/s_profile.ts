@@ -9,4 +9,4 @@ export const gs_User = atomWithStorage<any | null>("value_User", null)
 /**
  * @returns data user by profile
  */
-export const gs_Profile = atomWithStorage<any | null>("value_Profile", null)
+export const gs_Profile = atomWithStorage<any | null>("valProfile", null)
