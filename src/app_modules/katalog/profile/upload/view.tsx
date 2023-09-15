@@ -48,18 +48,25 @@ export default function UploadFoto() {
   return (
     <>
       {/* {JSON.stringify(foto)} */}
-      {/* <Image alt="Foto" src={`/api/profile/foto/${imgId}`}  /> */}
 
       <Paper radius={"md"}>
         <AspectRatio ratio={16 / 10} maw={500} mah={500} mx="auto">
-          {foto && (
-            <Image
+     
+            {/* <Image
               alt="Foto"
-              src={foto ? `/api/profile/foto/${foto}` : `/aset/avatar.png`}
+              src={foto  ?   `/api/profile/foto/${foto}` : `/aset/avatar.png` }
+              height={200}
+              radius={"lg"}
+            /> */}
+
+            {foto &&  (
+              <Image
+              alt="Foto" 
+              src={`/api/profile/foto/${foto}` }
               height={200}
               radius={"lg"}
             />
-          )}
+            )}
         </AspectRatio>
       </Paper>
     </>
