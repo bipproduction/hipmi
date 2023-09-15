@@ -1,4 +1,6 @@
 import prisma from "@/app/lib/prisma";
+import { MyConsole } from "@/app_modules/fun";
+import { error } from "console";
 import { sealData } from "iron-session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -6,7 +8,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   if (req.method === "POST") {
     const body = await req.json();
-    // console.log(body);
+    MyConsole(body);
 
     const data = await prisma.user.create({
       data: {
@@ -16,7 +18,7 @@ export async function POST(req: Request) {
     });
 
     if (data) {
-      const res = await sealData(
+      const seal = await sealData(
         JSON.stringify({
           id: data.id,
           username: data.username,
@@ -28,12 +30,12 @@ export async function POST(req: Request) {
 
       cookies().set({
         name: "session",
-        value: res,
+        value: seal,
         maxAge: 60 * 60 * 24 * 7,
       });
 
       // console.log(c.get("token"))
-      return NextResponse.json({ body,status: 201 });
+      return NextResponse.json({ body, status: 201 });
     }
 
     return NextResponse.json({ success: true });

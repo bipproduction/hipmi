@@ -134,6 +134,7 @@ export default function ViewHome() {
           </ActionIcon>
 
           <Text>Welcome to, {valToken?.data?.username}</Text>
+          <Logout/>
         </Flex>
         <Paper bg={"dark"} radius={5} my={"xs"}>
           <Image alt="logo" src={"/aset/logo.png"} />

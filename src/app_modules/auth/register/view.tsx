@@ -99,13 +99,13 @@ export default function Register() {
                 });
               }}
             />
-            
+
             <Text>Nomor : {nomor}</Text>
           </Flex>
           <Button
-          radius={50}
-          bg={Warna.biru}
-          color="cyan"
+            radius={50}
+            bg={Warna.biru}
+            color="cyan"
             compact
             onClick={() => {
               onRegister();
