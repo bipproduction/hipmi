@@ -24,7 +24,7 @@ model User {
 }
 
 model MasterUserRole {
-  id        String    @id @default(uuid())
+  id        String    @id
   name      String
   active    Boolean   @default(true)
   createdAt DateTime? @default(now())
