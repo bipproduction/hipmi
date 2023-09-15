@@ -3,9 +3,9 @@ import { getDataProfile } from "../fun/get-profile";
 
 /**
  * @function load data user dan profile
- * @param id 
- * @param setProfile 
+ * @param id user
  * @param setUser 
+ * @param setProfile 
  * @returns data user dan data profile
  */
 export async function loadDataProfile(id: any,  setUser: any, setProfile: any) {

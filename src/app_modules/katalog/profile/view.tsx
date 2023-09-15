@@ -35,7 +35,7 @@ import { Warna } from "@/app/lib/warna";
 import { MyConsole } from "@/app_modules/fun";
 import { gs_Profile, gs_User } from "./state/s_profile";
 import { loadDataProfile } from "./load/load_profile";
-import getFotoProfile from "./fun/get-foto";
+import { getFotoProfile } from "./fun/get-foto";
 
 export default function ViewProfile({
   dataUser,
@@ -53,29 +53,28 @@ export default function ViewProfile({
     loadDataProfile(dataUser.id, setUser, setProfile);
   }, []);
 
-  useShallowEffect(() => {
-    getFoto(valProfile?.imagesId);
-  }, [valProfile?.imagesId]);
 
-  const getFoto = async (id: string) => {
-    const data = await getFotoProfile(id).then((res) => res?.url);
-    setFoto(data);
-  };
+  useShallowEffect(() => {
+    if (valProfile?.imagesId != null)
+      getFotoProfile(valProfile.imagesId).then((res) => setFoto(res?.url));
+  }, [valProfile?.imagesId]);
 
   return (
     <>
       {/* {JSON.stringify(valUser,null,2)}
-      <pre/>
-      {JSON.stringify(valProfile,null,2)} */}
+      <pre/> */}
+      {/* {JSON.stringify(valProfile?.imagesId, null, 2)} */}
 
       <Center>
-        <Image
-        radius={50}
-          height={100}
-          width={100}
-          alt="foto"
-          src={foto ? `/img/${foto}` : "/aset/avatar.png"}
-        />
+        {foto && (
+          <Image
+            radius={50}
+            height={100}
+            width={100}
+            alt="foto"
+            src={foto ? `/api/profile/foto/${foto}` : "/aset/avatar.png"}
+          />
+        )}
       </Center>
 
       <Center bg={"blue"}>

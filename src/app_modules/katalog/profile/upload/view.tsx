@@ -26,7 +26,8 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { gs_Profile } from "../state/s_profile";
 import { useShallowEffect } from "@mantine/hooks";
-import getFotoProfile from "../fun/get-foto";
+import { getFotoProfile } from "../fun/get-foto";
+import { MyConsole } from "@/app_modules/fun";
 
 export default function UploadFoto() {
   const [file, setFile] = useState<File | null>(null);
@@ -36,24 +37,29 @@ export default function UploadFoto() {
   const router = useRouter();
 
   const [valProfile, setProfile] = useAtom(gs_Profile);
-  const [foto, setFoto] = useState<any | null>(null)
+  const [foto, setFoto] = useState<any | null>(null);
 
   useShallowEffect(() => {
-    getFoto(valProfile?.imagesId);
+    if (valProfile?.imagesId != null) {
+      getFotoProfile(valProfile?.imagesId).then((res) => setFoto(res?.url));
+    }
   }, [valProfile?.imagesId]);
-
-  const getFoto = async (id: string) => {
-    const data = await getFotoProfile(id).then((res) => res?.url);
-    setFoto(data);
-  };
 
   return (
     <>
-      {/* {JSON.stringify(valProfile, null,2)} */}
+      {/* {JSON.stringify(foto)} */}
+      {/* <Image alt="Foto" src={`/api/profile/foto/${imgId}`}  /> */}
 
-      <Paper radius={"md"} >
+      <Paper radius={"md"}>
         <AspectRatio ratio={16 / 10} maw={500} mah={500} mx="auto">
-          <Image alt="Foto" src={foto ? `/img/${foto}` : "/aset/avatar.png"} height={200} radius={"lg"}  />
+          {foto && (
+            <Image
+              alt="Foto"
+              src={foto ? `/api/profile/foto/${foto}` : `/aset/avatar.png`}
+              height={200}
+              radius={"lg"}
+            />
+          )}
         </AspectRatio>
       </Paper>
     </>
