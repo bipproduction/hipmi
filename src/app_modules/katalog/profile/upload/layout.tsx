@@ -23,12 +23,14 @@ import { funUploadFoto } from "../fun/upload_foto";
 import { MyConsole } from "@/app_modules/fun";
 import { redirect, useRouter } from "next/navigation";
 import { useAtom } from "jotai";
-import { gs_Profile } from "../state/s_profile";
+import { gs_Profile, gs_User } from "../state/s_profile";
 import { loadDataProfile } from "../load/load_profile";
+import { getFotoProfile } from "../fun/get-foto";
 
 export default function UploadFotoLayout({ children }: { children: any }) {
   const router = useRouter();
   const [valProfile, setProfile] = useAtom(gs_Profile);
+  const [valUser, setUser] = useAtom(gs_User);
 
   return (
     <>
@@ -57,16 +59,15 @@ export default function UploadFotoLayout({ children }: { children: any }) {
                       const fd = new FormData();
                       fd.append("file", files);
 
+                      // const upFoto = await fetch("/api/profile/")
+
                       const upFoto = await funUploadFoto(fd, idProfile);
                       if (upFoto.success) {
-                        toast("Upload berhasil")
-                        setProfile({
-                            ...valProfile,
-                            imagesId: upFoto.data.id
-                        })
+                        toast("Upload berhasil");
+                        loadDataProfile(valUser.id, setUser, setProfile);
                       }
                     }}
-                    accept="image/png,image/jpeg"
+                    accept="image/png,image/jpeg,image/webp"
                   >
                     {(props) => (
                       <ActionIcon {...props}>
@@ -85,11 +86,8 @@ export default function UploadFotoLayout({ children }: { children: any }) {
           </Footer>
         }
       >
-        {/* {JSON.stringify(valProfile)} */}
+        {/* {JSON.stringify(valUser.id)} */}
         {children}
-        {/* <Flex align={"center"} justify={"center"} h={"80vh"}>
-            <Image alt="Foto" src={file ? file : "/aset/avatar.png"}/>
-        </Flex> */}
       </AppShell>
     </>
   );

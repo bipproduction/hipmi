@@ -3,8 +3,8 @@
 import prisma from "@/app/lib/prisma";
 
 /**
- * 
- * @param id 
+ *
+ * @param id
  * @function get data profile dan user
  * @returns data profile dan user
  */
@@ -34,7 +34,6 @@ export async function getDataProfile(id: string) {
       jenisKelamin: true,
       active: true,
       imagesId: true,
-      
     },
   });
 

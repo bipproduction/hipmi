@@ -6,6 +6,7 @@ import fs from "fs";
 import _ from "lodash";
 import { cookies } from "next/headers";
 import { v4 } from "uuid";
+import { getFotoProfile } from "./get-foto";
 
 /**
  * 
@@ -42,6 +43,7 @@ export async function funUploadFoto(formData: FormData, id: string) {
       }
     })
   }
+
 
   const upFolder = Buffer.from(await file.arrayBuffer());
   fs.writeFileSync(`./public/img/${upload.url}`, upFolder);
