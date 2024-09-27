@@ -293,5 +293,8 @@ if (isDiscountAvailable(customer)) {
 14. halaman informasi galery
 15. api
 16. database
+
+
+v.1.2.3
     
 
