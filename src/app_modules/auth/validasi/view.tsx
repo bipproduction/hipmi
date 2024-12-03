@@ -103,13 +103,13 @@ export default function Validasi() {
         localStorage.removeItem("hipmi_auth_code_id");
 
         if (result.roleId === "1") {
-          if (result.active === true) {
-            ComponentGlobal_NotifikasiBerhasil(result.message);
-            router.push(RouterHome.main_home, { scroll: false });
-          } else {
-            ComponentGlobal_NotifikasiBerhasil(result.message);
-            router.push("/waiting-room", { scroll: false });
-          }
+          ComponentGlobal_NotifikasiBerhasil(result.message);
+          router.push(RouterHome.main_home, { scroll: false });
+          // if (result.active === true) {
+          // } else {
+          //   ComponentGlobal_NotifikasiBerhasil(result.message);
+          //   router.push("/waiting-room", { scroll: false });
+          // }
         } else {
           ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
           router.push(RouterAdminDashboard.splash_admin, { scroll: false });

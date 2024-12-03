@@ -24,6 +24,7 @@ export async function POST(req: Request) {
       data: {
         username: data.username,
         nomor: data.nomor,
+        active: true,
       },
     });
 

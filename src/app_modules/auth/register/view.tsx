@@ -67,7 +67,7 @@ export default function Register() {
       if (res.status === 200) {
         localStorage.removeItem("hipmi_auth_code_id");
         ComponentGlobal_NotifikasiBerhasil(result.message);
-        router.push("/waiting-room", { scroll: false });
+        router.push("/dev/home", { scroll: false });
 
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,

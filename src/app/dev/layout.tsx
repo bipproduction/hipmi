@@ -12,12 +12,18 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const userLoginId = await funGetUserIdByToken();
-  const activationUser = await funGlobal_checkActivationUseById({
-    userId: userLoginId as string,
-  });
+  // const dataUser = await funGlobal_getUserById({
+  //   userId: userLoginId as string,
+  // });
 
-  if (activationUser == false) return redirect("/waiting-room");
- 
+  // if (dataUser?.masterUserRoleId != "1") return redirect("/dev/home");
+
+  // const activationUser = await funGlobal_checkActivationUseById({
+  //   userId: userLoginId as string,
+  // });
+
+  // if (activationUser == false) return redirect("/waiting-room");
+
   return (
     <>
       <RealtimeProvider

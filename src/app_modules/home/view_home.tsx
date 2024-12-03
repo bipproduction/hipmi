@@ -32,13 +32,13 @@ export default function HomeView({
   const [countLoadNtf, setCountLoadNtf] = useAtom(gs_count_ntf);
   const userRoleId = dataUser.masterUserRoleId;
 
-  useShallowEffect(() => {
-    if (userRoleId === "2" || userRoleId === "3") {
-      setTimeout(() => {
-        router.push("/waiting-room", { scroll: false });
-      }, 1000);
-    }
-  }, [userRoleId]);
+  // useShallowEffect(() => {
+  //   if (userRoleId === "2" || userRoleId === "3") {
+  //     setTimeout(() => {
+  //       router.push("/waiting-room", { scroll: false });
+  //     }, 1000);
+  //   }
+  // }, [userRoleId]);
 
   useShallowEffect(() => {
     onLoadNotifikasi({
