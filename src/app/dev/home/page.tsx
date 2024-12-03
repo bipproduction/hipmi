@@ -18,8 +18,9 @@ export default async function PageHome() {
   // if (dataUser?.active === false) {
   //   return redirect(RouterHome.home_user_non_active);
   // }
-  // if (dataUser?.masterUserRoleId === "2" || dataUser?.masterUserRoleId === "3")
-  //   return redirect(RouterAdminDashboard.main_admin);
+  
+  if (dataUser?.masterUserRoleId === "2" || dataUser?.masterUserRoleId === "3")
+    return redirect(RouterAdminDashboard.main_admin);
 
   return (
     <>
