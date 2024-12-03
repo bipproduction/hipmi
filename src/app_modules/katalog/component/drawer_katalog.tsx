@@ -1,3 +1,4 @@
+import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
 import {
   RouterPortofolio,
   RouterProfile,
@@ -14,6 +15,7 @@ import {
   Text,
 } from "@mantine/core";
 import {
+  IconDashboard,
   IconEdit,
   IconPencilPlus,
   IconPhotoEdit,
@@ -27,16 +29,19 @@ export function ComponentKatalog_DrawerKatalog({
   opened,
   close,
   profileId,
-  userId
+  userId,
+  userRoleId
 }: {
   opened: boolean;
   close: () => void;
   profileId: string;
   userId: string
+  userRoleId: string
 }) {
   const router = useRouter();
   const [pageId, setPageId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
 
   const listPage = [
     {
@@ -125,6 +130,27 @@ export function ComponentKatalog_DrawerKatalog({
             ))}
 
             <Component_ButtonLogout userId={userId} />
+            {userRoleId != "1" && (
+              <Stack align="center" spacing={"xs"}>
+                <ActionIcon
+                  variant="transparent"
+                  c="white"
+                  onClick={() => {
+                    router.push(RouterAdminDashboard.main_admin, { scroll: false });
+                    setIsLoadingAdmin(true);
+                  }}
+                >
+                  {isLoadingAdmin  ? (
+                    <ComponentGlobal_Loader />
+                  ) : (
+                    <IconDashboard/>
+                  )}
+                </ActionIcon>
+                <Text align="center" color="white">
+                  Dashboard Admin
+                </Text>
+              </Stack>
+            )}
           </SimpleGrid>
         </Stack>
       </Drawer>

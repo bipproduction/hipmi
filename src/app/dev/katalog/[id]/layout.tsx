@@ -14,6 +14,7 @@ export default async function Layout({
   const authorId = dataProfile?.userId;
 
   const userLoginId = await funGetUserIdByToken();
+  const userRoleId = dataProfile?.User?.masterUserRoleId;
 
   return (
     <>
@@ -21,6 +22,7 @@ export default async function Layout({
         profileId={profileId}
         userLoginId={userLoginId as string}
         authorId={authorId as any}
+        userRoleId={userRoleId as string}
       >
         {children}
       </KatalogLayout>

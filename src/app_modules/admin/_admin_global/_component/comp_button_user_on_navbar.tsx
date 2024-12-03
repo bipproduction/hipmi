@@ -14,6 +14,7 @@ import {
   Menu,
   Modal,
   Popover,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -82,11 +83,21 @@ export function Admin_ComponentButtonUserCircle({
 
             <Divider />
 
-            <Center>
-              <Button radius={"xl"} onClick={() => setOpenModal(true)}>
+            <SimpleGrid cols={2}>
+              <Button
+                radius={"xl"}
+                onClick={() => router.push("/dev/home", { scroll: false })}
+              >
+                User Access
+              </Button>
+              <Button
+                radius={"xl"}
+                color="red"
+                onClick={() => setOpenModal(true)}
+              >
                 Keluar
               </Button>
-            </Center>
+            </SimpleGrid>
           </Stack>
         </Popover.Dropdown>
       </Popover>
