@@ -51,7 +51,7 @@ export function ComponentGlobal_AvatarAndUsername({
               </Avatar>
             ) : (
               <ComponentGlobal_LoaderAvatar
-                fileId={profile.imageId as any}
+                fileId={profile?.imageId as any}
                 sizeAvatar={sizeAvatar}
               />
             )}

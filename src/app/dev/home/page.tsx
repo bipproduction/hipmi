@@ -4,8 +4,6 @@ import { HomeView } from "@/app_modules/home";
 import { user_getOneByUserId } from "@/app_modules/home/fun/get/get_one_user_by_id";
 import { job_getTwoForHomeView } from "@/app_modules/job/fun/get/get_two_for_home_view";
 import notifikasi_countUserNotifikasi from "@/app_modules/notifikasi/fun/count/fun_count_by_id";
-
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function PageHome() {
@@ -20,8 +18,8 @@ export default async function PageHome() {
   // if (dataUser?.active === false) {
   //   return redirect(RouterHome.home_user_non_active);
   // }
-  if (dataUser?.masterUserRoleId === "2" || dataUser?.masterUserRoleId === "3")
-    return redirect(RouterAdminDashboard.main_admin);
+  // if (dataUser?.masterUserRoleId === "2" || dataUser?.masterUserRoleId === "3")
+  //   return redirect(RouterAdminDashboard.main_admin);
 
   return (
     <>

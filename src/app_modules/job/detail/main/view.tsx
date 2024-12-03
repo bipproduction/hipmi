@@ -28,11 +28,13 @@ function ButtonAction({ jobId }: { jobId: string }) {
     // if (typeof window !== "undefined") {
     //   setOrigin(window.location.origin);
     // }
+
   }, [setOrigin]);
 
   async function onLoadOrigin(setOrigin: any) {
-    const res = await fetch("/api/zz-makuro");
+    const res = await fetch("/api/origin-url");
     const result = await res.json();
+    console.log(result);
     setOrigin(result.origin);
   }
 

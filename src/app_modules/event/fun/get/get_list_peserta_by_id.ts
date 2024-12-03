@@ -13,12 +13,14 @@ export async function Event_getListPesertaById(eventId: string) {
       createdAt: true,
       updatedAt: true,
       userId: true,
+
+      isPresent: true,
       User: {
         select: {
           Profile: true,
         },
       },
-      // Event: true,
+      Event: true,
       eventId: true,
     },
   });

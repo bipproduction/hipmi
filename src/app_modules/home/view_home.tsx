@@ -15,6 +15,7 @@ import { gs_count_ntf, gs_user_ntf } from "@/app/lib/global_state";
 import { useAtom } from "jotai";
 import notifikasi_countUserNotifikasi from "../notifikasi/fun/count/fun_count_by_id";
 import { Center, Text, Title } from "@mantine/core";
+import { useRouter } from "next/navigation";
 
 export default function HomeView({
   dataUser,
@@ -25,9 +26,19 @@ export default function HomeView({
   dataJob: MODEL_JOB[];
   countNotifikasi: number;
 }) {
+  const router = useRouter();
   const [countNtf, setCountNtf] = useState(countNotifikasi);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
   const [countLoadNtf, setCountLoadNtf] = useAtom(gs_count_ntf);
+  const userRoleId = dataUser.masterUserRoleId;
+
+  useShallowEffect(() => {
+    if (userRoleId === "2" || userRoleId === "3") {
+      setTimeout(() => {
+        router.push("/waiting-room", { scroll: false });
+      }, 1000);
+    }
+  }, [userRoleId]);
 
   useShallowEffect(() => {
     onLoadNotifikasi({

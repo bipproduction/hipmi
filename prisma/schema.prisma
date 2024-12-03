@@ -618,6 +618,7 @@ model Event_Peserta {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isPresent Boolean  @default(false)
 
   Event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?

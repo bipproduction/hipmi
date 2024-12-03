@@ -24,6 +24,7 @@ import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { adminEvent_funGetListPublish } from "../fun";
 import QRCode from "react-qr-code";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function AdminEvent_TablePublish({
   listPublish,
@@ -48,6 +49,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
   const [isSearch, setSearch] = useState("");
   const [eventId, setEventId] = useState("");
   const [loading, setLoading] = useState(false);
+
+   const [origin, setOrigin] = useState("");
+
+   useShallowEffect(() => {
+     onLoadOrigin(setOrigin);
+     // if (typeof window !== "undefined") {
+     //   setOrigin(window.location.origin);
+     // }
+   }, [setOrigin]);
+
+   async function onLoadOrigin(setOrigin: any) {
+     const res = await fetch("/api/origin-url");
+     const result = await res.json();
+     setOrigin(result.origin);
+   }
 
   async function onSearch(s: string) {
     setSearch(s);
@@ -80,9 +96,12 @@ function TableStatus({ listPublish }: { listPublish: any }) {
       <tr key={i}>
         <td>
           <Center w={200}>
-            <QRCode style={{ height: 50, width: 50 }} value={e.id} />
+            <QRCode
+              style={{ height: 70, width: 70 }}
+              value={`${origin}/dev/event/konfirmasi/${e.id}`}
+            />
           </Center>
-        </td>
+        </td> 
         <td>
           <Center w={200}>
             <Text>{e?.Author?.username}</Text>

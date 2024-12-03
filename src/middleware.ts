@@ -20,6 +20,7 @@ const middlewareConfig: MiddlewareConfig = {
   publicRoutes: [
     "/",
     "/api/auth/*",
+    "/api/origin-url",
     "/login",
     "/register",
     "/validasi",

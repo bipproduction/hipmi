@@ -30,5 +30,6 @@ export interface MODEL_EVENT_PESERTA {
   userId: string;
   User: MODEL_USER;
   eventId: string;
+  isPresent: boolean
   Event: MODEL_EVENT;
 }
