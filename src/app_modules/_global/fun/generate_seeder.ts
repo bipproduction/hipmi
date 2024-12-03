@@ -52,11 +52,13 @@ export async function generate_seeder() {
         nomor: i.nomor,
         username: i.name,
         masterUserRoleId: i.masterUserRoleId,
+        active: i.active,
       },
       update: {
         nomor: i.nomor,
         username: i.name,
         masterUserRoleId: i.masterUserRoleId,
+        active: i.active,
       },
     });
   }
