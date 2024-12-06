@@ -6,20 +6,17 @@ import { MODEL_EVENT } from "../../model/interface";
 
 export default function Event_DetailPublish({
   dataEvent,
-  listPeserta,
   totalPeserta,
+  eventId,
 }: {
   dataEvent: MODEL_EVENT;
-  listPeserta: any[];
   totalPeserta: number;
+  eventId: string;
 }) {
   return (
     <>
       <ComponentEvent_DetailData data={dataEvent} />
-      <ComponentEvent_ListPeserta
-        listPeserta={listPeserta}
-        total={totalPeserta}
-      />
+      <ComponentEvent_ListPeserta eventId={eventId} total={totalPeserta} />
     </>
   );
 }

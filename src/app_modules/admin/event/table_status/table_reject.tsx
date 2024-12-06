@@ -11,6 +11,7 @@ import {
   Spoiler,
   Stack,
   Table,
+  Text,
   Textarea,
   TextInput,
   Title,
@@ -106,19 +107,40 @@ function TableStatus({ listReject }: { listReject: any }) {
       <td>
         <Center w={200}>{e.EventMaster_TipeAcara.name}</Center>
       </td>
+
       <td>
         <Center w={200}>
-          {e.tanggal.toLocaleString("id-ID", { dateStyle: "full" })}
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggal)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggal)}
+            </Text>
+          </Text>
         </Center>
       </td>
       <td>
-        <Center w={100}>
-          {e.tanggal.toLocaleTimeString([], {
-            timeStyle: "short",
-            hourCycle: "h24",
-          })}
+        <Center w={200}>
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggalSelesai)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggalSelesai)}
+            </Text>
+          </Text>
         </Center>
       </td>
+
       <td>
         <Center w={500}>
           <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
@@ -197,10 +219,10 @@ function TableStatus({ listReject }: { listReject: any }) {
                     <Center>Tipe Acara</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center>Tanggal & Waktu Mulai</Center>
                   </th>
                   <th>
-                    <Center>Jam</Center>
+                    <Center>Tanggal & Waktu Selesai</Center>
                   </th>
                   <th>
                     <Center>Cacatan</Center>

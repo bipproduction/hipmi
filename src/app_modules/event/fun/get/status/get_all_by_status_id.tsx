@@ -26,9 +26,7 @@ export async function event_getAllByStatusId({
         active: true,
         eventMaster_StatusId: "1",
         authorId: userLoginId,
-        tanggal: {
-          gte: new Date(),
-        },
+        isArsip: false,
       },
       select: {
         id: true,

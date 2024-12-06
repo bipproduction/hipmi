@@ -19,9 +19,7 @@ export async function event_funGetAllStatusPublish({ page }: { page: number }) {
       active: true,
       eventMaster_StatusId: "1",
       authorId: userLoginId,
-      tanggal: {
-        gte: new Date(),
-      },
+      isArsip: false,
     },
     select: {
       id: true,

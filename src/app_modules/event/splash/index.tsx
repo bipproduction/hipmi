@@ -16,7 +16,7 @@ export default function Event_SplashScreen() {
     setTimeout(() => {
       router.replace(RouterEvent.beranda);
       setHotMenu(0);
-    }, 1000);
+    }, 500);
   }, []);
   return (
     <>

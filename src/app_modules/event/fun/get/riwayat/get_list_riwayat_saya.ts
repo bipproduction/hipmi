@@ -18,9 +18,7 @@ export async function event_getListRiwayatSaya({ page }: { page: number }) {
     where: {
       authorId: userLoginId,
       eventMaster_StatusId: "1",
-      tanggal: {
-        lte: new Date(),
-      },
+      isArsip: true,
     },
     select: {
       id: true,

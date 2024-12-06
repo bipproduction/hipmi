@@ -1,7 +1,7 @@
 "use client";
 
-import { Logout } from "@/app_modules/auth";
-import Component_Logout from "@/app_modules/auth/logout/view";
+import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
+import Component_ButtonLogout from "@/app_modules/auth/logout/view";
 import { Center, Group, Skeleton, Stack, Text, Title } from "@mantine/core";
 
 export default function Home_UserNotActive() {
@@ -38,15 +38,17 @@ export default function Home_UserNotActive() {
   );
   return (
     <>
-      <Center h={"100vh"}>
-        <Stack align="center">
-          {customLOader}
-          <Title order={4} c={"gray"}>
-            Tunggu Konfirmasi Admin !
-          </Title>
-          <Component_Logout />
-        </Stack>
-      </Center>
+      <UIGlobal_LayoutDefault>
+        <Center h={"100vh"}>
+          <Stack align="center">
+            {customLOader}
+            <Title order={4} c={"gray"}>
+              Tunggu Konfirmasi Admin !
+            </Title>
+            <Component_ButtonLogout userId="" />
+          </Stack>
+        </Center>
+      </UIGlobal_LayoutDefault>
     </>
   );
 }

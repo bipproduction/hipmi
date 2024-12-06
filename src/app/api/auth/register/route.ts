@@ -1,51 +1,70 @@
+import { sessionCreate } from "@/app/auth/_lib/session_create";
 import prisma from "@/app/lib/prisma";
-import { ServerEnv } from "@/app/lib/server_env";
-import { sealData } from "iron-session";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   if (req.method === "POST") {
-    const body = await req.json();
-    // MyConsole(body);
+    const { data } = await req.json();
 
     const cekUsername = await prisma.user.findUnique({
       where: {
-        username: body.username,
+        username: data.username,
       },
     });
 
     if (cekUsername)
-      return NextResponse.json({ status: 400, message: "Username sudah ada" });
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Username sudah digunakan",
+        }),
+        { status: 400 }
+      );
 
-    const data = await prisma.user.create({
+    const createUser = await prisma.user.create({
       data: {
-        username: body.username,
-        nomor: body.nomor,
+        username: data.username,
+        nomor: data.nomor,
+        active: true,
       },
     });
 
-    if (data) {
-      const seal = await sealData(
-        JSON.stringify({
-          id: data.id,
-          username: data.username,
-        }),
-        {
-          password: ServerEnv.value?.WIBU_PWD as string,
-        }
-      );
+    const token = await sessionCreate({
+      sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
+      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
+      user: createUser as any,
+    });
 
-      cookies().set({
-        name: "mySession",
-        value: seal,
-        maxAge: 60 * 60 * 24 * 7,
+    try {
+      const createUserSession = await prisma.userSession.create({
+        data: {
+          token: token as string,
+          userId: createUser.id,
+        },
       });
 
-      return NextResponse.json({ status: 201 });
+      if (!createUserSession)
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Gagal Membuat Session",
+          }),
+          { status: 400 }
+        );
+    } catch (error) {
+      console.log(error);
     }
 
-    return NextResponse.json({ success: true });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Berhasil Login",
+      }),
+
+      { status: 200 }
+    );
   }
-  return NextResponse.json({ success: false });
+  return new Response(
+    JSON.stringify({ success: false, message: "Method Not Allowed" }),
+    { status: 405 }
+  );
 }

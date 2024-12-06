@@ -5,22 +5,29 @@ import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
 import { AccentColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { Affix, Box, Button, Center, Loader, rem } from "@mantine/core";
+import {
+  Affix,
+  Box,
+  Button,
+  Center,
+  Loader,
+  rem,
+  Skeleton,
+  Paper,
+} from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ComponentEvent_CardBeranda } from "../component/card_view/card_beranda";
 import { event_getListAllPublish } from "../fun/get/get_list_all_publish";
 import { MODEL_EVENT } from "../model/interface";
+import { Event_ComponentSkeletonBeranda } from "../component";
+import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 
-export default function Event_Beranda({
-  dataEvent,
-}: {
-  dataEvent: MODEL_EVENT[];
-}) {
-  const [data, setData] = useState(dataEvent);
+export default function Event_Beranda() {
+  const [data, setData] = useState<MODEL_EVENT[] | null>(null);
   const [activePage, setActivePage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,23 +38,27 @@ export default function Event_Beranda({
   const [isShowUpdate, setIsShowUpdate] = useState(false);
 
   useShallowEffect(() => {
-    onLoadData({
-      onPublish(val) {
-        setData(val);
-      },
-    });
-  }, [setData]);
+    setIsShowUpdate(false);
+    loadData();
+  }, []);
 
   useShallowEffect(() => {
     if (isTriggerEventBeranda) {
       setIsShowUpdate(true);
     }
-  }, [isTriggerEventBeranda, setIsShowUpdate]);
+  }, [isTriggerEventBeranda]);
 
-  async function onLoadData({ onPublish }: { onPublish: (val: any) => void }) {
+  async function loadData() {
+    const res = await fetch(API_RouteEvent.get_all({ page: activePage }));
+    const data = await res.json();
+    setData(data.data as any);
+  }
+
+  async function onLoadNewData() {
     setIsLoading(true);
-    const loadData = await event_getListAllPublish({ page: 1 });
-    onPublish(loadData);
+    const res = await fetch(API_RouteEvent.get_all({ page: 1 }));
+    const data = await res.json();
+    setData(data.data as any);
 
     setIsShowUpdate(false);
     setIsTriggerEventBeranca(false);
@@ -71,13 +82,7 @@ export default function Event_Beranda({
                 radius={"xl"}
                 opacity={0.8}
                 onClick={() => {
-                  onLoadData({
-                    onPublish(val) {
-                      setData(val);
-                    },
-                  });
-
-                  
+                  onLoadNewData();
                 }}
               >
                 Update beranda
@@ -87,7 +92,10 @@ export default function Event_Beranda({
         )}
 
         <ComponentGlobal_CreateButton path={RouterEvent.create} />
-        {_.isEmpty(data) ? (
+
+        {data == null ? (
+          <Event_ComponentSkeletonBeranda />
+        ) : _.isEmpty(data) ? (
           <ComponentGlobal_IsEmptyData />
         ) : (
           <Box>
@@ -99,7 +107,7 @@ export default function Event_Beranda({
                 </Center>
               )}
               data={data}
-              setData={setData}
+              setData={setData as any}
               moreData={async () => {
                 const loadData = await event_getListAllPublish({
                   page: activePage + 1,

@@ -4,6 +4,7 @@ import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
+  ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
 import { Button } from "@mantine/core";
@@ -14,13 +15,23 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Event_funCreate } from "../../fun/create/fun_create";
 import { gs_event_hotMenu } from "../../global_state";
+import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";
 
-export default function Event_ComponentCreateButton({ value }: { value: any }) {
+export default function Event_ComponentCreateButton({
+  value,
+  diffTimeStart,
+  diffTimeEnd,
+}: {
+  value: any;
+  diffTimeStart: number;
+  diffTimeEnd: number;
+}) {
   const router = useRouter();
   const [hotMenu, setHotMenu] = useAtom(gs_event_hotMenu);
   const [isLoading, setLoading] = useState(false);
 
   async function onSave() {
+    
     const res = await Event_funCreate(value);
 
     if (res.status === 201) {
@@ -71,7 +82,8 @@ export default function Event_ComponentCreateButton({ value }: { value: any }) {
           value.deskripsi === "" ||
           value.eventMaster_TipeAcaraId === 0 ||
           value.tanggal === "function Date() { [native code] }" ||
-          moment(value.tanggal).diff(moment(), "minutes") < 0
+          // moment(value.tanggal).diff(moment(), "minutes") < 0
+          diffTimeEnd - 1 < diffTimeStart
         }
         loaderPosition="center"
         loading={isLoading ? true : false}

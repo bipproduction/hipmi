@@ -1,13 +1,8 @@
-import MqttLoader from "@/util/mqtt_loader";
 import RootStyleRegistry from "./emotion";
 // import "./globals.css";
-import { TokenProvider } from "./lib/token";
 import dotenv from "dotenv";
 import { ServerEnv } from "./lib/server_env";
-import { RealtimeProvider } from "./lib";
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
-import { funCheckCookies } from "@/app_modules/_global/fun/get/fun_check_cookies";
-import { redirect } from "next/navigation";
+import { TokenProvider } from "./lib/token";
 dotenv.config({
   path: ".env",
 });

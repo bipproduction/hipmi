@@ -5,6 +5,5 @@ export default async function Page({ params }: { params: { id: string } }) {
   let kodeId = params.id;
   const dataOtp = await auth_getCodeOtpByNumber({ kodeId: kodeId });
 
-
-  return <Validasi dataOtp={dataOtp as any} />;
+  return <Validasi />;
 }

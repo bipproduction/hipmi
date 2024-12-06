@@ -6,16 +6,16 @@ import { CheckCookies_UiView } from "@/app_modules/check_cookies";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const userLoginId = await funGetUserIdByToken();
-  const dataUser = await funGlobal_getUserById({ userId: userLoginId });
+  // const userLoginId = await funGetUserIdByToken();
+  // const dataUser = await funGlobal_getUserById({ userId: userLoginId });
 
-  if (dataUser?.masterUserRoleId === "1") {
-    return redirect(RouterHome.main_home);
-  }
+  // if (dataUser?.masterUserRoleId === "1") {
+  //   return redirect(RouterHome.main_home);
+  // }
 
-  if (dataUser?.masterUserRoleId !== "1") {
-    return redirect(RouterAdminDashboard.splash_admin);
-  }
+  // if (dataUser?.masterUserRoleId !== "1") {
+  //   return redirect(RouterAdminDashboard.splash_admin);
+  // }
 
   // return <CheckCookies_UiView />;
 }

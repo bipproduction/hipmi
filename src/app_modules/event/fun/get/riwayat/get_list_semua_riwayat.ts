@@ -3,8 +3,7 @@
 import prisma from "@/app/lib/prisma";
 import _ from "lodash";
 
-export async function event_getListSemuaRiwayat({page}: {page: number}) {
-
+export async function event_getListSemuaRiwayat({ page }: { page: number }) {
   const takeData = 10;
   const skipData = page * takeData - takeData;
 
@@ -16,9 +15,7 @@ export async function event_getListSemuaRiwayat({page}: {page: number}) {
     },
     where: {
       eventMaster_StatusId: "1",
-      tanggal: {
-        lte: new Date(),
-      },
+      isArsip: true,
     },
     select: {
       id: true,

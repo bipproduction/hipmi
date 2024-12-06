@@ -1,6 +1,5 @@
 "use client";
 
-import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
 import {
   AccentColor,
   MainColor,
@@ -8,10 +7,10 @@ import {
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import {
   ComponentGlobal_NotifikasiBerhasil,
+  ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import { auth_funLogin } from "@/app_modules/auth/fun/fun_login";
 import { Box, Button, Center, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,23 +27,28 @@ export default function Login({ version }: { version: string }) {
     const nomor = phone.substring(1);
     if (nomor.length <= 4) return setError(true);
 
-    const res = await auth_funLogin({ nomor: nomor });
-    if (res.status === 200) {
-      setLoading(true);
-      ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
-      // router.push(RouterAuth.validasi + res.kodeId, { scroll: false });
-      router.push("/validasi/" + res.kodeId, { scroll: false });
-    } else {
-      ComponentGlobal_NotifikasiPeringatan(res.message);
-    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ nomor: nomor }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    // await fetch(ApiHipmi.login, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(body),
-    // })
+      const result = await res.json();
+      if (res.status === 200) {
+        localStorage.setItem("hipmi_auth_code_id", result.kodeId);
+        ComponentGlobal_NotifikasiBerhasil(result.message, 2000);
+        router.push("/validasi", { scroll: false });
+      } else {
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
+    }
   }
 
   return (
@@ -96,16 +100,11 @@ export default function Login({ version }: { version: string }) {
 
           <Box pos={"fixed"} bottom={10}>
             <Text fw={"bold"} c={"white"} fs={"italic"} fz={"xs"}>
-              V.{version}
+              v {version}
             </Text>
           </Box>
         </Stack>
       </UIGlobal_LayoutDefault>
-      {/* <BackgroundImage
-        src={"/aset/global/main_background.png"}
-        h={"100vh"}
-        // pos={"static"}
-      ></BackgroundImage> */}
     </>
   );
 }

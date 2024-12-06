@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     page: 1,
   });
 
-  dataPosting?.isActive === false && redirect(RouterForum.beranda);
+  // dataPosting?.isActive === false && redirect(RouterForum.beranda);
 
   const countKomentar = await forum_countTotalKomenById(postingId);
 

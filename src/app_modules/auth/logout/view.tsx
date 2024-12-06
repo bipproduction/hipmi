@@ -11,18 +11,21 @@ import { useState } from "react";
 import { auth_Logout } from "../fun/fun_logout";
 import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
 
-export default function Component_Logout() {
+export default function Component_ButtonLogout({userId}: {userId: string}) {
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function onClickLogout() {
-    const res = await auth_Logout();
+    setLoading(true);
+    const res = await fetch(`/api/auth/logout?id=${userId}`, {
+      method: "GET",
+    });
+
+    const result = await res.json();
     if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      router.push("/login", { scroll: false });
-    } else {
-      ComponentGlobal_NotifikasiPeringatan(res.message);
+      ComponentGlobal_NotifikasiBerhasil(result.message);
+      router.push("/", { scroll: false });
     }
   }
 
@@ -49,7 +52,6 @@ export default function Component_Logout() {
             bg={Warna.merah}
             color="red"
             onClick={() => {
-              setLoading(true);
               onClickLogout();
             }}
           >

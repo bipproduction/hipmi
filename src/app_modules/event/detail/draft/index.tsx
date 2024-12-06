@@ -46,7 +46,7 @@ export default function Event_DetailDraft({
           ""
         )}
         <ComponentEvent_DetailData data={data} />
-        <ButtonAction eventId={data.id} tanggal={data.tanggal} />
+        <ButtonAction eventId={data.id} tanggalSelesai={data.tanggalSelesai} />
       </Stack>
     </>
   );
@@ -54,10 +54,10 @@ export default function Event_DetailDraft({
 
 function ButtonAction({
   eventId,
-  tanggal,
+  tanggalSelesai,
 }: {
   eventId: string;
-  tanggal?: any;
+  tanggalSelesai?: any;
 }) {
   const router = useRouter();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
@@ -77,20 +77,16 @@ function ButtonAction({
   }
 
   async function onAjukan() {
-    if (moment(tanggal.toISOString().toString()).diff(moment(), "minutes") < 0)
+    if (
+      moment(tanggalSelesai.toISOString().toString()).diff(
+        moment(),
+        "minutes"
+      ) < 0
+    )
       return ComponentGlobal_NotifikasiPeringatan("Waktu acara telah lewat");
 
     const res = await Event_funEditStatusById("2", eventId);
     if (res.status === 200) {
-      // const dataNotif: any = {
-      //   appId: res.data?.id as any,
-      //   status: res.data?.EventMaster_Status?.name as any,
-      //   userId: res.data?.authorId as any,
-      //   pesan: res.data?.title as any,
-      //   kategoriApp: "EVENT",
-      //   title: "Mengajukan review",
-      // };
-
       const dataNotifikasi: IRealtimeData = {
         appId: res.data?.id as any,
         status: res.data?.EventMaster_Status?.name as any,

@@ -104,7 +104,7 @@ export function Home_UiView({
             border: `2px solid ${AccentColor.blue}`,
           }}
         >
-          <Image radius={"lg"} alt="logo" src={"/aset/home/home-hipmi.png"} />
+          <Image radius={"lg"} alt="logo" src={"/aset/home/home-hipmi-new.png"} />
         </Paper>
 
         <Stack my={"sm"}>

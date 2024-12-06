@@ -8,7 +8,7 @@ import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import ComponentEvent_BoxListStatus from "../../component/box_list_status";
-import { event_funGetAllStatusPublish } from "../../fun/get/status/get_all_status_publish";
+import { event_getAllByStatusId } from "../../fun";
 import { MODEL_EVENT } from "../../model/interface";
 
 export default function Event_StatusPublish({
@@ -36,8 +36,9 @@ export default function Event_StatusPublish({
             data={data}
             setData={setData}
             moreData={async () => {
-              const loadData = await event_funGetAllStatusPublish({
+              const loadData = await event_getAllByStatusId({
                 page: activePage + 1,
+                statusId: "1"
               });
               setActivePage((val) => val + 1);
 

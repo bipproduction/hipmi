@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 export default async function Page() {
   const version = versionUpdate.version;
 
-   const checkCookies = await funCheckCookies();
-   console.log(checkCookies, "ini halaman login");
-    if (!checkCookies) return redirect("/");
+  //  const checkCookies = await funCheckCookies();
+  //  console.log(checkCookies, "ini halaman login");
+  //   if (!checkCookies) return redirect("/");
 
   return (
     <>

@@ -2,7 +2,14 @@
 
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
-import { Select, Stack, TextInput, Textarea } from "@mantine/core";
+import {
+  Button,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import moment from "moment";
 import { useState } from "react";
@@ -17,14 +24,18 @@ export default function Event_Create({
   authorId: string;
 }) {
   const [listTipe, setListTipe] = useState(listTipeAcara);
-  const [isTime, setIsTime] = useState(false);
 
+  const [isTimeStart, setIsTimeStart] = useState(false);
+  const [diffTimeStart, setDiffTimeStart] = useState(0);
+  const [isTimeEnd, setIsTimeEnd] = useState(false);
+  const [diffTimeEnd, setDiffTimeEnd] = useState(0);
 
   const [value, setValue] = useState({
     title: "",
     lokasi: "",
     deskripsi: "",
     tanggal: Date.toString(),
+    tanggalSelesai: Date.toString(),
     eventMaster_TipeAcaraId: 0,
     authorId: authorId,
   });
@@ -88,6 +99,8 @@ export default function Event_Create({
             });
           }}
         />
+
+        
         <DateTimePicker
           styles={{
             label: {
@@ -98,10 +111,10 @@ export default function Event_Create({
             return moment(date).diff(Date.now(), "days") < 0;
           }}
           withAsterisk
-          label="Tanggal & Waktu "
-          placeholder="Masukan tangal dan waktu acara"
+          label="Tanggal & Waktu Mulai"
+          placeholder="Masukan tangal dan waktu"
           error={
-            isTime ? (
+            isTimeStart ? (
               <ComponentEvent_ErrorMaximalInput text="Invalid Time !" />
             ) : (
               ""
@@ -111,13 +124,61 @@ export default function Event_Create({
             // console.log(
             //   moment(val?.toISOString().toString()).diff(moment(), "minutes" )
             // );
+            const diffTime = moment(val?.toISOString().toString()).diff(
+              moment(),
+              "minutes"
+            );
+            setDiffTimeStart(diffTime);
+
             moment(val?.toISOString().toString()).diff(moment(), "minutes") < 0
-              ? setIsTime(true)
-              : setIsTime(false);
+              ? setIsTimeStart(true)
+              : setIsTimeStart(false);
 
             setValue({
               ...value,
               tanggal: val as any,
+            });
+          }}
+        />
+
+        <DateTimePicker
+          styles={{
+            label: {
+              color: "white",
+            },
+          }}
+          excludeDate={(date) => {
+            return moment(date).diff(Date.now(), "days") < 0;
+          }}
+          withAsterisk
+          label="Tanggal & Waktu Berakhir"
+          placeholder="Masukan tangal dan waktu "
+          error={
+            isTimeEnd ? (
+              <ComponentEvent_ErrorMaximalInput text="Invalid Time !" />
+            ) : diffTimeEnd - 1 < diffTimeStart && diffTimeEnd != 0 ? (
+              <ComponentEvent_ErrorMaximalInput text="Invalid Time !" />
+            ) : (
+              ""
+            )
+          }
+          onChange={(val) => {
+            // console.log(
+            //   moment(val?.toISOString().toString()).diff(moment(), "minutes" )
+            // );
+            const diffTime = moment(val?.toISOString().toString()).diff(
+              moment(),
+              "minutes"
+            );
+            setDiffTimeEnd(diffTime);
+
+            moment(val?.toISOString().toString()).diff(moment(), "minutes") < 0
+              ? setIsTimeEnd(true)
+              : setIsTimeEnd(false);
+
+            setValue({
+              ...value,
+              tanggalSelesai: val as any,
             });
           }}
         />
@@ -147,7 +208,11 @@ export default function Event_Create({
           />
         </Stack>
 
-        <Event_ComponentCreateButton value={value} />
+        <Event_ComponentCreateButton
+          value={value}
+          diffTimeStart={diffTimeStart}
+          diffTimeEnd={diffTimeEnd}
+        />
       </Stack>
     </>
   );

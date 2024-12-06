@@ -1,19 +1,11 @@
 "use client";
 
 import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { MODEL_EVENT } from "@/app_modules/event/model/interface";
 import {
-  MODEL_EVENT,
-  MODEL_EVENT_PESERTA,
-} from "@/app_modules/event/model/interface";
-import {
-  Avatar,
   Button,
   Center,
-  Divider,
-  Grid,
   Group,
-  Modal,
   Pagination,
   Paper,
   ScrollArea,
@@ -24,7 +16,6 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconCircleCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -80,11 +71,14 @@ function DetailRiwayat({ listRiwayat }: { listRiwayat: any }) {
     <tr key={i}>
       <td>
         <Button
+          loaderPosition="center"
           loading={e.id === eventId && loading ? true : false}
           color={"green"}
           leftIcon={<IconCircleCheck />}
           radius={"xl"}
           onClick={() => {
+            setEventId(e.id);
+            setLoading(true);
             router.push(RouterAdminEvent.detail_peserta + e.id);
           }}
         >
@@ -112,19 +106,40 @@ function DetailRiwayat({ listRiwayat }: { listRiwayat: any }) {
           <Text>{e.EventMaster_TipeAcara.name}</Text>
         </Center>
       </td>
+
       <td>
         <Center w={200}>
-          {e.tanggal.toLocaleString("id-ID", { dateStyle: "full" })}
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggal)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggal)}
+            </Text>
+          </Text>
         </Center>
       </td>
       <td>
         <Center w={200}>
-          {e.tanggal.toLocaleTimeString([], {
-            timeStyle: "short",
-            hourCycle: "h24",
-          })}
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggalSelesai)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggalSelesai)}
+            </Text>
+          </Text>
         </Center>
       </td>
+
       <td>
         <Center w={400}>
           <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
@@ -183,10 +198,10 @@ function DetailRiwayat({ listRiwayat }: { listRiwayat: any }) {
                     <Center>Tipe Acara</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center>Tanggal & Waktu Mulai</Center>
                   </th>
                   <th>
-                    <Center>Jam</Center>
+                    <Center>Tanggal & Waktu Selesai</Center>
                   </th>
                   <th>
                     <Center>Deskripsi</Center>

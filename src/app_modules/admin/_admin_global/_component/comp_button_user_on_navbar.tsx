@@ -1,14 +1,8 @@
 "use client";
 
-import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
 import { Warna } from "@/app/lib/warna";
 import { AccentColor } from "@/app_modules/_global/color";
-import {
-  ComponentGlobal_NotifikasiBerhasil,
-  ComponentGlobal_NotifikasiPeringatan,
-} from "@/app_modules/_global/notif_global";
-import { auth_Logout } from "@/app_modules/auth/fun/fun_logout";
-import { gs_kodeId } from "@/app_modules/auth/state/state";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import {
   ActionIcon,
@@ -20,12 +14,12 @@ import {
   Menu,
   Modal,
   Popover,
+  SimpleGrid,
   Stack,
   Text,
   Title,
 } from "@mantine/core";
 import { IconPhone, IconUser, IconUserCircle } from "@tabler/icons-react";
-import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -38,21 +32,18 @@ export function Admin_ComponentButtonUserCircle({
   const [isOpenMenuUser, setOpenMenuUser] = useState(false);
   const [openPop, setOpenPop] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [kodeId, setKodeId] = useAtom(gs_kodeId);
   const [loadingLogout, setLoadingLogout] = useState(false);
 
   async function onClickLogout() {
-    const res = await auth_Logout();
+    setLoadingLogout(true);
+    const res = await fetch(`/api/auth/logout?id=${dataUser.id}`, {
+      method: "GET",
+    });
+
+    const result = await res.json();
     if (res.status === 200) {
-      console.log(res);
-      setLoadingLogout(true);
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      setKodeId("");
-      setOpenModal(false);
-      router.push(RouterAuth.login, { scroll: false });
-    } else {
-      ComponentGlobal_NotifikasiPeringatan(res.message);
+      ComponentGlobal_NotifikasiBerhasil(result.message);
+      router.push("/", { scroll: false });
     }
   }
 
@@ -92,11 +83,21 @@ export function Admin_ComponentButtonUserCircle({
 
             <Divider />
 
-            <Center>
-              <Button radius={"xl"} onClick={() => setOpenModal(true)}>
+            <SimpleGrid cols={2}>
+              <Button
+                radius={"xl"}
+                onClick={() => router.push("/dev/home", { scroll: false })}
+              >
+                User Access
+              </Button>
+              <Button
+                radius={"xl"}
+                color="red"
+                onClick={() => setOpenModal(true)}
+              >
                 Keluar
               </Button>
-            </Center>
+            </SimpleGrid>
           </Stack>
         </Popover.Dropdown>
       </Popover>
@@ -114,7 +115,6 @@ export function Admin_ComponentButtonUserCircle({
             <Button
               onClick={() => {
                 setOpenModal(false);
-                setLoading(false);
               }}
               radius={50}
             >

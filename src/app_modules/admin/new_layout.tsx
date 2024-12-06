@@ -4,6 +4,7 @@ import { gs_admin_ntf } from "@/app/lib/global_state";
 import {
   ActionIcon,
   AppShell,
+  Button,
   Divider,
   Drawer,
   Grid,
@@ -18,8 +19,10 @@ import {
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { IconBell } from "@tabler/icons-react";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AccentColor } from "../_global/color";
+import { ComponentGlobal_NotifikasiBerhasil } from "../_global/notif_global";
 import { MODEL_USER } from "../home/model/interface";
 import { MODEL_NOTIFIKASI } from "../notifikasi/model/interface";
 import {
@@ -47,6 +50,7 @@ export function Admin_NewLayout({
   listNotifikasi: MODEL_NOTIFIKASI[];
   version: string;
 }) {
+  const router = useRouter();
   const matches = useMediaQuery("(min-width: 1024px)");
   const [dataUser, setDataUser] = useState(user);
   const userRoleId = dataUser.masterUserRoleId;
@@ -70,6 +74,20 @@ export function Admin_NewLayout({
 
     setDataNotifikasi(loadNotifikasi as []);
     setDrawerNotifikasi(true);
+  }
+
+  const [loadingLogout, setLoadingLogout] = useState(false);
+  async function onClickLogout() {
+    setLoadingLogout(true);
+    const res = await fetch(`/api/auth/logout?id=${user.id}`, {
+      method: "GET",
+    });
+
+    const result = await res.json();
+    if (res.status === 200) {
+      ComponentGlobal_NotifikasiBerhasil(result.message);
+      router.push("/", { scroll: false });
+    }
   }
 
   return (
@@ -168,6 +186,7 @@ export function Admin_NewLayout({
             <Title order={4} align="center">
               View Only Available For Desktop
             </Title>
+            <Button onClick={() => onClickLogout()}>Logout</Button>
           </Stack>
         ) : (
           children

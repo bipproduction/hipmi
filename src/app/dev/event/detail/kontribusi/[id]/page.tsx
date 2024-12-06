@@ -11,8 +11,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <Event_DetailKontribusi
-        dataEvent={dataEvent as any}
-        listKontributor={listKontributor as any}
+        eventId={eventId}
         totalPeserta={totalPeserta}
       />
     </>

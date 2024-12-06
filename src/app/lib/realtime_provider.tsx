@@ -17,6 +17,8 @@ import {
   gs_votingTiggerBeranda,
   IRealtimeData,
 } from "./global_state";
+import { newFunGetUserId } from "./new_fun_user_id";
+import { useState } from "react";
 
 // const WIBU_REALTIME_TOKEN: string | undefined =
 //   process.env.NEXT_PUBLIC_WIBU_REALTIME_TOKEN;
@@ -30,12 +32,11 @@ export type TypeNotification = {
 };
 
 export default function RealtimeProvider({
-  userLoginId,
   WIBU_REALTIME_TOKEN,
 }: {
-  userLoginId: string;
   WIBU_REALTIME_TOKEN: string;
 }) {
+  const [userLoginId, setUserLoginId] = useState("");
   const [dataRealtime, setDataRealtime] = useAtom(gs_realtimeData);
   const [newAdminNtf, setNewAdminNtf] = useAtom(gs_admin_ntf);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
@@ -71,8 +72,15 @@ export default function RealtimeProvider({
     gs_donasiTriggerBeranda
   );
 
+  async function loadUserId() {
+    const userId = await newFunGetUserId();
+
+    setUserLoginId(userId as string);
+  }
+
   useShallowEffect(() => {
-    // if (WIBU_REALTIME_TOKEN === undefined) return alert("gak dapet key");
+    loadUserId();
+
     try {
       WibuRealtime.init({
         project: "hipmi",
@@ -201,7 +209,7 @@ export default function RealtimeProvider({
         },
       });
     } catch (error) {
-      console.log(error);
+      console.log("Error!:", error);
     }
   }, []);
 

@@ -10,13 +10,15 @@ import { useState } from "react";
 
 export function Profile_ComponentLoadBackgroundImage({
   fileId,
+  size
 }: {
   fileId: string;
+  size?: number
 }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId,size: size ? size.toString() : "200" });
 
   useShallowEffect(() => {
     onLoadImage();

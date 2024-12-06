@@ -21,9 +21,7 @@ export async function adminEvent_funGetListAllRiwayat({
     },
     where: {
       eventMaster_StatusId: "1",
-      tanggal: {
-        lte: new Date(),
-      },
+      isArsip: true,
       title: {
         contains: search,
         mode: "insensitive",
@@ -49,9 +47,7 @@ export async function adminEvent_funGetListAllRiwayat({
   const nCount = await prisma.event.count({
     where: {
       eventMaster_StatusId: "1",
-      tanggal: {
-        lte: new Date(),
-      },
+      isArsip: true,
       title: {
         contains: search,
         mode: "insensitive",

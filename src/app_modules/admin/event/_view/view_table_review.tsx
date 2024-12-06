@@ -45,6 +45,8 @@ import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_cre
 import { adminEvent_funGetListReview } from "../fun";
 import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
+import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_by_id";
+import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 
 export default function AdminEvent_ComponentTableReview({
   listData,
@@ -104,51 +106,65 @@ export default function AdminEvent_ComponentTableReview({
     setIsAdminTriggerReview(false);
   }
 
-  async function onPublish(eventId: string, tanggal: Date) {
-    if (moment(tanggal).diff(Date.now(), "minutes") < 0)
-      return ComponentGlobal_NotifikasiPeringatan(
-        "Waktu acara telah lewat, Report untuk memberitahu user !"
-      );
+  async function onPublish({
+    eventId,
+    tanggal,
+  }: {
+    eventId: string;
+    tanggal: Date;
+  }) {
+    const checkStatus = await event_checkStatus({ id: eventId });
 
-    const res = await AdminEvent_funEditStatusPublishById(eventId, "1");
-    if (res.status === 200) {
-      const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.EventMaster_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "EVENT",
-        title: "Event publish",
-      };
+    if (checkStatus) {
+      if (moment(tanggal).diff(Date.now(), "minutes") < 0)
+        return ComponentGlobal_NotifikasiPeringatan(
+          "Waktu acara telah lewat, Report untuk memberitahu user !"
+        );
 
-      const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotifikasi as any,
-      });
+      const res = await AdminEvent_funEditStatusPublishById(eventId, "1");
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.EventMaster_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "EVENT",
+          title: "Event publish",
+        };
 
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "USER",
-          dataMessage: dataNotifikasi,
+        const notif = await adminNotifikasi_funCreateToUser({
+          data: dataNotifikasi as any,
         });
 
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "USER",
-          dataMessage: dataNotifikasi,
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+        }
+
+        const loadData = await adminEvent_funGetListReview({
+          search: isSearch,
+          page: isActivePage,
         });
+        setData(loadData.data as any);
+        setNPage(loadData.nPage);
+
+        ComponentAdminGlobal_NotifikasiBerhasil("Berhasil update status");
+      } else {
+        ComponentAdminGlobal_NotifikasiGagal(res.message);
       }
-
-      const loadData = await adminEvent_funGetListReview({
-        search: isSearch,
-        page: isActivePage,
-      });
-      setData(loadData.data as any);
-      setNPage(loadData.nPage);
-
-      ComponentAdminGlobal_NotifikasiBerhasil("Berhasil update status");
     } else {
-      ComponentAdminGlobal_NotifikasiGagal(res.message);
+      ComponentAdminGlobal_NotifikasiPeringatan(
+        "Review di batalkan oleh user, reload halaman review !"
+      );
     }
   }
 
@@ -218,19 +234,40 @@ export default function AdminEvent_ComponentTableReview({
           <Text>{e.EventMaster_TipeAcara.name}</Text>
         </Center>
       </td>
+
       <td>
         <Center w={200}>
-          {e.tanggal.toLocaleString("id-ID", { dateStyle: "full" })}
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggal)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggal)}
+            </Text>
+          </Text>
         </Center>
       </td>
       <td>
         <Center w={200}>
-          {e.tanggal.toLocaleTimeString([], {
-            timeStyle: "short",
-            hourCycle: "h24",
-          })}
+          <Text align="center">
+            {" "}
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "full",
+            }).format(e?.tanggalSelesai)}
+            ,{" "}
+            <Text span inherit>
+              {new Intl.DateTimeFormat("id-ID", {
+                timeStyle: "short",
+              }).format(e?.tanggalSelesai)}
+            </Text>
+          </Text>
         </Center>
       </td>
+
       <td>
         <Center w={400}>
           <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
@@ -246,7 +283,12 @@ export default function AdminEvent_ComponentTableReview({
               color={"green"}
               leftIcon={<IconCircleCheck />}
               radius={"xl"}
-              onClick={() => onPublish(e.id, e.tanggal)}
+              onClick={() =>
+                onPublish({
+                  eventId: e.id,
+                  tanggal: e.tanggal,
+                })
+              }
             >
               Publish
             </Button>
@@ -254,9 +296,17 @@ export default function AdminEvent_ComponentTableReview({
               color={"red"}
               leftIcon={<IconBan />}
               radius={"xl"}
-              onClick={() => {
-                open();
-                setEventId(e.id);
+              onClick={async () => {
+                const checkStatus = await event_checkStatus({ id: e.id });
+
+                if (checkStatus) {
+                  open();
+                  setEventId(e.id);
+                } else {
+                  ComponentAdminGlobal_NotifikasiPeringatan(
+                    "Review di batalkan oleh user, muat kembali halaman ini !"
+                  );
+                }
               }}
             >
               Reject
@@ -334,10 +384,10 @@ export default function AdminEvent_ComponentTableReview({
                     <Center>Tipe Acara</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center>Tanggal & Waktu Mulai</Center>
                   </th>
                   <th>
-                    <Center>Jam</Center>
+                    <Center>Tanggal & Waktu Selesai</Center>
                   </th>
                   <th>
                     <Center>Deskripsi</Center>

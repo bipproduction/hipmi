@@ -9,11 +9,13 @@ export default function KatalogLayout({
   profileId,
   userLoginId,
   authorId,
+  userRoleId,
 }: {
   children: any;
   profileId: any;
   userLoginId: string;
   authorId: string;
+  userRoleId: string
 }) {
   return (
     <>
@@ -26,6 +28,7 @@ export default function KatalogLayout({
                 profileId={profileId}
                 userLoginId={userLoginId}
                 authorId={authorId as any}
+                userRoleId={userRoleId}
               />
             }
           />

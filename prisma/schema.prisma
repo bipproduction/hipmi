@@ -15,7 +15,7 @@ model User {
   id                                   String                                 @id @default(cuid())
   username                             String                                 @unique
   nomor                                String                                 @unique
-  active                               Boolean                                @default(true)
+  active                               Boolean                                @default(false)
   createdAt                            DateTime?                              @default(now())
   updatedAt                            DateTime?                              @updatedAt
   MasterUserRole                       MasterUserRole                         @relation(fields: [masterUserRoleId], references: [id])
@@ -573,15 +573,18 @@ model Donasi_PencairanDana {
 // ========================================= EVENT ========================================= //
 
 model Event {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   lokasi    String
-  tanggal   DateTime
+  tanggal   DateTime?
   deskripsi String
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   catatan   String?
+
+  tanggalSelesai DateTime?
+  isArsip        Boolean?  @default(false)
 
   Author                  User?                  @relation(fields: [authorId], references: [id])
   authorId                String?
@@ -615,6 +618,7 @@ model Event_Peserta {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isPresent Boolean  @default(false)
 
   Event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?

@@ -6,6 +6,8 @@ export interface MODEL_EVENT {
   title: string;
   lokasi: string;
   tanggal: Date;
+  tanggalSelesai: Date;
+  isArsip: boolean;
   deskripsi: string;
   active: boolean;
   createdAt: Date;
@@ -28,5 +30,6 @@ export interface MODEL_EVENT_PESERTA {
   userId: string;
   User: MODEL_USER;
   eventId: string;
+  isPresent: boolean
   Event: MODEL_EVENT;
 }

@@ -2,7 +2,7 @@
 
 import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
 import { useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { MODEL_USER } from "../home/model/interface";
 import { RouterHome } from "@/app/lib/router_hipmi/router_home";
 import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
@@ -15,6 +15,12 @@ export function CheckCookies_UiLayout({
   dataUser: MODEL_USER;
 }) {
   const router = useRouter();
+
+  // if (dataUser.active == false){
+  //   router.push(RouterHome.home_user_non_active, { scroll: false });
+  //   return children
+  // }
+  
 
   // useShallowEffect(() => {
   //   onCheckCookies();
@@ -38,5 +44,5 @@ export function CheckCookies_UiLayout({
   //   router.push(RouterAdminDashboard.splash_admin, { scroll: false });
   // }
 
-  return children;
+  return <>{children}</>;
 }

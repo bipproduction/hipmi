@@ -12,9 +12,7 @@ export default async function AdminEvent_funCountByStatusId(statusId: string) {
         const count = await prisma.event.count({
           where: {
             eventMaster_StatusId: "1",
-            tanggal: {
-              gte: new Date
-            }
+            isArsip: false
           },
         });
         return count;
