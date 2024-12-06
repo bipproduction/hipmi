@@ -11,6 +11,8 @@ import LayoutPortofolio_EditDataBisnis from "./edit/data/layout";
 import LayoutPortofolio_EditLogoBisnis from "./edit/logo/layout";
 import LayoutPortofolio_EditMedsosBisnis from "./edit/medsos/layout";
 import ListDetailPortofolioNew from './view/list_detail_portofolio_new';
+import Portofolio_UiDetailNew from './ui/ui_detail_portofolio_new';
+import PortofolioLayoutNew from './ui/ui_layout_new';
 
 export {
   CreatePortofolio,
@@ -28,4 +30,6 @@ export {
 export type { IListPortofolio };
 export { Portofolio_ViewListDetail } from "./view/view_list_detail_portofolio";
 export { ListDetailPortofolioNew }
+export { Portofolio_UiDetailNew }
+export { PortofolioLayoutNew }
 
