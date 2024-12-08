@@ -1,38 +1,33 @@
 "use client";
 
-import {
-  UIGlobal_LayoutDefault,
-  UIGlobal_LayoutTamplate,
-} from "@/app_modules/_global/ui";
-import {
-  Button,
-  Card,
-  Center,
-  Group,
-  Paper,
-  Skeleton,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import { MODEL_EVENT } from "../model/interface";
-import { useShallowEffect } from "@mantine/hooks";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { event_funCheckKehadiran, event_funUpdateKehadiran } from "../fun";
+import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
+import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { MainColor } from "@/app_modules/_global/color";
+import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
 } from "@/app_modules/_global/notif_global";
-import { redirect, useRouter } from "next/navigation";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
-import { useState } from "react";
-import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
-import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import moment from "moment";
-import { gs_event_hotMenu } from "../global_state";
+import {
+  UIGlobal_LayoutDefault
+} from "@/app_modules/_global/ui";
+import {
+  Button,
+  Center,
+  Group,
+  Skeleton,
+  Stack,
+  Text
+} from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
-import { Event_funJoinEvent } from "../fun/create/fun_join_event";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { event_funUpdateKehadiran } from "../fun";
 import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm";
+import { gs_event_hotMenu } from "../global_state";
+import { MODEL_EVENT } from "../model/interface";
 
 export default function Ui_Konfirmasi({
   userLoginId,
@@ -70,7 +65,6 @@ export default function Ui_Konfirmasi({
       API_RouteEvent.check_peserta({ eventId: eventId, userId: userLoginId })
     );
     const data = await res.json();
-    console.log("cek peserta", data);
     setIsJoin(data);
   }
 
@@ -87,9 +81,6 @@ export default function Ui_Konfirmasi({
     setIsPresent(data);
   }
 
-  // console.log("kehadiran:", isPresent);
-  // console.log("data:", data);
-
   if (data == null && isPresent == null) {
     return <SkeletonIsDataNull />;
   }
@@ -102,7 +93,7 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  if (moment(data?.tanggal).diff(moment(), "minute") < 0) {
+  if (moment(data?.tanggalSelesai).diff(moment(), "minute") < 0) {
     return (
       <>
         <EventAlreadyDone title={data?.title} eventId={eventId} />

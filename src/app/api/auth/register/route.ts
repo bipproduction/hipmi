@@ -1,5 +1,6 @@
 import { sessionCreate } from "@/app/auth/_lib/session_create";
 import prisma from "@/app/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   if (req.method === "POST") {
@@ -12,11 +13,8 @@ export async function POST(req: Request) {
     });
 
     if (cekUsername)
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Username sudah digunakan",
-        }),
+      return NextResponse.json(
+        { success: false, message: "Username sudah digunakan" },
         { status: 400 }
       );
 
@@ -43,28 +41,22 @@ export async function POST(req: Request) {
       });
 
       if (!createUserSession)
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "Gagal Membuat Session",
-          }),
+        return NextResponse.json(
+          { success: false, message: "Gagal Membuat Session" },
           { status: 400 }
         );
     } catch (error) {
       console.log(error);
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "Berhasil Login",
-      }),
-
+    return NextResponse.json(
+      { success: true, message: "Berhasil Login", data: createUser },
       { status: 200 }
     );
   }
-  return new Response(
-    JSON.stringify({ success: false, message: "Method Not Allowed" }),
+
+  return NextResponse.json(
+    { success: false, message: "Method Not Allowed" },
     { status: 405 }
   );
 }

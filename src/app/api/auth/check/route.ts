@@ -1,10 +1,12 @@
 import { prisma } from "@/app/lib";
 import { data } from "autoprefixer";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function GET(request: NextRequest) {
+  const id = request.nextUrl.searchParams.get("id");
+  // const { searchParams } = new URL(request.url);
+  // const id = searchParams.get("id");
 
   try {
     const data = await prisma.kodeOtp.findFirst({
@@ -12,10 +14,10 @@ export async function GET(request: Request) {
         id: id as string,
       },
     });
-    return new Response(JSON.stringify({ data }), { status: 200 });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.log(error);
   }
 
-  return new Response(JSON.stringify({ data: null }), { status: 404 });
+  return NextResponse.json(null, { status: 500 });
 }

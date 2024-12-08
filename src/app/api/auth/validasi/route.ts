@@ -1,9 +1,5 @@
 import { sessionCreate } from "@/app/auth/_lib/session_create";
 import prisma from "@/app/lib/prisma";
-import { ServerEnv } from "@/app/lib/server_env";
-import { sealData } from "iron-session";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -23,10 +19,9 @@ export async function POST(req: Request) {
       },
     });
 
-
     if (dataUser === null)
-      return new Response(
-        JSON.stringify({ success: false, message: "Nomor Belum Terdaftar" }),
+      return NextResponse.json(
+        { success: false, message: "Nomor Belum Terdaftar" },
         { status: 404 }
       );
 
@@ -59,49 +54,27 @@ export async function POST(req: Request) {
       });
 
       if (!createUserSession)
-        return new Response(
-          JSON.stringify({ success: false, message: "Gagal Membuat Session" }),
+        return NextResponse.json(
+          { success: false, message: "Gagal Membuat Session" },
           { status: 400 }
         );
     } catch (error) {
       console.log(error);
     }
 
-    // if (data) {
-    //   const res = await sealData(
-    //     JSON.stringify({
-    //       id: data.id,
-    //       username: data.username,
-    //     }),
-    //     {
-    //       password: ServerEnv.value?.WIBU_PWD as string,
-    //     }
-    //   );
-
-    //   cookies().set({
-    //     name: "mySession",
-    //     value: res,
-    //     maxAge: 60 * 60 * 24 * 7,
-    //   });
-
-    //   revalidatePath("/dev/home");
-
-    //   return NextResponse.json({ status: 200, data });
-    // }
-
-    // return NextResponse.json({ success: true });
-    return new Response(
-      JSON.stringify({
+    return NextResponse.json(
+      {
         success: true,
         message: "Berhasil Login",
         roleId: dataUser.masterUserRoleId,
         active: dataUser.active,
-      }),
+      },
       { status: 200 }
     );
   }
-  return new Response(
-    JSON.stringify({ success: false, message: "Method Not Allowed" }),
+
+  return NextResponse.json(
+    { success: false, message: "Method Not Allowed" },
     { status: 405 }
   );
 }

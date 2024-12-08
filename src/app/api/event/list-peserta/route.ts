@@ -1,4 +1,5 @@
 import { event_newGetListPesertaById } from "@/app_modules/event/fun";
+import { Event_getListPesertaById } from "@/app_modules/event/fun/get/get_list_peserta_by_id";
 import { toNumber } from "lodash";
 import { NextResponse } from "next/server";
 
