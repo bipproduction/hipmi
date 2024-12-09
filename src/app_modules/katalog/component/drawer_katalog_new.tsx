@@ -89,7 +89,7 @@ export default function DrawerKatalogNew({ opened, close, userRoleId, userId }: 
                ))}
 
                <Component_ButtonLogout userId={userId} />
-               {userRoleId != "1" && (
+               {userRoleId != "1" && userRoleId != "" && (
                   <Stack align="center" spacing={"xs"}>
                      <ActionIcon
                         variant="transparent"

@@ -2,7 +2,7 @@
 import { APIs } from "@/app/lib";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { Avatar, Stack } from "@mantine/core";
+import { Avatar, Loader, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState } from "react";
@@ -44,7 +44,10 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
          <Stack style={{ borderRadius: "10px" }}>
             {
                loading ?
-                  <></> :
+                  <Stack align="center" spacing="sm">
+                     <Loader color="gray" variant="dots" />
+                  </Stack>
+                  :
                   <Map
                      mapboxAccessToken={mapboxToken}
                      mapStyle={"mapbox://styles/mapbox/streets-v11"}

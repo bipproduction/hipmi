@@ -15,9 +15,11 @@ export default function LayoutKatalogNew({ children }: { children: any }) {
    const [userRoleId, setUserRoleId] = useState("")
    const [userLoginId, setUserLoginId] = useState("")
    const [opened, { open, close }] = useDisclosure()
+   const [loading, setLoading] = useState(true);
 
    async function getProfile() {
       try {
+         setLoading(true)
          const response = await apiGetUserProfile(`?profile=${param.id}`)
          const response2 = await funGetUserIdByToken()
          if (response.success) {
@@ -27,6 +29,8 @@ export default function LayoutKatalogNew({ children }: { children: any }) {
          }
       } catch (error) {
          console.error(error);
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -41,13 +45,15 @@ export default function LayoutKatalogNew({ children }: { children: any }) {
                <UIGlobal_LayoutHeaderTamplate
                   title="KATALOG"
                   customButtonRight={
-                     authorId !== userLoginId ? (
-                        <ActionIcon disabled variant="transparent"></ActionIcon>
-                     ) : (
-                        <ActionIcon c="white" variant="transparent" onClick={() => open()}>
-                           <IconDotsVertical />
-                        </ActionIcon>
-                     )
+                     loading ?
+                        <ActionIcon disabled variant="transparent"></ActionIcon> :
+                        authorId == userLoginId ? (
+                           <ActionIcon c="white" variant="transparent" onClick={() => open()}>
+                              <IconDotsVertical />
+                           </ActionIcon>
+                        ) : (
+                           <ActionIcon disabled variant="transparent"></ActionIcon>
+                        )
                   }
                />
             }

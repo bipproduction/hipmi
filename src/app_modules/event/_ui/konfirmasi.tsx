@@ -20,6 +20,7 @@ import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm
 import { gs_event_hotMenu } from "../global_state";
 import { MODEL_EVENT } from "../model/interface";
 import { Event_funJoinEvent } from "../fun/create/fun_join_event";
+import "moment/locale/id";
 
 export default function Ui_Konfirmasi({
   userLoginId,
@@ -88,11 +89,20 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  // Jika tanggal acara lewat
+  // Jika tanggal acara sudah lewat
   if (moment(data?.tanggalSelesai).diff(moment(), "minute") < 0) {
     return (
       <>
         <EventAlreadyDone title={data?.title} eventId={eventId} />
+      </>
+    );
+  }
+
+  // Jika join true
+  if (isJoin == true && moment(data?.tanggal).diff(moment(), "minute") > 0) {
+    return (
+      <>
+        <UserJoinTrue title={data?.title} tanggal={data?.tanggal} />
       </>
     );
   }
@@ -125,8 +135,13 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  // Jika sudah join, belum konfirm dan acara sudah mulai
-  if (isPresent && moment(data?.tanggal).diff(moment(), "minute") < 0) {
+  // Jika sudah join, sudah konfirmasi dan tanggal mulai acara sudah lewat
+  // if (isPresent && moment(data?.tanggal).diff(moment(), "minute") < 0)
+  if (
+    isPresent &&
+    isJoin &&
+    moment(data?.tanggal).diff(moment(), "minute") < 0
+  ) {
     return <UserAlreadyConfirm title={data.title} />;
   }
 
@@ -191,6 +206,52 @@ function SkeletonIsDataNull() {
               <Center>
                 <Skeleton height={40} width={"40%"} radius={"sm"} />
               </Center>
+            </Stack>
+          </ComponentGlobal_CardStyles>
+        </Stack>
+      </UIGlobal_LayoutDefault>
+    </>
+  );
+}
+
+function UserJoinTrue({ title, tanggal }: { title: string; tanggal: Date }) {
+  const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
+  const [hotMenu, setHotMenu] = useAtom(gs_event_hotMenu);
+
+  return (
+    <>
+      <UIGlobal_LayoutDefault>
+        <Stack h={"100vh"} justify="center">
+          <ComponentGlobal_CardStyles>
+            <Stack align="center" justify="center">
+              <Text align="center">
+                Terima kasih, Bapak/Ibu, Anda telah berhasil bergabung dalam
+                acara{" "}
+                <Text inherit span fw={"bold"}>
+                  {title}
+                </Text>{" "}
+                . Mohon ditunggu hingga tanggal{" "}
+                <Text inherit span fw={"bold"}>
+                  {moment(tanggal).format("DD-MM-YYYY")}
+                </Text>{" "}
+                untuk melakukan konfirmasi kehadiran melalui aplikasi HIPMI APP.
+              </Text>
+
+              <Button
+                loading={isLoading}
+                loaderPosition="center"
+                radius={"xl"}
+                color="green"
+                c={"black"}
+                onClick={() => {
+                  setHotMenu(0);
+                  setLoading(true);
+                  router.push(RouterEvent.beranda, { scroll: false });
+                }}
+              >
+                Beranda
+              </Button>
             </Stack>
           </ComponentGlobal_CardStyles>
         </Stack>
