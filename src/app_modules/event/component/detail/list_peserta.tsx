@@ -3,6 +3,7 @@
 import {
   ActionIcon,
   Avatar,
+  Badge,
   Center,
   Grid,
   Group,
@@ -136,11 +137,8 @@ function ComponentEvent_AvatarAndUsername({
     }
   }
 
-  const tglMulai = moment(tanggalMulai).diff(moment(), "minutes");
+  const tglMulai = moment(tanggalMulai).diff(moment(), "minutes") < 0;
 
-  const tglSelesai = moment(tanggalSelesai).diff(moment(), "minutes");
-
-  // console.log("mulai:", tglMulai, "selesai:", tglSelesai);
 
   return (
     <>
@@ -177,20 +175,12 @@ function ComponentEvent_AvatarAndUsername({
           </Stack>
         </Grid.Col>
 
-        {/* {component && (
-          <Grid.Col span={"auto"} style={{ minHeight: 50 }}>
-            <Stack justify="center" h={30}>
-              {component}
-            </Stack>
-          </Grid.Col>
-        )} */}
-
-        {tglMulai < 0 && (
-          <Grid.Col span={3} style={{ minHeight: 50 }}>
+        {tglMulai && (
+          <Grid.Col span={4} style={{ minHeight: 50 }}>
             <Group position="right">
               <Stack justify="center" h={30}>
                 <Text fw={"bold"} fz={fontSize ? fontSize : "sm"}>
-                  {isPresent ? "Hadir" : "-"}
+                  {isPresent ? <Badge color="green" >Hadir</Badge> : <Badge>-</Badge>}
                 </Text>
               </Stack>
             </Group>

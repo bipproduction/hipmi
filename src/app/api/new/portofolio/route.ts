@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
 
 // GET  ALL DATA PORTOFOLIO BY PROFILE ID

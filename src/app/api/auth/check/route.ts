@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
         id: id as string,
       },
     });
+
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.log(error);

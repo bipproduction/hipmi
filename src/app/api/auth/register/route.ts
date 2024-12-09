@@ -32,22 +32,22 @@ export async function POST(req: Request) {
       user: createUser as any,
     });
 
-    try {
-      const createUserSession = await prisma.userSession.create({
-        data: {
-          token: token as string,
-          userId: createUser.id,
-        },
-      });
+    // try {
+    //   const createUserSession = await prisma.userSession.create({
+    //     data: {
+    //       token: token as string,
+    //       userId: createUser.id,
+    //     },
+    //   });
 
-      if (!createUserSession)
-        return NextResponse.json(
-          { success: false, message: "Gagal Membuat Session" },
-          { status: 400 }
-        );
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (!createUserSession)
+    //     return NextResponse.json(
+    //       { success: false, message: "Gagal Membuat Session" },
+    //       { status: 400 }
+    //     );
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     return NextResponse.json(
       { success: true, message: "Berhasil Login", data: createUser },

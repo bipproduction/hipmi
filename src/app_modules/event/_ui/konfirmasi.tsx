@@ -8,17 +8,8 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
 } from "@/app_modules/_global/notif_global";
-import {
-  UIGlobal_LayoutDefault
-} from "@/app_modules/_global/ui";
-import {
-  Button,
-  Center,
-  Group,
-  Skeleton,
-  Stack,
-  Text
-} from "@mantine/core";
+import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
+import { Button, Center, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import moment from "moment";
@@ -28,6 +19,7 @@ import { event_funUpdateKehadiran } from "../fun";
 import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm";
 import { gs_event_hotMenu } from "../global_state";
 import { MODEL_EVENT } from "../model/interface";
+import { Event_funJoinEvent } from "../fun/create/fun_join_event";
 
 export default function Ui_Konfirmasi({
   userLoginId,
@@ -68,7 +60,7 @@ export default function Ui_Konfirmasi({
     setIsJoin(data);
   }
 
-  // CEK KEHADIRAN
+  // =========== CEK KEHADIRAN ===========//
   useShallowEffect(() => {
     onLoadKehadiran();
   }, []);
@@ -80,11 +72,14 @@ export default function Ui_Konfirmasi({
     const data = await res.json();
     setIsPresent(data);
   }
+  // =========== CEK KEHADIRAN ===========//
 
+  // Jika data kosong
   if (data == null && isPresent == null) {
     return <SkeletonIsDataNull />;
   }
 
+  // Jika data tidak ada
   if (data == null) {
     return (
       <>
@@ -93,6 +88,7 @@ export default function Ui_Konfirmasi({
     );
   }
 
+  // Jika tanggal acara lewat
   if (moment(data?.tanggalSelesai).diff(moment(), "minute") < 0) {
     return (
       <>
@@ -101,10 +97,26 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  if (isJoin == false) {
+  // Jika belum join dan tanggal mulai acara belum lewat
+  if (isJoin == false && moment(data?.tanggal).diff(moment(), "minute") > 0) {
     return (
       <>
-        <UserNotJoin
+        <UserAllowToJoin
+          title={data?.title}
+          tanggal={data?.tanggal}
+          lokasi={data.lokasi}
+          eventId={eventId}
+          userLoginId={userLoginId}
+        />
+      </>
+    );
+  }
+
+  // Jika belum join dan tanggal mulai acara sudah lewat
+  if (isJoin == false && moment(data?.tanggal).diff(moment(), "minute") < 0) {
+    return (
+      <>
+        <UserNotJoinAndEventReady
           title={data?.title}
           eventId={eventId}
           userLoginId={userLoginId}
@@ -113,7 +125,8 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  if (isPresent && data) {
+  // Jika sudah join, belum konfirm dan acara sudah mulai
+  if (isPresent && moment(data?.tanggal).diff(moment(), "minute") < 0) {
     return <UserAlreadyConfirm title={data.title} />;
   }
 
@@ -126,16 +139,6 @@ export default function Ui_Konfirmasi({
       />
     );
   }
-  // const tgl = moment(data?.tanggal).diff(moment(), "minute") < 0;
-  // return (
-  //   <>
-  //     <UIGlobal_LayoutDefault>
-  //       <Stack h={"100vh"} justify="center" c={"white"}>
-  //         {JSON.stringify(tgl)}
-  //       </Stack>
-  //     </UIGlobal_LayoutDefault>
-  //   </>
-  // );
 }
 
 function DataNotFound() {
@@ -196,7 +199,91 @@ function SkeletonIsDataNull() {
   );
 }
 
-function UserNotJoin({
+function UserAllowToJoin({
+  title,
+  tanggal,
+  lokasi,
+  eventId,
+  userLoginId,
+}: {
+  title: string;
+  tanggal: Date;
+  lokasi: string;
+  eventId: string;
+  userLoginId: string;
+}) {
+  const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
+
+  async function onJoinEvent() {
+    setLoading(true);
+
+    const data = {
+      userId: userLoginId,
+      eventId: eventId,
+    };
+
+    const res = await Event_funJoinEvent(data as any);
+    if (res.status === 200) {
+      ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+      router.push(RouterEvent.detail_main + eventId);
+    } else {
+      setLoading(false);
+      ComponentGlobal_NotifikasiGagal(res.message);
+    }
+  }
+
+  return (
+    <>
+      <UIGlobal_LayoutDefault>
+        <Stack h={"100vh"} justify="center">
+          <ComponentGlobal_CardStyles>
+            <Stack align="center" justify="center">
+              <Text align="center">
+                Halo, Bapak/Ibu. Kami dengan senang hati mengundang Anda untuk
+                bergabung dalam acara
+                <Text inherit span fw={"bold"}>
+                  {title}
+                </Text>{" "}
+                yang akan diselenggarakan pada{" "}
+                <Text inherit span fw={"bold"}>
+                  {moment(tanggal).format("LL")}
+                </Text>{" "}
+                pukul
+                <Text inherit span fw={"bold"}>
+                  {moment(tanggal).format("LT")}
+                </Text>{" "}
+                di
+                <Text inherit span fw={"bold"}>
+                  {lokasi}
+                </Text>{" "}
+                . Pastikan Anda sudah melakukan registrasi melalui aplikasi
+                [Nama Aplikasi] agar dapat berpartisipasi. Kami sangat
+                menantikan kehadiran Anda. Sampai jumpa di acara ini.
+              </Text>
+
+              <Button
+                loading={isLoading}
+                loaderPosition="center"
+                radius={"xs"}
+                bg={MainColor.yellow}
+                color="yellow"
+                c={"black"}
+                onClick={() => {
+                  onJoinEvent();
+                }}
+              >
+                Join Event
+              </Button>
+            </Stack>
+          </ComponentGlobal_CardStyles>
+        </Stack>
+      </UIGlobal_LayoutDefault>
+    </>
+  );
+}
+
+function UserNotJoinAndEventReady({
   title,
   eventId,
   userLoginId,
@@ -373,8 +460,12 @@ function UserNotConfirm({
                   {title}
                 </Text>{" "}
                 pada hari ini. Mohon untuk mengonfirmasi kehadiran Anda dengan
-                menekan tombol {"Hadir"} atau fitur konfirmasi yang tersedia di
-                bawah. Terima kasih dan selamat menikmati acara.
+                menekan tombol{" "}
+                <Text inherit span fw={"bold"}>
+                  Konfirmasi Kehadiran
+                </Text>{" "}
+                atau fitur konfirmasi yang tersedia di bawah. Terima kasih dan
+                selamat menikmati acara.
               </Text>
 
               <Button
@@ -388,7 +479,7 @@ function UserNotConfirm({
                   onUpdateKonfirmasi();
                 }}
               >
-                HADIR
+                Konfirmasi Kehadiran
               </Button>
             </Stack>
           </ComponentGlobal_CardStyles>

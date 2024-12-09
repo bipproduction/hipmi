@@ -41,7 +41,7 @@ export default function Register() {
     const res = await fetch(`/api/auth/check?id=${kodeId}`);
     const result = await res.json();
 
-    onSetData(result.data.nomor);
+    onSetData(result.nomor);
   }
 
   async function onRegistarsi() {

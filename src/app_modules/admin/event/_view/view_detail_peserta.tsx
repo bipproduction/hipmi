@@ -2,6 +2,7 @@
 
 import { MODEL_EVENT_PESERTA } from "@/app_modules/event/model/interface";
 import {
+  Badge,
   Button,
   Center,
   Pagination,
@@ -25,6 +26,7 @@ export function AdminEvent_ViewDetailPeserta({
   const [data, setData] = useState<MODEL_EVENT_PESERTA[]>(dataPeserta.data);
   const [isNPage, setNPage] = useState(dataPeserta.nPage);
   const [isActivePage, setActivePage] = useState(1);
+
 
   async function onPageClick(p: any) {
     setActivePage(p);
@@ -51,6 +53,15 @@ export function AdminEvent_ViewDetailPeserta({
           </td>
           <td>
             <Center>{e?.User?.Profile?.email}</Center>
+          </td>
+          <td>
+            <Center>
+              {e.isPresent ? (
+                <Badge color="green">Hadir</Badge>
+              ) : (
+                <Badge color="red">Tidak Hadir</Badge>
+              )}
+            </Center>
           </td>
         </tr>
       ));
@@ -80,6 +91,9 @@ export function AdminEvent_ViewDetailPeserta({
                 </th>
                 <th>
                   <Center>Email</Center>
+                </th>
+                <th>
+                  <Center>Konfirmasi Kehadiran</Center>
                 </th>
               </tr>
             </thead>

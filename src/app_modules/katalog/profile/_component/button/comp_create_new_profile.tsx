@@ -47,40 +47,46 @@ export function Profile_ComponentCreateNewProfile({
         "Lengkapi background profile"
       );
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const uploadPhoto = await funGlobal_UploadToStorage({
-      file: filePP,
-      dirId: DIRECTORY_ID.profile_foto,
-    });
-    if (!uploadPhoto.success) {
-      setLoading(false);
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
-    }
+      const uploadPhoto = await funGlobal_UploadToStorage({
+        file: filePP,
+        dirId: DIRECTORY_ID.profile_foto,
+      });
+      if (!uploadPhoto.success) {
+        setLoading(false);
+        return ComponentGlobal_NotifikasiPeringatan(
+          "Gagal upload foto profile"
+        );
+      }
 
-    const uploadBackground = await funGlobal_UploadToStorage({
-      file: fileBG,
-      dirId: DIRECTORY_ID.profile_background,
-    });
-    if (!uploadBackground.success) {
-      setLoading(false);
-      return ComponentGlobal_NotifikasiPeringatan(
-        "Gagal upload background profile"
-      );
-    }
+      const uploadBackground = await funGlobal_UploadToStorage({
+        file: fileBG,
+        dirId: DIRECTORY_ID.profile_background,
+      });
+      if (!uploadBackground.success) {
+        setLoading(false);
+        return ComponentGlobal_NotifikasiPeringatan(
+          "Gagal upload background profile"
+        );
+      }
 
-    const create = await funCreateNewProfile({
-      data: newData as any,
-      imageId: uploadPhoto.data.id,
-      imageBackgroundId: uploadBackground.data.id,
-    });
+      const create = await funCreateNewProfile({
+        data: newData as any,
+        imageId: uploadPhoto.data.id,
+        imageBackgroundId: uploadBackground.data.id,
+      });
 
-    if (create.status === 201) {
-      ComponentGlobal_NotifikasiBerhasil("Berhasil membuat profile", 3000);
-      router.push(RouterHome.main_home, { scroll: false });
-    } else {
-      ComponentGlobal_NotifikasiGagal(create.message);
-      setLoading(false);
+      if (create.status === 201) {
+        ComponentGlobal_NotifikasiBerhasil("Berhasil membuat profile", 3000);
+        router.push(RouterHome.main_home, { scroll: false });
+      } else {
+        ComponentGlobal_NotifikasiGagal(create.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
