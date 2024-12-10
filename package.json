@@ -1,10 +1,10 @@
 {
   "name": "hipmi",
-  "version": "1.2.21",
+  "version": "1.2.22",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts --yes"
-  }, 
+  },
   "scripts": {
     "dev": "bun --bun run next dev --experimental-https",
     "build": "NODE_OPTIONS='--max-old-space-size=2048' bun --bun run next build",

@@ -54,7 +54,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
 
   useShallowEffect(() => {
     if (typeof window !== "undefined") {
-      console.log(window.location.origin);
+      // console.log(window.location.origin);
       setOrigin(window.location.origin);
     }
   }, [setOrigin]);

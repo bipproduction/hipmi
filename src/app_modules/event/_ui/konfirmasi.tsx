@@ -135,16 +135,6 @@ export default function Ui_Konfirmasi({
     );
   }
 
-  // Jika sudah join, sudah konfirmasi dan tanggal mulai acara sudah lewat
-  // if (isPresent && moment(data?.tanggal).diff(moment(), "minute") < 0)
-  if (
-    isPresent &&
-    isJoin &&
-    moment(data?.tanggal).diff(moment(), "minute") < 0
-  ) {
-    return <UserAlreadyConfirm title={data.title} />;
-  }
-
   if (isPresent == false && data) {
     return (
       <UserNotConfirm
@@ -153,6 +143,16 @@ export default function Ui_Konfirmasi({
         userLoginId={userLoginId}
       />
     );
+  }
+
+  // Jika sudah join, sudah konfirmasi dan tanggal mulai acara sudah lewat
+  // if (isPresent && moment(data?.tanggal).diff(moment(), "minute") < 0)
+  if (
+    isPresent &&
+    isJoin &&
+    moment(data?.tanggal).diff(moment(), "minute") < 0
+  ) {
+    return <UserAlreadyConfirm title={data.title} />;
   }
 }
 

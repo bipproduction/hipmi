@@ -7,6 +7,7 @@ import {
   Center,
   Grid,
   Group,
+  Loader,
   Skeleton,
   Stack,
   Text,
@@ -31,6 +32,8 @@ import moment from "moment";
 import { useShallowEffect } from "@mantine/hooks";
 import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 import Event_ComponentSkeletonListPeserta from "../skeleton/comp_skeleton_list_peserta";
+import { ScrollOnly } from "next-scroll-loader";
+import { event_newGetListPesertaById } from "../../fun";
 
 export default function ComponentEvent_ListPeserta({
   total,
@@ -43,6 +46,7 @@ export default function ComponentEvent_ListPeserta({
 }) {
   const router = useRouter();
   const [data, setData] = useState<MODEL_EVENT_PESERTA[] | null>(null);
+  const [activePage, setActivePage] = useState<number>(1);
 
   useShallowEffect(() => {
     onLoadPeserta();
@@ -80,22 +84,53 @@ export default function ComponentEvent_ListPeserta({
                 </Text>
               </Center>
             ) : (
-              <Stack>
-                {data.map((e, i) => (
-                  <Stack key={i} spacing={"sm"}>
-                    <ComponentEvent_AvatarAndUsername
-                      profile={e?.User?.Profile as any}
-                      sizeAvatar={30}
-                      fontSize={"sm"}
-                      tanggalMulai={e?.Event?.tanggal}
-                      tanggalSelesai={e?.Event?.tanggalSelesai}
-                      isPresent={e?.isPresent}
-                    />
+              // <Stack>
+              //   {data.map((e, i) => (
+              //     <Stack key={i} spacing={"sm"}>
+              //       <ComponentEvent_AvatarAndUsername
+              //         profile={e?.User?.Profile as any}
+              //         sizeAvatar={30}
+              //         fontSize={"sm"}
+              //         tanggalMulai={e?.Event?.tanggal}
+              //         tanggalSelesai={e?.Event?.tanggalSelesai}
+              //         isPresent={e?.isPresent}
+              //       />
 
-                    {/* <Divider /> */}
-                  </Stack>
-                ))}
-              </Stack>
+              //       {/* <Divider /> */}
+              //     </Stack>
+              //   ))}
+              // </Stack>
+              <ScrollOnly
+                height="90vh"
+                renderLoading={() => (
+                  <Center mt={"lg"}>
+                    <Loader color={"yellow"} />
+                  </Center>
+                )}
+                data={data}
+                setData={setData as any}
+                moreData={async () => {
+                  const loadData = await event_newGetListPesertaById({
+                    eventId: eventId as string,
+                    page: activePage + 1,
+                  });
+
+                  setActivePage((val) => val + 1);
+
+                  return loadData;
+                }}
+              >
+                {(item) => (
+                  <ComponentEvent_AvatarAndUsername
+                    profile={item?.User?.Profile as any}
+                    sizeAvatar={30}
+                    fontSize={"sm"}
+                    tanggalMulai={item?.Event?.tanggal}
+                    tanggalSelesai={item?.Event?.tanggalSelesai}
+                    isPresent={item?.isPresent}
+                  />
+                )}
+              </ScrollOnly>
             )}
           </Stack>
         </ComponentGlobal_CardStyles>
@@ -139,7 +174,6 @@ function ComponentEvent_AvatarAndUsername({
 
   const tglMulai = moment(tanggalMulai).diff(moment(), "minutes") < 0;
 
-
   return (
     <>
       <Grid align="flex-start" justify="space-around">
@@ -180,7 +214,11 @@ function ComponentEvent_AvatarAndUsername({
             <Group position="right">
               <Stack justify="center" h={30}>
                 <Text fw={"bold"} fz={fontSize ? fontSize : "sm"}>
-                  {isPresent ? <Badge color="green" >Hadir</Badge> : <Badge>-</Badge>}
+                  {isPresent ? (
+                    <Badge color="green">Hadir</Badge>
+                  ) : (
+                    <Badge>-</Badge>
+                  )}
                 </Text>
               </Stack>
             </Group>

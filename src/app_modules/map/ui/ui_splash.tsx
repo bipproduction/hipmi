@@ -11,7 +11,7 @@ export function UiMap_SplashView() {
 
   useShallowEffect(() => {
     setTimeout(() => {
-      router.replace(RouterMap.main_view, { scroll: false }), 1000;
+      router.replace(RouterMap.main_view, { scroll: false }), 500;
     });
   }, []);
   return (

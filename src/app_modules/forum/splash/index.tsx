@@ -11,7 +11,7 @@ export default function Forum_Splash() {
   useShallowEffect(() => {
     setTimeout(() => {
       router.replace(RouterForum.beranda, { scroll: false });
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
