@@ -4,14 +4,14 @@ import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { validRegex } from "../../component/regular_expressions";
+import { gmailRegex, validRegex } from "../../component/regular_expressions";
 import { Profile_funEditById } from "../fun/update/fun_edit_profile_by_id";
 import { MODEL_PROFILE } from "../model/interface";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
   const router = useRouter();
@@ -24,8 +24,10 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
     const body = dataProfile;
 
     // console.log(body)
-    if (_.values(body).includes("")) return null;
-    if (!body.email.match(validRegex)) return null;
+    if (_.values(body).includes(""))
+      return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
+    if (!body.email.match(gmailRegex))
+      return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     await Profile_funEditById(body).then((res) => {
       if (res.status === 200) {
@@ -126,7 +128,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             dataProfile?.email === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan email " />
             ) : dataProfile?.email?.length > 0 &&
-              !dataProfile?.email.match(validRegex) ? (
+              !dataProfile?.email.match(gmailRegex) ? (
               <ComponentGlobal_ErrorInput text="Invalid email" />
             ) : (
               ""

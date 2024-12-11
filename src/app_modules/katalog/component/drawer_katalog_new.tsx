@@ -108,14 +108,12 @@ export default function DrawerKatalogNew({
           </Group>
           <SimpleGrid cols={4}>
             {listPage.map((e, i) => (
-              <Stack key={i} align="center" spacing={"xs"}>
-                <ActionIcon
-                  variant="transparent"
-                  c="white"
-                  onClick={() => {
-                    router.push(e.path, { scroll: false });
-                  }}
-                >
+              <Stack key={i} align="center" spacing={"xs"}
+                onClick={() => {
+                  router.push(e.path, { scroll: false });
+                }}
+              >
+                <ActionIcon variant="transparent" c="white" >
                   {e.icon}
                 </ActionIcon>
                 <Text align="center" color="white">

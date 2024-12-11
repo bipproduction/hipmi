@@ -9,15 +9,13 @@ import {
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
+import { gmailRegex } from "@/app_modules/katalog/component/regular_expressions";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import funCreateNewProfile from "../../fun/fun_create_profile";
 import { MODEL_PROFILE } from "../../model/interface";
-import { validRegex } from "@/app_modules/katalog/component";
-import { envs } from "@/lib/envs";
-import { TokenProvider, TokenStorage } from "@/app/lib/token";
 
 export function Profile_ComponentCreateNewProfile({
   value,
@@ -40,7 +38,8 @@ export function Profile_ComponentCreateNewProfile({
     };
     if (_.values(newData).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-    if (!newData.email.match(validRegex)) return null;
+    if (!newData.email.match(gmailRegex))
+      return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     if (filePP == null)
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi foto profile");

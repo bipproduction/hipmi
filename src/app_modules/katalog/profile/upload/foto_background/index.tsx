@@ -30,7 +30,10 @@ export default function Profile_UpdateFotoBackground({
               src={
                 image
                   ? image
-                  : APIs.GET({ fileId: profile.imageBackgroundId as any })
+                  : APIs.GET({
+                      fileId: profile.imageBackgroundId as any,
+                      size: "400",
+                    })
               }
             />
           </AspectRatio>

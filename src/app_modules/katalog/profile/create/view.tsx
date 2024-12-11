@@ -6,6 +6,8 @@ import {
   ComponentGlobal_BoxUploadImage,
   ComponentGlobal_ErrorInput,
 } from "@/app_modules/_global/component";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import {
   AspectRatio,
   Avatar,
@@ -22,10 +24,8 @@ import {
 } from "@mantine/core";
 import { IconAt, IconCamera, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
-import { validRegex } from "../../component";
-import { Profile_ComponentCreateNewProfile } from "../_component";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { gmailRegex } from "../../component/regular_expressions";
+import { Profile_ComponentCreateNewProfile } from "../_component";
 
 export default function CreateProfile() {
   const [filePP, setFilePP] = useState<File | null>(null);
@@ -39,9 +39,6 @@ export default function CreateProfile() {
     alamat: "",
     jenisKelamin: "",
   });
-
-  // Maksimal ukuran file dalam byte (2 MB)
-  const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
 
   return (
     <>

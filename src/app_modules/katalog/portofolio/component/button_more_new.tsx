@@ -13,6 +13,7 @@ export default function ComponentPortofolio_ButtonMoreNew() {
    const param = useParams<{ id: string }>()
    const [userLoginId, setUserLoginId] = useState("")
    const [authorId, setAuthorId] = useState("")
+   const [mapId, setMapId] = useState(true)
    const [openDrawer, setOpenDrawer] = useState(false)
 
    const listPage = [
@@ -48,13 +49,48 @@ export default function ComponentPortofolio_ButtonMoreNew() {
       },
    ];
 
+   const listPage2 = [
+      {
+         id: "1",
+         name: "Edit detail ",
+         icon: <IconEdit />,
+         path: RouterPortofolio.edit_data_bisnis + `${param.id}`,
+      },
+      {
+         id: "2",
+         name: "Edit logo ",
+         icon: <IconPhotoEdit />,
+         path: RouterPortofolio.edit_logo_bisnis + `${param.id}`,
+      },
+      {
+         id: "3",
+         name: "Edit sosial media",
+         icon: <IconId />,
+         path: RouterPortofolio.edit_medsos_bisnis + `${param.id}`,
+      },
+      {
+         id: "4",
+         name: "Edit data map",
+         icon: <IconMapPin2 />,
+         path: RouterMap.create + `${param.id}`,
+      },
+      {
+         id: "5",
+         name: "Custom pin map",
+         icon: <IconMapPin />,
+         path: RouterMap.custom_pin + `${param.id}`,
+      },
+   ];
+
 
    async function funGetPortofolio() {
       try {
          const response = await apiGetOnePortofolioById(param.id, "bisnis")
+         const response3 = await apiGetOnePortofolioById(param.id, "lokasi")
          const response2 = await funGetUserIdByToken()
          if (response.success) {
             setAuthorId(response.data.authorId)
+            setMapId((response3.data?.mapId !== null && response3.data?.mapId !== undefined) ? true : false)
             setUserLoginId(response2)
          }
       } catch (error) {
@@ -80,7 +116,7 @@ export default function ComponentPortofolio_ButtonMoreNew() {
          <UIGlobal_Drawer
             opened={openDrawer}
             close={() => setOpenDrawer(false)}
-            component={listPage}
+            component={mapId ? listPage : listPage2}
          />
       </>
    )

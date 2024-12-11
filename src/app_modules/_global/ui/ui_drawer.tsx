@@ -28,13 +28,13 @@ export default function UIGlobal_Drawer({
   opened: boolean;
   close: () => void;
   component:
-    | {
-        id: string;
-        name: string;
-        icon: string;
-        path: string;
-      }[]
-    | any[];
+  | {
+    id: string;
+    name: string;
+    icon: string;
+    path: string;
+  }[]
+  | any[];
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -77,21 +77,28 @@ export default function UIGlobal_Drawer({
           </Group>
           <SimpleGrid cols={component.length < 4 ? component.length : 4}>
             {component.map((e, i) => (
-              <Stack key={i} align="center" spacing={"xs"}>
+              <Stack key={i} align="center" spacing={"xs"}
+                onClick={() => {
+                  setPageId(e?.id);
+                  setIsLoading(true);
+                  router.push(e?.path, { scroll: false });
+                }}
+              >
                 <ActionIcon
                   variant="transparent"
                   c="white"
-                  onClick={() => {
-                    setPageId(e?.id);
-                    setIsLoading(true);
-                    router.push(e?.path, {scroll: false});
-                  }}
                 >
-                  {isLoading && e?.id === pageId ? (
+                  {/* PAKE LOADING */}
+                  {/* {isLoading && e?.id === pageId ? (
                     <ComponentGlobal_Loader />
                   ) : (
                     e?.icon
-                  )}
+                  )} */}
+
+
+                  {/* GA PAKE LOADING */}
+                  {e?.icon}
+
                 </ActionIcon>
                 <Text fz={"sm"} align="center" color="white">
                   {e?.name}

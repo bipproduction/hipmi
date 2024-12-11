@@ -27,7 +27,11 @@ export default function UploadFotoProfile({
             <Image
               style={{ maxHeight: 250 }}
               alt="Avatar"
-              src={image ? image : APIs.GET({ fileId: profile.imageId as any })}
+              src={
+                image
+                  ? image
+                  : APIs.GET({ fileId: profile.imageId as any, size: "400" })
+              }
             />
           </AspectRatio>
         </ComponentGlobal_BoxUploadImage>
