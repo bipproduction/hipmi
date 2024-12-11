@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.24](https://github.com/bipproduction/hipmi/compare/v1.2.23...v1.2.24) (2024-12-11)
+
+
+### Bug Fixes
+
+* drawer katalog ([eab293d](https://github.com/bipproduction/hipmi/commit/eab293dd35a6f061cfa4675679de1ce68f506c3c))
+* loading button tambah portofolio ([8823a01](https://github.com/bipproduction/hipmi/commit/8823a01b067928cbeea195402f2bb454df8e8bea))
+* pencegahan error ([afe8014](https://github.com/bipproduction/hipmi/commit/afe8014cc8b4ab7266f3c52918a6bc82bb62bc58))
+
 ## [1.2.23](https://github.com/bipproduction/hipmi/compare/v1.2.22...v1.2.23) (2024-12-11)
 
 ## [1.2.22](https://github.com/bipproduction/hipmi/compare/v1.2.21...v1.2.22) (2024-12-10)
