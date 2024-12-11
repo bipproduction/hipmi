@@ -16,6 +16,8 @@ import { useState } from "react";
 import funCreateNewProfile from "../../fun/fun_create_profile";
 import { MODEL_PROFILE } from "../../model/interface";
 import { validRegex } from "@/app_modules/katalog/component";
+import { envs } from "@/lib/envs";
+import { TokenProvider, TokenStorage } from "@/app/lib/token";
 
 export function Profile_ComponentCreateNewProfile({
   value,
@@ -54,7 +56,6 @@ export function Profile_ComponentCreateNewProfile({
         file: filePP,
         dirId: DIRECTORY_ID.profile_foto,
       });
-      // console.log("ini foto", uploadPhoto);
       if (!uploadPhoto.success) {
         setLoading(false);
         return ComponentGlobal_NotifikasiPeringatan(
@@ -62,36 +63,28 @@ export function Profile_ComponentCreateNewProfile({
         );
       }
 
-      if (uploadPhoto.success) {
-        const uploadBackground = await funGlobal_UploadToStorage({
-          file: fileBG,
-          dirId: DIRECTORY_ID.profile_background,
-        });
-        // console.log("ini background", uploadBackground);
-        if (!uploadBackground.success) {
-          setLoading(false);
-          return ComponentGlobal_NotifikasiPeringatan(
-            "Gagal upload background profile"
-          );
-        }
+      const uploadBackground = await funGlobal_UploadToStorage({
+        file: fileBG,
+        dirId: DIRECTORY_ID.profile_background,
+      });
+      if (!uploadBackground.success) {
+        setLoading(false);
+        return ComponentGlobal_NotifikasiPeringatan(
+          "Gagal upload background profile"
+        );
+      }
 
-        if (uploadBackground.success) {
-          const create = await funCreateNewProfile({
-            data: newData as any,
-            imageId: uploadPhoto.data.id,
-            imageBackgroundId: uploadBackground.data.id,
-          });
-          if (create.status === 201) {
-            ComponentGlobal_NotifikasiBerhasil(
-              "Berhasil membuat profile",
-              3000
-            );
-            router.push(RouterHome.main_home, { scroll: false });
-          } else {
-            ComponentGlobal_NotifikasiGagal(create.message);
-            setLoading(false);
-          }
-        }
+      const create = await funCreateNewProfile({
+        data: newData as any,
+        imageId: uploadPhoto.data.id,
+        imageBackgroundId: uploadBackground.data.id,
+      });
+      if (create.status === 201) {
+        ComponentGlobal_NotifikasiBerhasil("Berhasil membuat profile", 3000);
+        router.push(RouterHome.main_home, { scroll: false });
+      } else {
+        ComponentGlobal_NotifikasiGagal(create.message);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);

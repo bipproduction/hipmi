@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         },
       });
 
-      if (dataUser === null)
+      if (dataUser == null)
         return NextResponse.json(
           { success: false, message: "Nomor Belum Terdaftar" },
           { status: 404 }
@@ -31,37 +31,6 @@ export async function POST(req: Request) {
         encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
         user: dataUser as any,
       });
-
-      // const cekSessionUser = await prisma.userSession.findFirst({
-      //   where: {
-      //     userId: dataUser.id,
-      //   },
-      // });
-
-      // if (cekSessionUser !== null) {
-      //   await prisma.userSession.delete({
-      //     where: {
-      //       userId: dataUser.id,
-      //     },
-      //   });
-      // }
-
-      // try {
-      //   const createUserSession = await prisma.userSession.create({
-      //     data: {
-      //       token: token as string,
-      //       userId: dataUser.id,
-      //     },
-      //   });
-
-      //   if (!createUserSession)
-      //     return NextResponse.json(
-      //       { success: false, message: "Gagal Membuat Session" },
-      //       { status: 400 }
-      //     );
-      // } catch (error) {
-      //   console.log(error);
-      // }
 
       return NextResponse.json(
         {

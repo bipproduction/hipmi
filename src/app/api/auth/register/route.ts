@@ -12,47 +12,34 @@ export async function POST(req: Request) {
       },
     });
 
-    if (cekUsername)
+    try {
+      if (cekUsername)
+        return NextResponse.json(
+          { success: false, message: "Username sudah digunakan" },
+          { status: 400 }
+        );
+
+      const createUser = await prisma.user.create({
+        data: {
+          username: data.username,
+          nomor: data.nomor,
+          active: true,
+        },
+      });
+
+      const token = await sessionCreate({
+        sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
+        encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
+        user: createUser as any,
+      });
+
       return NextResponse.json(
-        { success: false, message: "Username sudah digunakan" },
-        { status: 400 }
+        { success: true, message: "Berhasil Login", data: createUser },
+        { status: 200 }
       );
-
-    const createUser = await prisma.user.create({
-      data: {
-        username: data.username,
-        nomor: data.nomor,
-        active: true,
-      },
-    });
-
-    const token = await sessionCreate({
-      sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
-      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
-      user: createUser as any,
-    });
-
-    // try {
-    //   const createUserSession = await prisma.userSession.create({
-    //     data: {
-    //       token: token as string,
-    //       userId: createUser.id,
-    //     },
-    //   });
-
-    //   if (!createUserSession)
-    //     return NextResponse.json(
-    //       { success: false, message: "Gagal Membuat Session" },
-    //       { status: 400 }
-    //     );
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    return NextResponse.json(
-      { success: true, message: "Berhasil Login", data: createUser },
-      { status: 200 }
-    );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return NextResponse.json(
