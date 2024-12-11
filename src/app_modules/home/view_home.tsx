@@ -1,21 +1,15 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { gs_count_ntf, gs_user_ntf } from "@/app/lib/global_state";
+import { useShallowEffect } from "@mantine/hooks";
+import { useAtom } from "jotai";
+import { useState } from "react";
 import UIGlobal_LayoutHeaderTamplate from "../_global/ui/ui_header_tamplate";
 import UIGlobal_LayoutTamplate from "../_global/ui/ui_layout_tamplate";
 import { MODEL_JOB } from "../job/model/interface";
-import {
-  ComponentHome_ButtonHeaderLeft,
-  ComponentHome_ButtonHeaderRight,
-} from "./component/button_header";
+import notifikasi_countUserNotifikasi from "../notifikasi/fun/count/fun_count_by_id";
+import { ComponentHome_ButtonHeaderLeft, ComponentHome_ButtonHeaderRight, } from "./component/button_header";
 import { Home_UiFooter, Home_UiView } from "./component/ui_home";
 import { MODEL_USER } from "./model/interface";
-import { useShallowEffect } from "@mantine/hooks";
-import { gs_count_ntf, gs_user_ntf } from "@/app/lib/global_state";
-import { useAtom } from "jotai";
-import notifikasi_countUserNotifikasi from "../notifikasi/fun/count/fun_count_by_id";
-import { Center, Text, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
 
 export default function HomeView({
   dataUser,
@@ -26,7 +20,6 @@ export default function HomeView({
   dataJob: MODEL_JOB[];
   countNotifikasi: number;
 }) {
-  const router = useRouter();
   const [countNtf, setCountNtf] = useState(countNotifikasi);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
   const [countLoadNtf, setCountLoadNtf] = useAtom(gs_count_ntf);
@@ -60,15 +53,11 @@ export default function HomeView({
     onLoad(loadNotif);
   }
 
-  // console.log(dataUser, "dipage")
 
   return (
     <>
       <UIGlobal_LayoutTamplate
         header={
-          // <Center>
-          //   <Title order={3}>HIPMI</Title>
-          // </Center>
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={

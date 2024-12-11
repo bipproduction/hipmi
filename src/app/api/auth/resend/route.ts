@@ -18,11 +18,11 @@ export async function POST(req: Request) {
 
       const sendWa = await res.json();
       if (sendWa.status !== "success")
-        return new Response(
-          JSON.stringify({
+        return NextResponse.json(
+          {
             success: false,
             message: "Nomor Whatsapp Tidak Aktif",
-          }),
+          },
           { status: 400 }
         );
 
@@ -34,32 +34,36 @@ export async function POST(req: Request) {
       });
 
       if (!createOtpId)
-        return new Response(
-          JSON.stringify({
+        return NextResponse.json(
+          {
             success: false,
             message: "Gagal Membuat Kode OTP",
-          }),
+          },
           { status: 400 }
         );
 
-      return new Response(
-        JSON.stringify({
+      return NextResponse.json(
+        {
           success: true,
           message: "Kode Verifikasi Dikirim",
           kodeId: createOtpId.id,
-        }),
+        },
         { status: 200 }
       );
     } catch (error) {
       console.log(error);
-      return new Response(
-        JSON.stringify({
+
+      return NextResponse.json(
+        {
           success: false,
           message: "Server Whatsapp Error !!",
-        }),
+        },
         { status: 500 }
       );
     }
   }
-  return NextResponse.json({ success: false });
+  return NextResponse.json(
+    { success: false, message: "Method Not Allowed" },
+    { status: 405 }
+  );
 }

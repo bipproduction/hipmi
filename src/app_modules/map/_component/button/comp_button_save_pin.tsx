@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { map_funCreatePin } from "../../fun/create/fun_create_pin";
 import { DIRECTORY_ID } from "@/app/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { useState } from "react";
 
 export function ComponentMap_ButtonSavePin({
   namePin,
@@ -26,7 +27,10 @@ export function ComponentMap_ButtonSavePin({
   file: File;
 }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false)
+
   async function onSavePin() {
+    setLoading(true)
     const uploadFileToStorage = await funGlobal_UploadToStorage({
       file: file,
       dirId: DIRECTORY_ID.map_image,
@@ -49,15 +53,19 @@ export function ComponentMap_ButtonSavePin({
     res.status === 200
       ? (ComponentGlobal_NotifikasiBerhasil(res.message), router.back())
       : ComponentGlobal_NotifikasiGagal(res.message);
+
+    setLoading(false)
   }
 
   return (
     <>
       <Button
+        loading={loading}
         my={"xl"}
         style={{ transition: "0.5s" }}
         disabled={namePin === "" || file === null ? true : false}
         radius={"xl"}
+        loaderPosition="center"
         bg={MainColor.yellow}
         color="yellow"
         c={"black"}

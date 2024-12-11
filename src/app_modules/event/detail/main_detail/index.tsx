@@ -1,11 +1,12 @@
 "use client";
 
+import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 import { IRealtimeData } from "@/app/lib/global_state";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
-import { Button, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { Button, Skeleton, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import ComponentEvent_DetailMainData from "../../component/detail/detail_main";
@@ -13,31 +14,43 @@ import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
 import { Event_countTotalPesertaById } from "../../fun/count/count_total_peserta_by_id";
 import { Event_funJoinEvent } from "../../fun/create/fun_join_event";
 import { Event_getListPesertaById } from "../../fun/get/get_list_peserta_by_id";
-import { MODEL_EVENT, MODEL_EVENT_PESERTA } from "../../model/interface";
 
 export default function Event_DetailMain({
-  dataEvent,
-  listPeserta,
   userLoginId,
-  isJoin,
   totalPeserta,
+  eventId,
 }: {
-  dataEvent: MODEL_EVENT;
-  listPeserta: MODEL_EVENT_PESERTA[];
   userLoginId: string;
-  isJoin: boolean;
   totalPeserta: number;
+  eventId: string;
 }) {
-  const router = useRouter();
   const [total, setTotal] = useState(totalPeserta);
-  const [peserta, setPeserta] = useState(listPeserta);
   const [isLoading, setLoading] = useState(false);
+  const [isJoinSuccess, setIsJoinSuccess] = useState<boolean | null>(null);
+  const [isNewPeserta, setIsNewPeserta] = useState<boolean | null>(null);
+
+  useShallowEffect(() => {
+    onCheckPeserta();
+  }, []);
+
+  async function onCheckPeserta() {
+    const res = await fetch(
+      API_RouteEvent.check_peserta({ eventId: eventId, userId: userLoginId })
+    );
+    const data = await res.json();
+    setIsJoinSuccess(data);
+  }
 
   return (
     <>
       <Stack spacing={"lg"} pb={"md"}>
-        <ComponentEvent_DetailMainData data={dataEvent} />
-        {isJoin ? (
+        <ComponentEvent_DetailMainData
+          eventId={eventId}
+        />
+
+        {isJoinSuccess == null ? (
+          <Skeleton radius={"xl"} h={40} />
+        ) : isJoinSuccess ? (
           <Button disabled radius={"xl"} color="green">
             Anda Telah Ikut Serta
           </Button>
@@ -50,10 +63,11 @@ export default function Event_DetailMain({
             onClick={() => {
               onJoin(
                 userLoginId,
-                dataEvent.id,
-                setPeserta,
+                eventId,
                 setTotal,
-                setLoading
+                setLoading,
+                setIsJoinSuccess,
+                setIsNewPeserta
               );
             }}
           >
@@ -61,7 +75,11 @@ export default function Event_DetailMain({
           </Button>
         )}
 
-        <ComponentEvent_ListPeserta listPeserta={listPeserta} total={total} />
+        <ComponentEvent_ListPeserta
+          total={total}
+          eventId={eventId}
+          isNewPeserta={isNewPeserta}
+        />
       </Stack>
     </>
   );
@@ -70,9 +88,11 @@ export default function Event_DetailMain({
 async function onJoin(
   userId: string,
   eventId: string,
-  setPeserta: any,
   setTotal: any,
-  setLoading: any
+  setLoading: any,
+  setIsJoinSuccess: (val: boolean | null) => void,
+  setIsNewPeserta: any
+
 ) {
   const body = {
     userId: userId,
@@ -84,7 +104,7 @@ async function onJoin(
   const res = await Event_funJoinEvent(body as any);
   if (res.status === 200) {
     const resPeserta = await Event_getListPesertaById(eventId);
-    setPeserta(resPeserta);
+    setIsNewPeserta(true);
 
     const resTotal = await Event_countTotalPesertaById(eventId);
     setTotal(resTotal);
@@ -111,7 +131,7 @@ async function onJoin(
         });
       }
     }
-
+    setIsJoinSuccess(true);
     setLoading(true);
     ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
   } else {

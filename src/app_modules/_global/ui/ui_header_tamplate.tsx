@@ -77,9 +77,18 @@ export default function UIGlobal_LayoutHeaderTamplate({
                   : router.push(routerLeft, { scroll: false });
               }}
             >
-              {isLoading ? (
+              {/* PAKE LOADING SAAT KLIK BACK */}
+              {/* {isLoading ? (
                 <Loader color={AccentColor.yellow} size={20} />
               ) : iconLeft ? (
+                iconLeft
+              ) : (
+                <IconChevronLeft />
+              )} */}
+              
+
+              {/* GA PAKE LOADING SAAT KLIK BACK */}
+              {iconLeft ? (
                 iconLeft
               ) : (
                 <IconChevronLeft />

@@ -30,6 +30,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
   const [loading, setLoading] = useState(false);
 
   async function onSubmit() {
+    setLoading(true);
     const porto = {
       namaBisnis: dataPortofolio.namaBisnis,
       masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
@@ -56,7 +57,6 @@ export function Portofolio_ComponentButtonSelanjutnya({
       fileId: uploadFileToStorage.data.id,
     });
     if (res.status === 201) {
-      setLoading(true);
       ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
       router.replace(RouterMap.create + res.id, { scroll: false });
     } else {

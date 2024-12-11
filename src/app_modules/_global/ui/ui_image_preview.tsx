@@ -28,7 +28,7 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

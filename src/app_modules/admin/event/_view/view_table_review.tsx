@@ -108,15 +108,15 @@ export default function AdminEvent_ComponentTableReview({
 
   async function onPublish({
     eventId,
-    tanggalSelesai,
+    tanggal,
   }: {
     eventId: string;
-    tanggalSelesai: Date;
+    tanggal: Date;
   }) {
     const checkStatus = await event_checkStatus({ id: eventId });
 
     if (checkStatus) {
-      if (moment(tanggalSelesai).diff(Date.now(), "minutes") < 0)
+      if (moment(tanggal).diff(Date.now(), "minutes") < 0)
         return ComponentGlobal_NotifikasiPeringatan(
           "Waktu acara telah lewat, Report untuk memberitahu user !"
         );
@@ -267,7 +267,7 @@ export default function AdminEvent_ComponentTableReview({
           </Text>
         </Center>
       </td>
-      
+
       <td>
         <Center w={400}>
           <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
@@ -286,7 +286,7 @@ export default function AdminEvent_ComponentTableReview({
               onClick={() =>
                 onPublish({
                   eventId: e.id,
-                  tanggalSelesai: e.tanggalSelesai,
+                  tanggal: e.tanggal,
                 })
               }
             >
@@ -297,7 +297,7 @@ export default function AdminEvent_ComponentTableReview({
               leftIcon={<IconBan />}
               radius={"xl"}
               onClick={async () => {
-                const checkStatus = await event_checkStatus({ id: eventId });
+                const checkStatus = await event_checkStatus({ id: e.id });
 
                 if (checkStatus) {
                   open();

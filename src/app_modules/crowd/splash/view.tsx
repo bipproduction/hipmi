@@ -10,7 +10,7 @@ export default function SplashCrowd() {
   const router = useRouter();
 
   useShallowEffect(() => {
-    setTimeout(() => router.push(RouterCrowd.main), 1000);
+    setTimeout(() => router.push(RouterCrowd.main), 500);
   }, []);
   return (
     <>

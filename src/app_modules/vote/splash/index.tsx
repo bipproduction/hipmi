@@ -24,7 +24,7 @@ export default function Vote_Splash() {
       setTabsStatus("Publish");
       setTabsRiwayat("Semua");
       router.replace(RouterVote.beranda);
-    }, 1000);
+    }, 500);
   }, []);
 
   return (

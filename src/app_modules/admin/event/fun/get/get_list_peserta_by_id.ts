@@ -22,6 +22,7 @@ export async function adminEvent_getListPesertaById({
       eventId: eventId,
     },
     select: {
+      isPresent: true,
       User: {
         include: {
           Profile: true,

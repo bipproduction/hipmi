@@ -43,7 +43,7 @@ export default function Validasi() {
   useShallowEffect(() => {
     const kodeId = localStorage.getItem("hipmi_auth_code_id");
     if (kodeId != null) {
-      onCheckAuthCode({ kodeId: kodeId as string, onSetData: setData });
+      onCheckAuthCode({ kodeId: kodeId as string });
     } else {
       console.log("code id not found");
     }
@@ -51,27 +51,25 @@ export default function Validasi() {
     if (triggerOtp) {
       const kodeId = localStorage.getItem("hipmi_auth_code_id");
       if (kodeId != null) {
-        onCheckAuthCode({ kodeId: kodeId as string, onSetData: setData });
+        onCheckAuthCode({ kodeId: kodeId as string });
       } else {
         console.log("code id not found");
       }
       setTriggerOtp(false);
     }
-  }, [triggerOtp, setData, setTriggerOtp]);
+  }, [triggerOtp]);
 
   async function onCheckAuthCode({
     kodeId,
-    onSetData,
   }: {
     kodeId: string;
-    onSetData: any;
   }) {
     const res = await fetch(`/api/auth/check?id=${kodeId}`);
     const result = await res.json();
 
-    onSetData({
-      nomor: result.data.nomor,
-      code: result.data.otp,
+    setData({
+      nomor: result.nomor,
+      code: result.otp,
     });
   }
 

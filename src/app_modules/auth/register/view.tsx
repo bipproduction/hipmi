@@ -41,7 +41,7 @@ export default function Register() {
     const res = await fetch(`/api/auth/check?id=${kodeId}`);
     const result = await res.json();
 
-    onSetData(result.data.nomor);
+    onSetData(result.nomor);
   }
 
   async function onRegistarsi() {
@@ -64,6 +64,11 @@ export default function Register() {
 
       const result = await res.json();
 
+      if (res.status === 400) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+      }
+
       if (res.status === 200) {
         localStorage.removeItem("hipmi_auth_code_id");
         ComponentGlobal_NotifikasiBerhasil(result.message);
@@ -72,11 +77,6 @@ export default function Register() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
-      }
-
-      if (res.status === 400) {
-        setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(result.message);
       }
     } catch (error) {
       console.log(error);

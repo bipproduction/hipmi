@@ -74,7 +74,7 @@ export function ComponentMap_DetailData({
               <IconPhoneCall />
             </Grid.Col>
             <Grid.Col span={"auto"}>
-              <Text>+{data?.Portofolio.tlpn}</Text>
+              <Text>{data?.Portofolio.tlpn}</Text>
             </Grid.Col>
           </Grid>
           <Grid>

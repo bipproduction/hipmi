@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib";
 import { sessionCreate } from "../../_lib/session_create";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const user = await prisma.user.findUnique({
@@ -12,10 +13,7 @@ export async function POST(req: Request) {
     },
   });
 
-  if (!user)
-    return new Response(
-      JSON.stringify({ success: false, message: "User not found" }), {status: 404}
-    );
+  if (!user) return NextResponse.json({ success: false }, { status: 404 });
 
   const token = await sessionCreate({
     sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
@@ -23,5 +21,5 @@ export async function POST(req: Request) {
     user: user as any,
   });
 
-  return new Response(JSON.stringify({ success: true, token }));
+  return NextResponse.json({ success: true, token });
 }

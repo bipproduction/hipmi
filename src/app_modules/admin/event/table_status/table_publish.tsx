@@ -50,20 +50,20 @@ function TableStatus({ listPublish }: { listPublish: any }) {
   const [eventId, setEventId] = useState("");
   const [loading, setLoading] = useState(false);
 
-   const [origin, setOrigin] = useState("");
+  const [origin, setOrigin] = useState("");
 
-   useShallowEffect(() => {
-     onLoadOrigin(setOrigin);
-     // if (typeof window !== "undefined") {
-     //   setOrigin(window.location.origin);
-     // }
-   }, [setOrigin]);
+  useShallowEffect(() => {
+    if (typeof window !== "undefined") {
+      // console.log(window.location.origin);
+      setOrigin(window.location.origin);
+    }
+  }, [setOrigin]);
 
-   async function onLoadOrigin(setOrigin: any) {
-     const res = await fetch("/api/origin-url");
-     const result = await res.json();
-     setOrigin(result.origin);
-   }
+  //  async function onLoadOrigin(setOrigin: any) {
+  //    const res = await fetch("/api/origin-url");
+  //    const result = await res.json();
+  //    setOrigin(result.origin);
+  //  }
 
   async function onSearch(s: string) {
     setSearch(s);
@@ -97,11 +97,38 @@ function TableStatus({ listPublish }: { listPublish: any }) {
         <td>
           <Center w={200}>
             <QRCode
+              id={e.id}
               style={{ height: 70, width: 70 }}
               value={`${origin}/dev/event/konfirmasi/${e.id}`}
             />
           </Center>
-        </td> 
+        </td>
+        <td>
+          <Center w={200}>
+            <input
+              type="button"
+              value="Download QR"
+              onClick={() => {
+                const svg: any = document.getElementById(e.id);
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const canvas = document.createElement("canvas");
+                const ctx: any = canvas.getContext("2d");
+                const img = new Image();
+                img.onload = () => {
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+                  ctx.drawImage(img, 0, 0);
+                  const pngFile = canvas.toDataURL("image/png");
+                  const downloadLink = document.createElement("a");
+                  downloadLink.download = `QRCode ${e.title}`;
+                  downloadLink.href = `${pngFile}`;
+                  downloadLink.click();
+                };
+                img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+              }}
+            />
+          </Center>
+        </td>
         <td>
           <Center w={200}>
             <Text>{e?.Author?.username}</Text>
@@ -224,6 +251,9 @@ function TableStatus({ listPublish }: { listPublish: any }) {
                 <tr>
                   <th>
                     <Center>QR Code</Center>
+                  </th>
+                  <th>
+                    <Center>Download QR</Center>
                   </th>
 
                   <th>

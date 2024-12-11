@@ -3,9 +3,12 @@
 import {
   ActionIcon,
   Avatar,
+  Badge,
   Center,
   Grid,
   Group,
+  Loader,
+  Skeleton,
   Stack,
   Text,
   Title,
@@ -26,55 +29,112 @@ import { funGlobal_CheckProfile } from "@/app_modules/_global/fun/get";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { useState } from "react";
 import moment from "moment";
+import { useShallowEffect } from "@mantine/hooks";
+import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
+import Event_ComponentSkeletonListPeserta from "../skeleton/comp_skeleton_list_peserta";
+import { ScrollOnly } from "next-scroll-loader";
+import { event_newGetListPesertaById } from "../../fun";
 
 export default function ComponentEvent_ListPeserta({
-  listPeserta,
   total,
+  eventId,
+  isNewPeserta,
 }: {
-  listPeserta: MODEL_EVENT_PESERTA[];
   total: number;
+  eventId: string;
+  isNewPeserta?: boolean | null;
 }) {
   const router = useRouter();
+  const [data, setData] = useState<MODEL_EVENT_PESERTA[] | null>(null);
+  const [activePage, setActivePage] = useState<number>(1);
+
+  useShallowEffect(() => {
+    onLoadPeserta();
+  }, []);
+
+  useShallowEffect(() => {
+    if (isNewPeserta !== null && isNewPeserta === true) {
+      onLoadPeserta();
+    }
+  }, [isNewPeserta]);
+
+  async function onLoadPeserta() {
+    const res = await fetch(
+      API_RouteEvent.list_peserta({ eventId: eventId, page: 1 })
+    );
+    const data = await res.json();
+    setData(data);
+  }
+
   return (
     <>
-      <ComponentGlobal_CardStyles>
-        <Stack spacing={"md"} px={"sm"}>
-          <Center>
-            <Title order={5}>Daftar Peserta ({total})</Title>
-          </Center>
-
-          {_.isEmpty(listPeserta) ? (
+      {data === null ? (
+        <Event_ComponentSkeletonListPeserta />
+      ) : (
+        <ComponentGlobal_CardStyles>
+          <Stack spacing={"md"} px={"sm"}>
             <Center>
-              <Text fz={"xs"} fw={"bold"}>
-                - Tidak ada peserta -
-              </Text>
+              <Title order={5}>Daftar Peserta ({total})</Title>
             </Center>
-          ) : (
-            <Stack>
-              {listPeserta.map((e, i) => (
-                <Stack key={i} spacing={"sm"}>
-                  {/* <ComponentGlobal_AvatarAndUsername
-                    profile={e?.User?.Profile as any}
-                    sizeAvatar={30}
-                    fontSize={"sm"}
 
-                  /> */}
+            {_.isEmpty(data) ? (
+              <Center>
+                <Text fz={"xs"} fw={"bold"}>
+                  - Tidak ada peserta -
+                </Text>
+              </Center>
+            ) : (
+              // <Stack>
+              //   {data.map((e, i) => (
+              //     <Stack key={i} spacing={"sm"}>
+              //       <ComponentEvent_AvatarAndUsername
+              //         profile={e?.User?.Profile as any}
+              //         sizeAvatar={30}
+              //         fontSize={"sm"}
+              //         tanggalMulai={e?.Event?.tanggal}
+              //         tanggalSelesai={e?.Event?.tanggalSelesai}
+              //         isPresent={e?.isPresent}
+              //       />
+
+              //       {/* <Divider /> */}
+              //     </Stack>
+              //   ))}
+              // </Stack>
+              <ScrollOnly
+                height="90vh"
+                renderLoading={() => (
+                  <Center mt={"lg"}>
+                    <Loader color={"yellow"} />
+                  </Center>
+                )}
+                data={data}
+                setData={setData as any}
+                moreData={async () => {
+                  const loadData = await event_newGetListPesertaById({
+                    eventId: eventId as string,
+                    page: activePage + 1,
+                  });
+
+                  setActivePage((val) => val + 1);
+
+                  return loadData;
+                }}
+              >
+                {(item) => (
                   <ComponentEvent_AvatarAndUsername
-                    profile={e?.User?.Profile as any}
+                    profile={item?.User?.Profile as any}
                     sizeAvatar={30}
                     fontSize={"sm"}
-                    tanggalMulai={e?.Event?.tanggal}
-                    tanggalSelesai={e?.Event?.tanggalSelesai}
-                    isPresent={e?.isPresent}
+                    tanggalMulai={item?.Event?.tanggal}
+                    tanggalSelesai={item?.Event?.tanggalSelesai}
+                    isPresent={item?.isPresent}
                   />
-
-                  {/* <Divider /> */}
-                </Stack>
-              ))}
-            </Stack>
-          )}
-        </Stack>
-      </ComponentGlobal_CardStyles>
+                )}
+              </ScrollOnly>
+            )}
+          </Stack>
+        </ComponentGlobal_CardStyles>
+      )}
     </>
   );
 }
@@ -112,11 +172,7 @@ function ComponentEvent_AvatarAndUsername({
     }
   }
 
-  const tglMulai = moment(tanggalMulai).diff(moment(), "minutes");
-
-  const tglSelesai = moment(tanggalSelesai).diff(moment(), "minutes");
-
-  // console.log("mulai:", tglMulai, "selesai:", tglSelesai);
+  const tglMulai = moment(tanggalMulai).diff(moment(), "minutes") < 0;
 
   return (
     <>
@@ -153,20 +209,16 @@ function ComponentEvent_AvatarAndUsername({
           </Stack>
         </Grid.Col>
 
-        {/* {component && (
-          <Grid.Col span={"auto"} style={{ minHeight: 50 }}>
-            <Stack justify="center" h={30}>
-              {component}
-            </Stack>
-          </Grid.Col>
-        )} */}
-
-        {tglMulai < 0 && (
-          <Grid.Col span={3} style={{ minHeight: 50 }}>
+        {tglMulai && (
+          <Grid.Col span={4} style={{ minHeight: 50 }}>
             <Group position="right">
               <Stack justify="center" h={30}>
                 <Text fw={"bold"} fz={fontSize ? fontSize : "sm"}>
-                  {isPresent ? "Hadir" : "-"}
+                  {isPresent ? (
+                    <Badge color="green">Hadir</Badge>
+                  ) : (
+                    <Badge>-</Badge>
+                  )}
                 </Text>
               </Stack>
             </Group>

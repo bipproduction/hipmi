@@ -34,11 +34,11 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
               <Title order={5} lineClamp={1}>
                 {data.title}
               </Title>
-              <Text align="right" fz={"sm"} lineClamp={1}>
+              {/* <Text align="right" fz={"sm"} lineClamp={1}>
                 {new Intl.DateTimeFormat("id-ID", {
                   dateStyle: "medium",
-                }).format(data.tanggal)}
-              </Text>
+                }).format(data?.tanggal)}
+              </Text> */}
             </Group>
 
             <Text fz={"sm"} lineClamp={2}>

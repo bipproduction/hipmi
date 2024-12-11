@@ -6,6 +6,8 @@ import {
   ComponentGlobal_BoxUploadImage,
   ComponentGlobal_ErrorInput,
 } from "@/app_modules/_global/component";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import {
   AspectRatio,
   Avatar,
@@ -22,7 +24,7 @@ import {
 } from "@mantine/core";
 import { IconAt, IconCamera, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
-import { validRegex } from "../../component";
+import { gmailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 
 export default function CreateProfile() {
@@ -83,8 +85,15 @@ export default function CreateProfile() {
                     const buffer = URL.createObjectURL(
                       new Blob([new Uint8Array(await files.arrayBuffer())])
                     );
-                    setImgPP(buffer);
-                    setFilePP(files);
+
+                    if (files.size > MAX_SIZE) {
+                      ComponentGlobal_NotifikasiPeringatan(
+                        "Ukuran file terlalu besar. Maksimal 2 MB."
+                      );
+                    } else {
+                      setImgPP(buffer);
+                      setFilePP(files);
+                    }
                   } catch (error) {
                     console.log(error);
                   }
@@ -138,8 +147,15 @@ export default function CreateProfile() {
                     const buffer = URL.createObjectURL(
                       new Blob([new Uint8Array(await files.arrayBuffer())])
                     );
-                    setImgBG(buffer);
-                    setFileBG(files);
+
+                    if (files.size > MAX_SIZE) {
+                      ComponentGlobal_NotifikasiPeringatan(
+                        "Ukuran file terlalu besar. Maksimal 2 MB."
+                      );
+                    } else {
+                      setImgBG(buffer);
+                      setFileBG(files);
+                    }
                   } catch (error) {
                     console.log(error);
                   }
@@ -189,7 +205,7 @@ export default function CreateProfile() {
             maxLength={100}
             placeholder="Contoh: User@gmail.com"
             error={
-              value.email.length > 0 && !value.email.match(validRegex) ? (
+              value.email.length > 0 && !value.email.match(gmailRegex) ? (
                 <ComponentGlobal_ErrorInput text="Invalid Email" />
               ) : (
                 ""

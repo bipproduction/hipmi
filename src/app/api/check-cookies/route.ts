@@ -8,7 +8,7 @@ export async function GET(req: Request) {
 
   if (!c || !c?.value || _.isEmpty(c?.value) || _.isUndefined(c?.value)) {
     return NextResponse.json({ success: false });
-    // return new Response(JSON.stringify({ success: false }));
+  
   }
   return NextResponse.json({ success: true });
 }

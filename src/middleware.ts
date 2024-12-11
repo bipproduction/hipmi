@@ -19,8 +19,12 @@ const middlewareConfig: MiddlewareConfig = {
   userPath: "/dev/home",
   publicRoutes: [
     "/",
+    "/api/upload",
+    "/api/validation",
     "/api/auth/*",
     "/api/origin-url",
+    "/api/user",
+    "/api/event/*",
     "/login",
     "/register",
     "/validasi",
@@ -29,6 +33,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/auth/api/login",
     "/aset/global/main_background.png",
     "/aset/logo/logo-hipmi.png",
+    "/api/new/*"
   ],
   encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
   sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,

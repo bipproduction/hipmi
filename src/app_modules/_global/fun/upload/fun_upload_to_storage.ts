@@ -54,6 +54,4 @@ export async function funGlobal_UploadToStorage({
     console.error("Error:", error);
     return { success: false, data: {} };
   }
-
-  return { success: false, data: { id: "" } };
 }

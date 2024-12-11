@@ -1,17 +1,26 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
-
+// Singleton PrismaClient untuk pengembangan
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined
+  __prisma__: PrismaClient | undefined;
+};
+
+export const prisma = globalForPrisma.__prisma__ ?? new PrismaClient({
+  // log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : [],
+});
+
+// Gunakan PrismaClient yang sama jika sudah ada
+if (process.env.NODE_ENV !== 'production') {
+  if (!globalForPrisma.__prisma__) {
+    console.log('PrismaClient initialized in development mode');
+  }
+  globalForPrisma.__prisma__ = prisma;
 }
 
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+process.on('SIGINT', async () => {
+  console.log('Disconnecting PrismaClient...');
+  await prisma.$disconnect();
+  process.exit(0);
+});
 
-export default prisma
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+export default prisma;

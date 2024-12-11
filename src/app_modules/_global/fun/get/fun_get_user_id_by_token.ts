@@ -7,13 +7,16 @@ import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 export async function funGetUserIdByToken() {
-  const c = cookies().get(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!);
+  const SESSION_KEY = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
+  // console.log("SESSION_KEY", SESSION_KEY);
+  const c = cookies().get("hipmi-key");
 
   const cekUser = await decrypt({
     token: c?.value as string,
     encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
   });
 
+  // console.log("userid" , cekUser?.id)
 
   //  const token = JSON.parse(
   //    await unsealData(c?.value as string, {

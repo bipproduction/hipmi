@@ -1,13 +1,14 @@
 {
   "name": "hipmi",
-  "version": "1.2.16",
+  "version": "1.2.23",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts --yes"
   },
   "scripts": {
     "dev": "bun --bun run next dev --experimental-https",
-    "build": "bun --bun run next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=2048' bun --bun run next build",
+    "build:dev": "bun --bun run next build",
     "start": "bun --bun run next start",
     "lint": "bun --bun run next lint",
     "ver": "bunx commit-and-tag-version -- --prerelease"
@@ -39,6 +40,7 @@
     "@tiptap/pm": "^2.2.3",
     "@tiptap/react": "^2.2.3",
     "@tiptap/starter-kit": "^2.2.3",
+    "@types/bun": "^1.1.14",
     "@types/lodash": "^4.17.4",
     "@types/mapbox-gl": "^3.4.0",
     "@types/node": "20.4.5",
@@ -47,6 +49,7 @@
     "@types/uuid": "^9.0.4",
     "autoprefixer": "10.4.14",
     "bufferutil": "^4.0.8",
+    "bun": "^1.1.38",
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.5",
     "echarts": "^5.4.3",
