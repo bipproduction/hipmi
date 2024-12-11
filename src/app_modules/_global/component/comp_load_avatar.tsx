@@ -17,7 +17,7 @@ export function ComponentGlobal_LoaderAvatar({
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId, size: imageSize });
+  const url = APIs.GET({ fileId: fileId, size: imageSize ? imageSize : "400" });
 
   useShallowEffect(() => {
     onLoadImage();

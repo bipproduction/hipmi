@@ -11,6 +11,9 @@ import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
 import { MODEL_PORTOFOLIO } from "../../model/interface";
 import { ComponentPortofolio_ButtonEditLogoBisnis } from "../../component";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function Portofolio_EditLogoBisnis({
   dataPorto,
@@ -47,8 +50,15 @@ export default function Portofolio_EditLogoBisnis({
                     const buffer = URL.createObjectURL(
                       new Blob([new Uint8Array(await files.arrayBuffer())])
                     );
-                    setImg(buffer);
-                    setFile(files);
+
+                    if (files.size > MAX_SIZE) {
+                      ComponentGlobal_NotifikasiPeringatan(
+                        PemberitahuanMaksimalFile
+                      );
+                    } else {
+                      setImg(buffer);
+                      setFile(files);
+                    }
                   } catch (error) {
                     console.log(error);
                   }

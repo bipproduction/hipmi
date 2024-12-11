@@ -96,8 +96,8 @@ export default function Portofolio_UiMapNew({ mapboxToken }: { mapboxToken: stri
                                  <Avatar
                                     src={
                                        dataPorto?.pinId === null
-                                          ? APIs.GET({ fileId: String(dataPorto?.logoId) })
-                                          : APIs.GET({ fileId: String(dataPorto?.pinId) })
+                                          ? APIs.GET({ fileId: String(dataPorto?.logoId), size: "300" })
+                                          : APIs.GET({ fileId: String(dataPorto?.pinId), size: "300" })
                                     }
                                     alt="Logo"
                                     style={{

@@ -102,8 +102,8 @@ function MapView({
             <Avatar
               src={
                 data.pinId === null
-                  ? APIs.GET({ fileId: logoId })
-                  : APIs.GET({ fileId: data.pinId })
+                  ? APIs.GET({ fileId: logoId , size: "300"})
+                  : APIs.GET({ fileId: data.pinId, size: "300" })
               }
               alt="Logo"
               style={{

@@ -23,7 +23,7 @@ export function UIGlobal_NotUserImagePreview({ fileId }: { fileId: string }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

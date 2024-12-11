@@ -1,2 +1,3 @@
-// Maksimal ukuran file dalam byte (2 MB)
-export const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+// Maksimal ukuran file dalam byte (3 MB)
+export const MAX_SIZE = 3 * 1024 * 1024; // 3 MB
+export const PemberitahuanMaksimalFile = "Ukuran file terlalu besar. Maksimal 3 MB.";

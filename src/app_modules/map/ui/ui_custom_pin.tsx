@@ -27,6 +27,8 @@ import { defaultMapZoom } from "../lib/default_lat_long";
 import { MODEL_MAP } from "../lib/interface";
 import { APIs, DIRECTORY_ID } from "@/app/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export function UiMap_CustomPin({
   dataMap,
@@ -72,8 +74,8 @@ export function UiMap_CustomPin({
                 radius={"100%"}
                 src={
                   data.pinId === null
-                    ? APIs.GET({ fileId: data.Portofolio.logoId })
-                    : APIs.GET({ fileId: data.pinId })
+                    ? APIs.GET({ fileId: data.Portofolio.logoId, size: "300" })
+                    : APIs.GET({ fileId: data.pinId, size: "300" })
                 }
                 style={{
                   border: `2px solid ${AccentColor.skyblue}`,
@@ -90,9 +92,9 @@ export function UiMap_CustomPin({
                   const buffer = URL.createObjectURL(
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
-                  if (files.size > 2000000) {
+                  if (files.size > MAX_SIZE) {
                     ComponentGlobal_NotifikasiPeringatan(
-                      "Maaf, Ukuran file terlalu besar, maximum 2mb",
+                      PemberitahuanMaksimalFile,
                       3000
                     );
                   } else {
@@ -155,8 +157,8 @@ export function UiMap_CustomPin({
                 imgPin
                   ? imgPin
                   : data.pinId === null
-                    ? APIs.GET({ fileId: data.Portofolio.logoId })
-                    : APIs.GET({ fileId: data.pinId })
+                    ? APIs.GET({ fileId: data.Portofolio.logoId, size: "300" })
+                    : APIs.GET({ fileId: data.pinId, size: "300" })
               }
               style={{
                 border: `2px solid ${AccentColor.softblue}`,

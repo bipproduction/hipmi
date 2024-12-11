@@ -94,8 +94,8 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
                                     }}
                                     src={
                                        e.pinId === null
-                                          ? APIs.GET({ fileId: e.logoId })
-                                          : APIs.GET({ fileId: e.pinId })
+                                          ? APIs.GET({ fileId: e.logoId, size: "300" })
+                                          : APIs.GET({ fileId: e.pinId, size: "300" })
                                     }
                                  />
                               </Stack>
