@@ -1,14 +1,10 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { MODEL_PROFILE } from "../model/interface";
-import _ from "lodash";
-import { v4 } from "uuid";
-import fs from "fs";
-import { revalidatePath } from "next/cache";
 import { RouterHome } from "@/app/lib/router_hipmi/router_home";
-import { Prisma } from "@prisma/client";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
+import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export default async function funCreateNewProfile({
   data,
@@ -19,33 +15,53 @@ export default async function funCreateNewProfile({
   imageId: string;
   imageBackgroundId: string;
 }) {
-  const userLoginId = await funGetUserIdByToken();
+  try {
+    const userLoginId = await funGetUserIdByToken();
 
-  const findEmail = await prisma.profile.findUnique({
-    where: {
-      email: data.email,
-    },
-  });
+    if (!userLoginId) {
+      return { status: 400, message: "User tidak terautentikasi" }; // Validasi user login
+    }
 
-  if (findEmail) return { status: 400, message: "Email telah digunakan" };
+    const findEmail = await prisma.profile.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
 
-  const createProfile = await prisma.profile.create({
-    data: {
-      userId: userLoginId,
-      name: data.name,
-      email: data.email,
-      alamat: data.alamat,
-      jenisKelamin: data.jenisKelamin,
-      imageId: imageId,
-      imageBackgroundId: imageBackgroundId,
-    },
-  });
+    if (findEmail) {
+      return { status: 400, message: "Email telah digunakan" };
+    }
 
-  if (!createProfile) return { status: 400, message: "Gagal membuat profile" };
-  revalidatePath(RouterHome.main_home);
+    const createProfile = await prisma.profile.create({
+      data: {
+        userId: userLoginId,
+        name: data.name,
+        email: data.email,
+        alamat: data.alamat,
+        jenisKelamin: data.jenisKelamin,
+        imageId: imageId,
+        imageBackgroundId: imageBackgroundId,
+      },
+    });
 
-  return {
-    status: 201,
-    message: "Berhasil",
-  };
+    if (!createProfile) {
+      return { status: 400, message: "Gagal membuat profile" };
+    }
+
+    // Revalidate cache halaman home
+    try {
+      revalidatePath(RouterHome.main_home);
+    } catch (cacheError) {
+      console.error("Cache revalidation failed:", cacheError);
+      // Tidak membuat fungsi gagal, cukup log error cache
+    }
+
+    return {
+      status: 201,
+      message: "Berhasil",
+    };
+  } catch (error) {
+    console.error("Error creating profile:", error);
+    return { status: 500, message: "Terjadi kesalahan pada server" };
+  }
 }

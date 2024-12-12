@@ -4,6 +4,7 @@ import { Button, FileButton } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import { MainColor } from "../color";
 import { MAX_SIZE } from "../lib";
+import { PemberitahuanMaksimalFile } from "../lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
 
 export function ComponentGlobal_ButtonUploadFileImage({
@@ -22,9 +23,7 @@ export function ComponentGlobal_ButtonUploadFileImage({
           );
 
           if (files.size > MAX_SIZE) {
-            ComponentGlobal_NotifikasiPeringatan(
-              "Ukuran file terlalu besar. Maksimal 2 MB."
-            );
+            ComponentGlobal_NotifikasiPeringatan(PemberitahuanMaksimalFile);
           } else {
             onSetFile(files);
             onSetImage(buffer);

@@ -33,6 +33,8 @@ import Map, {
 import { ComponentMap_ButtonUpdateDataMap } from "../_component";
 import { defaultMapZoom } from "../lib/default_lat_long";
 import { MODEL_MAP } from "../lib/interface";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export function UiMap_EditMap({
   mapboxToken,
@@ -85,8 +87,8 @@ export function UiMap_EditMap({
             <Avatar
               src={
                 data.pinId === null
-                  ? APIs.GET({ fileId: dataMap.Portofolio.logoId })
-                  : APIs.GET({ fileId: data.pinId })
+                  ? APIs.GET({ fileId: dataMap.Portofolio.logoId, size: "400" })
+                  : APIs.GET({ fileId: data.pinId, size: "400" })
               }
               alt="Logo"
               style={{
@@ -141,44 +143,6 @@ export function UiMap_EditMap({
             )}
           </ComponentGlobal_BoxUploadImage>
 
-          {/* {img ? (
-            <AspectRatio ratio={1 / 1} mah={300}>
-              <Paper
-                style={{
-                  border: `2px solid ${AccentColor.blue}`,
-                  backgroundColor: AccentColor.darkblue,
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <Image
-                  radius={"sm"}
-                  alt="Photo"
-                  src={img ? img : "/aset/no-img.png"}
-                  maw={250}
-                />
-              </Paper>
-            </AspectRatio>
-          ) : (
-            <AspectRatio ratio={1 / 1} mah={300}>
-              <Paper
-                style={{
-                  border: `2px solid ${AccentColor.blue}`,
-                  backgroundColor: AccentColor.darkblue,
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <Image
-                  radius={"sm"}
-                  alt="Photo"
-                  src={RouterMap.api_foto + data.imageId}
-                  maw={250}
-                />
-              </Paper>
-            </AspectRatio>
-          )} */}
-
           <Center>
             <FileButton
               onChange={async (files: any | null) => {
@@ -186,9 +150,9 @@ export function UiMap_EditMap({
                   const buffer = URL.createObjectURL(
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
-                  if (files.size > 2000000) {
+                  if (files.size > MAX_SIZE) {
                     ComponentGlobal_NotifikasiPeringatan(
-                      "Maaf, Ukuran file terlalu besar, maximum 2mb",
+                      PemberitahuanMaksimalFile,
                       3000
                     );
                   } else {

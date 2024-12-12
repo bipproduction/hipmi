@@ -13,7 +13,7 @@ export function Admin_ComponentPreviewImageAdmin({
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

@@ -22,6 +22,9 @@ import { IconCamera } from "@tabler/icons-react";
 import _ from "lodash";
 import { useState } from "react";
 import { Portofolio_ComponentButtonSelanjutnya } from "../component";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function CreatePortofolio({
   bidangBisnis,
@@ -184,8 +187,16 @@ export default function CreatePortofolio({
                   const buffer = URL.createObjectURL(
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
-                  setImg(buffer);
-                  setFile(files);
+                  if (files.size > MAX_SIZE) {
+                    setImg(null);
+                    setFile(null);
+                    ComponentGlobal_NotifikasiPeringatan(
+                      PemberitahuanMaksimalFile
+                    );
+                  } else {
+                    setImg(buffer);
+                    setFile(files);
+                  }
                 } catch (error) {
                   console.log(error);
                 }

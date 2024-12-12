@@ -16,7 +16,7 @@ import {
   Stack,
   Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import _ from "lodash";
@@ -29,6 +29,8 @@ import Map, {
 } from "react-map-gl";
 import { ComponentMap_ButtonSavePin } from "../_component";
 import { defaultLatLong, defaultMapZoom } from "../lib/default_lat_long";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export function UiMap_CreatePin({
   mapboxToken,
@@ -141,9 +143,12 @@ export function UiMap_CreatePin({
                   const buffer = URL.createObjectURL(
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
-                  if (files.size > 2000000) {
+
+                  if (files.size > MAX_SIZE) {
+                    setImg(null);
+                    setFile(null);
                     ComponentGlobal_NotifikasiPeringatan(
-                      "Maaf, Ukuran file terlalu besar, maximum 2mb",
+                      PemberitahuanMaksimalFile,
                       3000
                     );
                   } else {

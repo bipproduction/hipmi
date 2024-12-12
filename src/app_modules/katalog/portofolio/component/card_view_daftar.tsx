@@ -43,11 +43,16 @@ export function ComponentPortofolio_DaftarBoxView({
           </Stack>
 
           <Stack>
-            {isLoading ? (
+            {/* PAKE LOADING */}
+            {/* {isLoading ? (
               <ComponentGlobal_Loader />
             ) : (
               <IconCaretRight color="white" size={25} />
-            )}
+            )} */}
+
+
+            {/* GA PAKE LOADING */}
+            <IconCaretRight color="white" size={25} />
           </Stack>
         </Group>
       </Paper>

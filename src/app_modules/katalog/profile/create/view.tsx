@@ -26,6 +26,7 @@ import { IconAt, IconCamera, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
 import { gmailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export default function CreateProfile() {
   const [filePP, setFilePP] = useState<File | null>(null);
@@ -88,7 +89,7 @@ export default function CreateProfile() {
 
                     if (files.size > MAX_SIZE) {
                       ComponentGlobal_NotifikasiPeringatan(
-                        "Ukuran file terlalu besar. Maksimal 2 MB."
+                        PemberitahuanMaksimalFile
                       );
                     } else {
                       setImgPP(buffer);
@@ -150,7 +151,7 @@ export default function CreateProfile() {
 
                     if (files.size > MAX_SIZE) {
                       ComponentGlobal_NotifikasiPeringatan(
-                        "Ukuran file terlalu besar. Maksimal 2 MB."
+                        PemberitahuanMaksimalFile
                       );
                     } else {
                       setImgBG(buffer);

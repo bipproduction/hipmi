@@ -24,19 +24,10 @@ function ButtonAction({ jobId }: { jobId: string }) {
   const [origin, setOrigin] = useState("");
 
   useShallowEffect(() => {
-    onLoadOrigin(setOrigin);
-    // if (typeof window !== "undefined") {
-    //   setOrigin(window.location.origin);
-    // }
-
-  }, [setOrigin]);
-
-  async function onLoadOrigin(setOrigin: any) {
-    const res = await fetch("/api/origin-url");
-    const result = await res.json();
-    console.log(result);
-    setOrigin(result.origin);
-  }
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   return (
     <>

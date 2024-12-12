@@ -16,7 +16,7 @@ export function ComponentGlobal_LoadImageLandscape({
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

@@ -17,7 +17,7 @@ export function ComponentMap_LoadImageMap({
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId, size: size });
+  const url = APIs.GET({ fileId: fileId, size: size ? size : "400" });
 
   useShallowEffect(() => {
     onLoadImage();

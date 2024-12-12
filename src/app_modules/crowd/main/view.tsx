@@ -32,7 +32,7 @@ export default function MainCrowd() {
           </AspectRatio> */}
           <Image
             alt="Logo"
-            src={"/aset/investasi/logo-crowd-panjang.png"}
+            src={"/aset/investasi/logo-crowd-panjang-new.png"}
             mah={"100%"}
             styles={{
               image: {

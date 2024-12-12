@@ -15,7 +15,7 @@ export function ComponentGlobal_LoadImageCustom({
   height: number;
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();
