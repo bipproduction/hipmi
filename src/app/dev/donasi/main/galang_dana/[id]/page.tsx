@@ -1,4 +1,4 @@
-import { PostingDonasi } from "@/app_modules/donasi";
+import { GalangDanaDonasiNew, PostingDonasi } from "@/app_modules/donasi";
 import { donasi_funGetAllStatusById } from "@/app_modules/donasi/fun";
 import { donasi_funMasterStatusDonasi } from "@/app_modules/donasi/fun/master/get_status_donasi";
 
@@ -18,6 +18,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         dataStatus={dataDonasi}
         listStatus={listStatus}
       />
+
+
+      {/* NANTI AJA LANJUT -- KEJAR TAYANG :) */}
+      {/* <GalangDanaDonasiNew listStatus={listStatus}/> */}
     </>
   );
 }

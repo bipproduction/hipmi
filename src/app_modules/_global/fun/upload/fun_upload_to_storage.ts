@@ -1,6 +1,4 @@
-import { ServerEnv } from "@/app/lib/server_env";
 import { TokenStorage } from "@/app/lib/token";
-import { envs } from "@/lib/envs";
 
 export async function funGlobal_UploadToStorage({
   file,
@@ -24,9 +22,19 @@ export async function funGlobal_UploadToStorage({
     "text/plain",
   ];
 
-  if (!allowedMimeTypes.includes(file.type)) console.log("File tidak sesuai");
+  // if (!allowedMimeTypes.includes(file.type)) console.log("File tidak sesuai");
+  if (!allowedMimeTypes.includes(file.type)) {
+    console.error("File tidak sesuai");
+    return { success: false, message: "File type not allowed" };
+  }
 
-  if (file.size > 100 * 1024 * 1024) console.log("File terlalu besar");
+  if (file.size > 100 * 1024 * 1024) {
+    console.error("File terlalu besar");
+    return { success: false, message: "File size exceeds limit" };
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // Timeout 30 detik
 
   const formData = new FormData();
   formData.append("file", file);
@@ -39,19 +47,23 @@ export async function funGlobal_UploadToStorage({
       headers: {
         Authorization: `Bearer ${Env_WS_APIKEY}`,
       },
+      signal: controller.signal,
     });
 
-    const dataRes = await res.json();
+    clearTimeout(timeoutId); // Bersihkan timeout jika selesai tepat waktu
 
     if (res.ok) {
+      const dataRes = await res.json();
       return { success: true, data: dataRes.data };
     } else {
       const errorText = await res.text();
       console.error("Error:", errorText);
-      return { success: false, data: {} };
+      return { success: false, message: errorText };
     }
   } catch (error) {
+    clearTimeout(timeoutId); //
+
     console.error("Error:", error);
-    return { success: false, data: {} };
+    return { success: false, message: "An unexpected error occurred" };
   }
 }

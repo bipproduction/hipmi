@@ -9,7 +9,6 @@ export async function donasi_checkStatus({ id }: { id: string }) {
     },
   });
 
-  console.log(checkStatus?.donasiMaster_StatusDonasiId, "ini status nya")
 
   if (checkStatus?.donasiMaster_StatusDonasiId == "2") return true;
   return false;

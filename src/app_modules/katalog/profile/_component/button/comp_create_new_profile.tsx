@@ -56,10 +56,8 @@ export function Profile_ComponentCreateNewProfile({
         dirId: DIRECTORY_ID.profile_foto,
       });
       if (!uploadPhoto.success) {
-        setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan(
-          "Gagal upload foto profile"
-        );
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
+        return;
       }
 
       const uploadBackground = await funGlobal_UploadToStorage({
@@ -67,10 +65,8 @@ export function Profile_ComponentCreateNewProfile({
         dirId: DIRECTORY_ID.profile_background,
       });
       if (!uploadBackground.success) {
-        setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan(
-          "Gagal upload background profile"
-        );
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload background profile");
+        return;
       }
 
       const create = await funCreateNewProfile({
@@ -78,15 +74,24 @@ export function Profile_ComponentCreateNewProfile({
         imageId: uploadPhoto.data.id,
         imageBackgroundId: uploadBackground.data.id,
       });
+
       if (create.status === 201) {
         ComponentGlobal_NotifikasiBerhasil("Berhasil membuat profile", 3000);
         router.push(RouterHome.main_home, { scroll: false });
-      } else {
-        ComponentGlobal_NotifikasiGagal(create.message);
-        setLoading(false);
       }
+
+      if (create.status === 400) {
+        ComponentGlobal_NotifikasiGagal(create.message);
+      }
+
+      if (create.status === 500) {
+        ComponentGlobal_NotifikasiGagal(create.message);
+      }
+      
     } catch (error) {
-      console.log(error);
+      console.log("Terjadi kesalahan", error);
+    } finally {
+      setLoading(false);
     }
   }
 

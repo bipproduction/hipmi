@@ -115,11 +115,15 @@ function CardView({ data }: { data: MODEL_USER }) {
           <Group position="right" align="center" h={"100%"}>
             <Center>
               <ActionIcon variant="transparent">
-                {loading ? (
+                {/* PAKE LOADING */}
+                {/* {loading ? (
                   <ComponentGlobal_Loader />
                 ) : (
                   <IconChevronRight color="white" />
-                )}
+                )} */}
+
+                {/* GA PAKE LOADING */}
+                <IconChevronRight color="white" />
               </ActionIcon>
             </Center>
           </Group>

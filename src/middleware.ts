@@ -20,6 +20,7 @@ const middlewareConfig: MiddlewareConfig = {
   publicRoutes: [
     "/",
     "/api/upload",
+    "/api/job/*",
     "/api/validation",
     "/api/auth/*",
     "/api/origin-url",
