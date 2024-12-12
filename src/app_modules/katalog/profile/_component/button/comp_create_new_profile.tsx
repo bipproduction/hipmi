@@ -19,12 +19,16 @@ import { MODEL_PROFILE } from "../../model/interface";
 
 export function Profile_ComponentCreateNewProfile({
   value,
-  filePP,
-  fileBG,
+  // filePP,
+  // fileBG,
+  fotoProfileId,
+  backgroundProfileId,
 }: {
   value: MODEL_PROFILE;
-  filePP: File;
-  fileBG: File;
+  // filePP: File;
+  // fileBG: File;
+  fotoProfileId: string;
+  backgroundProfileId: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -41,9 +45,9 @@ export function Profile_ComponentCreateNewProfile({
     if (!newData.email.match(gmailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
-    if (filePP == null)
+    if (fotoProfileId == "")
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi foto profile");
-    if (fileBG == null)
+    if (backgroundProfileId == null)
       return ComponentGlobal_NotifikasiPeringatan(
         "Lengkapi background profile"
       );
@@ -51,28 +55,28 @@ export function Profile_ComponentCreateNewProfile({
     try {
       setLoading(true);
 
-      const uploadPhoto = await funGlobal_UploadToStorage({
-        file: filePP,
-        dirId: DIRECTORY_ID.profile_foto,
-      });
-      if (!uploadPhoto.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
-        return;
-      }
+      // const uploadPhoto = await funGlobal_UploadToStorage({
+      //   file: filePP,
+      //   dirId: DIRECTORY_ID.profile_foto,
+      // });
+      // if (!uploadPhoto.success) {
+      //   ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
+      //   return;
+      // }
 
-      const uploadBackground = await funGlobal_UploadToStorage({
-        file: fileBG,
-        dirId: DIRECTORY_ID.profile_background,
-      });
-      if (!uploadBackground.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal upload background profile");
-        return;
-      }
+      // const uploadBackground = await funGlobal_UploadToStorage({
+      //   file: fileBG,
+      //   dirId: DIRECTORY_ID.profile_background,
+      // });
+      // if (!uploadBackground.success) {
+      //   ComponentGlobal_NotifikasiPeringatan("Gagal upload background profile");
+      //   return;
+      // }
 
       const create = await funCreateNewProfile({
         data: newData as any,
-        imageId: uploadPhoto.data.id,
-        imageBackgroundId: uploadBackground.data.id,
+        imageId: fotoProfileId,
+        imageBackgroundId: backgroundProfileId,
       });
 
       if (create.status === 201) {

@@ -1,12 +1,15 @@
 "use client";
 
+import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_BoxUploadImage,
   ComponentGlobal_ErrorInput,
 } from "@/app_modules/_global/component";
+import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import {
   AspectRatio,
@@ -26,13 +29,14 @@ import { IconAt, IconCamera, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
 import { gmailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export default function CreateProfile() {
   const [filePP, setFilePP] = useState<File | null>(null);
   const [imgPP, setImgPP] = useState<any | null>();
   const [fileBG, setFileBG] = useState<File | null>(null);
   const [imgBG, setImgBG] = useState<any | null>();
+  const [fotoProfileId, setFotoProfileId] = useState("");
+  const [backgroundProfileId, setBackgroundProfileId] = useState("");
 
   const [value, setValue] = useState({
     name: "",
@@ -92,8 +96,20 @@ export default function CreateProfile() {
                         PemberitahuanMaksimalFile
                       );
                     } else {
-                      setImgPP(buffer);
-                      setFilePP(files);
+                      const uploadPhoto = await funGlobal_UploadToStorage({
+                        file: files,
+                        dirId: DIRECTORY_ID.profile_foto,
+                      });
+
+                      if (uploadPhoto.success) {
+                        setFotoProfileId(uploadPhoto.data.id);
+                        setImgPP(buffer);
+                        setFilePP(files);
+                      } else {
+                        ComponentGlobal_NotifikasiPeringatan(
+                          "Gagal upload foto profile"
+                        );
+                      }
                     }
                   } catch (error) {
                     console.log(error);
@@ -154,8 +170,20 @@ export default function CreateProfile() {
                         PemberitahuanMaksimalFile
                       );
                     } else {
-                      setImgBG(buffer);
-                      setFileBG(files);
+                      const uploadBackground = await funGlobal_UploadToStorage({
+                        file: files,
+                        dirId: DIRECTORY_ID.profile_background,
+                      });
+
+                      if (uploadBackground.success) {
+                        setBackgroundProfileId(uploadBackground.data.id);
+                        setImgBG(buffer);
+                        setFileBG(files);
+                      } else {
+                        ComponentGlobal_NotifikasiPeringatan(
+                          "Gagal upload background profile"
+                        );
+                      }
                     }
                   } catch (error) {
                     console.log(error);
@@ -256,8 +284,10 @@ export default function CreateProfile() {
 
           <Profile_ComponentCreateNewProfile
             value={value as any}
-            filePP={filePP as any}
-            fileBG={fileBG as any}
+            // filePP={filePP as any}
+            // fileBG={fileBG as any}
+            fotoProfileId={fotoProfileId}
+            backgroundProfileId={backgroundProfileId}
           />
         </Stack>
       </Stack>

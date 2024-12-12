@@ -121,10 +121,7 @@ export default function MainDonasiNew() {
                         }}
                      >
                         {(item) => (
-                           <ComponentDonasi_CardPublishNew
-                              data={item as any}
-                              path={RouterDonasi.detail_main}
-                           />
+                           <ComponentDonasi_CardPublishNew data={item as any} />
                         )}
                      </ScrollOnly>
                   )

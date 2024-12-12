@@ -74,11 +74,15 @@ export default function MainCrowd() {
               </Grid.Col>
               <Grid.Col span={2}>
                 <Stack h={"100%"} justify="center" align="center">
-                  {loadingInv ? (
+                  {/* PAKE LOADING */}
+                  {/* {loadingInv ? (
                     <ComponentGlobal_Loader />
                   ) : (
                     <IconChevronRight />
-                  )}
+                  )} */}
+
+                  {/* GA PAKE LOADING */}
+                  <IconChevronRight />
                 </Stack>
               </Grid.Col>
             </Grid>
@@ -114,11 +118,15 @@ export default function MainCrowd() {
               </Grid.Col>
               <Grid.Col span={2}>
                 <Stack h={"100%"} justify="center" align="center">
-                  {loadingDon ? (
+                  {/* PAKE LOADING */}
+                  {/* {loadingDon ? (
                     <ComponentGlobal_Loader />
                   ) : (
                     <IconChevronRight />
-                  )}
+                  )} */}
+
+                  {/* GA PAKE LOADINGF */}
+                  <IconChevronRight />
                 </Stack>
               </Grid.Col>
             </Grid>

@@ -40,11 +40,15 @@ export default function ComponentGlobal_CreateButton({
           router.push(path);
         }}
       >
-        {isLoading ? (
+        {/* PAKE LOADING */}
+        {/* {isLoading ? (
           <Loader color={AccentColor.blue} size={25} />
         ) : (
           <IconPencilPlus color="white" />
-        )}
+        )} */}
+
+        {/* GA PAKE LOADING */}
+        <IconPencilPlus color="white" />
       </ActionIcon>
     </>
   );

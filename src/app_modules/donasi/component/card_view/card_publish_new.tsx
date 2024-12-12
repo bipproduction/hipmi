@@ -1,23 +1,21 @@
 "use client";
-import { ComponentGlobal_CardLoadingOverlay, ComponentGlobal_CardStyles, ComponentGlobal_LoadImageCustom, } from "@/app_modules/_global/component";
+import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { ComponentGlobal_CardStyles, ComponentGlobal_LoadImageCustom } from "@/app_modules/_global/component";
 import { Grid, Progress, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import ComponentDonasi_TampilanHitungMundur from "../tampilan_hitung_mundur";
 import TampilanRupiahDonasi from "../tampilan_rupiah";
 
-export default function ComponentDonasi_CardPublishNew({ data, path, }: { data: any; path: string; }) {
+export default function ComponentDonasi_CardPublishNew({ data }: { data: any; }) {
   const router = useRouter();
-  const [visible, setVisible] = useState(false);
-  const [donasiId, setDonasiId] = useState("");
 
   return (
     <>
       <ComponentGlobal_CardStyles
         onClickHandler={() => {
-          setVisible(true);
-          setDonasiId(data.id);
-          router.push(path + `${data.id}`);
+          // DELSOON
+          console.log(RouterDonasi.detail_main + `${data.id}`)
+          router.push(RouterDonasi.detail_main + `${data.id}`)
         }}
       >
         <Stack>
