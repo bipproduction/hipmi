@@ -25,6 +25,11 @@ import { Portofolio_ComponentButtonSelanjutnya } from "../component";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
 import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
+import { DIRECTORY_ID } from "@/app/lib";
 
 export default function CreatePortofolio({
   bidangBisnis,
@@ -49,8 +54,8 @@ export default function CreatePortofolio({
     tiktok: "",
   });
 
-  const [file, setFile] = useState<File | any>(null);
   const [img, setImg] = useState<any | null>(null);
+  const [imageId, setImageId] = useState("");
 
   return (
     <>
@@ -187,15 +192,61 @@ export default function CreatePortofolio({
                   const buffer = URL.createObjectURL(
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
+
                   if (files.size > MAX_SIZE) {
                     setImg(null);
-                    setFile(null);
                     ComponentGlobal_NotifikasiPeringatan(
                       PemberitahuanMaksimalFile
                     );
+
+                    return;
+                  }
+
+                  // if (files.size > MAX_SIZE) {
+                  //   setImg(null);
+                  //   setFile(null);
+                  //   ComponentGlobal_NotifikasiPeringatan(
+                  //     PemberitahuanMaksimalFile
+                  //   );
+                  // } else {
+                  //   setImg(buffer);
+                  //   setFile(files);
+                  // }
+
+                  if (imageId != "") {
+                    const deletePhoto = await funGlobal_DeleteFileById({
+                      fileId: imageId,
+                    });
+
+                    if (deletePhoto.success) {
+                      setImageId("");
+
+                      const uploadPhoto = await funGlobal_UploadToStorage({
+                        file: files,
+                        dirId: DIRECTORY_ID.portofolio_logo,
+                      });
+
+                      if (uploadPhoto.success) {
+                        setImageId(uploadPhoto.data.id);
+                        setImg(buffer);
+                      } else {
+                        ComponentGlobal_NotifikasiPeringatan(
+                          "Gagal upload foto"
+                        );
+                      }
+                    }
                   } else {
-                    setImg(buffer);
-                    setFile(files);
+                    const uploadPhoto = await funGlobal_UploadToStorage({
+                      file: files,
+                      dirId: DIRECTORY_ID.portofolio_logo,
+                    });
+
+                    if (uploadPhoto.success) {
+                      setImageId(uploadPhoto.data.id);
+                      setImg(buffer);
+                    } else {
+                      ComponentGlobal_NotifikasiPeringatan("Gagal upload foto");
+                    }
                   }
                 } catch (error) {
                   console.log(error);
@@ -306,12 +357,10 @@ export default function CreatePortofolio({
         <Portofolio_ComponentButtonSelanjutnya
           dataPortofolio={dataPortofolio as any}
           dataMedsos={dataMedsos}
-          file={file}
           profileId={profileId}
+          imageId={imageId}
         />
       </Stack>
-
-      {/* <pre> {JSON.stringify(bidangBisnis, null, 2)}</pre> */}
     </>
   );
 }

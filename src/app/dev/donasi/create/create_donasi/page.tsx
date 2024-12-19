@@ -1,14 +1,12 @@
-import { CreateDonasi } from "@/app_modules/donasi";
-import {
-  Donasi_getMasterDurasi,
-  Donasi_getMasterKategori,
-} from "@/app_modules/donasi/fun";
+import { CreateDonasiNew } from "@/app_modules/donasi";
+
 
 export default async function Page() {
-  const masterKategori = await Donasi_getMasterKategori();
-  const masterDurasi = await Donasi_getMasterDurasi();
+  // const masterKategori = await Donasi_getMasterKategori();
+  // const masterDurasi = await Donasi_getMasterDurasi();
 
   return (
-    <CreateDonasi masterKategori={masterKategori} masterDurasi={masterDurasi} />
+    // <CreateDonasi masterKategori={masterKategori} masterDurasi={masterDurasi} />
+    <CreateDonasiNew />
   );
 }

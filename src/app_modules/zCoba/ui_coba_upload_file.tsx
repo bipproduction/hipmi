@@ -189,7 +189,7 @@ async function coba_ButtonFileUpload({
   formData.append("dirId", dirId);
 
   try {
-    const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
+    const res = await fetch("https://wibu-storage.wibudev.com/api/image/upload", {
       method: "POST",
       body: formData,
       headers: {

@@ -48,6 +48,7 @@ export default function Profile_UpdateFotoBackground({
         <Profile_ComponentButtonUpdateBackgroundProfile
           file={file as any}
           profileId={profile.id}
+          fileId={profile.imageBackgroundId as string}
         />
       </Stack>
     </>

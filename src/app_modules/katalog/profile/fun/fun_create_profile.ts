@@ -3,6 +3,7 @@
 import prisma from "@/app/lib/prisma";
 import { RouterHome } from "@/app/lib/router_hipmi/router_home";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
+import backendLogger from "@/util/backendLogger";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -19,6 +20,7 @@ export default async function funCreateNewProfile({
     const userLoginId = await funGetUserIdByToken();
 
     if (!userLoginId) {
+      backendLogger.error("User tidak terautentikasi");
       return { status: 400, message: "User tidak terautentikasi" }; // Validasi user login
     }
 
@@ -45,6 +47,7 @@ export default async function funCreateNewProfile({
     });
 
     if (!createProfile) {
+      backendLogger.error("Gagal membuat profile");
       return { status: 400, message: "Gagal membuat profile" };
     }
 
@@ -61,7 +64,7 @@ export default async function funCreateNewProfile({
       message: "Berhasil",
     };
   } catch (error) {
-    console.error("Error creating profile:", error);
+    backendLogger.error("Terjadi kesalahan pada server", error);
     return { status: 500, message: "Terjadi kesalahan pada server" };
   }
 }

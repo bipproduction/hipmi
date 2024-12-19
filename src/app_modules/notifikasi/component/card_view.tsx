@@ -13,13 +13,15 @@ import { IconCheck, IconChecks } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_NOTIFIKASI } from "../model/interface";
+import { ICategoryapp, MODEL_NOTIFIKASI } from "../model/interface";
 import { notifikasi_eventCheckStatus } from "./path/event";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { gs_vote_hotMenu } from "@/app_modules/vote/global_state";
 import { notifikasi_votingCheckStatus } from "./path/voting";
 import { redirectDonasiPage } from "./path/donasi";
 import { gs_donasi_hot_menu } from "@/app_modules/donasi/global_state";
+import moment from "moment";
+import "moment/locale/id";
 
 export function ComponentNotifiaksi_CardView({
   data,
@@ -28,7 +30,7 @@ export function ComponentNotifiaksi_CardView({
 }: {
   data: MODEL_NOTIFIKASI;
   onLoadData: (val: any) => void;
-  categoryPage: any;
+  categoryPage: string;
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
@@ -220,16 +222,7 @@ export function ComponentNotifiaksi_CardView({
         <Card.Section p={"sm"}>
           <Group position="apart">
             <Text fz={10} color="gray">
-              {new Intl.DateTimeFormat("id-ID", {
-                dateStyle: "long",
-              }).format(data?.createdAt)}
-
-              <Text span inherit fz={10} color="gray">
-                {", "}
-                {new Intl.DateTimeFormat("id-ID", {
-                  timeStyle: "short",
-                }).format(data?.createdAt)}
-              </Text>
+              {moment(data.createdAt).format("LLL")}
             </Text>
             {data?.isRead ? (
               <Group spacing={5}>

@@ -65,13 +65,13 @@ export default function Register() {
       const result = await res.json();
 
       if (res.status === 200) {
-        localStorage.removeItem("hipmi_auth_code_id");
         ComponentGlobal_NotifikasiBerhasil(result.message);
-        router.push("/dev/home", { scroll: false });
-
+        localStorage.removeItem("hipmi_auth_code_id");
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+        router.push("/dev/home", { scroll: false });
+        return;
       }
 
       if (res.status === 400) {

@@ -33,8 +33,18 @@ export interface MODEL_NOTIFIKASI {
     | "Gagal"
     | "Donatur Baru"
     | "Kabar Donasi"
-    | "Pencairan Dana"
+    | "Pencairan Dana";
 
   Role: MODEL_NEW_DEFAULT_MASTER;
   userRoleId: String;
 }
+
+export type ICategoryapp =
+  | "Semua"
+  | "Event"
+  | "Job"
+  | "Voting"
+  | "Donasi"
+  | "Investasi"
+  | "Forum"
+  | "Collaboration";

@@ -3,27 +3,28 @@
 import { RouterNotifikasi } from "@/app/lib/router_hipmi/router_notifikasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
-    BackgroundImage,
-    Box,
-    Button,
-    Container,
-    Flex,
-    rem,
+  BackgroundImage,
+  Box,
+  Button,
+  Container,
+  Flex,
+  rem,
+  Loader,
 } from "@mantine/core";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { gs_notifikasi_kategori_app } from "../lib/global_state";
+import { useShallowEffect } from "@mantine/hooks";
+import { API_RouteNotifikasi } from "@/app/lib/api_user_router/route_api_notifikasi";
 
 export default function Notifikasi_UiNewLayout({
   children,
   header,
-  masterKategori,
 }: {
   children: React.ReactNode;
   header?: React.ReactNode;
-  masterKategori: any[];
 }) {
   return (
     <>
@@ -45,7 +46,7 @@ export default function Notifikasi_UiNewLayout({
           >
             <UIHeader header={header} />
 
-            <UIChildren masterKategori={masterKategori}>{children}</UIChildren>
+            <UIChildren>{children}</UIChildren>
           </BackgroundImage>
         </Container>
       </Box>
@@ -75,17 +76,77 @@ function UIHeader({ header }: { header: React.ReactNode }) {
   );
 }
 
-function UIChildren({
-  children,
-  masterKategori,
-}: {
-  children: React.ReactNode;
-  masterKategori: any[];
-}) {
+function UIChildren({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [mstrKategori, setMstrKategori] = useState(masterKategori);
+  const [mstrKategori, setMstrKategori] = useState<any[] | null>(null);
   const [categoryPage, setCategoryPage] = useAtom(gs_notifikasi_kategori_app);
 
+  useShallowEffect(() => {
+    onLoadMaster();
+  }, []);
+
+  async function onLoadMaster() {
+    const res = await fetch(API_RouteNotifikasi.get_master_kategori());
+    const data = await res.json();
+    setMstrKategori(data.data);
+  }
+
+  return (
+    <>
+      {_.isNull(mstrKategori) ? (
+        <SkeletonButton />
+      ) : _.isEmpty(mstrKategori) ? (
+        <Button w={80} radius={"xl"} c={"gray.5"}>
+          Null
+        </Button>
+      ) : (
+        <Box style={{ zIndex: 0 }} h={"92vh"} px={"xs"} pos={"static"}>
+          <Box
+            mb={"xs"}
+            style={{
+              display: "flex",
+              gap: "20px",
+              position: "relative",
+              overflowX: "scroll",
+              scrollbarWidth: "none",
+            }}
+          >
+            <Flex gap={"md"}>
+              {mstrKategori.map((e, i) => (
+                <Button
+                  radius={"xl"}
+                  key={i}
+                  c={categoryPage === e.name ? "black" : "gray.5"}
+                  style={{
+                    transition: "0.3s",
+                    backgroundColor:
+                      categoryPage === e.name ? MainColor.yellow : "GrayText",
+                  }}
+                  onClick={() => {
+                    router.replace(
+                      RouterNotifikasi.categoryApp({
+                        name: _.lowerCase(e.name),
+                      }),
+                      {
+                        scroll: false,
+                      }
+                    );
+                    setCategoryPage(e.name);
+                  }}
+                >
+                  {e.name}
+                </Button>
+              ))}
+            </Flex>
+          </Box>
+          {children}
+        </Box>
+      )}
+    </>
+  );
+}
+
+function SkeletonButton() {
   return (
     <>
       <Box style={{ zIndex: 0 }} h={"92vh"} px={"xs"} pos={"static"}>
@@ -100,36 +161,25 @@ function UIChildren({
           }}
         >
           <Flex gap={"md"}>
-            {mstrKategori.map((e, i) => (
+            {Array.from(new Array(10)).map((e, i) => (
               <Button
+                w={80}
                 radius={"xl"}
                 key={i}
-                c={categoryPage === e.name ? "black" : "gray.5"}
+                c={"gray.5"}
                 style={{
                   transition: "0.3s",
-                  backgroundColor:
-                    categoryPage === e.name
-                      ? MainColor.yellow
-                      : "GrayText",
+                  backgroundColor: "GrayText",
                 }}
-                onClick={() => {
-                  router.replace(
-                    RouterNotifikasi.categoryApp({ name: _.lowerCase(e.name) }),
-                    {
-                      scroll: false,
-                    }
-                  );
-                  setCategoryPage(e.name);
-                  // onLoadDataNotifikasi(e.name);
-                }}
+                onClick={() => {}}
               >
-                {e.name}
+                <Loader size={"xs"} color="black" />
               </Button>
             ))}
           </Flex>
         </Box>
-        {children}
       </Box>
+      ;
     </>
   );
 }

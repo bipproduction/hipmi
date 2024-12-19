@@ -1,4 +1,5 @@
 import InvestasiCreate from "./create/view";
+import InvestasiCreateNew from "./create/view_new";
 import InvestasiCreateLayout from "./create/layout";
 import DetailInvestasi from "./detail/view";
 import LayoutDetailInvestasi from "./detail/layout";
@@ -98,4 +99,5 @@ export {
   LayoutProsesTransaksiInvestasi,
   StatusPesananInvetsatsi,
   LayoutStatusPesananInvestasi,
+  InvestasiCreateNew
 };

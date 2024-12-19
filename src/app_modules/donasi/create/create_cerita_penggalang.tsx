@@ -272,7 +272,7 @@ export default function CreateCeritaPenggalangDonasi({
               },
             }}
             withAsterisk
-            placeholder="Maskuan nomor rekening"
+            placeholder="Masukan nomor rekening"
             label="Nomor rekening"
             maxLength={100}
             onChange={(val) => {

@@ -1,23 +1,20 @@
-import { InvestasiCreate } from "@/app_modules/investasi";
-import getPembagianDeviden from "@/app_modules/investasi/fun/master/get_pembagian_deviden";
-import getPencarianInvestor from "@/app_modules/investasi/fun/master/get_pencarian_investor";
-import getPeriodeDeviden from "@/app_modules/investasi/fun/master/get_periode_deviden";
-import getStatusInvestasi from "@/app_modules/investasi/fun/master/get_status_investasi";
+import { InvestasiCreateNew } from "@/app_modules/investasi";
 
 export default async function Page() {
 
-  const pencarianInvestor = await getPencarianInvestor();
-  const periodeDeviden = await getPeriodeDeviden();
-  const pembagianDeviden = await getPembagianDeviden();
-  const statusInvestasi = await getStatusInvestasi();
+  // const pencarianInvestor = await getPencarianInvestor();
+  // const periodeDeviden = await getPeriodeDeviden();
+  // const pembagianDeviden = await getPembagianDeviden();
+  // const statusInvestasi = await getStatusInvestasi();
 
   return (
     <>
-      <InvestasiCreate
+      {/* <InvestasiCreate
         pencarianInvestor={pencarianInvestor as any}
         periodeDeviden={periodeDeviden as any}
         pembagianDeviden={pembagianDeviden as any}
-      />
+      /> */}
+      <InvestasiCreateNew />
     </>
   );
 }

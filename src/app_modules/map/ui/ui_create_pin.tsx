@@ -5,6 +5,8 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_BoxUploadImage } from "@/app_modules/_global/component";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import {
   AspectRatio,
@@ -29,8 +31,11 @@ import Map, {
 } from "react-map-gl";
 import { ComponentMap_ButtonSavePin } from "../_component";
 import { defaultLatLong, defaultMapZoom } from "../lib/default_lat_long";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
+import { DIRECTORY_ID } from "@/app/lib";
 
 export function UiMap_CreatePin({
   mapboxToken,
@@ -42,8 +47,8 @@ export function UiMap_CreatePin({
   const [[lat, long], setLatLong] = useState([0, 0]);
   const [isPin, setIsPin] = useState(false);
   const [namePin, setNamePin] = useState("");
-  const [file, setFile] = useState<File | any>(null);
   const [img, setImg] = useState<any | null>(null);
+  const [imageId, setImageId] = useState("");
 
   return (
     <>
@@ -146,14 +151,60 @@ export function UiMap_CreatePin({
 
                   if (files.size > MAX_SIZE) {
                     setImg(null);
-                    setFile(null);
                     ComponentGlobal_NotifikasiPeringatan(
                       PemberitahuanMaksimalFile,
                       3000
                     );
+
+                    return;
+                  }
+
+                  // if (files.size > MAX_SIZE) {
+                  //   setImg(null);
+                  //   ComponentGlobal_NotifikasiPeringatan(
+                  //     PemberitahuanMaksimalFile,
+                  //     3000
+                  //   );
+                  // } else {
+                  //   setImg(buffer);
+                  // }
+
+                  if (imageId != "") {
+                    const deletePhoto = await funGlobal_DeleteFileById({
+                      fileId: imageId,
+                    });
+
+                    if (deletePhoto.success) {
+                      setImageId("");
+
+                      const uploadPhoto = await funGlobal_UploadToStorage({
+                        file: files,
+                        dirId: DIRECTORY_ID.map_image,
+                      });
+
+                      if (uploadPhoto.success) {
+                        setImageId(uploadPhoto.data.id);
+                        setImg(buffer);
+                      } else {
+                        ComponentGlobal_NotifikasiPeringatan(
+                          "Gagal upload gambar"
+                        );
+                      }
+                    }
                   } else {
-                    setImg(buffer);
-                    setFile(files);
+                    const uploadPhoto = await funGlobal_UploadToStorage({
+                      file: files,
+                      dirId: DIRECTORY_ID.map_image,
+                    });
+
+                    if (uploadPhoto.success) {
+                      setImageId(uploadPhoto.data.id);
+                      setImg(buffer);
+                    } else {
+                      ComponentGlobal_NotifikasiPeringatan(
+                        "Gagal upload gambar"
+                      );
+                    }
                   }
                 } catch (error) {
                   console.log(error);
@@ -183,7 +234,7 @@ export function UiMap_CreatePin({
           lat={lat as any}
           long={long as any}
           portofolioId={portofolioId}
-          file={file}
+          imageId={imageId}
         />
       </Stack>
     </>

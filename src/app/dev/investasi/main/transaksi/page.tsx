@@ -4,6 +4,7 @@ import getMaster_StatusTransaksiInvestasi from "@/app_modules/investasi/fun/mast
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { investasi_funGetTransaksiByUserId } from "@/app_modules/investasi/_fun";
 import { Investasi_UiDaftarTransaksi } from "@/app_modules/investasi/_ui";
+import { Investasi_ViewDaftarTransaksiNew } from "@/app_modules/investasi/_view/main/view_transaksi_new";
 
 export default async function Page() {
   const userLoginId = await funGetUserIdByToken();
@@ -22,7 +23,8 @@ export default async function Page() {
         statusTransaksi={statusTransaksi as any}
         listTransaksi={listTransaksi as any}
       /> */}
-      <Investasi_UiDaftarTransaksi dataTransaksi={dataTransaksi} />
+      {/* <Investasi_UiDaftarTransaksi dataTransaksi={dataTransaksi} /> */}
+      <Investasi_ViewDaftarTransaksiNew/>
     </>
   );
 }

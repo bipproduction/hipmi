@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.32](https://github.com/bipproduction/hipmi/compare/v1.2.31...v1.2.32) (2024-12-19)
+
+
+### Bug Fixes
+
+* donasi ([72b6d23](https://github.com/bipproduction/hipmi/commit/72b6d239fee3e90e812ab24192154e5e8910fccb))
+
+## [1.2.31](https://github.com/bipproduction/hipmi/compare/v1.2.30...v1.2.31) (2024-12-17)
+
+## [1.2.30](https://github.com/bipproduction/hipmi/compare/v1.2.29...v1.2.30) (2024-12-16)
+
+## [1.2.29](https://github.com/bipproduction/hipmi/compare/v1.2.28...v1.2.29) (2024-12-13)
+
+## [1.2.28](https://github.com/bipproduction/hipmi/compare/v1.2.27...v1.2.28) (2024-12-12)
+
 ## [1.2.27](https://github.com/bipproduction/hipmi/compare/v1.2.26...v1.2.27) (2024-12-12)
 
 ## [1.2.26](https://github.com/bipproduction/hipmi/compare/v1.2.25...v1.2.26) (2024-12-12)

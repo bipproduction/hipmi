@@ -13,8 +13,6 @@ export default function ComponentDonasi_CardPublishNew({ data }: { data: any; })
     <>
       <ComponentGlobal_CardStyles
         onClickHandler={() => {
-          // DELSOON
-          console.log(RouterDonasi.detail_main + `${data.id}`)
           router.push(RouterDonasi.detail_main + `${data.id}`)
         }}
       >

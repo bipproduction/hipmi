@@ -33,7 +33,7 @@ export default function Page() {
     const formData = new FormData();
     formData.append("file", filePP as any);
 
-    const res = await fetch("/api/upload", {
+    const res = await fetch("/api/image/upload", {
       method: "POST",
       body: formData,
     });

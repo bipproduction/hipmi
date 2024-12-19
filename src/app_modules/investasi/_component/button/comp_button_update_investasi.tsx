@@ -25,6 +25,7 @@ export function Investasi_ComponentButtonUpdateDataInvestasi({
   const [isLoading, setIsLoading] = useState(false);
 
   async function onUpdate() {
+    setIsLoading(true);
     if (totalLembar === "0")
       return ComponentGlobal_NotifikasiPeringatan("Total lembar kosong");
 
@@ -74,6 +75,8 @@ export function Investasi_ComponentButtonUpdateDataInvestasi({
   return (
     <Stack>
       <Button
+        loading={isLoading}
+        loaderPosition="center"
         my={50}
         radius={50}
         bg={MainColor.yellow}

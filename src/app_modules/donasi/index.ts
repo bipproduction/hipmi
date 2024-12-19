@@ -5,6 +5,7 @@ import GalangDanaDonasi from "./main/galang_dana/ui_galang_dana";
 import GalangDanaDonasiNew from "./main/galang_dana/ui_galang_dana_new";
 import DonasiSayaDonasi from "./main/donasi_saya";
 import CreateDonasi from "./create/create_donasi";
+import CreateDonasiNew from "./create/create_donasi_new";
 import LayoutCreateDonasi from "./create/layout";
 import DetailMainDonasi from "./detail/detail_main";
 import LayoutDetailMainDonasi from "./detail/detail_main/layout";
@@ -103,4 +104,5 @@ export {
   LayoutDonasi_EditRekening,
   MainDonasiNew,
   GalangDanaDonasiNew,
+  CreateDonasiNew
 };

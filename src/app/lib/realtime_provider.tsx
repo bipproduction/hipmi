@@ -17,8 +17,6 @@ import {
   gs_votingTiggerBeranda,
   IRealtimeData,
 } from "./global_state";
-import { newFunGetUserId } from "./new_fun_user_id";
-import { useState } from "react";
 
 // const WIBU_REALTIME_TOKEN: string | undefined =
 //   process.env.NEXT_PUBLIC_WIBU_REALTIME_TOKEN;
@@ -28,15 +26,16 @@ export type TypeNotification = {
   type: "message" | "notification" | "trigger";
   pushNotificationTo: "ADMIN" | "USER";
   dataMessage?: IRealtimeData;
-  userLoginId?: string;
+  userId?: string;
 };
 
 export default function RealtimeProvider({
+  userId,
   WIBU_REALTIME_TOKEN,
 }: {
+  userId: string;
   WIBU_REALTIME_TOKEN: string;
 }) {
-  const [userLoginId, setUserLoginId] = useState("");
   const [dataRealtime, setDataRealtime] = useAtom(gs_realtimeData);
   const [newAdminNtf, setNewAdminNtf] = useAtom(gs_admin_ntf);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
@@ -72,15 +71,7 @@ export default function RealtimeProvider({
     gs_donasiTriggerBeranda
   );
 
-  async function loadUserId() {
-    const userId = await newFunGetUserId();
-
-    setUserLoginId(userId as string);
-  }
-
   useShallowEffect(() => {
-    loadUserId();
-
     try {
       WibuRealtime.init({
         project: "hipmi",
@@ -97,7 +88,7 @@ export default function RealtimeProvider({
           if (
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
-            data.dataMessage?.userId == userLoginId
+            data.dataMessage?.userId == userId
           ) {
             setNewUserNtf((e) => e + 1);
             setDataRealtime(data.dataMessage as any);
@@ -144,7 +135,7 @@ export default function RealtimeProvider({
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
             data.dataMessage?.status == "Peserta Event" &&
-            userLoginId !== data.dataMessage?.userId
+            userId !== data.dataMessage?.userId
           ) {
             setNewUserNtf((e) => e + 1);
           }
@@ -172,7 +163,7 @@ export default function RealtimeProvider({
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
             data.dataMessage?.status == "Voting Masuk" &&
-            userLoginId !== data.dataMessage?.userId
+            userId !== data.dataMessage?.userId
           ) {
             setNewUserNtf((e) => e + 1);
           }
@@ -200,9 +191,9 @@ export default function RealtimeProvider({
           //   data.type == "notification" &&
           //   data.pushNotificationTo == "ADMIN" &&
           //   data.dataMessage?.status == "Menunggu" &&
-          //   userLoginId !== data.dataMessage?.userId
+          //   userId !== data.dataMessage?.userId
           // ) {
-          //   console.log("yes");
+
           // }
 
           // ---------------------- DONASI ------------------------- //

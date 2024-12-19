@@ -42,7 +42,7 @@ export type IRealtimeData = {
 export const gs_realtimeData = atom<IRealtimeData | null>(null);
 export const gs_admin_ntf = atom<number>(0);
 export const gs_user_ntf = atom<number>(0);
-export const gs_count_ntf = atom<number>(0);
+export const gs_count_ntf = atom<number | null>(null);
 
 // job
 export const gs_adminJob_triggerReview = atom<boolean>(false);

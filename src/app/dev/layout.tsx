@@ -7,9 +7,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const userId = await newFunGetUserId();
+
   return (
     <>
       <RealtimeProvider
+        userId={userId}
         WIBU_REALTIME_TOKEN={
           ServerEnv.value?.NEXT_PUBLIC_WIBU_REALTIME_TOKEN as string
         }
