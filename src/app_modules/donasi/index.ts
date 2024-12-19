@@ -50,6 +50,7 @@ import Donasi_CreateKabar from "./create/create_kabar";
 import LayoutDonasi_CreateKabar from "./create/create_kabar/layout";
 import Donasi_EditRekening from "./edit/edit_rekening";
 import LayoutDonasi_EditRekening from "./edit/edit_rekening/layout";
+import EditDonasiNew from "./edit/edit_donasi/edit_donasi_new";
 export { LayoutDonasi_BuktiTransfer } from "./detail/detail_main/bukti_transfer";
 
 export {
@@ -104,5 +105,6 @@ export {
   LayoutDonasi_EditRekening,
   MainDonasiNew,
   GalangDanaDonasiNew,
-  CreateDonasiNew
+  CreateDonasiNew,
+  EditDonasiNew
 };
