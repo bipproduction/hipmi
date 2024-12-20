@@ -13,7 +13,7 @@ export const apiGetAllDonasiSaya = async (path?: string) => {
    return await response.json().catch(() => null)
 }
 
-export const apiGetOneDonasiById = async (path: string) => {
-   const response = await fetch(`/api/new/donasi/${path}`)
+export const apiGetOneDonasiById = async (path: string, kategori: string) => {
+   const response = await fetch(`/api/new/donasi/${path}?cat=${kategori}`)
    return await response.json().catch(() => null)
 }
