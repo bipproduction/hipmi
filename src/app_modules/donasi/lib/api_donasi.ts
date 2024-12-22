@@ -12,3 +12,8 @@ export const apiGetAllDonasiSaya = async (path?: string) => {
    const response = await fetch(`/api/new/donasi/invoice${(path) ? path : ''}`)
    return await response.json().catch(() => null)
 }
+
+export const apiGetOneDonasiById = async (path: string) => {
+   const response = await fetch(`/api/new/donasi/${path}`)
+   return await response.json().catch(() => null)
+}
