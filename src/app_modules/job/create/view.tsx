@@ -34,6 +34,9 @@ import {
 } from "@/app_modules/_global/component";
 import { Job_ComponentButtonSaveCreate } from "../component";
 import { defaultDeskripsi, defaultSyarat } from "../component/default_value";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function Job_Create() {
   const [value, setValue] = useState({
@@ -80,6 +83,16 @@ export default function Job_Create() {
                 const buffer = URL.createObjectURL(
                   new Blob([new Uint8Array(await files.arrayBuffer())])
                 );
+
+                if (files.size > MAX_SIZE) {
+                  ComponentGlobal_NotifikasiPeringatan(
+                    PemberitahuanMaksimalFile
+                  );
+                  setImg(null);
+
+                  return;
+                }
+
                 setImg(buffer);
                 setFile(files);
               } catch (error) {

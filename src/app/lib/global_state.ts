@@ -59,3 +59,7 @@ export const gs_votingTiggerBeranda = atom<boolean>(false);
 // donasi
 export const gs_adminDonasi_triggerReview = atom<boolean>(false);
 export const gs_donasiTriggerBeranda = atom<boolean>(false);
+
+// investasi
+export const gs_adminInvestasi_triggerReview = atom<boolean>(false);
+export const gs_investasiTriggerBeranda = atom<boolean>(false);

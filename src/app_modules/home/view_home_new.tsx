@@ -70,12 +70,12 @@ export default function HomeViewNew() {
                 variant={"transparent"}
                 onClick={() => {
                   if (
-                    dataUser.profile === undefined ||
-                    dataUser?.profile === null
+                    dataUser.profile != undefined ||
+                    dataUser?.profile != null
                   ) {
-                    router.push(RouterProfile.create, { scroll: false });
-                  } else {
                     router.push(RouterUserSearch.main, { scroll: false });
+                  } else {
+                    router.push(RouterProfile.create, { scroll: false });
                   }
                 }}
               >
@@ -88,11 +88,9 @@ export default function HomeViewNew() {
                 disabled={countNtf == null}
                 onClick={() => {
                   if (
-                    dataUser.profile === undefined ||
-                    dataUser?.profile === null
+                    dataUser.profile != undefined ||
+                    dataUser?.profile != null
                   ) {
-                    router.push(RouterProfile.create, { scroll: false });
-                  } else {
                     setCategoryPage("Semua");
                     router.push(
                       RouterNotifikasi.categoryApp({ name: "semua" }),
@@ -100,6 +98,8 @@ export default function HomeViewNew() {
                         scroll: false,
                       }
                     );
+                  } else {
+                    router.push(RouterProfile.create, { scroll: false });
                   }
                 }}
               >

@@ -24,6 +24,7 @@ import {
 } from "./route_setting/type_of_select_page";
 import { adminNotifikasi_findRouterVoting } from "./route_setting/voting";
 import adminNotifikasi_findRouterDonasi from "./route_setting/donasi";
+import adminNotifikasi_findRouterInvestasi from "./route_setting/investasi";
 
 export default function AdminNotifikasi_ViewCardDrawer({
   data,
@@ -166,6 +167,9 @@ export default function AdminNotifikasi_ViewCardDrawer({
     // ========================== DONASI ========================== //
 
     if (data.kategoriApp == "DONASI") {
+      setVisible(true);
+      setDataId(data.id);
+
       const checkDonasi = await adminNotifikasi_findRouterDonasi({
         appId: data.appId,
         notifikasiId: data.id,
@@ -195,6 +199,39 @@ export default function AdminNotifikasi_ViewCardDrawer({
 
     // ========================== DONASI ========================== //
 
+    // ========================== INVESTASI ========================== //
+
+    if (data.kategoriApp == "INVESTASI") {
+      setVisible(true);
+      setDataId(data.id);
+
+      const checkInvestasi = await adminNotifikasi_findRouterInvestasi({
+        appId: data.appId,
+        notifikasiId: data.id,
+        status: data.status as ITypeStatusNotifikasi,
+        router: router,
+        onLoadCountNotif(val) {
+          onLoadCountNotif(val);
+        },
+        onLoadDataNotifikasi(val) {
+          onLoadDataNotifikasi(val);
+        },
+        onChangeNavbar(val) {
+          onChangeNavbar({
+            id: val.id,
+            childId: val.childId,
+          });
+        },
+      });
+
+      if (checkInvestasi) {
+        setIsAdminDonasi_TriggerReview(false);
+        setVisible(false);
+        setDataId("");
+        onToggleNavbar(false);
+      }
+    }
+
     // // FORUM
     // e?.kategoriApp === "FORUM" &&
     //   adminNotifikasi_findRouterForum({
@@ -211,36 +248,6 @@ export default function AdminNotifikasi_ViewCardDrawer({
     // // VOTE
     // e?.kategoriApp === "VOTING" &&
     //   adminNotifikasi_findRouterVoting({
-    //     data: e,
-    //     router: router,
-    //     onChangeNavbar(val) {
-    //       onChangeNavbar(val);
-    //     },
-    //     onToggleNavbar(val) {
-    //       onToggleNavbar(val);
-    //     },
-    //   });
-
-    // //   EVENT
-    // e?.kategoriApp === "EVENT" &&
-    //
-
-    // // DONASI
-    // e.kategoriApp === "DONASI" &&
-    //   adminNotifikasi_findRouterDonasi({
-    //     data: e,
-    //     router: router,
-    //     onChangeNavbar(val) {
-    //       onChangeNavbar(val);
-    //     },
-    //     onToggleNavbar(val) {
-    //       onToggleNavbar(val);
-    //     },
-    //   });
-
-    // // INVESTASI
-    // e.kategoriApp === "INVESTASI" &&
-    //   adminNotifikasi_findRouterInvestasi({
     //     data: e,
     //     router: router,
     //     onChangeNavbar(val) {

@@ -1,18 +1,14 @@
 "use client";
 
+import { IRealtimeData } from "@/app/lib/global_state";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
-import mqtt_client from "@/util/mqtt_client";
-import {
-  Button,
-  Group,
-  SimpleGrid,
-  Stack
-} from "@mantine/core";
+import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { Admin_ComponentModalReport } from "../../_admin_global/_component";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
@@ -60,24 +56,25 @@ export default function AdminInvestasi_DetailReview({
     if (res.status === 200) {
       setIsLoadingReject(true);
 
-      const dataNotif = {
-        appId: res.data?.id,
-        userId: res.data?.authorId,
-        pesan: res.data?.title,
-        status: res.data?.MasterStatusInvestasi?.name,
+      const dataNotifikasi: IRealtimeData = {
+        appId: res.data?.id as string,
+        userId: res.data?.authorId as string,
+        pesan: res.data?.title as string,
+        status: res.data?.MasterStatusInvestasi?.name as any,
         kategoriApp: "INVESTASI",
         title: "Investasi anda di tolak !",
       };
 
       const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
+        data: dataNotifikasi as any,
       });
 
       if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: res?.data?.authorId, count: 1 })
-        );
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "USER",
+          dataMessage: dataNotifikasi,
+        });
       }
 
       const loadData = await getOneInvestasiById(data.id);
@@ -100,8 +97,8 @@ export default function AdminInvestasi_DetailReview({
       progesInvestasiId: "1",
     });
     if (res.status === 200) {
-      const dataNotif = {
-        appId: res.data?.id,
+      const dataNotifikasi: IRealtimeData = {
+        appId: res.data?.id as string,
         userId: res.data?.authorId as any,
         pesan: res.data?.title as any,
         status: res.data?.MasterStatusInvestasi?.name as any,
@@ -110,19 +107,21 @@ export default function AdminInvestasi_DetailReview({
       };
 
       const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
+        data: dataNotifikasi as any,
       });
 
       if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: res?.data?.authorId, count: 1 })
-        );
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "USER",
+          dataMessage: dataNotifikasi,
+        });
 
-        mqtt_client.publish(
-          "Beranda_Investasi",
-          JSON.stringify({ update: true })
-        );
+        WibuRealtime.setData({
+          type: "trigger",
+          pushNotificationTo: "USER",
+          dataMessage: dataNotifikasi,
+        });
 
         const loadData = await getOneInvestasiById(data.id);
         setData(loadData as any);
@@ -216,8 +215,6 @@ export default function AdminInvestasi_DetailReview({
           </Button>
         }
       />
-
-  
     </>
   );
 }
