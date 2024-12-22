@@ -3,29 +3,27 @@ import { Affix, Button, Center, rem } from "@mantine/core";
 import { useState } from "react";
 import { investasi_funGetAllPublish } from "../../fun/get_all_investasi";
 import { data } from "autoprefixer";
+import { apiGetAllInvestasi } from "../../_lib/api_interface";
 
 export function Investasi_ComponentButtonUpdateBeranda({
   onLoadData,
 }: {
   onLoadData: (val: any) => void;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   async function onLoaded() {
     try {
-      await investasi_funGetAllPublish({ page: 1 });
+      setLoading(true);
+      const response = await apiGetAllInvestasi(`?cat=bursa&page=1`);
+      if (response.success) {
+        onLoadData(response.data);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
-      const loadData = await investasi_funGetAllPublish({ page: 1 });
-
-      onLoadData({
-        data: loadData,
-        isNewPost: false,
-      });
+      setLoading(false);
     }
-
-    setIsLoading(true);
   }
 
   return (

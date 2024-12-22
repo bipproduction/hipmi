@@ -1,33 +1,33 @@
 "use client";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { gs_adminInvestasi_triggerReview } from "@/app/lib/global_state";
 import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { AccentColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
-  Badge,
-  ActionIcon,
-  Box,
-  ScrollArea,
-  Table,
-  Tooltip,
-  Stack,
-  Group,
-  Avatar,
-  Text,
-  Center,
+  Affix,
   Button,
+  Center,
+  Group,
   Pagination,
   Paper,
+  rem,
+  ScrollArea,
+  Stack,
+  Table,
+  Text,
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconChevronLeft, IconEdit, IconSearch } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconRefresh, IconSearch } from "@tabler/icons-react";
+import { useAtom } from "jotai";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
-import _ from "lodash";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
+import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 
 export default function Admin_TableReviewInvestasi({
   dataInvestsi,
@@ -52,6 +52,33 @@ function TableView({ listData }: { listData: any }) {
   const [isSearch, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [idData, setIdData] = useState("");
+
+  // Realtime
+  const [isAdminInvestasi_TriggerReview, setIsAdminInvestasi_TriggerReview] =
+    useAtom(gs_adminInvestasi_triggerReview);
+  const [isShowReload, setIsShowReload] = useState(false);
+  const [isLoadingReload, setLoadingReload] = useState(false);
+
+  useShallowEffect(() => {
+    if (isAdminInvestasi_TriggerReview) {
+      setIsShowReload(false);
+    }
+  }, [isAdminInvestasi_TriggerReview]);
+
+  useShallowEffect(() => {
+    if (isAdminInvestasi_TriggerReview) {
+      setIsShowReload(true);
+    }
+  }, [isAdminInvestasi_TriggerReview]);
+
+  async function onLoadData() {
+    const loadData = await adminInvestasi_funGetAllReview({ page: 1 });
+    setData(loadData.data as any);
+    setNPage(loadData.nPage);
+    setLoadingReload(false);
+    setIsShowReload(false);
+    setIsAdminInvestasi_TriggerReview(false);
+  }
 
   async function onSearch(s: string) {
     setSearch(s);
@@ -151,6 +178,30 @@ function TableView({ listData }: { listData: any }) {
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
           <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+            {isShowReload && (
+              <Paper bg={"red"} w={"50%"}>
+                <Affix position={{ top: rem(200) }} w={"100%"}>
+                  <Center>
+                    <Button
+                      style={{
+                        transition: "0.5s",
+                        border: `1px solid ${AccentColor.skyblue}`,
+                      }}
+                      bg={AccentColor.blue}
+                      loaderPosition="center"
+                      loading={isLoadingReload}
+                      radius={"xl"}
+                      opacity={0.8}
+                      onClick={() => onLoadData()}
+                      leftIcon={<IconRefresh />}
+                    >
+                      Update Data
+                    </Button>
+                  </Center>
+                </Affix>
+              </Paper>
+            )}
+
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
