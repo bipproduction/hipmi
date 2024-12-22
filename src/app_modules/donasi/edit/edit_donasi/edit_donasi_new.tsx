@@ -51,7 +51,7 @@ export default function EditDonasiNew() {
    async function onGetData() {
       try {
          setLoadingData(true)
-         const response = await apiGetOneDonasiById(param.id)
+         const response = await apiGetOneDonasiById(param.id, "semua")
          if (response.success) {
             setData(response.data)
          }

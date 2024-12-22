@@ -1,3 +1,4 @@
+import LayoutDetailMainDonasiNew from '@/app_modules/donasi/detail/detail_main/layout_new';
 import MainDonasi from "./main/beranda";
 import MainDonasiNew from "./main/beranda_new";
 import LayoutDonasi from "./main/layout";
@@ -106,5 +107,6 @@ export {
   MainDonasiNew,
   GalangDanaDonasiNew,
   CreateDonasiNew,
-  EditDonasiNew
+  EditDonasiNew,
+  LayoutDetailMainDonasiNew
 };
