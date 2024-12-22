@@ -1,6 +1,6 @@
 {
   "name": "hipmi",
-  "version": "1.2.32",
+  "version": "1.2.33",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts --yes"
