@@ -62,12 +62,7 @@ function TableView({ listData }: { listData: any }) {
   useShallowEffect(() => {
     if (isAdminInvestasi_TriggerReview) {
       setIsShowReload(false);
-    }
-  }, [isAdminInvestasi_TriggerReview]);
-
-  useShallowEffect(() => {
-    if (isAdminInvestasi_TriggerReview) {
-      setIsShowReload(true);
+      setIsAdminInvestasi_TriggerReview(false)
     }
   }, [isAdminInvestasi_TriggerReview]);
 

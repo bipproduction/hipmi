@@ -74,7 +74,6 @@ export function AdminInvestasi_DetailPublish({
             investasiId={investasiId}
           />
         ) : null}
-        {/* {selectPage == "3" ? <AdminInvestasi_ViewDaftarInvestor /> : null} */}
       </Stack>
     </>
   );

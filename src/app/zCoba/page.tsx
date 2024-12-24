@@ -1,8 +1,6 @@
 "use client";
 
 import { MainColor } from "@/app_modules/_global/color";
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
-import Coba_TestLoading from "@/app_modules/zCoba";
 import {
   Avatar,
   Button,
@@ -14,8 +12,6 @@ import {
 import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
 import { DIRECTORY_ID } from "../lib";
-import { TokenStorage } from "../lib/token";
-import { envs } from "@/lib/envs";
 
 export default function Page() {
   const [filePP, setFilePP] = useState<File | null>(null);

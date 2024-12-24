@@ -2,7 +2,7 @@
 
 import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import { ComponentGlobal_LoadImage, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import {
   ActionIcon,
   Box,
@@ -170,10 +170,7 @@ export function Investasi_ViewTransaksiGagal({
               transitionDuration={500}
               transitionTimingFunction="linear"
             >
-              <Image
-                alt="foto"
-                src={RouterAdminInvestasi.api_bukti_transfer + data?.imagesId}
-              />
+              <ComponentGlobal_LoadImage fileId={data.imageId} />
             </Collapse>
           </Stack>
         </Paper>
