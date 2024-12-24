@@ -13,11 +13,12 @@ export type ITypeStatusNotifikasi =
   | "Peserta Event"
   // VOTING
   | "Voting Masuk"
-  // DONASI
+  // DONASI & INVESTASI
   | "Berhasil"
   | "Proses"
   | "Menunggu"
   | "Gagal";
+
 
 /**
  * @param kategoriApp | "JOB", "VOTING", "EVENT", "DONASI", "INVESTASI", "COLLABORATION", "FORUM"
