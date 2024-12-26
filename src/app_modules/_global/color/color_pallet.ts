@@ -1,7 +1,8 @@
 export const MainColor = {
   black: "#202020",
   darkblue: "#001D3D",
-  yellow: "#FFC300",
+  yellow: "#E1B525",
+  white: "#D4D0D0"
 };
 
 export const AccentColor = {
@@ -10,5 +11,7 @@ export const AccentColor = {
   blue: "#00447D",
   softblue: "#007CBA",
   skyblue: "#00BFFF",
-  yellow: "#FFD60A",
+  yellow: "#E1B525",
 };
+//yellow: "#FFC300"
+//yellow: "#FFD60A"
