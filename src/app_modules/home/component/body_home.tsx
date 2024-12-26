@@ -26,6 +26,7 @@ export default function BodyHome() {
   const [dataUser, setDataUser] = useState<any>({});
   const [dataJob, setDataJob] = useState<any[]>([]);
   const [loadingJob, setLoadingJob] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useShallowEffect(() => {
     cekUserLogin();
@@ -59,16 +60,35 @@ export default function BodyHome() {
 
   return (
     <Box>
-      <Paper
+      {/* <Paper
         radius={"xl"}
+        h={150}
         mb={"xs"}
         style={{
           borderRadius: "10px 10px 10px 10px",
           border: `2px solid ${AccentColor.blue}`,
+          position: "relative",
         }}
       >
-        <Image radius={"lg"} alt="logo" src={"/aset/home/home-hipmi-new.png"} />
-      </Paper>
+       
+      </Paper> */}
+
+      <Image
+        height={140}
+        fit={"cover"}
+        alt="logo"
+        src={"/aset/home/home-hipmi-new.png"}
+        onLoad={() => setLoading(false)}
+        styles={{
+          imageWrapper: {
+            border: `2px solid ${AccentColor.blue}`,
+            borderRadius: "10px 10px 10px 10px",
+          },
+          image: {
+            borderRadius: "8px 8px 8px 8px",
+          },
+        }}
+      />
 
       <Stack my={"sm"}>
         <SimpleGrid cols={2} spacing="md">
