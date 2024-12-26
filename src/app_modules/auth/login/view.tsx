@@ -99,7 +99,7 @@ export default function Login({ version }: { version: string }) {
           </Stack>
 
           <Box pos={"fixed"} bottom={10}>
-            <Text fw={"bold"} c={"white"} fs={"italic"} fz={"xs"}>
+            <Text fw={"bold"} c={MainColor.white} fs={"italic"} fz={"xs"}>
               v {version}
             </Text>
           </Box>

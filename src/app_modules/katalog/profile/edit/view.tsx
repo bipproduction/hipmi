@@ -54,7 +54,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
           }}
           withAsterisk
@@ -66,7 +66,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
           }}
           withAsterisk
@@ -92,8 +92,11 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           withAsterisk
           label="Nama"
@@ -118,8 +121,11 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           withAsterisk
           label="Email"
@@ -146,8 +152,11 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           withAsterisk
           label="Alamat"
@@ -172,8 +181,11 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           withAsterisk
           label="Jenis Kelamin"

@@ -42,7 +42,7 @@ export default function ListPortofolioProfileNew() {
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px ",
                padding: "15px",
-               color: "white",
+               color: MainColor.white,
             }}
          >
             <Stack spacing={"sm"}>
@@ -84,7 +84,7 @@ export default function ListPortofolioProfileNew() {
                                        border: `2px solid ${AccentColor.blue}`,
                                        borderRadius: "10px ",
                                        padding: "15px",
-                                       color: "white",
+                                       color: MainColor.white,
                                     }}
                                  >
                                     <Group position="apart">
@@ -97,7 +97,7 @@ export default function ListPortofolioProfileNew() {
                                           </Text>
                                        </Stack>
                                        <Stack>
-                                          <IconCaretRight color="white" size={25} />
+                                          <IconCaretRight color={MainColor.white} size={25} />
                                        </Stack>
                                     </Group>
                                  </Paper>

@@ -7,6 +7,7 @@ import { Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MainColor } from "@/app_modules/_global/color";
 
 export function Profile_ComponentLoadBackgroundImage({
   fileId,
@@ -41,7 +42,7 @@ export function Profile_ComponentLoadBackgroundImage({
   if (!isImage)
     return (
       <>
-        <Center h={200} bg={"white"} style={{ borderRadius: "10px" }}>
+        <Center h={200} bg={MainColor.white} style={{ borderRadius: "10px" }}>
           <Image
             alt="No Image"
             maw={150}
@@ -64,7 +65,7 @@ export function Profile_ComponentLoadBackgroundImage({
             });
           }}
           style={{
-            borderColor: "white",
+            borderColor: MainColor.white,
             borderStyle: "solid",
             borderWidth: "1px",
             borderRadius: "5px",

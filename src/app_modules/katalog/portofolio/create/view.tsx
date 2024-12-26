@@ -67,8 +67,14 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             withAsterisk
             label="Nama Bisnis"
@@ -82,10 +88,17 @@ export default function CreatePortofolio({
             }}
           />
           <Select
+            
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             withAsterisk
             label="Bidang Bisnis"
@@ -104,8 +117,14 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             withAsterisk
             label="Alamat Bisnis"
@@ -121,8 +140,14 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             withAsterisk
             label="Nomor Telepon "
@@ -139,8 +164,14 @@ export default function CreatePortofolio({
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
                 },
+                input: {
+                  backgroundColor: MainColor.white
+                },
+                required: {
+                  color: MainColor.red,
+                }
               }}
               maxLength={300}
               autosize
@@ -164,7 +195,7 @@ export default function CreatePortofolio({
         </Stack>
 
         <Stack>
-          <ComponentGlobal_BoxInformation informasi="Upload Logo Bisnis Anda!" />
+          <ComponentGlobal_BoxInformation informasi="Upload Logo Bisnis Anda" />
           <ComponentGlobal_BoxUploadImage>
             {img ? (
               <AspectRatio ratio={1 / 1} mah={265} mx={"auto"}>
@@ -177,8 +208,8 @@ export default function CreatePortofolio({
               </AspectRatio>
             ) : (
               <Stack spacing={5} justify="center" align="center" h={"100%"}>
-                <Title order={3}>Upload Logo Bisnis</Title>
-                <Text fs={"italic"} fz={10} align="center">
+                <Title c={MainColor.white} order={3}>Upload Logo Bisnis</Title>
+                <Text c={MainColor.white} fs={"italic"} fz={10} align="center">
                   Masukan logo bisnis anda untuk ditampilkan dalam portofolio
                 </Text>
               </Stack>
@@ -275,8 +306,11 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              }
             }}
             label="Facebook"
             maxLength={100}
@@ -291,8 +325,11 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              }
             }}
             label="Instagram"
             maxLength={100}
@@ -307,8 +344,11 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              }
             }}
             label="Tiktok"
             maxLength={100}
@@ -323,8 +363,11 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              }
             }}
             label="Twitter"
             maxLength={100}
@@ -339,8 +382,11 @@ export default function CreatePortofolio({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white
+              }
             }}
             label="Youtube"
             maxLength={100}

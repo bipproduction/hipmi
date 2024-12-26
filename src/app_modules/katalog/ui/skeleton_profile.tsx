@@ -14,27 +14,29 @@ export default function SkeletonProfile() {
                }}
             >
                <Center>
-                  <Avatar radius={"50%"} size={100} bg={"gray"} />
+                  <Avatar radius={"50%"} size={100}  />
                </Center>
             </Box>
             <Stack align="center" justify="center" spacing={"xs"}>
                <Skeleton height={15} radius={"md"} width={"50%"} />
-               <Skeleton height={15} radius={"md"} width={"20%"} />
+               <Skeleton height={15} radius={"md"} width={"50%"} />
             </Stack>
 
             <Box mt={"lg"}>
-               {[...Array(4)].map((_, index) => (
-                  <Box key={index} py={5}>
-                     <Grid align="center">
-                        <Grid.Col span={1}>
-                           <Skeleton w={25} h={25} />
-                        </Grid.Col>
-                        <Grid.Col span={11}>
-                           <Skeleton w={"100%"} h={15} />
-                        </Grid.Col>
-                     </Grid>
-                  </Box>
-               ))}
+               <Stack spacing={"xs"}>
+                  {[...Array(4)].map((_, index) => (
+                     <Box key={index} py={5}>
+                        <Grid align="center">
+                           <Grid.Col span={1}>
+                              <Skeleton w={25} h={25} />
+                           </Grid.Col>
+                           <Grid.Col span={11}>
+                              <Skeleton w={"50%"} h={15} />
+                           </Grid.Col>
+                        </Grid>
+                     </Box>
+                  ))}
+               </Stack>
             </Box>
          </Box>
       </>

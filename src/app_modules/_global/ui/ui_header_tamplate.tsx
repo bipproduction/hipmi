@@ -67,7 +67,7 @@ export default function UIGlobal_LayoutHeaderTamplate({
             customButtonLeft
           ) : (
             <ActionIcon
-              c={"white"}
+              c={MainColor.white}
               variant="transparent"
               radius={"xl"}
               onClick={() => {
