@@ -197,8 +197,8 @@ export default function Validasi() {
 
               <Stack spacing={"md"} align="center">
                 <Stack spacing={0} align="center">
-                  <Text c={"white"}>Masukan 4 digit kode otp</Text>
-                  <Text c={"white"}>
+                  <Text c={MainColor.white}>Masukan 4 digit kode otp</Text>
+                  <Text c={MainColor.white}>
                     Yang dikirim ke{" "}
                     <Text span inherit fw={"bold"}>
                       {" "}
@@ -207,12 +207,14 @@ export default function Validasi() {
                   </Text>
                 </Stack>
                 <Center>
-                  <PinInput
+                    <PinInput
+                      
                     size="xl"
                     type={"number"}
                     ref={focusTrapRef}
                     spacing={"md"}
-                    mt={"md"}
+                      mt={"md"}
+                      styles={{ input: { backgroundColor: MainColor.white } }}
                     onChange={(val) => {
                       setInputOtp(val);
                     }}
@@ -220,7 +222,7 @@ export default function Validasi() {
                 </Center>
 
                 <Stack h={"5vh"} align="center" justify="center">
-                  <Text fs="italic" c={"white"}>
+                  <Text fs="italic" c={MainColor.white}>
                     Tidak menerima kode ?{" "}
                     {counter > 0 ? (
                       <Text fw={"bold"} inherit span>

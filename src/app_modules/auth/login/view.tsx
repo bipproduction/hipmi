@@ -67,7 +67,7 @@ export default function Login({ version }: { version: string }) {
               <Text c={MainColor.white}>Nomor telepon</Text>
             </Center>
             <PhoneInput
-              inputStyle={{ width: "100%", }}
+              inputStyle={{ width: "100%" }}             
               defaultCountry="id"
               onChange={(val) => {
                 setPhone(val);
