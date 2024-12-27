@@ -1,5 +1,5 @@
 import { prisma } from "@/app/lib";
-import { newFunGetUserId } from "@/app/lib/new_fun_user_id";
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
-    const userLoginId = await newFunGetUserId();
+    const userLoginId = await funGetUserIdByToken();
 
     const count = await prisma.notifikasi.findMany({
       where: {

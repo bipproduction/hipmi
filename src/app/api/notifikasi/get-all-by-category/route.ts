@@ -1,5 +1,5 @@
 import { prisma } from "@/app/lib";
-import { newFunGetUserId } from "@/app/lib/new_fun_user_id";
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { ICategoryapp } from "@/app_modules/notifikasi/model/interface";
 import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const category = searchParams.get("category") as ICategoryapp;
     const page = searchParams.get("page");
 
-    const userLoginId = await newFunGetUserId();
+    const userLoginId = await funGetUserIdByToken();
     const fixPage = _.toNumber(page);
     const takeData = 10;
     const skipData = fixPage * takeData - takeData;

@@ -1,4 +1,4 @@
-import { jwtVerify } from "jose";
+import { decrypt } from "@/app/auth/_lib/decrypt";
 import _ from "lodash";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -19,23 +19,4 @@ export async function GET() {
   });
 
   return NextResponse.json({ status: 200, message: "OK", data: dataUser });
-}
-
-async function decrypt({
-  token,
-  encodedKey,
-}: {
-  token: string;
-  encodedKey: string;
-}): Promise<Record<string, any> | null> {
-  try {
-    const enc = new TextEncoder().encode(encodedKey);
-    const { payload } = await jwtVerify(token, enc, {
-      algorithms: ["HS256"],
-    });
-    return (payload.user as Record<string, any>) || null;
-  } catch (error) {
-    console.error("Gagal verifikasi session", error);
-    return null;
-  }
 }

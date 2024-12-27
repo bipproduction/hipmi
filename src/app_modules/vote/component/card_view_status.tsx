@@ -1,12 +1,17 @@
 "use client";
 
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  ComponentGlobal_CardLoadingOverlay,
+  ComponentGlobal_CardStyles,
+} from "@/app_modules/_global/component";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { Badge, Card, Group, Stack, Text } from "@mantine/core";
+import { Badge, Stack, Text } from "@mantine/core";
+import moment from "moment";
+import "moment/locale/id";
 import { useRouter } from "next/navigation";
-import { MODEL_VOTING } from "../model/interface";
 import { useState } from "react";
-import { ComponentGlobal_CardLoadingOverlay, ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
+import { MODEL_VOTING } from "../model/interface";
 
 export default function ComponentVote_CardViewStatus({
   path,
@@ -17,13 +22,13 @@ export default function ComponentVote_CardViewStatus({
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  
+
   return (
     <>
       <ComponentGlobal_CardStyles
         onClickHandler={() => {
           if (data?.id === undefined) {
-            ComponentGlobal_NotifikasiPeringatan("Path tidak ditemukan");
+            ComponentGlobal_NotifikasiPeringatan("Halaman tidak ditemukan");
           } else {
             setVisible(true);
             router.push((path as string) + data?.id);
@@ -42,23 +47,14 @@ export default function ComponentVote_CardViewStatus({
                 backgroundColor: AccentColor.blue,
                 border: `1px solid ${AccentColor.skyblue}`,
                 color: "white",
-                width: "80%",
+                width: "70%",
               },
             }}
           >
-            <Group>
-              <Text>
-                {data?.awalVote.toLocaleDateString(["id-ID"], {
-                  dateStyle: "medium",
-                })}
-              </Text>
-              <Text>-</Text>
-              <Text>
-                {data?.akhirVote.toLocaleDateString(["id-ID"], {
-                  dateStyle: "medium",
-                })}
-              </Text>
-            </Group>
+            <Text>
+              {data ? moment(data.awalVote).format("ll") : "tgl awal voting"} -{" "}
+              {data ? moment(data.akhirVote).format("ll") : "tgl akhir voting"}
+            </Text>
           </Badge>
         </Stack>
         {visible && <ComponentGlobal_CardLoadingOverlay />}
