@@ -7,17 +7,9 @@ import {
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Center,
-  Grid,
-  Group,
-  Stack,
-  Text,
-  Title
-} from "@mantine/core";
+import { Avatar, Badge, Box, Center, Grid, Stack, Text } from "@mantine/core";
+import moment from "moment";
+import "moment/locale/id";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_VOTING } from "../model/interface";
@@ -75,35 +67,23 @@ export default function ComponentVote_CardViewPublish({
                       backgroundColor: AccentColor.blue,
                       border: `1px solid ${AccentColor.skyblue}`,
                       color: "white",
-                      width: "80%",
+                      width: "70%",
                     },
                   }}
                 >
-                  <Group>
-                    <Text>
-                      {data
-                        ? data?.awalVote.toLocaleDateString(["id-ID"], {
-                            dateStyle: "medium",
-                          })
-                        : "tgl awal voting"}
-                    </Text>
-                    <Text>-</Text>
-                    <Text>
-                      {data
-                        ? data?.akhirVote.toLocaleDateString(["id-ID"], {
-                            dateStyle: "medium",
-                          })
-                        : "tgl akhir voting"}
-                    </Text>
-                  </Group>
+                  <Text>
+                    {data
+                      ? moment(data.awalVote).format("ll")
+                      : "tgl awal voting"}{" "}
+                    -{" "}
+                    {data
+                      ? moment(data.akhirVote).format("ll")
+                      : "tgl akhir voting"}
+                  </Text>
                 </Badge>
               </Stack>
               {data ? (
                 <Stack>
-                  <Center>
-                    <Title order={5}>Hasil Voting</Title>
-                  </Center>
-
                   <Grid justify="center">
                     {data?.Voting_DaftarNamaVote.map((e) => (
                       <Grid.Col

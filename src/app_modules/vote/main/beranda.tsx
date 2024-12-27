@@ -1,8 +1,11 @@
 "use client";
 
+import { gs_votingTiggerBeranda } from "@/app/lib/global_state";
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { AccentColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Affix,
   Box,
@@ -14,22 +17,17 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { useAtom } from "jotai";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
+import { apiGetAllVoting } from "../_lib/api_voting";
+import { Voting_ComponentSkeletonViewPublish } from "../component";
 import ComponentVote_CardViewPublish from "../component/card_view_publish";
-import { vote_getAllListPublish } from "../fun/get/get_all_list_publish";
 import { MODEL_VOTING } from "../model/interface";
-import { gs_votingTiggerBeranda } from "@/app/lib/global_state";
-import { useAtom } from "jotai";
-import { AccentColor } from "@/app_modules/_global/color";
 
-export default function Vote_Beranda({
-  dataVote,
-}: {
-  dataVote: MODEL_VOTING[];
-}) {
-  const [data, setData] = useState(dataVote);
+export default function Vote_Beranda() {
+  const [data, setData] = useState<MODEL_VOTING[] | null>(null);
   const [activePage, setActivePage] = useState(1);
 
   // Realtime
@@ -46,32 +44,50 @@ export default function Vote_Beranda({
   }, [isTriggerVotingBeranda, setIsShowUpdate]);
 
   useShallowEffect(() => {
-    onLoad({
-      newData(val) {
-        setData(val);
-      },
-    });
-    setIsTriggerVotingBeranda(false);
-  }, [setData, setIsTriggerVotingBeranda]);
+    onLoad();
+  }, []);
 
-  async function onLoad({ newData }: { newData: (val: any) => void }) {
-    const loadData = await vote_getAllListPublish({ page: 1 });
-    newData(loadData);
+  async function onLoad() {
+    try {
+      const loadData = await apiGetAllVoting({
+        kategori: "beranda",
+        page: "1",
+      });
+      setData(loadData.data as any);
+      setIsTriggerVotingBeranda(false);
+    } catch (error) {
+      clientLogger.error("Error get data beranda", error);
+    }
   }
 
   async function onSearch(s: string) {
-    const loadSearch = await vote_getAllListPublish({ page: 1, search: s });
-    setData(loadSearch as any);
+    try {
+      const loadData = await apiGetAllVoting({
+        kategori: "beranda",
+        page: "1",
+        search: s,
+      });
+      setData(loadData.data as any);
+    } catch (error) {
+      clientLogger.error("Error get data beranda", error);
+    }
   }
 
-  async function onLoadData({ onPublish }: { onPublish: (val: any) => void }) {
-    setIsLoading(true);
-    const loadData = await vote_getAllListPublish({ page: 1 });
-    onPublish(loadData);
-
-    setIsShowUpdate(false);
-    setIsTriggerVotingBeranda(false);
-    setIsLoading(false);
+  async function onLoadData() {
+    try {
+      setIsLoading(true);
+      const loadData = await apiGetAllVoting({
+        kategori: "beranda",
+        page: "1",
+      });
+      setData(loadData.data as any);
+      setIsShowUpdate(false);
+      setIsTriggerVotingBeranda(false);
+    } catch (error) {
+      clientLogger.error("Error get data beranda", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -90,11 +106,7 @@ export default function Vote_Beranda({
               radius={"xl"}
               opacity={0.8}
               onClick={() => {
-                onLoadData({
-                  onPublish(val) {
-                    setData(val);
-                  },
-                });
+                onLoadData();
               }}
             >
               Update beranda
@@ -111,7 +123,9 @@ export default function Vote_Beranda({
 
       <ComponentGlobal_CreateButton path={RouterVote.create} />
 
-      {_.isEmpty(data) ? (
+      {_.isNull(data) ? (
+        <Voting_ComponentSkeletonViewPublish />
+      ) : _.isEmpty(data) ? (
         <ComponentGlobal_IsEmptyData />
       ) : (
         <Box>
@@ -123,15 +137,16 @@ export default function Vote_Beranda({
               </Center>
             )}
             data={data}
-            setData={setData}
+            setData={setData as any}
             moreData={async () => {
-              const loadData = await vote_getAllListPublish({
-                page: activePage + 1,
+              const loadData = await apiGetAllVoting({
+                kategori: "beranda",
+                page: `${activePage + 1}`,
               });
 
               setActivePage((val) => val + 1);
 
-              return loadData;
+              return loadData.data;
             }}
           >
             {(item) => (
