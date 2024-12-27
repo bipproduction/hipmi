@@ -1,5 +1,6 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import { Box, Grid, Skeleton } from "@mantine/core";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Box, Grid } from "@mantine/core";
 
 export default function SkeletonInvestasiBursa() {
    return (
@@ -8,7 +9,7 @@ export default function SkeletonInvestasiBursa() {
             <ComponentGlobal_CardStyles key={index}>
                <Grid>
                   <Grid.Col span={6}>
-                     <Skeleton w={"100%"} height={100} radius="md" />
+                     <CustomSkeleton w={"100%"} height={100} radius="md" />
                   </Grid.Col>
                   <Grid.Col span={6}>
                      <Box>
@@ -16,7 +17,7 @@ export default function SkeletonInvestasiBursa() {
                            <Box key={i} py={5}>
                               <Grid align="center">
                                  <Grid.Col span={12}>
-                                    <Skeleton w={"100%"} h={23} />
+                                    <CustomSkeleton w={"100%"} h={23} />
                                  </Grid.Col>
                               </Grid>
                            </Box>

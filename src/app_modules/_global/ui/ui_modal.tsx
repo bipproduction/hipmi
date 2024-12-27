@@ -33,7 +33,7 @@ export default function UIGlobal_Modal({
         }}
       >
         <Stack>
-          <Title order={6} color="white" align="center">
+          <Title order={6} color={MainColor.white} align="center">
             {title}
           </Title>
           <Group position="center">

@@ -53,7 +53,7 @@ export function Investasi_ComponentFooterMain() {
             <ActionIcon
               // disabled={e.path === "" ? true : false}
               variant="transparent"
-              c={hotMenu === i ? MainColor.yellow : "white"}
+              c={hotMenu === i ? MainColor.yellow : MainColor.white}
               onClick={() => {
                 router.push(e.route, { scroll: false });
                 setHotMenu(i);
@@ -62,7 +62,7 @@ export function Investasi_ComponentFooterMain() {
               {e.icon}
             </ActionIcon>
             <Text
-              c={hotMenu === i ? MainColor.yellow : "white"}
+              c={hotMenu === i ? MainColor.yellow : MainColor.white}
               fz={"xs"}
               lineClamp={1}
             >

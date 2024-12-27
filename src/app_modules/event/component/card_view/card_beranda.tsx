@@ -1,4 +1,5 @@
 import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardLoadingOverlay,
@@ -31,7 +32,7 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
             }}
           >
             <Group w={"100%"} position="apart" grow>
-              <Title order={5} lineClamp={1}>
+              <Title c={MainColor.white} order={5} lineClamp={1}>
                 {data.title}
               </Title>
               {/* <Text align="right" fz={"sm"} lineClamp={1}>
@@ -41,7 +42,7 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
               </Text> */}
             </Group>
 
-            <Text fz={"sm"} lineClamp={2}>
+            <Text c={MainColor.white} fz={"sm"} lineClamp={2}>
               {data.deskripsi}
             </Text>
           </Stack>

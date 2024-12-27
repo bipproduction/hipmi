@@ -61,7 +61,7 @@ export default function Event_StatusPage({
                 style={{
                   transition: "0.5s",
                   backgroundColor:
-                    changeStatus === e.id ? MainColor.yellow : "white",
+                    changeStatus === e.id ? MainColor.yellow : MainColor.white,
                   border:
                     changeStatus === e.id
                       ? `1px solid ${AccentColor.yellow}`

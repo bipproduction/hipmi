@@ -48,7 +48,7 @@ export default function ComponentGlobal_CreateButton({
         )} */}
 
         {/* GA PAKE LOADING */}
-        <IconPencilPlus color="white" />
+        <IconPencilPlus color={MainColor.white} />
       </ActionIcon>
     </>
   );
