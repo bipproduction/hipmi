@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiDeletePortofolio, apiGetOnePortofolioById } from "../lib/api_portofolio";
 import { IDetailPortofolioBisnis } from "../lib/type_portofolio";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentPortofolio_ButtonDeleteNew() {
    const param = useParams<{ id: string }>()
@@ -59,7 +60,7 @@ export default function ComponentPortofolio_ButtonDeleteNew() {
          {userLoginId === dataPorto?.authorId ? (
             <Button
                radius={"xl"}
-               bg={"red"}
+               bg={MainColor.red}
                color="red"
                onClick={() => {
                   setModal(true)

@@ -1,12 +1,12 @@
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_LoadImage } from "@/app_modules/_global/component";
-import { Paper, Stack, Group, Title, SimpleGrid, Box, Grid, Divider, Text } from "@mantine/core";
-import { IconBuildingSkyscraper, IconListDetails, IconPhoneCall, IconMapPin, IconPinned } from "@tabler/icons-react";
-import { useState } from "react";
-import { IDetailPortofolioBisnis } from "../lib/type_portofolio";
-import { useParams } from "next/navigation";
-import { apiGetOnePortofolioById } from "../lib/api_portofolio";
+import { Box, Divider, Grid, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { IconBuildingSkyscraper, IconListDetails, IconMapPin, IconPhoneCall, IconPinned } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetOnePortofolioById } from "../lib/api_portofolio";
+import { IDetailPortofolioBisnis } from "../lib/type_portofolio";
 import SkeletonDetailBisnis from "./ui_skeleton_detail_bisnis";
 
 export default function Portofolio_UiDetailDataNew() {
@@ -41,7 +41,7 @@ export default function Portofolio_UiDetailDataNew() {
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px ",
                padding: "15px",
-               color: "white",
+               color: MainColor.white,
             }}
          >
             {

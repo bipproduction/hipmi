@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { apiGetOnePortofolioById } from "../lib/api_portofolio";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentPortofolio_ButtonMoreNew() {
    const param = useParams<{ id: string }>()
@@ -20,31 +21,31 @@ export default function ComponentPortofolio_ButtonMoreNew() {
       {
          id: "1",
          name: "Edit detail ",
-         icon: <IconEdit />,
+         icon: <IconEdit color={MainColor.white} />,
          path: RouterPortofolio.edit_data_bisnis + `${param.id}`,
       },
       {
          id: "2",
          name: "Edit logo ",
-         icon: <IconPhotoEdit />,
+         icon: <IconPhotoEdit color={MainColor.white} />,
          path: RouterPortofolio.edit_logo_bisnis + `${param.id}`,
       },
       {
          id: "3",
          name: "Edit sosial media",
-         icon: <IconId />,
+         icon: <IconId color={MainColor.white} />,
          path: RouterPortofolio.edit_medsos_bisnis + `${param.id}`,
       },
       {
          id: "4",
          name: "Edit data map",
-         icon: <IconMapPin2 />,
+         icon: <IconMapPin2 color={MainColor.white} />,
          path: RouterMap.edit + `${param.id}`,
       },
       {
          id: "5",
          name: "Custom pin map",
-         icon: <IconMapPin />,
+         icon: <IconMapPin color={MainColor.white} />,
          path: RouterMap.custom_pin + `${param.id}`,
       },
    ];
@@ -53,31 +54,31 @@ export default function ComponentPortofolio_ButtonMoreNew() {
       {
          id: "1",
          name: "Edit detail ",
-         icon: <IconEdit />,
+         icon: <IconEdit color={MainColor.white} />,
          path: RouterPortofolio.edit_data_bisnis + `${param.id}`,
       },
       {
          id: "2",
          name: "Edit logo ",
-         icon: <IconPhotoEdit />,
+         icon: <IconPhotoEdit color={MainColor.white} />,
          path: RouterPortofolio.edit_logo_bisnis + `${param.id}`,
       },
       {
          id: "3",
          name: "Edit sosial media",
-         icon: <IconId />,
+         icon: <IconId color={MainColor.white} />,
          path: RouterPortofolio.edit_medsos_bisnis + `${param.id}`,
       },
       {
          id: "4",
          name: "Edit data map",
-         icon: <IconMapPin2 />,
+         icon: <IconMapPin2 color={MainColor.white} />,
          path: RouterMap.create + `${param.id}`,
       },
       {
          id: "5",
          name: "Custom pin map",
-         icon: <IconMapPin />,
+         icon: <IconMapPin color={MainColor.white} />,
          path: RouterMap.custom_pin + `${param.id}`,
       },
    ];
@@ -107,7 +108,7 @@ export default function ComponentPortofolio_ButtonMoreNew() {
       <>
          {userLoginId === authorId ? (
             <ActionIcon variant="transparent" onClick={() => setOpenDrawer(true)}>
-               <IconDotsVertical color="white" />
+               <IconDotsVertical color={MainColor.white} />
             </ActionIcon>
          ) : (
             <ActionIcon disabled variant="transparent"></ActionIcon>

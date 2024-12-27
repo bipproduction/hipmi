@@ -7,6 +7,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
 import { IconCaretRight } from "@tabler/icons-react";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function ListPortofolioProfileNew() {
    const router = useRouter();
@@ -58,8 +59,8 @@ export default function ListPortofolioProfileNew() {
                   {
                      loading ?
                         <>
-                           <Skeleton height={70} radius={"md"} width={"100%"} />
-                           <Skeleton height={70} radius={"md"} width={"100%"} />
+                           <CustomSkeleton height={70} radius={"md"} width={"100%"} />
+                           <CustomSkeleton height={70} radius={"md"} width={"100%"} />
                         </>
                         :
 
