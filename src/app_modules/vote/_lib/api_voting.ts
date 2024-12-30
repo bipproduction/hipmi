@@ -40,3 +40,37 @@ export const apiGetAllVoting = async ({
   );
   return await respone.json().catch(() => null);
 };
+
+export const apiGetOneVotingById = async ({ id }: { id: string }) => {
+  const respone = await fetch(`/api/voting/${id}`);
+  return await respone.json().catch(() => null);
+};
+
+export const apiCheckKontributorToOneVoting = async ({
+  id,
+  kategori,
+}: {
+  id: string;
+  kategori: "isKontributor" | "pilihan";
+}) => {
+  const respone = await fetch(
+    `/api/voting/check?id=${id}&kategori=${kategori}`
+  );
+  return await respone.json().catch(() => null);
+};
+
+export const apiGetHasilVotingById = async ({ id }: { id: string }) => {
+  const respone = await fetch(`/api/voting/hasil?id=${id}`);
+  return await respone.json().catch(() => null);
+};
+
+export const apiGetKontributorById = async ({
+  id,
+  page,
+}: {
+  id: string;
+  page: string;
+}) => {
+  const respone = await fetch(`/api/voting/kontributor?id=${id}&page=${page}`);
+  return await respone.json().catch(() => null);
+};

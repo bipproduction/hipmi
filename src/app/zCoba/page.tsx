@@ -14,93 +14,46 @@ import { useState } from "react";
 import { DIRECTORY_ID } from "../lib";
 
 export default function Page() {
-  const [filePP, setFilePP] = useState<File | null>(null);
-  const [imgPP, setImgPP] = useState<any | null>();
-
-  async function onSave() {
-    const body = {
-      file: filePP,
-      dirId: DIRECTORY_ID.profile_foto,
-    };
-
-    const token =
-      "QWERTYUIOPLKJHGFDSAZXCVBNMQAZWSXEDCRFVTGBYHNUJMIKOLPPOIUYTREWQLKJHGFDSAMNBVCXZlghvftyguhijknhbgvcfytguu8okjnhbgvfty7u8oilkjnhgvtygu7u8ojilnkhbgvhujnkhghvjhukjnhb";
-
-    const formData = new FormData();
-    formData.append("file", filePP as any);
-
-    const res = await fetch("/api/image/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    console.log(await res.json());
-  }
+  const [data, setData] = useState({
+    name: "bagas",
+    hobi: [
+      {
+        id: "1",
+        name: "mancing",
+      },
+      {
+        id: "2",
+        name: "game",
+      },
+    ],
+  });
 
   return (
     <>
-      <Stack>
-        <Center>
-          {imgPP ? (
-            <Paper shadow="lg" radius={"100%"}>
-              <Avatar
-                color={"cyan"}
-                sx={{
-                  borderStyle: "solid",
-                  borderColor: "gray",
-                  borderWidth: "0.5px",
-                }}
-                src={imgPP ? imgPP : "/aset/global/avatar.png"}
-                size={150}
-                radius={"100%"}
-              />
-            </Paper>
-          ) : (
-            <Paper shadow="lg" radius={"100%"}>
-              <Avatar
-                variant="light"
-                color="blue"
-                size={150}
-                radius={"100%"}
-                sx={{
-                  borderStyle: "solid",
-                  borderColor: MainColor.darkblue,
-                  borderWidth: "0.5px",
-                }}
-              />
-            </Paper>
-          )}
-        </Center>
+      <Stack align="center" justify="center" h={"100vh"}>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
 
-        <FileButton
-          onChange={async (files: any | null) => {
-            try {
-              const buffer = URL.createObjectURL(
-                new Blob([new Uint8Array(await files.arrayBuffer())])
-              );
-              setImgPP(buffer);
-              setFilePP(files);
-            } catch (error) {
-              console.log(error);
-            }
+        <Button
+          onClick={() => {
+            const newData = [
+              {
+                id: "1",
+                name: "sepedah",
+              },
+              {
+                id: "2",
+                name: "berenang",
+              },
+            ];
+
+            setData({
+              ...data,
+              hobi: newData,
+            });
           }}
-          accept="image/png,image/jpeg"
         >
-          {(props) => (
-            <Button
-              {...props}
-              radius={"xl"}
-              leftIcon={<IconCamera />}
-              bg={MainColor.yellow}
-              color="yellow"
-              c={"black"}
-            >
-              Upload
-            </Button>
-          )}
-        </FileButton>
-
-        <Button onClick={() => onSave()}>Upload</Button>
+          Ganti
+        </Button>
       </Stack>
     </>
   );

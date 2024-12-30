@@ -11,40 +11,44 @@ export default function Voting_ComponentSkeletonViewPuh() {
   return (
     <>
       <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Detail Publish" />}
+        header={<UIGlobal_LayoutHeaderTamplate title="Skeleton Maker" />}
       >
-        <ComponentGlobal_CardStyles marginBottom={"0"}>
-          <Stack spacing={"lg"}>
-            <Grid align="center">
-              <Grid.Col span={"content"}>
-                <Skeleton circle height={40} />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <Skeleton height={20} w={150} />
-              </Grid.Col>
-            </Grid>
-
-            <Stack align="center">
-              <Skeleton height={20} w={150} />
-              <Skeleton height={20} w={300} />
+        <Stack>
+          <ComponentGlobal_CardStyles marginBottom={"0"}>
+            <Stack spacing={"xl"}>
+              <Grid align="center" gutter={"md"}>
+                <Grid.Col span={"content"}>
+                  <Skeleton circle height={40} />
+                </Grid.Col>
+                <Grid.Col span={3}>
+                  <Skeleton height={20} w={150} />
+                </Grid.Col>
+                <Grid.Col span={3} offset={3}>
+                  <Skeleton height={20} w={150} />
+                </Grid.Col>
+              </Grid>
             </Stack>
+          </ComponentGlobal_CardStyles>
 
-            <Group position="center" spacing={100}>
-              <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
-              </Stack>
-              <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
-              </Stack>
-            </Group>
+          {/* <ComponentGlobal_CardStyles>
+            <Stack>
+              <Center>
+                <Skeleton h={20} w={"30%"} />
+              </Center>
 
-            <Stack align="center">
-              <Skeleton height={15} w={50} /> <Skeleton height={20} w={50} />
+              <Group position="center" spacing={50}>
+                <Stack align="center">
+                  <Skeleton circle height={70} />
+                  <Skeleton height={20} w={50} />
+                </Stack>
+                <Stack align="center">
+                  <Skeleton circle height={70} />
+                  <Skeleton height={20} w={50} />
+                </Stack>
+              </Group>
             </Stack>
-          </Stack>
-        </ComponentGlobal_CardStyles>
+          </ComponentGlobal_CardStyles> */}
+        </Stack>
       </UIGlobal_LayoutTamplate>
     </>
   );
