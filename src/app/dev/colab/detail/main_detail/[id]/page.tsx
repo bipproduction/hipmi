@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <Colab_MainDetail
-        dataColab={dataColab as any}
+        dataColab={{} as any}
         userLoginId={userLoginId as string}
         listPartisipan={listPartisipan as any}
         cekPartisipan={cekPartisipan}

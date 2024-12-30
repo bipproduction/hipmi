@@ -1,25 +1,17 @@
 "use client";
 
+import {
+  AccentColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { Stack, Tabs, Text } from "@mantine/core";
-import { IconBrandOffice, IconUsersGroup, IconUser } from "@tabler/icons-react";
-import { useState } from "react";
-import Colab_ProyekSaya from "./saya";
-import Colab_PartisipasiProyek from "./partisipasi";
+import { IconUser, IconUsersGroup } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { gs_colab_proyek } from "../../global_state";
-import {
-  MODEL_COLLABORATION,
-  MODEL_COLLABORATION_PARTISIPASI,
-} from "../../model/interface";
-import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
+import Colab_PartisipasiProyek from "./partisipasi";
+import Colab_ProyekSaya from "./saya";
 
-export default function Colab_Proyek({
-  listPartisipasiUser,
-  listProyekSaya,
-}: {
-  listPartisipasiUser: MODEL_COLLABORATION_PARTISIPASI[];
-  listProyekSaya: MODEL_COLLABORATION[];
-}) {
+export default function Colab_Proyek() {
   const [activeTab, setActiveTab] = useAtom(gs_colab_proyek);
 
   const listTabs = [
@@ -28,18 +20,14 @@ export default function Colab_Proyek({
       icon: <IconUsersGroup />,
       label: "Partisipasi Proyek",
       value: "Partisipasi",
-      path: (
-        <Colab_PartisipasiProyek
-          listPartisipasiUser={listPartisipasiUser as any}
-        />
-      ),
+      path: <Colab_PartisipasiProyek />,
     },
     {
       id: 2,
       icon: <IconUser />,
       label: "Proyek Saya",
       value: "Saya",
-      path: <Colab_ProyekSaya listProyekSaya={listProyekSaya as any} />,
+      path: <Colab_ProyekSaya />,
     },
   ];
 

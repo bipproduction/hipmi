@@ -40,15 +40,15 @@ export default function ComponentColab_CardSectionData({
         <Stack spacing={"xs"}>
           <Grid>
             <Grid.Col span={2}>
-              <Text fw={"bold"} fz={"xs"}>
+              <Text fw={"bold"} >
                 Industri
               </Text>
             </Grid.Col>
             <Grid.Col span={1}>
-              <Text fz={"xs"}>:</Text>
+              <Text >:</Text>
             </Grid.Col>
             <Grid.Col span={"auto"}>
-              <Text fz={"xs"} lineClamp={1}>
+              <Text  lineClamp={1}>
                 {data?.ProjectCollaborationMaster_Industri.name
                   ? data?.ProjectCollaborationMaster_Industri?.name
                   : "Industri"}
@@ -58,25 +58,25 @@ export default function ComponentColab_CardSectionData({
 
           <Grid>
             <Grid.Col span={2}>
-              <Text fw={"bold"} fz={"xs"}>
+              <Text fw={"bold"} >
                 Lokasi
               </Text>
             </Grid.Col>
             <Grid.Col span={1}>
-              <Text fz={"xs"}>:</Text>
+              <Text >:</Text>
             </Grid.Col>
             <Grid.Col span={"auto"}>
-              <Text fz={"xs"} lineClamp={1}>
+              <Text  lineClamp={1}>
                 {data?.lokasi ? data?.lokasi : "Lokasi dari proyek"}
               </Text>
             </Grid.Col>
           </Grid>
 
           <Stack spacing={5}>
-            <Text fw={"bold"} fz={"xs"}>
+            <Text fw={"bold"} >
               Tujuan proyek
             </Text>
-            <Text lineClamp={3} fz={"xs"}>
+            <Text lineClamp={2} >
               {data?.purpose
                 ? data?.purpose
                 : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores odio nihil in animi expedita, suscipit excepturi pariatur totam esse officiis enim cumque. Quidem, facere aliquam. Sunt laboriosam incidunt iste amet"}

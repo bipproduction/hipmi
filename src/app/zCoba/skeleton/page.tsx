@@ -23,10 +23,36 @@ export default function Voting_ComponentSkeletonViewPuh() {
                 <Grid.Col span={3}>
                   <Skeleton height={20} w={150} />
                 </Grid.Col>
-                <Grid.Col span={3} offset={3}>
+                {/* <Grid.Col span={3} offset={3}>
                   <Skeleton height={20} w={150} />
+                </Grid.Col> */}
+              </Grid>
+              <Center>
+                <Skeleton height={15} w={200} />
+              </Center>
+
+              <Grid align="center" gutter={"md"}>
+                <Grid.Col span={"content"}>
+                  <Skeleton h={15} w={70} />
+                </Grid.Col>
+                <Grid.Col span={3}>
+                  <Skeleton height={15} w={200} />
                 </Grid.Col>
               </Grid>
+
+              <Grid align="center" gutter={"md"}>
+                <Grid.Col span={"content"}>
+                  <Skeleton h={15} w={70} />
+                </Grid.Col>
+                <Grid.Col span={3}>
+                  <Skeleton height={15} w={200} />
+                </Grid.Col>
+              </Grid>
+
+              <Skeleton height={15} w={100} />
+              <Skeleton height={15} w={"100%"} />
+              <Skeleton height={15} w={100} />
+              <Skeleton height={15} w={"100%"} />
             </Stack>
           </ComponentGlobal_CardStyles>
 
