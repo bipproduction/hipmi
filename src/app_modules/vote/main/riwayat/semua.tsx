@@ -2,25 +2,46 @@
 
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Center, Loader } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
+import { apiGetAllVoting } from "../../_lib/api_voting";
+import { Voting_ComponentSkeletonViewPublish } from "../../component";
 import ComponentVote_CardViewPublish from "../../component/card_view_publish";
-import { vote_getAllListRiwayat } from "../../fun/get/get_all_list_riwayat";
 import { MODEL_VOTING } from "../../model/interface";
 
-export default function Vote_SemuaRiwayat({
-  listRiwayat,
-}: {
-  listRiwayat: MODEL_VOTING[];
-}) {
-  const [data, setData] = useState(listRiwayat);
+export default function Vote_SemuaRiwayat() {
+  const [data, setData] = useState<MODEL_VOTING[] | null>(null);
   const [activePage, setActivePage] = useState(1);
+
+  useShallowEffect(() => {
+    onLoad();
+  }, []);
+
+  async function onLoad() {
+    try {
+      const respone = await apiGetAllVoting({
+        kategori: "riwayat",
+        page: "1",
+        status: "1",
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data review", error);
+    }
+  }
 
   return (
     <>
-      {_.isEmpty(data) ? (
+      {_.isNull(data) ? (
+        <Voting_ComponentSkeletonViewPublish />
+      ) : _.isEmpty(data) ? (
         <ComponentGlobal_IsEmptyData />
       ) : (
         // --- Main component --- //
@@ -33,14 +54,17 @@ export default function Vote_SemuaRiwayat({
               </Center>
             )}
             data={data}
-            setData={setData}
+            setData={setData as any}
             moreData={async () => {
-              const loadData = await vote_getAllListRiwayat({
-                page: activePage + 1,
+              const respone = await apiGetAllVoting({
+                kategori: "riwayat",
+                page: `${activePage + 1}`,
+                status: "1",
               });
+
               setActivePage((val) => val + 1);
 
-              return loadData;
+              return respone.data;
             }}
           >
             {(item) => (

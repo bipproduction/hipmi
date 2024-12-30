@@ -31,7 +31,7 @@ export default function ComponentGlobal_BoxInformation({
             >
               * Report
             </Text>
-            <Text fz={fonsize ? fonsize : 12} c={"white"}>
+            <Text fz={fonsize ? fonsize : 12} c={MainColor.white}>
               {informasi}
             </Text>
           </Stack>
@@ -39,7 +39,7 @@ export default function ComponentGlobal_BoxInformation({
           <Group>
             <Text fz={fonsize ? fonsize : 12} c={"red"} fw={"bold"}>
               *{" "}
-              <Text span inherit c={"white"} fw={"normal"}>
+              <Text span inherit c={MainColor.white} fw={"normal"}>
                 {informasi}
               </Text>
             </Text>

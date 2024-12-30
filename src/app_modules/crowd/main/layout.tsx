@@ -15,7 +15,7 @@ export default function LayoutMainCrowd({
       <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
-            title="Crowd Funding"
+            title="Crowdfunding"
             routerLeft={RouterHome.main_home}
           />
         }

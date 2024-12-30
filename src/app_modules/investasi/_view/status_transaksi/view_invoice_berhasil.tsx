@@ -1,19 +1,20 @@
 "use client";
 
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_LoadImage, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_LoadImage,
+  ComponentGlobal_TampilanRupiah,
+} from "@/app_modules/_global/component";
 import {
   Box,
   Button,
   Collapse,
   Grid,
   Group,
-  Image,
   Paper,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import { IconBrandCashapp } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -157,12 +158,7 @@ export function Investasi_ViewTransaksiBerhasil({
               transitionDuration={500}
               transitionTimingFunction="linear"
             >
-
-              <ComponentGlobal_LoadImage fileId={data.imageId}/>
-              {/* <Image
-                alt="foto"
-                src={RouterAdminInvestasi.api_bukti_transfer + data?.imagesId}
-              /> */}
+              <ComponentGlobal_LoadImage fileId={data.imageId} />
             </Collapse>
           </Stack>
         </Paper>

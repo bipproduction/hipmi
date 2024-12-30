@@ -12,6 +12,7 @@ import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 import moment from "moment";
 import "moment/locale/id";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentEvent_DetailMainData({
   eventId,
@@ -44,37 +45,37 @@ export default function ComponentEvent_DetailMainData({
             />
 
             <Stack spacing={"xl"}>
-              <Title align="center" order={4}>
+              <Title color={MainColor.white} align="center" order={4}>
                 {data ? data.title : null}
               </Title>
               <Grid>
                 <Grid.Col span={4}>
-                  <Text fw={"bold"}>Lokasi</Text>
+                  <Text c={MainColor.white} fw={"bold"}>Lokasi</Text>
                 </Grid.Col>
                 <Grid.Col span={1}>:</Grid.Col>
                 <Grid.Col span={"auto"}>
-                  <Text>{data ? data.lokasi : null}</Text>
+                  <Text c={MainColor.white}>{data ? data.lokasi : null}</Text>
                 </Grid.Col>
               </Grid>
               <Grid>
                 <Grid.Col span={4}>
-                  <Text fw={"bold"}>Tipe Acara</Text>
+                  <Text c={MainColor.white} fw={"bold"}>Tipe Acara</Text>
                 </Grid.Col>
                 <Grid.Col span={1}>:</Grid.Col>
                 <Grid.Col span={"auto"}>
-                  <Text>{data ? data.EventMaster_TipeAcara.name : null}</Text>
+                  <Text c={MainColor.white}>{data ? data.EventMaster_TipeAcara.name : null}</Text>
                 </Grid.Col>
               </Grid>
 
               <Stack spacing={"xs"}>
-                <Text fw={"bold"}>Tanggal & Waktu</Text>
+                <Text c={MainColor.white} fw={"bold"}>Tanggal & Waktu</Text>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fw={"bold"}>Mulai</Text>
+                    <Text c={MainColor.white} fw={"bold"}>Mulai</Text>
                   </Grid.Col>
                   <Grid.Col span={1}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Text>
+                    <Text c={MainColor.white}>
                       {moment(
                         data.tanggal?.toLocaleString("id-ID", {
                           dateStyle: "full",
@@ -85,11 +86,11 @@ export default function ComponentEvent_DetailMainData({
                 </Grid>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fw={"bold"}>Selesai</Text>
+                    <Text c={MainColor.white} fw={"bold"}>Selesai</Text>
                   </Grid.Col>
                   <Grid.Col span={1}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Text>
+                    <Text c={MainColor.white}>
                       {moment(
                         data.tanggalSelesai?.toLocaleString("id-ID", {
                           dateStyle: "full",
@@ -101,8 +102,8 @@ export default function ComponentEvent_DetailMainData({
               </Stack>
 
               <Stack spacing={2}>
-                <Text fw={"bold"}>Deskripsi</Text>
-                <Text>{data ? data?.deskripsi : null}</Text>
+                <Text c={MainColor.white} fw={"bold"}>Deskripsi</Text>
+                <Text c={MainColor.white}>{data ? data?.deskripsi : null}</Text>
               </Stack>
             </Stack>
           </Stack>

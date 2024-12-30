@@ -1,30 +1,18 @@
 "use client";
 
-import { Stack, Tabs } from "@mantine/core";
-import { useState } from "react";
-import Vote_SemuaRiwayat from "./semua";
-import Vote_RiwayatSaya from "./saya";
-import { useAtom } from "jotai";
-import { gs_vote_riwayat } from "../../global_state";
-import { MODEL_VOTING } from "../../model/interface";
+import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
-import { useRouter } from "next/navigation";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { Stack, Tabs } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
+import Vote_RiwayatSaya from "./saya";
+import Vote_SemuaRiwayat from "./semua";
 
-export default function Vote_Riwayat({
-  riwayatId,
-  listRiwayat,
-  listRiwayatSaya,
-}: {
-  riwayatId: string;
-  listRiwayat?: MODEL_VOTING[];
-  listRiwayatSaya?: MODEL_VOTING[];
-}) {
+export default function Vote_Riwayat() {
   const router = useRouter();
-  const [changeStatus, setChangeStatus] = useState(riwayatId);
+  const params = useParams<{ id: string }>();
 
   const listTabs = [
     {
@@ -39,20 +27,15 @@ export default function Vote_Riwayat({
     },
   ];
 
-  async function onChangeStatus({ statusId }: { statusId: string }) {
-    router.push(RouterVote.riwayat({ id: statusId }));
-  }
-
   return (
     <>
       <Tabs
         mt={1}
         variant="pills"
         radius={"xl"}
-        value={changeStatus}
+        value={params.id}
         onTabChange={(val: any) => {
-          setChangeStatus(val);
-          onChangeStatus({ statusId: val });
+          router.replace(RouterVote.riwayat({ id: val }));
         }}
         styles={{
           tabsList: {
@@ -77,9 +60,9 @@ export default function Vote_Riwayat({
                 style={{
                   transition: "0.5s",
                   backgroundColor:
-                    changeStatus === e.id ? MainColor.yellow : "white",
+                    params.id === e.id ? MainColor.yellow : "white",
                   border:
-                    changeStatus === e.id
+                    params.id === e.id
                       ? `1px solid ${AccentColor.yellow}`
                       : `1px solid white`,
                 }}
@@ -89,13 +72,8 @@ export default function Vote_Riwayat({
             ))}
           </Tabs.List>
 
-          {riwayatId === "1" && (
-            <Vote_SemuaRiwayat listRiwayat={listRiwayat as any} />
-          )}
-
-          {riwayatId === "2" && (
-            <Vote_RiwayatSaya listRiwayatSaya={listRiwayatSaya as any} />
-          )}
+          {params.id === "1" && <Vote_SemuaRiwayat />}
+          {params.id === "2" && <Vote_RiwayatSaya />}
         </Stack>
       </Tabs>
     </>

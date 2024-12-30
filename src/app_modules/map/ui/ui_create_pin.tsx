@@ -109,7 +109,13 @@ export function UiMap_CreatePin({
           <TextInput
             disabled={isPin ? false : true}
             style={{ transition: "0.5s" }}
-            styles={{ label: { color: isPin ? "white" : "gray" } }}
+            styles={{ label: { color: isPin ? MainColor.white : "gray" },
+            input: {
+              backgroundColor: MainColor.white
+            },
+            required: {
+              color: MainColor.red,
+            } }}
             label="Nama Pin"
             placeholder="Masukan nama pin map"
             withAsterisk
@@ -132,8 +138,8 @@ export function UiMap_CreatePin({
               </AspectRatio>
             ) : (
               <Stack spacing={5} justify="center" align="center" h={"100%"}>
-                <Title order={3}>Foto Lokasi Bisnis</Title>
-                <Text fs={"italic"} fz={10} align="center">
+                <Title c={MainColor.white} order={3}>Foto Lokasi Bisnis</Title>
+                <Text c={MainColor.white} fs={"italic"} fz={10} align="center">
                   Upload foto lokasi bisnis anda untuk ditampilkan dalam detail
                   map
                 </Text>

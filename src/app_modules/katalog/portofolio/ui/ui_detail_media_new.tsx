@@ -1,11 +1,12 @@
-import { AccentColor } from "@/app_modules/_global/color";
-import { Paper, Title, Stack, Grid, Text, Skeleton, Box } from "@mantine/core";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Box, Grid, Paper, Stack, Text, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandFacebook, IconBrandInstagram, IconBrandTiktok, IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { IDetailPortofolioSosmed } from "../lib/type_portofolio";
 import { apiGetOnePortofolioById } from "../lib/api_portofolio";
-import { useShallowEffect } from "@mantine/hooks";
+import { IDetailPortofolioSosmed } from "../lib/type_portofolio";
 
 export default function Portofolio_UiSosialMediaNew() {
    const [loading, setLoading] = useState(true)
@@ -40,7 +41,7 @@ export default function Portofolio_UiSosialMediaNew() {
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px ",
                padding: "15px",
-               color: "white",
+               color: MainColor.white,
             }}
          >
             <Title order={6}>Media Sosial Bisnis</Title>
@@ -51,10 +52,10 @@ export default function Portofolio_UiSosialMediaNew() {
                         <Box key={index} py={5}>
                            <Grid align="center">
                               <Grid.Col span={1}>
-                                 <Skeleton w={25} h={25} />
+                                 <CustomSkeleton w={25} h={25} />
                               </Grid.Col>
                               <Grid.Col span={11}>
-                                 <Skeleton w={"100%"} h={15} />
+                                 <CustomSkeleton w={"100%"} h={15} />
                               </Grid.Col>
                            </Grid>
                         </Box>

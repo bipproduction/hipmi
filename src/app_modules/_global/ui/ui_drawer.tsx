@@ -11,7 +11,7 @@ import {
 import { IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AccentColor } from "../color/color_pallet";
+import { AccentColor, MainColor } from "../color/color_pallet";
 import ComponentGlobal_Loader from "../component/loader";
 
 interface MODEL_DRAWER {
@@ -72,7 +72,7 @@ export default function UIGlobal_Drawer({
         <Stack spacing={"xs"}>
           <Group position="right">
             <ActionIcon onClick={close} variant="transparent">
-              <IconX color="white" />
+              <IconX color={MainColor.white} />
             </ActionIcon>
           </Group>
           <SimpleGrid cols={component.length < 4 ? component.length : 4}>
@@ -100,7 +100,7 @@ export default function UIGlobal_Drawer({
                   {e?.icon}
 
                 </ActionIcon>
-                <Text fz={"sm"} align="center" color="white">
+                <Text fz={"sm"} align="center" color={MainColor.white}>
                   {e?.name}
                 </Text>
               </Stack>

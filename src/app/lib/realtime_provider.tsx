@@ -7,10 +7,12 @@ import {
   gs_admin_ntf,
   gs_adminDonasi_triggerReview,
   gs_adminEvent_triggerReview,
+  gs_adminInvestasi_triggerReview,
   gs_adminJob_triggerReview,
   gs_adminVoting_triggerReview,
   gs_donasiTriggerBeranda,
   gs_eventTriggerBeranda,
+  gs_investasiTriggerBeranda,
   gs_jobTiggerBeranda,
   gs_realtimeData,
   gs_user_ntf,
@@ -69,6 +71,14 @@ export default function RealtimeProvider({
   );
   const [isTriggerDonasiBeranda, setIsTriggerDonasiBeranda] = useAtom(
     gs_donasiTriggerBeranda
+  );
+
+  // INVESTASI
+  const [isAdminInvestasi_TriggerReview, setIsAdminInvestasi_TriggerReview] =
+    useAtom(gs_adminInvestasi_triggerReview);
+
+  const [isTriggerInvestasiBeranda, setIsTriggerInvestasiBeranda] = useAtom(
+    gs_investasiTriggerBeranda
   );
 
   useShallowEffect(() => {
@@ -195,12 +205,32 @@ export default function RealtimeProvider({
           // ) {
 
           // }
-
           // ---------------------- DONASI ------------------------- //
+
+          // ---------------------- INVESTASI ------------------------- //
+
+          if (
+            data.type == "trigger" &&
+            data.pushNotificationTo == "ADMIN" &&
+            data.dataMessage?.kategoriApp == "INVESTASI"
+          ) {
+            setIsAdminInvestasi_TriggerReview(true);
+          }
+
+          if (
+            data.type == "trigger" &&
+            data.pushNotificationTo == "USER" &&
+            data.dataMessage?.kategoriApp == "INVESTASI" &&
+            data.dataMessage.status == "Publish"
+          ) {
+            setIsTriggerInvestasiBeranda(true);
+          }
+
+          // ---------------------- INVESTASI ------------------------- //
         },
       });
     } catch (error) {
-      console.log("Error!:", error);
+      console.log("Error Realtime:", error);
     }
   }, []);
 

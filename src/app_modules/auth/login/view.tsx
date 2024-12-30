@@ -56,18 +56,22 @@ export default function Login({ version }: { version: string }) {
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" h={"100vh"} spacing={100}>
           <Stack align="center" spacing={0}>
-            <Title order={3} c={MainColor.yellow}>
+            <Title order={3} c={MainColor.yellow} >
               WELCOME TO
             </Title>
-            <Title c={MainColor.yellow}>HIPMI APPS</Title>
+            <Title c={MainColor.yellow} >
+              HIPMI APPS
+            </Title>
           </Stack>
 
           <Stack w={300}>
             <Center>
-              <Text c={"white"}>Nomor telepon</Text>
+              <Text c={MainColor.white} >
+                Nomor telepon
+              </Text>
             </Center>
             <PhoneInput
-              inputStyle={{ width: "100%" }}
+              inputStyle={{ width: "100%" }}             
               defaultCountry="id"
               onChange={(val) => {
                 setPhone(val);
@@ -99,7 +103,7 @@ export default function Login({ version }: { version: string }) {
           </Stack>
 
           <Box pos={"fixed"} bottom={10}>
-            <Text fw={"bold"} c={"white"} fs={"italic"} fz={"xs"}>
+            <Text fw={"bold"} c={MainColor.white} fs={"italic"} fz={"xs"}>
               v {version}
             </Text>
           </Box>

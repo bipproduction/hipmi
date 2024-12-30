@@ -70,7 +70,7 @@ export default function LayoutEvent_Main({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={hotMenu === i ? MainColor.yellow : "white"}
+                  c={hotMenu === i ? MainColor.yellow : MainColor.white}
                   onClick={() =>
                     e.path === ""
                       ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")
@@ -80,7 +80,7 @@ export default function LayoutEvent_Main({
                   {e.icon}
                 </ActionIcon>
                 <Text
-                  c={hotMenu === i ? MainColor.yellow : "white"}
+                  c={hotMenu === i ? MainColor.yellow : MainColor.white}
                   fz={"xs"}
                   lineClamp={1}
                 >

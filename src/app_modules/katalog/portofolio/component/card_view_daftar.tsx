@@ -34,7 +34,7 @@ export function ComponentPortofolio_DaftarBoxView({
       >
         <Group position="apart">
           <Stack spacing={0} w={"80%"}>
-            <Text fw={"bold"} lineClamp={1} w={"80%"}>
+            <Text c={MainColor.white} fw={"bold"} lineClamp={1} w={"80%"}>
               {data?.namaBisnis}
             </Text>
             <Text fz={10} c={MainColor.yellow}>
@@ -52,7 +52,7 @@ export function ComponentPortofolio_DaftarBoxView({
 
 
             {/* GA PAKE LOADING */}
-            <IconCaretRight color="white" size={25} />
+            <IconCaretRight color={MainColor.white} size={25} />
           </Stack>
         </Group>
       </Paper>

@@ -60,15 +60,26 @@ export async function adminInvestasi_funAcceptTransaksiById({
         lembarTerbeli: resultLembarTerbeli.toString(),
         progress: resultProgres,
       },
+      include: {
+        MasterStatusInvestasi: true,
+      },
     });
 
     if (!updateInvestasi)
       return { status: 400, message: "Gagal Update Data Investasi" };
 
+    const newData = updateInvestasi;
+
+    const allData = {
+      dataInvestasi: updateInvestasi,
+      dataInvestor: updt,
+    };
+
     revalidatePath(RouterAdminInvestasi.detail_publish);
     return {
       status: 200,
       message: "Update Berhasil",
+      data: allData,
     };
   }
 }
