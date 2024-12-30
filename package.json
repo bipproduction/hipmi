@@ -1,6 +1,6 @@
 {
   "name": "hipmi",
-  "version": "1.2.26",
+  "version": "1.2.36",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts --yes"
@@ -50,6 +50,7 @@
     "autoprefixer": "10.4.14",
     "bufferutil": "^4.0.8",
     "bun": "^1.1.38",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.5",
     "echarts": "^5.4.3",
@@ -95,6 +96,8 @@
     "wibu": "bipproduction/wibu",
     "wibu-cli": "^1.0.91",
     "wibu-pkg": "^1.0.3",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "yaml": "^2.3.2"
   }
 }

@@ -15,6 +15,7 @@ import moment from "moment";
 import { useState } from "react";
 import { Event_ComponentCreateButton } from "../component";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function Event_Create({
   listTipeAcara,
@@ -47,8 +48,14 @@ export default function Event_Create({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            required: {
+              color: MainColor.red,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           label="Judul"
           placeholder="Masukan judul"
@@ -64,8 +71,14 @@ export default function Event_Create({
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            required: {
+              color: MainColor.red,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           withAsterisk
           label="Tipe Acara"
@@ -85,8 +98,14 @@ export default function Event_Create({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            required: {
+              color: MainColor.red,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           label="Lokasi"
           placeholder="Masukan lokasi acara"
@@ -104,8 +123,14 @@ export default function Event_Create({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            required: {
+              color: MainColor.red,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -144,8 +169,14 @@ export default function Event_Create({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            required: {
+              color: MainColor.red,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -187,8 +218,14 @@ export default function Event_Create({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              }
             }}
             label="Deskripsi"
             placeholder="Deskripsikan acara yang akan di selenggarakan"

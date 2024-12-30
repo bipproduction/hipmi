@@ -1,21 +1,4 @@
-import Notifikasi_UiAll from "./ui_all_notifikasi";
-import Notifikasi_UiCollaboration from "./ui_collaboration_notifikasi";
-import Notifikasi_UiDonasi from "./ui_donasi_notifikasi";
-import Notifikasi_UiEvent from "./ui_event_notifikasi";
-import Notifikasi_UiForum from "./ui_forum_notifikasi";
-import Notifikasi_UiInvestasi from "./ui_investasi_notifikasi";
-import Notifikasi_UiJob from "./ui_job_notifikasi";
 import Notifikasi_UiNewLayout from "./ui_new_layout_notifikasi";
-import Notifikasi_UiNewMain from "./ui_new_notifikasi";
-import Notifikasi_UiVoting from "./ui_voting_notifikasi";
+import Notifikasi_UiMain from "./ui_notifikasi";
 
-export { Notifikasi_UiNewMain };
-export { Notifikasi_UiNewLayout };
-export { Notifikasi_UiAll };
-export { Notifikasi_UiJob };
-export { Notifikasi_UiEvent };
-export { Notifikasi_UiForum };
-export { Notifikasi_UiVoting };
-export { Notifikasi_UiDonasi };
-export { Notifikasi_UiInvestasi };
-export { Notifikasi_UiCollaboration };
+export { Notifikasi_UiMain, Notifikasi_UiNewLayout };

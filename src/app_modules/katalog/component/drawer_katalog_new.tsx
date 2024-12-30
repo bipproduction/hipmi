@@ -3,7 +3,7 @@ import {
   RouterPortofolio,
   RouterProfile,
 } from "@/app/lib/router_hipmi/router_katalog";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import {
   gs_admin_navbar_menu,
   gs_admin_navbar_subMenu,
@@ -48,25 +48,25 @@ export default function DrawerKatalogNew({
     {
       id: "1",
       name: "Edit profile",
-      icon: <IconEdit />,
+      icon: <IconEdit color={MainColor.white} />,
       path: RouterProfile.edit + param.id,
     },
     {
       id: "2",
       name: "Ubah foto profile",
-      icon: <IconPhotoEdit />,
+      icon: <IconPhotoEdit color={MainColor.white} />,
       path: RouterProfile.update_foto_profile + param.id,
     },
     {
       id: "3",
       name: "Ubah latar belakang",
-      icon: <IconPolaroid />,
+      icon: <IconPolaroid color={MainColor.white} />,
       path: RouterProfile.update_foto_background + param.id,
     },
     {
       id: "4",
       name: "Tambah portofolio",
-      icon: <IconPencilPlus />,
+      icon: <IconPencilPlus color={MainColor.white} />,
       path: RouterPortofolio.create + param.id,
     },
   ];
@@ -95,7 +95,7 @@ export default function DrawerKatalogNew({
             borderRight: `1px solid ${AccentColor.blue}`,
             borderLeft: `1px solid ${AccentColor.blue}`,
             borderRadius: "20px 20px 0px 0px",
-            color: "white",
+            color: MainColor.white,
             paddingBottom: "5%",
           },
         }}
@@ -103,7 +103,7 @@ export default function DrawerKatalogNew({
         <Stack spacing={"xs"}>
           <Group position="right">
             <ActionIcon onClick={close} variant="transparent">
-              <IconX color="white" />
+              <IconX color={MainColor.white} />
             </ActionIcon>
           </Group>
           <SimpleGrid cols={4}>
@@ -113,10 +113,10 @@ export default function DrawerKatalogNew({
                   router.push(e.path, { scroll: false });
                 }}
               >
-                <ActionIcon variant="transparent" c="white" >
+                <ActionIcon variant="transparent" c={MainColor.white} >
                   {e.icon}
                 </ActionIcon>
-                <Text align="center" color="white">
+                <Text align="center" color={MainColor.white}>
                   {e.name}
                 </Text>
               </Stack>
@@ -136,7 +136,7 @@ export default function DrawerKatalogNew({
                     });
                   }}
                 >
-                  <IconDashboard />
+                  <IconDashboard color={MainColor.white} />
                 </ActionIcon>
                 <Text align="center" color="white">
                   Dashboard Admin

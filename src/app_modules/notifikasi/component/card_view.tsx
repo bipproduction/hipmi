@@ -6,20 +6,24 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
+import { gs_donasi_hot_menu } from "@/app_modules/donasi/global_state";
 import { gs_event_hotMenu } from "@/app_modules/event/global_state";
+import { gs_investas_menu } from "@/app_modules/investasi/g_state";
 import { gs_job_hot_menu } from "@/app_modules/job/global_state";
+import { gs_vote_hotMenu } from "@/app_modules/vote/global_state";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconCheck, IconChecks } from "@tabler/icons-react";
 import { useAtom } from "jotai";
+import moment from "moment";
+import "moment/locale/id";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_NOTIFIKASI } from "../model/interface";
-import { notifikasi_eventCheckStatus } from "./path/event";
-import { notifikasi_jobCheckStatus } from "./path/job";
-import { gs_vote_hotMenu } from "@/app_modules/vote/global_state";
-import { notifikasi_votingCheckStatus } from "./path/voting";
 import { redirectDonasiPage } from "./path/donasi";
-import { gs_donasi_hot_menu } from "@/app_modules/donasi/global_state";
+import { notifikasi_eventCheckStatus } from "./path/event";
+import { redirectInvestasiPage } from "./path/investasi";
+import { notifikasi_jobCheckStatus } from "./path/job";
+import { notifikasi_votingCheckStatus } from "./path/voting";
 
 export function ComponentNotifiaksi_CardView({
   data,
@@ -28,7 +32,7 @@ export function ComponentNotifiaksi_CardView({
 }: {
   data: MODEL_NOTIFIKASI;
   onLoadData: (val: any) => void;
-  categoryPage: any;
+  categoryPage: string;
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
@@ -38,6 +42,7 @@ export function ComponentNotifiaksi_CardView({
   const [eventMenuId, setEventMenuId] = useAtom(gs_event_hotMenu);
   const [votingMenu, setVotingMenu] = useAtom(gs_vote_hotMenu);
   const [donasiMenu, setDonasiMenu] = useAtom(gs_donasi_hot_menu);
+  const [investasiMenu, setInvestasiMenu] = useAtom(gs_investas_menu);
 
   return (
     <>
@@ -74,6 +79,8 @@ export function ComponentNotifiaksi_CardView({
                 setLoadCountNtf(val);
               },
             });
+
+            return;
           }
 
           // EVENT
@@ -96,6 +103,8 @@ export function ComponentNotifiaksi_CardView({
                 setLoadCountNtf(val);
               },
             });
+
+            return;
           }
 
           if (data?.kategoriApp === "VOTING") {
@@ -117,6 +126,8 @@ export function ComponentNotifiaksi_CardView({
                 setLoadCountNtf(val);
               },
             });
+
+            return;
           }
 
           if (data?.kategoriApp === "DONASI") {
@@ -138,6 +149,31 @@ export function ComponentNotifiaksi_CardView({
                 setLoadCountNtf(val);
               },
             });
+
+            return;
+          }
+
+          if (data?.kategoriApp === "INVESTASI") {
+            redirectInvestasiPage({
+              appId: data.appId,
+              dataId: data.id,
+              categoryPage: categoryPage,
+              router: router,
+              onLoadDataEvent(val) {
+                onLoadData(val);
+              },
+              onSetVisible(val) {
+                setVisible(val);
+              },
+              onSetMenuId(val) {
+                setInvestasiMenu(val);
+              },
+              onLoadCountNtf(val) {
+                setLoadCountNtf(val);
+              },
+            });
+
+            return;
           }
 
           // data?.kategoriApp === "FORUM" &&
@@ -146,37 +182,10 @@ export function ComponentNotifiaksi_CardView({
           //     router: router,
           //   });
 
-          // data?.kategoriApp === "VOTING" &&
-          //   redirectVotingPage({
-          //     data: data,
-          //     router: router,
-          //     onSetPage(val) {
-          //       // onSetMenu(val);
-          //     },
-          //   });
-
-          // data?.kategoriApp === "EVENT" &&
-          //   redirectEventPage({
-          //     data: data,
-          //     router: router,
-          //     onSetPage(val) {
-          //       // onSetMenu(val);
-          //     },
-          //   });
-
           // data?.kategoriApp === "COLLABORATION" &&
           //   redirectDetailCollaborationPage({
           //     data: data,
           //     router: router,
-          //   });
-
-          // data.kategoriApp === "INVESTASI" &&
-          //   redirectInvestasiPage({
-          //     data: data,
-          //     router: router,
-          //     onSetPage(val) {
-          //       // onSetMenu(val);
-          //     },
           //   });
         }}
       >
@@ -220,16 +229,7 @@ export function ComponentNotifiaksi_CardView({
         <Card.Section p={"sm"}>
           <Group position="apart">
             <Text fz={10} color="gray">
-              {new Intl.DateTimeFormat("id-ID", {
-                dateStyle: "long",
-              }).format(data?.createdAt)}
-
-              <Text span inherit fz={10} color="gray">
-                {", "}
-                {new Intl.DateTimeFormat("id-ID", {
-                  timeStyle: "short",
-                }).format(data?.createdAt)}
-              </Text>
+              {moment(data.createdAt).format("LLL")}
             </Text>
             {data?.isRead ? (
               <Group spacing={5}>

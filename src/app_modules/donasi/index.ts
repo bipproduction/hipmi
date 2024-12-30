@@ -1,3 +1,4 @@
+import LayoutDetailMainDonasiNew from '@/app_modules/donasi/detail/detail_main/layout_new';
 import MainDonasi from "./main/beranda";
 import MainDonasiNew from "./main/beranda_new";
 import LayoutDonasi from "./main/layout";
@@ -5,6 +6,7 @@ import GalangDanaDonasi from "./main/galang_dana/ui_galang_dana";
 import GalangDanaDonasiNew from "./main/galang_dana/ui_galang_dana_new";
 import DonasiSayaDonasi from "./main/donasi_saya";
 import CreateDonasi from "./create/create_donasi";
+import CreateDonasiNew from "./create/create_donasi_new";
 import LayoutCreateDonasi from "./create/layout";
 import DetailMainDonasi from "./detail/detail_main";
 import LayoutDetailMainDonasi from "./detail/detail_main/layout";
@@ -49,6 +51,7 @@ import Donasi_CreateKabar from "./create/create_kabar";
 import LayoutDonasi_CreateKabar from "./create/create_kabar/layout";
 import Donasi_EditRekening from "./edit/edit_rekening";
 import LayoutDonasi_EditRekening from "./edit/edit_rekening/layout";
+import EditDonasiNew from "./edit/edit_donasi/edit_donasi_new";
 export { LayoutDonasi_BuktiTransfer } from "./detail/detail_main/bukti_transfer";
 
 export {
@@ -103,4 +106,7 @@ export {
   LayoutDonasi_EditRekening,
   MainDonasiNew,
   GalangDanaDonasiNew,
+  CreateDonasiNew,
+  EditDonasiNew,
+  LayoutDetailMainDonasiNew
 };

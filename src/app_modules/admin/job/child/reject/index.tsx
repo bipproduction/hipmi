@@ -1,5 +1,6 @@
 "use client";
 
+import { IRealtimeData } from "@/app/lib/global_state";
 import { RouterAdminJob } from "@/app/lib/router_admin/router_admin_job";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -8,7 +9,6 @@ import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_globa
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
-import mqtt_client from "@/util/mqtt_client";
 import {
   Button,
   Center,
@@ -22,11 +22,12 @@ import {
   Table,
   Text,
   TextInput,
-  Textarea
+  Textarea,
 } from "@mantine/core";
 import { IconBan, IconPhotoCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
 
@@ -311,7 +312,7 @@ async function onReject({
     const loadData = await adminJob_getListReject({ page: 1 });
     onSetData(loadData);
 
-    const dataNotif = {
+    const dataNotifikasi: IRealtimeData = {
       appId: reject.data?.id as any,
       status: reject.data?.MasterStatus?.name as any,
       userId: reject.data?.authorId as any,
@@ -321,14 +322,15 @@ async function onReject({
     };
 
     const notif = await adminNotifikasi_funCreateToUser({
-      data: dataNotif as any,
+      data: dataNotifikasi as any,
     });
 
     if (notif.status === 201) {
-      mqtt_client.publish(
-        "USER",
-        JSON.stringify({ userId: reject?.data?.authorId, count: 1 })
-      );
+      WibuRealtime.setData({
+        type: "notification",
+        pushNotificationTo: "USER",
+        dataMessage: dataNotifikasi,
+      });
     }
 
     ComponentGlobal_NotifikasiBerhasil(reject.message);

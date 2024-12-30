@@ -46,23 +46,44 @@ export async function GET(request: Request) {
             ..._.omit(v, ["DonasiMaster_Durasi"]),
             nameDonasiDurasi: v.DonasiMaster_Durasi.name
          }))
-      } else {
+      } else if (kategori == "galang-dana") {
          const userLoginId = await funGetUserIdByToken()
          if (userLoginId == null) {
             return NextResponse.json({ success: false, message: "Gagal mendapatkan data, user id tidak ada" }, { status: 500 });
          }
 
-         dataFix = await prisma.donasi.findMany({
+         const data = await prisma.donasi.findMany({
             take: 5,
             skip: dataSkip,
             where: {
                authorId: userLoginId,
                donasiMaster_StatusDonasiId: status,
+               active: true,
+            },
+            select: {
+               id: true,
+               title: true,
+               imagesId: true,
+               target: true,
+               progres: true,
+               publishTime: true,
+               DonasiMaster_Durasi: {
+                  select: {
+                     name: true
+                  }
+               },
+               terkumpul: true,
+               imageId: true,
             },
             orderBy: {
                updatedAt: "desc",
             },
          });
+
+         dataFix = data.map((v: any) => ({
+            ..._.omit(v, ["DonasiMaster_Durasi"]),
+            nameDonasiDurasi: v.DonasiMaster_Durasi.name
+         }))
       }
 
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan data", data: dataFix }, { status: 200 });

@@ -65,13 +65,13 @@ export default function Register() {
       const result = await res.json();
 
       if (res.status === 200) {
-        localStorage.removeItem("hipmi_auth_code_id");
         ComponentGlobal_NotifikasiBerhasil(result.message);
-        router.push("/dev/home", { scroll: false });
-
+        localStorage.removeItem("hipmi_auth_code_id");
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+        router.push("/dev/home", { scroll: false });
+        return;
       }
 
       if (res.status === 400) {
@@ -96,10 +96,10 @@ export default function Register() {
               REGISTRASI
             </Title>
 
-            <IconUserCircle size={100} color="white" />
+            <IconUserCircle size={100} color={MainColor.white} />
 
             <Stack spacing={"sm"} w={300}>
-              <Text align="center" c={"white"}>
+              <Text align="center" c={MainColor.white}>
                 Anda akan terdaftar dengan nomor berikut{" "}
                 <Text inherit span fw={"bold"}>
                   +{nomor}

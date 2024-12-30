@@ -2,29 +2,50 @@
 
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Center, Loader } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
+import { apiGetAllVoting } from "../../_lib/api_voting";
 import ComponentVote_CardViewStatus from "../../component/card_view_status";
-import { vote_getAllReview } from "../../fun/get/status/get_all_review";
 import { MODEL_VOTING } from "../../model/interface";
+import { Voting_ComponentSkeletonViewStatus } from "../../component";
 
-export default function Vote_StatusReview({
-  listReview,
-}: {
-  listReview: MODEL_VOTING[];
-}) {
-  const [data, setData] = useState(listReview);
+export default function Vote_StatusReview() {
+  const [data, setData] = useState<MODEL_VOTING[] | null>(null);
   const [activePage, setActivePage] = useState(1);
+
+  useShallowEffect(() => {
+    onLoad();
+  }, []);
+
+  async function onLoad() {
+    try {
+      const respone = await apiGetAllVoting({
+        kategori: "status",
+        page: "1",
+        status: "2",
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data review", error);
+    }
+  }
 
   return (
     <>
-      {_.isEmpty(data) ? (
+      {_.isNull(data) ? (
+        <Voting_ComponentSkeletonViewStatus />
+      ) : _.isEmpty(data) ? (
         <ComponentGlobal_IsEmptyData />
       ) : (
         // --- Main component --- //
-        <Box >
+        <Box>
           <ScrollOnly
             height="75vh"
             renderLoading={() => (
@@ -33,14 +54,16 @@ export default function Vote_StatusReview({
               </Center>
             )}
             data={data}
-            setData={setData}
+            setData={setData as any}
             moreData={async () => {
-              const loadData = await vote_getAllReview({
-                page: activePage + 1,
+              const respone = await apiGetAllVoting({
+                kategori: "status",
+                page: `${activePage + 1}`,
+                status: "2",
               });
               setActivePage((val) => val + 1);
 
-              return loadData;
+              return respone.data;
             }}
           >
             {(item) => (

@@ -44,6 +44,7 @@ export default function UploadFotoProfile({
         <Profile_ComponentButtonUpdatePhotoProfile
           file={file as any}
           profileId={profile.id}
+          fileId={profile.imageId as string}
         />
       </Stack>
     </>

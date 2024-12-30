@@ -1,16 +1,94 @@
-import { job_getAllListPublish } from "@/app_modules/job/fun/get/get_all_publish";
-import _ from "lodash";
+import { prisma } from "@/app/lib";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
-export async function GET(params: Request) {
-  const { searchParams } = new URL(params.url);
-  const page = searchParams.get("page");
-  const search = searchParams.get("search");
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
+    const page = searchParams.get("page");
+    const dataTake = 10;
+    const dataSkip = Number(page) * dataTake - dataTake;
 
-  const data = await job_getAllListPublish({
-    page: _.toNumber(page),
-    search: search as string,
-  });
+    if (search != "") {
+      const data = await prisma.job.findMany({
+        take: dataTake,
+        skip: dataSkip,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          masterStatusId: "1",
+          isActive: true,
+          isArsip: false,
+          title: {
+            mode: "insensitive",
+            contains: search as string,
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: true,
+            },
+          },
+        },
+      });
 
-  return NextResponse.json({ data });
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Berhasil ambil data",
+          data: data,
+        },
+        { status: 200 }
+      );
+    } else {
+      const data = await prisma.job.findMany({
+        take: dataTake,
+        skip: dataSkip,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          masterStatusId: "1",
+          isActive: true,
+          isArsip: false,
+          title: {
+            mode: "insensitive",
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: true,
+            },
+          },
+        },
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Berhasil ambil data",
+          data: data,
+        },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      success: false,
+      message: "Gagal ambil data",
+    });
+  }
 }

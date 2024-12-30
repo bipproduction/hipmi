@@ -7,18 +7,18 @@ import {
   gs_admin_ntf,
   gs_adminDonasi_triggerReview,
   gs_adminEvent_triggerReview,
+  gs_adminInvestasi_triggerReview,
   gs_adminJob_triggerReview,
   gs_adminVoting_triggerReview,
   gs_donasiTriggerBeranda,
   gs_eventTriggerBeranda,
+  gs_investasiTriggerBeranda,
   gs_jobTiggerBeranda,
   gs_realtimeData,
   gs_user_ntf,
   gs_votingTiggerBeranda,
   IRealtimeData,
 } from "./global_state";
-import { newFunGetUserId } from "./new_fun_user_id";
-import { useState } from "react";
 
 // const WIBU_REALTIME_TOKEN: string | undefined =
 //   process.env.NEXT_PUBLIC_WIBU_REALTIME_TOKEN;
@@ -28,15 +28,16 @@ export type TypeNotification = {
   type: "message" | "notification" | "trigger";
   pushNotificationTo: "ADMIN" | "USER";
   dataMessage?: IRealtimeData;
-  userLoginId?: string;
+  userId?: string;
 };
 
 export default function RealtimeProvider({
+  userId,
   WIBU_REALTIME_TOKEN,
 }: {
+  userId: string;
   WIBU_REALTIME_TOKEN: string;
 }) {
-  const [userLoginId, setUserLoginId] = useState("");
   const [dataRealtime, setDataRealtime] = useAtom(gs_realtimeData);
   const [newAdminNtf, setNewAdminNtf] = useAtom(gs_admin_ntf);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
@@ -72,15 +73,15 @@ export default function RealtimeProvider({
     gs_donasiTriggerBeranda
   );
 
-  async function loadUserId() {
-    const userId = await newFunGetUserId();
+  // INVESTASI
+  const [isAdminInvestasi_TriggerReview, setIsAdminInvestasi_TriggerReview] =
+    useAtom(gs_adminInvestasi_triggerReview);
 
-    setUserLoginId(userId as string);
-  }
+  const [isTriggerInvestasiBeranda, setIsTriggerInvestasiBeranda] = useAtom(
+    gs_investasiTriggerBeranda
+  );
 
   useShallowEffect(() => {
-    loadUserId();
-
     try {
       WibuRealtime.init({
         project: "hipmi",
@@ -97,7 +98,7 @@ export default function RealtimeProvider({
           if (
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
-            data.dataMessage?.userId == userLoginId
+            data.dataMessage?.userId == userId
           ) {
             setNewUserNtf((e) => e + 1);
             setDataRealtime(data.dataMessage as any);
@@ -144,7 +145,7 @@ export default function RealtimeProvider({
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
             data.dataMessage?.status == "Peserta Event" &&
-            userLoginId !== data.dataMessage?.userId
+            userId !== data.dataMessage?.userId
           ) {
             setNewUserNtf((e) => e + 1);
           }
@@ -172,7 +173,7 @@ export default function RealtimeProvider({
             data.type == "notification" &&
             data.pushNotificationTo == "USER" &&
             data.dataMessage?.status == "Voting Masuk" &&
-            userLoginId !== data.dataMessage?.userId
+            userId !== data.dataMessage?.userId
           ) {
             setNewUserNtf((e) => e + 1);
           }
@@ -200,16 +201,36 @@ export default function RealtimeProvider({
           //   data.type == "notification" &&
           //   data.pushNotificationTo == "ADMIN" &&
           //   data.dataMessage?.status == "Menunggu" &&
-          //   userLoginId !== data.dataMessage?.userId
+          //   userId !== data.dataMessage?.userId
           // ) {
-          //   console.log("yes");
-          // }
 
+          // }
           // ---------------------- DONASI ------------------------- //
+
+          // ---------------------- INVESTASI ------------------------- //
+
+          if (
+            data.type == "trigger" &&
+            data.pushNotificationTo == "ADMIN" &&
+            data.dataMessage?.kategoriApp == "INVESTASI"
+          ) {
+            setIsAdminInvestasi_TriggerReview(true);
+          }
+
+          if (
+            data.type == "trigger" &&
+            data.pushNotificationTo == "USER" &&
+            data.dataMessage?.kategoriApp == "INVESTASI" &&
+            data.dataMessage.status == "Publish"
+          ) {
+            setIsTriggerInvestasiBeranda(true);
+          }
+
+          // ---------------------- INVESTASI ------------------------- //
         },
       });
     } catch (error) {
-      console.log("Error!:", error);
+      console.log("Error Realtime:", error);
     }
   }, []);
 

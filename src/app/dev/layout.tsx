@@ -1,5 +1,5 @@
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { RealtimeProvider } from "../lib";
-import { newFunGetUserId } from "../lib/new_fun_user_id";
 import { ServerEnv } from "../lib/server_env";
 
 export default async function Layout({
@@ -7,9 +7,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const userId = await funGetUserIdByToken();
+
   return (
     <>
       <RealtimeProvider
+        userId={userId}
         WIBU_REALTIME_TOKEN={
           ServerEnv.value?.NEXT_PUBLIC_WIBU_REALTIME_TOKEN as string
         }

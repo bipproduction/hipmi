@@ -1,16 +1,17 @@
 import { APIs } from "@/app/lib";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { ComponentMap_DetailData, ComponentMap_DrawerDetailData } from "@/app_modules/map/_component";
 import { defaultMapZoom } from "@/app_modules/map/lib/default_lat_long";
-import { Paper, Stack, Title, Avatar, Skeleton, Text } from "@mantine/core";
+import { Avatar, Paper, Stack, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { AttributionControl, Map, Marker, NavigationControl, ScaleControl, } from "react-map-gl";
-import { IDetailPortofolioLokasi } from "../lib/type_portofolio";
 import { apiGetOnePortofolioById } from "../lib/api_portofolio";
-import { useShallowEffect } from "@mantine/hooks";
-import { ComponentMap_DetailData, ComponentMap_DrawerDetailData } from "@/app_modules/map/_component";
-import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { IDetailPortofolioLokasi } from "../lib/type_portofolio";
 
 export default function Portofolio_UiMapNew({ mapboxToken }: { mapboxToken: string }) {
    const [loading, setLoading] = useState(true)
@@ -46,7 +47,7 @@ export default function Portofolio_UiMapNew({ mapboxToken }: { mapboxToken: stri
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px ",
                padding: "15px",
-               color: "white",
+               color: MainColor.white,
             }}
          >
             <Stack spacing={0}>
@@ -55,7 +56,7 @@ export default function Portofolio_UiMapNew({ mapboxToken }: { mapboxToken: stri
                </Title>
                {
                   loading ?
-                     <Skeleton radius={"md"} w={"100%"} h={100} />
+                     <CustomSkeleton radius={"md"} w={"100%"} h={100} />
                      :
                      dataPorto?.mapId === null || dataPorto?.mapId === undefined ?
                         <ComponentGlobal_IsEmptyData text="Tidak ada data" height={10} /> 

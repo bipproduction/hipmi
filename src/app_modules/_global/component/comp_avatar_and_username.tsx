@@ -9,6 +9,7 @@ import ComponentGlobal_Loader from "./loader";
 import { funGlobal_CheckProfile } from "../fun/get";
 import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
+import { MainColor } from "../color";
 
 type IFontSize = "xs" | "sm" | "md" | "lg" | "xl";
 export function ComponentGlobal_AvatarAndUsername({
@@ -60,6 +61,7 @@ export function ComponentGlobal_AvatarAndUsername({
         <Grid.Col span={"auto"} style={{ minHeight: 50 }}>
           <Stack justify="center" h={30}>
             <Text
+              c={MainColor.white}
               fw={"bold"}
               fz={fontSize ? fontSize : "sm"}
               lineClamp={1}

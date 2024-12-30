@@ -1,4 +1,4 @@
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { apiGetUserProfile, IUserProfile } from "@/app_modules/user";
 import { Box, Center, Group, Stack, Text, ThemeIcon } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -14,23 +14,23 @@ export default function ProfileDetail() {
    const [dataProfile, setDataProfile] = useState<IUserProfile>()
    const listInformation = [
       {
-         icon: <IconPhone />,
+         icon: <IconPhone color={MainColor.white} />,
          value: "+" + dataProfile?.nomor,
       },
       {
-         icon: <IconBrandGmail />,
+         icon: <IconBrandGmail color={MainColor.white} />,
          value: dataProfile?.email,
       },
       {
-         icon: <IconHome />,
+         icon: <IconHome color={MainColor.white} />,
          value: dataProfile?.alamat,
       },
       {
          icon:
             dataProfile?.jenisKelamin === "Laki-laki" ? (
-               <IconGenderMale />
+               <IconGenderMale color={MainColor.white} />
             ) : (
-               <IconGenderFemale />
+               <IconGenderFemale color={MainColor.white}/>
             ),
          value: dataProfile?.jenisKelamin,
       },
@@ -64,7 +64,7 @@ export default function ProfileDetail() {
             border: `2px solid ${AccentColor.blue}`,
             borderRadius: "10px ",
             padding: "15px",
-            color: "white",
+            color: MainColor.white
          }}
       >
          {
@@ -96,11 +96,11 @@ export default function ProfileDetail() {
                               }}
                            />
                         </Center>
-                        <Stack align="center" c={"white"} mt={"xs"} spacing={0}>
-                           <Text fw={"bold"} lineClamp={1}>
+                        <Stack align="center" c={MainColor.white} mt={"xs"} spacing={0}>
+                           <Text fw={"bold"} lineClamp={1} c={MainColor.white}>
                               {dataProfile?.name}
                            </Text>
-                           <Text fs={"italic"} fz={"sm"} lineClamp={1}>
+                           <Text fs={"italic"} fz={"sm"} c={MainColor.white} lineClamp={1}>
                               @{dataProfile?.username}
                            </Text>
                         </Stack>
@@ -118,7 +118,7 @@ export default function ProfileDetail() {
                                  {e.icon}
                               </ThemeIcon>
                               <Box w={"85%"}>
-                                 <Text fw={"bold"}>{e?.value}</Text>
+                                 <Text c={MainColor.white} fw={"bold"}>{e?.value}</Text>
                               </Box>
                            </Group>
                         ))}

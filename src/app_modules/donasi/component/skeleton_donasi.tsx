@@ -1,5 +1,5 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import { Box, Grid, Group, Skeleton, Stack } from "@mantine/core";
+import { Box, Grid, Skeleton } from "@mantine/core";
 
 export default function SkeletonDonasi() {
    return <>

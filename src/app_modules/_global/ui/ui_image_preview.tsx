@@ -10,18 +10,16 @@ import {
   Image,
   rem,
   ScrollArea,
-  Skeleton,
-  Text,
-  Title,
+  Skeleton
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MainColor } from "../color";
+import ComponentGlobal_Loader from "../component/loader";
 import UIGlobal_LayoutHeaderTamplate from "./ui_header_tamplate";
 import { UIHeader } from "./ui_layout_tamplate";
-import ComponentGlobal_Loader from "../component/loader";
 
 export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
   const router = useRouter();

@@ -34,6 +34,7 @@ import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 import Event_ComponentSkeletonListPeserta from "../skeleton/comp_skeleton_list_peserta";
 import { ScrollOnly } from "next-scroll-loader";
 import { event_newGetListPesertaById } from "../../fun";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentEvent_ListPeserta({
   total,
@@ -74,12 +75,12 @@ export default function ComponentEvent_ListPeserta({
         <ComponentGlobal_CardStyles>
           <Stack spacing={"md"} px={"sm"}>
             <Center>
-              <Title order={5}>Daftar Peserta ({total})</Title>
+              <Title color={MainColor.white} order={5}>Daftar Peserta ({total})</Title>
             </Center>
 
             {_.isEmpty(data) ? (
               <Center>
-                <Text fz={"xs"} fw={"bold"}>
+                <Text c={MainColor.white} fz={"xs"} fw={"bold"}>
                   - Tidak ada peserta -
                 </Text>
               </Center>

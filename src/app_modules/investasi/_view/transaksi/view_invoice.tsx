@@ -28,6 +28,10 @@ import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_glo
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { DIRECTORY_ID } from "@/app/lib";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { IRealtimeData } from "@/app/lib/global_state";
+import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { WibuRealtime } from "wibu-pkg";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Investasi_ViewInvoice({
   dataInvoice,
@@ -40,25 +44,59 @@ export function Investasi_ViewInvoice({
   const [file, setFile] = useState<File | null>(null);
 
   async function onUpload() {
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
-      file: file as any,
-      dirId: DIRECTORY_ID.investasi_bukti_transfer,
-    });
+    try {
+      setLoading(true);
+      const uploadFileToStorage = await funGlobal_UploadToStorage({
+        file: file as any,
+        dirId: DIRECTORY_ID.investasi_bukti_transfer,
+      });
 
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload bukti transfer")
+      if (!uploadFileToStorage.success) {
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload bukti transfer");
+        return;
+      }
 
-    const res = await investasi_funUploadBuktiTransferById({
-      invoiceId: data.id,
-      fileId: uploadFileToStorage.data.id,
-    });
+      const res = await investasi_funUploadBuktiTransferById({
+        invoiceId: data.id,
+        fileId: uploadFileToStorage.data.id,
+      });
 
-    if (res.status !== 200) return ComponentGlobal_NotifikasiGagal(res.message);
-    ComponentGlobal_NotifikasiBerhasil(res.message);
-    setLoading(true);
-    router.push(NEW_RouterInvestasi.proses_transaksi + data.id, {
-      scroll: false,
-    });
+      if (res.status != 200) {
+        ComponentGlobal_NotifikasiGagal(res.message);
+        return;
+      }
+
+      const dataNotifikasi: IRealtimeData = {
+        appId: dataInvoice.Investasi.id,
+        status: "Proses",
+        userId: dataInvoice.authorId as string,
+        pesan: "Bukti transfer telah diupload",
+        kategoriApp: "INVESTASI",
+        title: "Invoice baru",
+      };
+
+      const notif = await notifikasiToAdmin_funCreate({
+        data: dataNotifikasi as any,
+      });
+
+      if (notif.status === 201) {
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "ADMIN",
+          dataMessage: dataNotifikasi,
+        });
+
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+
+        router.push(NEW_RouterInvestasi.proses_transaksi + data.id, {
+          scroll: false,
+        });
+      }
+    } catch (error) {
+      clientLogger.error(" Error upload invoice", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

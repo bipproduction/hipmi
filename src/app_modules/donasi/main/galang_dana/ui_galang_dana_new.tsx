@@ -1,13 +1,31 @@
 "use client";
 import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
 import { AccentColor, MainColor, } from "@/app_modules/_global/color/color_pallet";
-import { MODEL_NEW_DEFAULT_MASTER } from "@/app_modules/model_global/interface";
 import { Stack, Tabs } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
+import Donasi_ViewGalangDanaNew from "./donasi_galang_dana_new";
 
-export default function GalangDanaDonasiNew({listStatus,}: {listStatus: MODEL_NEW_DEFAULT_MASTER[]; }) {
+export default function GalangDanaDonasiNew() {
   const router = useRouter();
   const param = useParams<{ id: string }>();
+  const status = [
+    {
+      id: "1",
+      name: "Publish"
+    },
+    {
+      id: "2",
+      name: "Review"
+    },
+    {
+      id: "3",
+      name: "Draft"
+    },
+    {
+      id: "4",
+      name: "Reject"
+    }
+  ]
 
   async function onChangeStatus({ statusId }: { statusId: string }) {
     router.replace(RouterDonasi.status_galang_dana({ id: statusId }));
@@ -34,7 +52,7 @@ export default function GalangDanaDonasiNew({listStatus,}: {listStatus: MODEL_NE
       >
         <Stack>
           <Tabs.List grow>
-            {listStatus.map((e, i) => (
+            {status.map((e, i) => (
               <Tabs.Tab
                 key={e.id}
                 value={e.id}
@@ -54,14 +72,7 @@ export default function GalangDanaDonasiNew({listStatus,}: {listStatus: MODEL_NE
               </Tabs.Tab>
             ))}
           </Tabs.List>
-
-          {/* {param.id == "1" && <PostingPublishDonasi listPublish={dataStatus} />}
-
-          {param.id == "2" && <PostingReviewDonasi listReview={dataStatus} />}
-
-          {param.id == "3" && <PostingDraftDonasi listDraft={dataStatus} />}
-
-          {param.id == "4" && <PostingRejectDonasi listReject={dataStatus} />} */}
+          <Donasi_ViewGalangDanaNew />
         </Stack>
       </Tabs>
     </>

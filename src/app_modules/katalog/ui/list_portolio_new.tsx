@@ -7,6 +7,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
 import { IconCaretRight } from "@tabler/icons-react";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function ListPortofolioProfileNew() {
    const router = useRouter();
@@ -42,7 +43,7 @@ export default function ListPortofolioProfileNew() {
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px ",
                padding: "15px",
-               color: "white",
+               color: MainColor.white,
             }}
          >
             <Stack spacing={"sm"}>
@@ -58,8 +59,8 @@ export default function ListPortofolioProfileNew() {
                   {
                      loading ?
                         <>
-                           <Skeleton height={70} radius={"md"} width={"100%"} />
-                           <Skeleton height={70} radius={"md"} width={"100%"} />
+                           <CustomSkeleton height={70} radius={"md"} width={"100%"} />
+                           <CustomSkeleton height={70} radius={"md"} width={"100%"} />
                         </>
                         :
 
@@ -84,7 +85,7 @@ export default function ListPortofolioProfileNew() {
                                        border: `2px solid ${AccentColor.blue}`,
                                        borderRadius: "10px ",
                                        padding: "15px",
-                                       color: "white",
+                                       color: MainColor.white,
                                     }}
                                  >
                                     <Group position="apart">
@@ -97,7 +98,7 @@ export default function ListPortofolioProfileNew() {
                                           </Text>
                                        </Stack>
                                        <Stack>
-                                          <IconCaretRight color="white" size={25} />
+                                          <IconCaretRight color={MainColor.white} size={25} />
                                        </Stack>
                                     </Group>
                                  </Paper>

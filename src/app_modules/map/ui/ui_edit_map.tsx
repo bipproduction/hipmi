@@ -114,8 +114,8 @@ export function UiMap_EditMap({
           }}
         >
           <TextInput
-            style={{ transition: "0.5s" }}
-            styles={{ label: { color: "white" } }}
+            style={{ transition: "0.5s", }}
+            styles={{ label: { color: MainColor.white }, required: { color: MainColor.red }, input: { backgroundColor: MainColor.white } }}
             label="Nama Pin"
             placeholder="Masukan nama pin map"
             value={data.namePin}

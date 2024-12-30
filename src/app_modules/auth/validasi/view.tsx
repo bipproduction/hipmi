@@ -59,11 +59,7 @@ export default function Validasi() {
     }
   }, [triggerOtp]);
 
-  async function onCheckAuthCode({
-    kodeId,
-  }: {
-    kodeId: string;
-  }) {
+  async function onCheckAuthCode({ kodeId }: { kodeId: string }) {
     const res = await fetch(`/api/auth/check?id=${kodeId}`);
     const result = await res.json();
 
@@ -97,37 +93,40 @@ export default function Validasi() {
 
       const result = await res.json();
 
-      if (res.status === 200) {
+      if (res.status === 200 && result.roleId == "1") {
+        ComponentGlobal_NotifikasiBerhasil(result.message);
         localStorage.removeItem("hipmi_auth_code_id");
-
-        if (result.roleId === "1") {
-          ComponentGlobal_NotifikasiBerhasil(result.message);
-          router.push(RouterHome.main_home, { scroll: false });
-          // if (result.active === true) {
-          // } else {
-          //   ComponentGlobal_NotifikasiBerhasil(result.message);
-          //   router.push("/waiting-room", { scroll: false });
-          // }
-        } else {
-          ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
-          router.push(RouterAdminDashboard.splash_admin, { scroll: false });
-        }
-
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+        router.push(RouterHome.main_home, { scroll: false });
+        return;
+      }
+
+      if (res.status === 200 && result.roleId != "1") {
+        ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
+        localStorage.removeItem("hipmi_auth_code_id");
+        await auth_funDeleteAktivasiKodeOtpByNomor({
+          nomor: data.nomor,
+        });
+        router.push(RouterAdminDashboard.splash_admin, { scroll: false });
+        return;
       }
 
       if (res.status === 404) {
-        ComponentGlobal_NotifikasiBerhasil(result.message);
         router.push("/register", { scroll: false });
+        ComponentGlobal_NotifikasiBerhasil(result.message);
+        return;
       }
 
       if (res.status === 400) {
         ComponentGlobal_NotifikasiPeringatan(result.message);
+        return;
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -198,8 +197,8 @@ export default function Validasi() {
 
               <Stack spacing={"md"} align="center">
                 <Stack spacing={0} align="center">
-                  <Text c={"white"}>Masukan 4 digit kode otp</Text>
-                  <Text c={"white"}>
+                  <Text c={MainColor.white}>Masukan 4 digit kode otp</Text>
+                  <Text c={MainColor.white}>
                     Yang dikirim ke{" "}
                     <Text span inherit fw={"bold"}>
                       {" "}
@@ -208,12 +207,14 @@ export default function Validasi() {
                   </Text>
                 </Stack>
                 <Center>
-                  <PinInput
+                    <PinInput
+                      
                     size="xl"
                     type={"number"}
                     ref={focusTrapRef}
                     spacing={"md"}
-                    mt={"md"}
+                      mt={"md"}
+                      styles={{ input: { backgroundColor: MainColor.white } }}
                     onChange={(val) => {
                       setInputOtp(val);
                     }}
@@ -221,7 +222,7 @@ export default function Validasi() {
                 </Center>
 
                 <Stack h={"5vh"} align="center" justify="center">
-                  <Text fs="italic" c={"white"}>
+                  <Text fs="italic" c={MainColor.white}>
                     Tidak menerima kode ?{" "}
                     {counter > 0 ? (
                       <Text fw={"bold"} inherit span>

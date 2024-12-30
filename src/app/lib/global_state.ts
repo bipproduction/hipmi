@@ -13,11 +13,12 @@ export type ITypeStatusNotifikasi =
   | "Peserta Event"
   // VOTING
   | "Voting Masuk"
-  // DONASI
+  // DONASI & INVESTASI
   | "Berhasil"
   | "Proses"
   | "Menunggu"
   | "Gagal";
+
 
 /**
  * @param kategoriApp | "JOB", "VOTING", "EVENT", "DONASI", "INVESTASI", "COLLABORATION", "FORUM"
@@ -42,7 +43,7 @@ export type IRealtimeData = {
 export const gs_realtimeData = atom<IRealtimeData | null>(null);
 export const gs_admin_ntf = atom<number>(0);
 export const gs_user_ntf = atom<number>(0);
-export const gs_count_ntf = atom<number>(0);
+export const gs_count_ntf = atom<number | null>(null);
 
 // job
 export const gs_adminJob_triggerReview = atom<boolean>(false);
@@ -59,3 +60,7 @@ export const gs_votingTiggerBeranda = atom<boolean>(false);
 // donasi
 export const gs_adminDonasi_triggerReview = atom<boolean>(false);
 export const gs_donasiTriggerBeranda = atom<boolean>(false);
+
+// investasi
+export const gs_adminInvestasi_triggerReview = atom<boolean>(false);
+export const gs_investasiTriggerBeranda = atom<boolean>(false);

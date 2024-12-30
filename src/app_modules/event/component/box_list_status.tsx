@@ -1,6 +1,6 @@
 "use client";
 
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
@@ -33,17 +33,17 @@ export default function ComponentEvent_BoxListStatus({
       >
         <Stack>
           <Group w={"100%"} position="apart" grow>
-            <Title order={5} lineClamp={1}>
+            <Title color={MainColor.white} order={5} lineClamp={1}>
               {data.title}
             </Title>
-            <Text align="right" fz={"sm"} lineClamp={1}>
+            <Text c={MainColor.white} align="right" fz={"sm"} lineClamp={1}>
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "medium",
               }).format(data.tanggal)}
             </Text>
           </Group>
 
-          <Text fz={"sm"} lineClamp={2}>
+          <Text c={MainColor.white} fz={"sm"} lineClamp={2}>
             {data.deskripsi}
           </Text>
         </Stack>

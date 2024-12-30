@@ -32,38 +32,20 @@ export async function funGlobal_UploadToStorage({
     console.error("File terlalu besar");
     return { success: false, message: "File size exceeds limit" };
   }
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000); // Timeout 30 detik
-
   const formData = new FormData();
   formData.append("file", file);
   formData.append("dirId", dirId);
 
-  try {
-    const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${Env_WS_APIKEY}`,
-      },
-      signal: controller.signal,
-    });
+  const upload = await fetch("/api/image/upload", {
+    method: "POST",
+    body: formData,
+  });
 
-    clearTimeout(timeoutId); // Bersihkan timeout jika selesai tepat waktu
+  const res = await upload.json();
 
-    if (res.ok) {
-      const dataRes = await res.json();
-      return { success: true, data: dataRes.data };
-    } else {
-      const errorText = await res.text();
-      console.error("Error:", errorText);
-      return { success: false, message: errorText };
-    }
-  } catch (error) {
-    clearTimeout(timeoutId); //
-
-    console.error("Error:", error);
-    return { success: false, message: "An unexpected error occurred" };
+  if (upload.ok) {
+    return { success: true, data: res.data, message: res.message };
+  } else {
+    return { success: false, data: {}, message: res.message };
   }
 }

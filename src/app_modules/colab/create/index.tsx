@@ -5,7 +5,15 @@ import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/inpu
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { Button, Select, Stack, TextInput, Textarea } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Select,
+  Stack,
+  TextInput,
+  Textarea,
+  Loader,
+} from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import colab_funCreateProyek from "../fun/create/fun_create_proyek";
@@ -13,12 +21,12 @@ import { MODEL_COLLABORATION_MASTER } from "../model/interface";
 import mqtt_client from "@/util/mqtt_client";
 import { useHookstate } from "@hookstate/core";
 import { useGsCollabCreate } from "../global_state/state";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetMasterCollaboration } from "../component/lib/api_collaboration";
+import { clientLogger } from "@/util/clientLogger";
+import { Collaboration_SkeletonCreate } from "../component";
 
-export default function Colab_Create({
-  listIndustri,
-}: {
-  listIndustri: MODEL_COLLABORATION_MASTER[];
-}) {
+export default function Colab_Create() {
   const [value, setValue] = useState({
     title: "",
     lokasi: "",
@@ -27,9 +35,38 @@ export default function Colab_Create({
     projectCollaborationMaster_IndustriId: 0,
     // jumlah_partisipan: 0,
   });
+
+  const [listIndustri, setListIndustri] = useState<
+    MODEL_COLLABORATION_MASTER[] | null
+  >(null);
+
+  useShallowEffect(() => {
+    onLoadMaster();
+  }, []);
+
+  async function onLoadMaster() {
+    try {
+      const respone = await apiGetMasterCollaboration();
+      if (respone.success) {
+        setListIndustri(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get master collaboration", error);
+    }
+  }
+
+  
+  if (listIndustri == null) {
+    return (
+      <>
+        <Collaboration_SkeletonCreate />
+      </>
+    );
+  }
+
   return (
     <>
-      <Stack px={"xl"} py={"md"}>
+      <Stack px={"xl"} pb={"md"}>
         <TextInput
           maxLength={100}
           styles={{
@@ -66,7 +103,7 @@ export default function Colab_Create({
           }}
         />
 
-        <Select
+        {/* <Select
           styles={{
             label: {
               color: "white",
@@ -85,7 +122,7 @@ export default function Colab_Create({
               projectCollaborationMaster_IndustriId: val as any,
             });
           }}
-        />
+        /> */}
 
         {/* <TextInput
           description={
