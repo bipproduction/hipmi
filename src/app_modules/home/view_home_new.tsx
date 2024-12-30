@@ -79,7 +79,7 @@ export default function HomeViewNew() {
                   }
                 }}
               >
-                <IconUserSearch color="white" />
+                <IconUserSearch color={MainColor.white} />
               </ActionIcon>
             }
             customButtonRight={
@@ -113,10 +113,10 @@ export default function HomeViewNew() {
                       </Text>
                     }
                   >
-                    <IconBell color="white" />
+                    <IconBell color={MainColor.white} />
                   </Indicator>
                 ) : (
-                  <IconBell color="white" />
+                  <IconBell color={MainColor.white} />
                 )}
               </ActionIcon>
             }

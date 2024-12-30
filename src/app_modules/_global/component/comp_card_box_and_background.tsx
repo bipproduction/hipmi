@@ -1,4 +1,4 @@
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { Card } from "@mantine/core";
 import React from "react";
 
@@ -30,7 +30,7 @@ export function ComponentGlobal_CardStyles({
           paddingInline: "16px",
           paddingBlock: "16px",
           borderRadius: "10px",
-          color: color ? color : "white",
+          color: color ? color : MainColor.white,
           height: height ? height : "auto",
           marginBottom: marginBottom ? marginBottom : "15px",
         }}

@@ -5,6 +5,7 @@ import { Grid, Progress, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import ComponentDonasi_TampilanHitungMundur from "../tampilan_hitung_mundur";
 import TampilanRupiahDonasi from "../tampilan_rupiah";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentDonasi_CardPublishNew({ data }: { data: any; }) {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function ComponentDonasi_CardPublishNew({ data }: { data: any; })
             <Grid.Col span={6}>
               <Stack spacing={"xs"}>
                 <Stack spacing={0}>
-                  <Text fz={"sm"} fw={"bold"} lineClamp={2}>
+                  <Text c={MainColor.white} fz={"sm"} fw={"bold"} lineClamp={2}>
                     {data.title}
                   </Text>
                   <ComponentDonasi_TampilanHitungMundur
@@ -38,8 +39,8 @@ export default function ComponentDonasi_CardPublishNew({ data }: { data: any; })
                 </Stack>
                 <Progress value={+data.progres} color="yellow" />
                 <Stack spacing={0}>
-                  <Text fz={"sm"}>Terkumpul</Text>
-                  <Text fz={"sm"} fw={"bold"} c={"orange"} truncate>
+                  <Text c={MainColor.white} fz={"sm"}>Terkumpul</Text>
+                  <Text c={MainColor.white} fz={"sm"} fw={"bold"}  truncate>
                     <TampilanRupiahDonasi nominal={+data.terkumpul} />
                   </Text>
                 </Stack>

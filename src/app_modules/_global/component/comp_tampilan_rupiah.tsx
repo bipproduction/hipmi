@@ -1,4 +1,5 @@
 import { Text } from "@mantine/core";
+import { MainColor } from "../color";
 
 export default function ComponentGlobal_TampilanRupiah({
   nominal,
@@ -17,7 +18,7 @@ export default function ComponentGlobal_TampilanRupiah({
         fw={fontWeight ? fontWeight : "bold"}
         fz={fontSize ? fontSize : "md"}
         style={{
-          color: color ? color : "white",
+          color: color ? color : MainColor.white,
         }}
       >
         Rp.{" "}

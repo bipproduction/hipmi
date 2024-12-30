@@ -64,7 +64,7 @@ export default function UIGlobal_Drawer({
             borderRight: `1px solid ${AccentColor.blue}`,
             borderLeft: `1px solid ${AccentColor.blue}`,
             borderRadius: "20px 20px 0px 0px",
-            color: "white",
+            color: MainColor.white,
             paddingBottom: "5%",
           },
         }}
@@ -86,7 +86,7 @@ export default function UIGlobal_Drawer({
               >
                 <ActionIcon
                   variant="transparent"
-                  c="white"
+                  c={MainColor.white}
                 >
                   {/* PAKE LOADING */}
                   {/* {isLoading && e?.id === pageId ? (

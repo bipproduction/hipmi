@@ -4,8 +4,9 @@ import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 import { IRealtimeData } from "@/app/lib/global_state";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
-import { Button, Skeleton, Stack } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
@@ -49,7 +50,7 @@ export default function Event_DetailMain({
         />
 
         {isJoinSuccess == null ? (
-          <Skeleton radius={"xl"} h={40} />
+          <CustomSkeleton radius={"xl"} h={40} />
         ) : isJoinSuccess ? (
           <Button disabled radius={"xl"} color="green">
             Anda Telah Ikut Serta

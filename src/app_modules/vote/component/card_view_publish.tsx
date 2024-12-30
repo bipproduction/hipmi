@@ -1,6 +1,6 @@
 "use client";
 
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardLoadingOverlay,
@@ -66,7 +66,7 @@ export default function ComponentVote_CardViewPublish({
                     root: {
                       backgroundColor: AccentColor.blue,
                       border: `1px solid ${AccentColor.skyblue}`,
-                      color: "white",
+                      color: MainColor.white,
                       width: "70%",
                     },
                   }}

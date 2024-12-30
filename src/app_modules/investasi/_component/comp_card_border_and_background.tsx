@@ -1,4 +1,4 @@
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { Card } from "@mantine/core";
 import React from "react";
 
@@ -26,7 +26,7 @@ export function Investasi_ComponentStylesCard({
           paddingInline: "15px",
           paddingBlock: "15px",
           borderRadius: "10px",
-          color: "white",
+          color: MainColor.white,
           marginBottom: marginBottom ? marginBottom : "0x",
         }}
         onClick={onClickHandler}

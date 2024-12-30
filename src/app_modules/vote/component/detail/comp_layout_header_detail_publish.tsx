@@ -1,5 +1,5 @@
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
@@ -25,6 +25,7 @@ import { useState } from "react";
 import { voting_funUpdateIsArsipById } from "../../fun";
 import { MODEL_VOTING } from "../../model/interface";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
+
 
 export function Voting_ComponentLayoutHeaderDetailPublish({
   votingId,
@@ -177,7 +178,7 @@ function BoxIsAuthor({
           {/* Daftar Kontributor */}
           <ActionIcon
             variant="transparent"
-            c="white"
+            c={MainColor.white}
             onClick={() => {
               setIsLoading(true);
               router.push(RouterVote.daftar_kontributor + votingId, {
@@ -187,7 +188,7 @@ function BoxIsAuthor({
           >
             {isLoading ? <ComponentGlobal_Loader /> : <IconUsersGroup />}
           </ActionIcon>
-          <Text fz={"sm"} align="center" color="white">
+          <Text fz={"sm"} align="center" color={MainColor.white}>
             Daftar Kontributor
           </Text>
         </Stack>
@@ -195,7 +196,7 @@ function BoxIsAuthor({
           {/* Arsip button */}
           <ActionIcon
             variant="transparent"
-            c="white"
+            c={MainColor.white}
             onClick={() => {
               onSetDrawer({
                 drawer: false,
@@ -206,7 +207,7 @@ function BoxIsAuthor({
           >
             <IconArchive />
           </ActionIcon>
-          <Text fz={"sm"} align="center" color="white">
+          <Text fz={"sm"} align="center" color={MainColor.white}>
             Update Arsip
           </Text>
         </Stack>

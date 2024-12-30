@@ -18,7 +18,7 @@ import { useState } from "react";
 import ComponentInvestasi_IsEmptyData from "../component/is_empty_data";
 import { MODEL_INVESTASI } from "../_lib/interface";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Publish({ data }: { data: MODEL_INVESTASI[] }) {
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function Publish({ data }: { data: MODEL_INVESTASI[] }) {
             backgroundColor: AccentColor.darkblue,
             borderRadius: "10px",
             border: `2px solid ${AccentColor.blue}`,
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
