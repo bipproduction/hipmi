@@ -1,5 +1,6 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { Box } from "@mantine/core";
+import { MainColor } from "../color";
 
 /**
  * 
@@ -28,6 +29,7 @@ export function ComponentGlobal_BoxUploadImage({
             height: "100%",
             borderStyle: "dashed",
             borderRadius: "5px",
+            borderColor: MainColor.white,
           }}
         >
           {children}

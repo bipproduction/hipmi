@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { auth_Logout } from "../fun/fun_logout";
 import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function Component_ButtonLogout({userId}: {userId: string}) {
   const router = useRouter();
@@ -70,9 +71,9 @@ export default function Component_ButtonLogout({userId}: {userId: string}) {
             setOpened(true);
           }}
         >
-          <IconLogout color="red" />
+          <IconLogout color={MainColor.red} />
         </ActionIcon>
-        <Text fw={"bold"} align="center" color="red">
+        <Text fw={"bold"} align="center" color={MainColor.red}>
           Keluar
         </Text>
       </Stack>

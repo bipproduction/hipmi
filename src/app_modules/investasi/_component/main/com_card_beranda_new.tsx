@@ -30,7 +30,7 @@ export function Investasi_ComponentCardBerandaNew({ data }: { data: IDataInvesta
                   </Grid.Col>
                   <Grid.Col span={6}>
                      <Stack>
-                        <Text fw={"bold"} align="center" lineClamp={2}>
+                        <Text c={MainColor.white} fw={"bold"} align="center" lineClamp={2}>
                            {data?.title}
                         </Text>
 
@@ -40,6 +40,7 @@ export function Investasi_ComponentCardBerandaNew({ data }: { data: IDataInvesta
                            color={MainColor.yellow}
                            size="xl"
                            radius="xl"
+                           style={{ backgroundColor: MainColor.white }}
                            styles={{
                               label: { color: MainColor.black },
                            }}
@@ -84,15 +85,15 @@ export function Investasi_ComponentCardBerandaNew({ data }: { data: IDataInvesta
                                     </Group>
                                  ) : (
                                     <Group position="right" spacing={"xs"}>
-                                       <Text truncate>Sisa waktu:</Text>
-                                       <Text truncate>
+                                       <Text c={MainColor.white} truncate>Sisa waktu:</Text>
+                                       <Text c={MainColor.white} truncate>
                                           {Number(data?.pencarianInvestor) -
                                              moment(new Date()).diff(
                                                 new Date(data?.countDown),
                                                 "days"
                                              )}
                                        </Text>
-                                       <Text truncate>Hari</Text>
+                                       <Text c={MainColor.white} truncate>Hari</Text>
                                     </Group>
                                  )}
                               </Box>

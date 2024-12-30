@@ -96,10 +96,10 @@ export default function Register() {
               REGISTRASI
             </Title>
 
-            <IconUserCircle size={100} color="white" />
+            <IconUserCircle size={100} color={MainColor.white} />
 
             <Stack spacing={"sm"} w={300}>
-              <Text align="center" c={"white"}>
+              <Text align="center" c={MainColor.white}>
                 Anda akan terdaftar dengan nomor berikut{" "}
                 <Text inherit span fw={"bold"}>
                   +{nomor}

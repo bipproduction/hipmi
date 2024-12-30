@@ -50,7 +50,7 @@ export default function MainCrowd() {
               border: `2px solid ${AccentColor.blue}`,
               borderRadius: "10px",
               backgroundColor: MainColor.darkblue,
-              color: "white",
+              color: MainColor.white,
               // color: "gray",
             }}
             onClick={() => {
@@ -95,7 +95,7 @@ export default function MainCrowd() {
               border: `2px solid ${AccentColor.blue}`,
               borderRadius: "10px",
               backgroundColor: MainColor.darkblue,
-              color: "white",
+              color: MainColor.white,
             }}
             onClick={() => {
               setLoadingDon(true);

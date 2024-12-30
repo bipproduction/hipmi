@@ -37,8 +37,14 @@ export default function Portofolio_EditDataBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             withAsterisk
             value={value.namaBisnis}
@@ -62,8 +68,14 @@ export default function Portofolio_EditDataBisnis({
           <Select
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             withAsterisk
             value={value.MasterBidangBisnis.id}
@@ -85,8 +97,14 @@ export default function Portofolio_EditDataBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             withAsterisk
             value={value.alamatKantor}
@@ -110,8 +128,14 @@ export default function Portofolio_EditDataBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             withAsterisk
             value={value.tlpn}
@@ -137,8 +161,14 @@ export default function Portofolio_EditDataBisnis({
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white
                 },
+                input: {
+                  backgroundColor: MainColor.white
+                },
+                required: {
+                  color: MainColor.red
+                }
               }}
               autosize
               minRows={2}

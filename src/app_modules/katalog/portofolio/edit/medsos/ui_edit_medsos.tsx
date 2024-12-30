@@ -34,15 +34,21 @@ export default function Portofolio_EditMedsosBisnis({
           border: `2px solid ${AccentColor.blue}`,
           borderRadius: "10px ",
           padding: "15px",
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Stack px={"sm"}>
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Facebook"
             value={medsos.facebook}
@@ -57,8 +63,14 @@ export default function Portofolio_EditMedsosBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Instagram"
             value={medsos.instagram}
@@ -73,8 +85,14 @@ export default function Portofolio_EditMedsosBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Tiktok"
             value={medsos.tiktok}
@@ -89,8 +107,14 @@ export default function Portofolio_EditMedsosBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Twitter"
             value={medsos.twitter}
@@ -105,8 +129,14 @@ export default function Portofolio_EditMedsosBisnis({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white
               },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Youtube"
             value={medsos.youtube}
