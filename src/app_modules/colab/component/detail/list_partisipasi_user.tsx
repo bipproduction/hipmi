@@ -30,6 +30,7 @@ import { MODEL_COLLABORATION_PARTISIPASI } from "../../model/interface";
 import ComponentColab_AuthorNameOnListPartisipan from "./header_author_list_partisipan";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
 import mqtt_client from "@/util/mqtt_client";
+import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 
 export default function ComponentColab_DetailListPartisipasiUser({
   listPartisipan,
@@ -48,6 +49,8 @@ export default function ComponentColab_DetailListPartisipasiUser({
   const [data, setData] = useState(listPartisipan);
   const [opened, { open, close }] = useDisclosure(false);
   const [deskripsi, setDeskripsi] = useState("");
+
+  
 
   async function onJoin() {
     const res = await colab_funCreatePartisipan(
@@ -118,7 +121,6 @@ export default function ComponentColab_DetailListPartisipasiUser({
           },
         }}
       >
-        
         <Stack spacing={"xs"}>
           <Group position="right">
             <ActionIcon onClick={close} variant="transparent">
@@ -127,7 +129,11 @@ export default function ComponentColab_DetailListPartisipasiUser({
           </Group>
           <Textarea
             maxLength={300}
-            label={<Text c={"white"} mb={"sm"} fw={"bold"}>Deskripsi Diri</Text>}
+            label={
+              <Text c={"white"} mb={"sm"} fw={"bold"}>
+                Deskripsi Diri
+              </Text>
+            }
             placeholder="Deskripsikan diri anda yang sesuai dengan proyek ini.."
             minRows={4}
             onChange={(val) => {
@@ -175,15 +181,7 @@ export default function ComponentColab_DetailListPartisipasiUser({
           ""
         )}
 
-        <Paper
-          style={{
-            border: `2px solid ${AccentColor.softblue}`,
-            backgroundColor: AccentColor.blue,
-            color: "white",
-            borderRadius: "10px",
-            padding: "15px",
-          }}
-        >
+        <ComponentGlobal_CardStyles>
           <Stack spacing={"xl"}>
             <Center>
               <Title order={5}>Partispasi User ({data?.length})</Title>
@@ -212,7 +210,7 @@ export default function ComponentColab_DetailListPartisipasiUser({
               </Box>
             </ScrollArea>
           </Stack>
-        </Paper>
+        </ComponentGlobal_CardStyles>
       </Stack>
     </>
   );

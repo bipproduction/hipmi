@@ -6,6 +6,8 @@ import {
 } from "@/app_modules/_global/component";
 import { Badge, Center, Group, Stack, Text, Title } from "@mantine/core";
 import { MODEL_VOTING } from "../../model/interface";
+import moment from "moment"
+import "moment/locale/id"
 
 export default function ComponentVote_DetailDataSetelahPublish({
   data,
@@ -48,19 +50,15 @@ export default function ComponentVote_DetailDataSetelahPublish({
                     },
                   }}
                 >
-                  <Group>
-                    <Text>
-                      {data?.awalVote.toLocaleDateString(["id-ID"], {
-                        dateStyle: "medium",
-                      })}
-                    </Text>
-                    <Text>-</Text>
-                    <Text>
-                      {data?.akhirVote.toLocaleDateString(["id-ID"], {
-                        dateStyle: "medium",
-                      })}
-                    </Text>
-                  </Group>
+                  <Text>
+                    {data
+                      ? moment(data.awalVote).format("ll")
+                      : "tgl awal voting"}{" "}
+                    -{" "}
+                    {data
+                      ? moment(data.akhirVote).format("ll")
+                      : "tgl akhir voting"}
+                  </Text>
                 </Badge>
               </Stack>
             </Stack>

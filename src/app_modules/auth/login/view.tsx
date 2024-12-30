@@ -11,6 +11,7 @@ import {
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Button, Center, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,8 +28,8 @@ export default function Login({ version }: { version: string }) {
     const nomor = phone.substring(1);
     if (nomor.length <= 4) return setError(true);
 
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await fetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ nomor: nomor }),
@@ -38,6 +39,12 @@ export default function Login({ version }: { version: string }) {
       });
 
       const result = await res.json();
+
+      if (res.status == 500) {
+        ComponentGlobal_NotifikasiGagal("Server Error");
+        return;
+      }
+
       if (res.status === 200) {
         localStorage.setItem("hipmi_auth_code_id", result.kodeId);
         ComponentGlobal_NotifikasiBerhasil(result.message, 2000);
@@ -46,8 +53,10 @@ export default function Login({ version }: { version: string }) {
         ComponentGlobal_NotifikasiPeringatan(result.message);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error login:", error);
       ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -56,22 +65,18 @@ export default function Login({ version }: { version: string }) {
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" h={"100vh"} spacing={100}>
           <Stack align="center" spacing={0}>
-            <Title order={3} c={MainColor.yellow} >
+            <Title order={3} c={MainColor.yellow}>
               WELCOME TO
             </Title>
-            <Title c={MainColor.yellow} >
-              HIPMI APPS
-            </Title>
+            <Title c={MainColor.yellow}>HIPMI APPS</Title>
           </Stack>
 
           <Stack w={300}>
             <Center>
-              <Text c={MainColor.white} >
-                Nomor telepon
-              </Text>
+              <Text c={MainColor.white}>Nomor telepon</Text>
             </Center>
             <PhoneInput
-              inputStyle={{ width: "100%" }}             
+              inputStyle={{ width: "100%" }}
               defaultCountry="id"
               onChange={(val) => {
                 setPhone(val);

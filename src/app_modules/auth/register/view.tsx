@@ -78,6 +78,16 @@ export default function Register() {
         ComponentGlobal_NotifikasiPeringatan(result.message);
         return;
       }
+
+      if (res.status === 405) {
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+        return;
+      }
+
+      if (res.status === 500) {
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+        return;
+      }
     } catch (error) {
       console.log(error);
     } finally {

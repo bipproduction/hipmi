@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Validasi_SkeletonView from "./skeleton";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Validasi() {
   const router = useRouter();
@@ -123,8 +124,13 @@ export default function Validasi() {
         ComponentGlobal_NotifikasiPeringatan(result.message);
         return;
       }
+
+      if (res.status == 500) {
+        ComponentGlobal_NotifikasiGagal(result.message);
+        return;
+      }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error validasi:", error);
     } finally {
       setLoading(false);
     }
@@ -207,14 +213,13 @@ export default function Validasi() {
                   </Text>
                 </Stack>
                 <Center>
-                    <PinInput
-                      
+                  <PinInput
                     size="xl"
                     type={"number"}
                     ref={focusTrapRef}
                     spacing={"md"}
-                      mt={"md"}
-                      styles={{ input: { backgroundColor: MainColor.white } }}
+                    mt={"md"}
+                    styles={{ input: { backgroundColor: MainColor.white } }}
                     onChange={(val) => {
                       setInputOtp(val);
                     }}
