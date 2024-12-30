@@ -110,7 +110,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <Title order={5}>Mohon transfer ke rekening dibawah</Title>
@@ -123,7 +123,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
@@ -181,7 +181,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
@@ -196,7 +196,7 @@ export function Investasi_ViewInvoice({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
               }}
             >
               <Grid>
@@ -272,7 +272,7 @@ export function Investasi_ViewInvoice({
             {file ? (
               <Center>
                 <Group spacing={"xs"}>
-                  <Text fz={"xs"} fs={"italic"}>
+                  <Text c={MainColor.white} fz={"xs"} fs={"italic"}>
                     Upload berhasil{" "}
                   </Text>
                   <IconCircleCheck color="green" />
@@ -280,7 +280,7 @@ export function Investasi_ViewInvoice({
               </Center>
             ) : (
               <Center>
-                <Text fz={"xs"} fs={"italic"}>
+                <Text c={MainColor.white} fz={"xs"} fs={"italic"}>
                   Upload bukti transfer anda !
                 </Text>
               </Center>

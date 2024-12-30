@@ -68,7 +68,7 @@ export default function Vote_Status() {
                 style={{
                   transition: "0.5s",
                   backgroundColor:
-                    params.id === e.id ? MainColor.yellow : "white",
+                    params.id === e.id ? MainColor.yellow : MainColor.white,
                   border:
                     params.id === e.id
                       ? `1px solid ${AccentColor.yellow}`

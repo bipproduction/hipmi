@@ -16,6 +16,7 @@ import { useState } from "react";
 import { apiGetDataHome } from "../fun/get/api_home";
 import { Home_ComponentAvatarProfile } from "./comp_avatar_profile";
 import { listMenuHomeFooter } from "./list_menu_home";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function FooterHome() {
   const router = useRouter();
@@ -74,12 +75,12 @@ export default function FooterHome() {
             >
               <ActionIcon
                 radius={"xl"}
-                c={e.link === "" ? "gray" : "white"}
+                c={e.link === "" ? "gray" : MainColor.white}
                 variant="transparent"
               >
                 {e.icon}
               </ActionIcon>
-              <Text lineClamp={1} c={e.link === "" ? "gray" : "white"} fz={12}>
+              <Text lineClamp={1} c={e.link === "" ? "gray" : MainColor.white} fz={12}>
                 {e.name}
               </Text>
             </Stack>
@@ -105,7 +106,7 @@ export default function FooterHome() {
           >
             <ActionIcon variant={"transparent"}>
               {dataUser.profile === undefined || dataUser?.profile === null ? (
-                <IconUserCircle color="white" />
+                <IconUserCircle color={MainColor.white} />
               ) : (
                 <Home_ComponentAvatarProfile
                   url={APIs.GET({
@@ -115,7 +116,7 @@ export default function FooterHome() {
                 />
               )}
             </ActionIcon>
-            <Text fz={10} c={"white"}>
+            <Text fz={10} c={MainColor.white}>
               Profile
             </Text>
           </Stack>

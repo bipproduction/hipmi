@@ -4,7 +4,8 @@ export const MainColor = {
   yellow: "#E1B525",
   white: "#D4D0D0",
   red: "#C74E4E",
-  orange: "#E58958"
+  orange: "#E58958",
+  green: "#468A56"
 };
 
 export const AccentColor = {

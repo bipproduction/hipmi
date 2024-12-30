@@ -69,7 +69,7 @@ export default function Vote_StatusReject() {
             {(item) => (
               <ComponentVote_CardViewStatus
                 data={item}
-                path={RouterVote.detail_review}
+                path={RouterVote.detail_reject}
               />
             )}
           </ScrollOnly>

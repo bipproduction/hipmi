@@ -2,7 +2,7 @@ import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
 } from "@/app/lib/router_hipmi/router_investasi";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ActionIcon, Flex, Loader, Paper, Text } from "@mantine/core";
 import { IconFileDescription } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -34,12 +34,12 @@ export function Investasi_ComponentBoxDaftarBerita({
         }}
       >
         <Flex direction={"column"} align={"center"} justify={"center"}>
-          <Text fz={12}>Berita </Text>
+          <Text c={MainColor.white} fz={12}>Berita </Text>
           <ActionIcon radius={"xl"} variant="transparent" size={60}>
             {isLoading ? (
               <Loader color="yellow" />
             ) : (
-              <IconFileDescription size={70} color="white" />
+              <IconFileDescription size={70} color={MainColor.white} />
             )}
           </ActionIcon>
         </Flex>

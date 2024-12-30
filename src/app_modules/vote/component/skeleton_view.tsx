@@ -1,5 +1,6 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import { Center, Grid, Group, Skeleton, Stack } from "@mantine/core";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Center, Grid, Group, Stack } from "@mantine/core";
 
 export {
   Voting_ComponentSkeletonDetail,
@@ -17,25 +18,25 @@ function Voting_ComponentSkeletonViewPublish() {
           <Stack spacing={"lg"}>
             <Grid align="center">
               <Grid.Col span={"content"}>
-                <Skeleton circle height={40} />
+                <CustomSkeleton circle height={40} />
               </Grid.Col>
               <Grid.Col span={4}>
-                <Skeleton height={20} w={150} />
+                <CustomSkeleton height={20} w={150} />
               </Grid.Col>
             </Grid>
 
             <Stack align="center">
-              <Skeleton height={20} w={150} />
-              <Skeleton height={20} w={300} />
-              {/* <Skeleton height={20} w={70} /> */}
+              <CustomSkeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={300} />
+              {/* <CustomSkeleton height={20} w={70} /> */}
             </Stack>
 
             <Grid grow>
               {Array.from({ length: 2 }).map((e, i) => (
                 <Grid.Col span={4} key={i}>
                   <Stack align="center">
-                    <Skeleton circle height={70} />
-                    <Skeleton height={20} w={50} />
+                    <CustomSkeleton circle height={70} />
+                    <CustomSkeleton height={20} w={50} />
                   </Stack>
                 </Grid.Col>
               ))}
@@ -53,8 +54,8 @@ function Voting_ComponentSkeletonViewStatus() {
       {Array.from({ length: 2 }).map((e, i) => (
         <ComponentGlobal_CardStyles key={i}>
           <Stack align="center" spacing="lg">
-            <Skeleton height={20} w={150} />
-            <Skeleton height={20} w={300} />
+            <CustomSkeleton height={20} w={150} />
+            <CustomSkeleton height={20} w={300} />
           </Stack>
         </ComponentGlobal_CardStyles>
       ))}
@@ -70,31 +71,31 @@ function Voting_ComponentSkeletonViewKontribusi() {
           <Stack spacing={"lg"}>
             <Grid align="center">
               <Grid.Col span={"content"}>
-                <Skeleton circle height={40} />
+                <CustomSkeleton circle height={40} />
               </Grid.Col>
               <Grid.Col span={4}>
-                <Skeleton height={20} w={150} />
+                <CustomSkeleton height={20} w={150} />
               </Grid.Col>
             </Grid>
 
             <Stack align="center">
-              <Skeleton height={20} w={150} />
-              <Skeleton height={20} w={300} />
+              <CustomSkeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={300} />
             </Stack>
 
             <Group position="center" spacing={100}>
               <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
+                <CustomSkeleton circle height={70} />
+                <CustomSkeleton height={20} w={50} />
               </Stack>
               <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
+                <CustomSkeleton circle height={70} />
+                <CustomSkeleton height={20} w={50} />
               </Stack>
             </Group>
 
             <Stack align="center">
-              <Skeleton height={15} w={50} /> <Skeleton height={20} w={50} />
+              <CustomSkeleton height={15} w={50} /> <CustomSkeleton height={20} w={50} />
             </Stack>
           </Stack>
         </ComponentGlobal_CardStyles>
@@ -111,30 +112,30 @@ function Voting_ComponentSkeletonDetail() {
           <Stack spacing={"xl"}>
             <Grid align="center">
               <Grid.Col span={"content"}>
-                <Skeleton circle height={40} />
+                <CustomSkeleton circle height={40} />
               </Grid.Col>
               <Grid.Col span={4}>
-                <Skeleton height={20} w={150} />
+                <CustomSkeleton height={20} w={150} />
               </Grid.Col>
             </Grid>
 
             <Stack align="center">
-              <Skeleton height={20} w={150} />
-              <Skeleton height={20} w={"100%"} />
-              <Skeleton height={20} w={"100%"} />
-              <Skeleton height={20} w={"100%"} />
-              <Skeleton height={20} w={50} />
-              <Skeleton height={20} w={200} />
+              <CustomSkeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={"100%"} />
+              <CustomSkeleton height={20} w={"100%"} />
+              <CustomSkeleton height={20} w={"100%"} />
+              <CustomSkeleton height={20} w={50} />
+              <CustomSkeleton height={20} w={200} />
             </Stack>
 
             {/* <Stack>
-              <Skeleton height={20} w={70} />
-              <Skeleton height={20} w={150} />
-              <Skeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={70} />
+              <CustomSkeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={150} />
             </Stack> */}
 
             <Stack align="center">
-              <Skeleton height={20} w={70} />
+              <CustomSkeleton height={20} w={70} />
             </Stack>
           </Stack>
         </ComponentGlobal_CardStyles>
@@ -142,17 +143,17 @@ function Voting_ComponentSkeletonDetail() {
         <ComponentGlobal_CardStyles>
           <Stack>
             <Center>
-              <Skeleton h={20} w={"30%"} />
+              <CustomSkeleton h={20} w={"30%"} />
             </Center>
 
             <Group position="center" spacing={50}>
               <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
+                <CustomSkeleton circle height={70} />
+                <CustomSkeleton height={20} w={50} />
               </Stack>
               <Stack align="center">
-                <Skeleton circle height={70} />
-                <Skeleton height={20} w={50} />
+                <CustomSkeleton circle height={70} />
+                <CustomSkeleton height={20} w={50} />
               </Stack>
             </Group>
           </Stack>
@@ -169,13 +170,13 @@ function  Voting_ComponentSkeletonDaftarKontributor(){
         <Stack spacing={"xl"}>
           <Grid align="center" gutter={"md"}>
             <Grid.Col span={"content"}>
-              <Skeleton circle height={40} />
+              <CustomSkeleton circle height={40} />
             </Grid.Col>
             <Grid.Col span={3}>
-              <Skeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={150} />
             </Grid.Col>
             <Grid.Col span={3} offset={3}>
-              <Skeleton height={20} w={150} />
+              <CustomSkeleton height={20} w={150} />
             </Grid.Col>
           </Grid>
         </Stack>

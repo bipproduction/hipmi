@@ -1,6 +1,6 @@
 "use client";
 
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_LoadImage,
   ComponentGlobal_TampilanRupiah,
@@ -44,7 +44,7 @@ export function Investasi_ViewTransaksiBerhasil({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <IconBrandCashapp size={100} />
@@ -61,7 +61,7 @@ export function Investasi_ViewTransaksiBerhasil({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >

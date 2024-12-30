@@ -27,12 +27,12 @@ export function Investasi_ComponentSahamSayaNew({ data }: { data: IDataSahamSaya
                      </Text>
                      <ComponentGlobal_TampilanRupiah
                         nominal={+data?.nominal}
-                        color="white"
+                        color={MainColor.white}
                         fontSize={"xs"}
                      />
                      <ComponentGlobal_TampilanAngkaRatusan
                         nominal={+data?.lembarTerbeli}
-                        color="white"
+                        color={MainColor.white}
                         fontSize={"xs"}
                         textAfter="Lembar"
                      />
@@ -51,7 +51,7 @@ export function Investasi_ComponentSahamSayaNew({ data }: { data: IDataSahamSaya
                            backgroundColor: MainColor.yellow,
                         },
                         root: {
-                           backgroundColor: "whitesmoke",
+                           backgroundColor: MainColor.white,
                         },
                         label: {
                            color: "black",

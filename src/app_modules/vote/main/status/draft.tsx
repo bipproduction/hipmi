@@ -69,7 +69,7 @@ export default function Vote_StatusDraft() {
             {(item) => (
               <ComponentVote_CardViewStatus
                 data={item}
-                path={RouterVote.detail_review}
+                path={RouterVote.detail_draft}
               />
             )}
           </ScrollOnly>

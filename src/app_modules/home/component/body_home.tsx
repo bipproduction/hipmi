@@ -2,16 +2,18 @@ import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   ActionIcon,
   Box,
+  Flex,
+  Grid,
   Group,
   Image,
   Paper,
   SimpleGrid,
-  Skeleton,
   Stack,
-  Text,
+  Text
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconUserSearch } from "@tabler/icons-react";
@@ -129,11 +131,11 @@ export default function BodyHome() {
                 <ActionIcon
                   size={50}
                   variant="transparent"
-                  c={e.link == "" ? "gray.3" : "white"}
+                  c={e.link == "" ? "gray.3" : MainColor.white}
                 >
                   {e.icon}
                 </ActionIcon>
-                <Text c={e.link == "" ? "gray.3" : "white"} fz={"xs"}>
+                <Text c={e.link == "" ? "gray.3" : MainColor.white} fz={"xs"}>
                   {e.name}
                 </Text>
               </Stack>
@@ -180,22 +182,29 @@ export default function BodyHome() {
               <ActionIcon
                 variant="transparent"
                 size={40}
-                c={menuHomeJob.link == "" ? "gray.3" : "white"}
+                c={menuHomeJob.link == "" ? "gray.3" : MainColor.white}
               >
                 {menuHomeJob.icon}
               </ActionIcon>
-              <Text c={menuHomeJob.link == "" ? "gray.3" : "white"}>
+              <Text c={menuHomeJob.link == "" ? "gray.3" : MainColor.white}>
                 {menuHomeJob.name}
               </Text>
             </Group>
             {loadingJob ? (
-              Array(2)
+              Array(1)
                 .fill(null)
                 .map((_, i) => (
                   <Box key={i} mb={"md"}>
-                    <Skeleton height={10} mt={0} radius="xl" width={"50%"} />
-                    <Skeleton height={10} mt={10} radius="xl" />
-                    <Skeleton height={10} mt={10} radius="xl" />
+                    <Grid>
+                      <Grid.Col span={6}>
+                        <CustomSkeleton height={10} mt={0} radius="xl" width={"75%"} />
+                        <CustomSkeleton height={10} mt={10} radius="xl"  />
+                      </Grid.Col >
+                      <Grid.Col span={6}>
+                        <CustomSkeleton height={10} mt={0} radius="xl" width={"75%"} />
+                        <CustomSkeleton height={10} mt={10} radius="xl"  />
+                      </Grid.Col>
+                    </Grid>
                   </Box>
                 ))
             ) : _.isEmpty(dataJob) ? (
@@ -206,7 +215,7 @@ export default function BodyHome() {
                   <Stack key={e.id}>
                     <Group spacing={"xs"}>
                       <Stack h={"100%"} align="center" justify="flex-start">
-                        <IconUserSearch size={20} color="white" />
+                        <IconUserSearch size={20} color={MainColor.white} />
                       </Stack>
                       <Stack spacing={0} w={"60%"}>
                         <Text
@@ -217,7 +226,7 @@ export default function BodyHome() {
                         >
                           {e?.Author.username}
                         </Text>
-                        <Text fz={"sm"} c={"white"} lineClamp={2}>
+                        <Text fz={"sm"} c={MainColor.white} lineClamp={2}>
                           {e?.title}
                         </Text>
                       </Stack>
