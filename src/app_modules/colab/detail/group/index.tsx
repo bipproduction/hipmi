@@ -26,7 +26,7 @@ import {
   IconSend,
 } from "@tabler/icons-react";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import useInfiniteScroll, {
   ScrollDirection,
@@ -43,6 +43,8 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { apiGetDataGroupById } from "../../_lib/api_collaboration";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Colab_GroupChatView({
   userLoginId,
@@ -55,6 +57,7 @@ export default function Colab_GroupChatView({
   selectRoom: MODEL_COLLABORATION_ROOM_CHAT;
   dataUserLogin: MODEL_USER;
 }) {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const [loadingBack, setLoadingBack] = useState(false);
   const [loadingInfo, setLoadingInfo] = useState(false);
@@ -65,6 +68,30 @@ export default function Colab_GroupChatView({
   const [isLoading, setIsLoading] = useState(false);
   const [isGet, setIsGet] = useState(true);
   const [newMessageId, setIdMessage] = useState("");
+
+  // NEW
+
+  const [dataGroup, setDataGroup] =
+    useState<MODEL_COLLABORATION_ROOM_CHAT | null>(null);
+
+  useShallowEffect(() => {
+    onLoadDataGroup();
+  }, []);
+
+  async function onLoadDataGroup() {
+    try {
+      const respone = await apiGetDataGroupById({
+        id: params.id,
+        kategori: "detail",
+      });
+
+      if (respone) {
+        setDataGroup(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data group", error);
+    }
+  }
 
   const next = async (direction: ScrollDirection) => {
     try {
@@ -220,7 +247,9 @@ export default function Colab_GroupChatView({
                       radius={"xl"}
                       onClick={() => {
                         setLoadingInfo(true);
-                        router.push(RouterColab.info_grup + selectRoom.id, {scroll: false});
+                        router.push(RouterColab.info_grup + selectRoom.id, {
+                          scroll: false,
+                        });
                       }}
                     >
                       {loadingInfo ? (

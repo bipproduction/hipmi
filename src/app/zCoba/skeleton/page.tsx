@@ -5,7 +5,7 @@ import {
   UIGlobal_LayoutHeaderTamplate,
   UIGlobal_LayoutTamplate,
 } from "@/app_modules/_global/ui";
-import { Center, Grid, Group, Skeleton, Stack } from "@mantine/core";
+import { Grid, Skeleton, Stack } from "@mantine/core";
 
 export default function Voting_ComponentSkeletonViewPuh() {
   return (
@@ -15,6 +15,23 @@ export default function Voting_ComponentSkeletonViewPuh() {
       >
         <Stack>
           <ComponentGlobal_CardStyles marginBottom={"0"}>
+            <Stack>
+              <Skeleton h={20} w={100} />
+
+              {Array.from(new Array(2)).map((e, i) => (
+                <Grid align="center" gutter={"md"} key={i}>
+                  <Grid.Col span={"content"}>
+                    <Skeleton circle height={40} />
+                  </Grid.Col>
+                  <Grid.Col span={3}>
+                    <Skeleton height={20} w={150} />
+                  </Grid.Col>
+                </Grid>
+              ))}
+            </Stack>
+          </ComponentGlobal_CardStyles>
+
+          {/* <ComponentGlobal_CardStyles marginBottom={"0"}>
             <Stack spacing={"xl"}>
               <Grid align="center" gutter={"md"}>
                 <Grid.Col span={"content"}>
@@ -23,9 +40,6 @@ export default function Voting_ComponentSkeletonViewPuh() {
                 <Grid.Col span={3}>
                   <Skeleton height={20} w={150} />
                 </Grid.Col>
-                {/* <Grid.Col span={3} offset={3}>
-                  <Skeleton height={20} w={150} />
-                </Grid.Col> */}
               </Grid>
               <Center>
                 <Skeleton height={15} w={200} />
@@ -54,7 +68,7 @@ export default function Voting_ComponentSkeletonViewPuh() {
               <Skeleton height={15} w={100} />
               <Skeleton height={15} w={"100%"} />
             </Stack>
-          </ComponentGlobal_CardStyles>
+          </ComponentGlobal_CardStyles> */}
 
           {/* <ComponentGlobal_CardStyles>
             <Stack>
