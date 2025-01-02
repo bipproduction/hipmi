@@ -63,7 +63,7 @@ export function ComponentGlobal_AvatarAndUsername({
             <Text
               c={MainColor.white}
               fw={"bold"}
-              fz={fontSize ? fontSize : "sm"}
+              fz={fontSize ? fontSize : "md"}
               lineClamp={1}
               onClick={() => onCheckProfile()}
             >

@@ -15,6 +15,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     "ProjectCollaboration",
     "ProjectCollaboration_AnggotaRoomChat",
   ]);
+
+
   let listMsg = await colab_getMessageByRoomId({ roomId: roomId, page: 1 });
   const dataUserLogin = await user_getOneByUserId(userLoginId as string);
 

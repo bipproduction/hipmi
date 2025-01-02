@@ -6,22 +6,22 @@ import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_ta
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import { ActionIcon } from "@mantine/core";
 import { IconDotsVertical, IconEdit } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LayoutColab_DetailProyekSaya({
   children,
-  colabId,
 }: {
   children: React.ReactNode;
-  colabId: string;
 }) {
+  const params = useParams<{id: string}>()
   const [openDrawer, setOpenDrawer] = useState(false);
   const listPage = [
     {
       id: "1",
       name: "Edit Proyek",
       icon: <IconEdit />,
-      path: RouterColab.edit + colabId,
+      path: RouterColab.edit + params.id,
     },
   ];
 
