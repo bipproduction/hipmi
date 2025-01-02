@@ -15,6 +15,7 @@ import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_
 import { MODEL_VOTING } from "../../model/interface";
 import { voting_checkStatus } from "../../fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Vote_DetailReview({
   dataVote,
@@ -90,7 +91,8 @@ function ButtonAction({
     <>
       <Button
         radius={"xl"}
-        color="orange"
+        style={{ backgroundColor: MainColor.orange }}
+        c={MainColor.darkblue}
         onClick={() => {
           setOpenModal(true);
         }}
@@ -103,16 +105,17 @@ function ButtonAction({
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             loaderPosition="center"
+            style={{ backgroundColor: AccentColor.yellow }}
             loading={isLoading ? true : false}
             radius={"xl"}
-            color="green"
+            c={MainColor.darkblue}
             onClick={() => {
               onUpdate();
               console.log(statusId);

@@ -94,7 +94,7 @@ export default function Event_ComponentCreateButton({
         }}
         bg={MainColor.yellow}
         color="yellow"
-        c={"black"}
+        c={MainColor.darkblue}
       >
         Simpan
       </Button>

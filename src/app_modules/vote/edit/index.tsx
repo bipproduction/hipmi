@@ -57,7 +57,13 @@ export default function Vote_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
             },
           }}
           label="Judul"
@@ -84,7 +90,13 @@ export default function Vote_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             label="Deskripsi"
@@ -117,9 +129,15 @@ export default function Vote_Edit({
 
         <DatePickerInput
           styles={{
-            label: {
-              color: "white",
-            },
+              label: {
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
           }}
           label="Jangka Waktu"
           placeholder="Masukan jangka waktu voting"
@@ -161,7 +179,13 @@ export default function Vote_Edit({
                     <TextInput
                       styles={{
                         label: {
-                          color: "white",
+                          color: MainColor.white,
+                        },
+                        input: {
+                          backgroundColor: MainColor.white,
+                        },
+                        required: {
+                          color: MainColor.red,
                         },
                       }}
                       label={"Nama Pilihan"}

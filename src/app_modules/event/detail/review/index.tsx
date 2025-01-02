@@ -17,6 +17,7 @@ import { IRealtimeData } from "@/app/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Event_DetailReview({
   dataEvent,
@@ -39,7 +40,7 @@ function ButtonAction({ eventId }: { eventId: string }) {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <Button radius={"xl"} color={"orange"} onClick={() => setOpenModal(true)}>
+      <Button radius={"xl"} style={{ backgroundColor: MainColor.orange }} c={MainColor.darkblue} onClick={() => setOpenModal(true)}>
         Batalkan Review
       </Button>
 
@@ -48,16 +49,17 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+          style={{ backgroundColor: MainColor.orange }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}
-            color={"orange"}
+            c={MainColor.darkblue}
             onClick={() => onClick(router, eventId, setLoading)}
           >
             Simpan

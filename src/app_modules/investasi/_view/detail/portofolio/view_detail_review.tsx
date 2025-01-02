@@ -1,6 +1,7 @@
 "use client";
 
 import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
@@ -65,9 +66,10 @@ export default function Investasi_ViewDetailReview({
           <Button
             mb={"xl"}
             radius={50}
-            bg={"orange"}
-            color="yellow"
-            c={"black"}
+            style={{
+              backgroundColor: MainColor.orange,
+            }}
+            c={MainColor.darkblue}
             onClick={() => setOpenModal(true)}
           >
             Batalkan Review
@@ -80,19 +82,21 @@ export default function Investasi_ViewDetailReview({
         close={() => setOpenModal(false)}
         title={"Anda yakin ingin batalkan review?"}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+            
             style={{
-              transition: "0.5s",
+              transition: "0.5s", color: "black",
+              backgroundColor: AccentColor.yellow
             }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}
-            color={"orange"}
+            c={MainColor.darkblue}
             onClick={() => onChangeStatus()}
           >
             Simpan

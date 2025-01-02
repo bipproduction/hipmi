@@ -446,7 +446,10 @@ export default function InvestasiCreateNew() {
               },
               input: {
                 backgroundColor: MainColor.white,
-              }
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
+              },
             }}
             withAsterisk
             label="Pencarian Investor"
@@ -475,7 +478,10 @@ export default function InvestasiCreateNew() {
               },
               input: {
                 backgroundColor: MainColor.white,
-              }
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
+              },
             }}
             withAsterisk
             label="Periode Deviden"
@@ -501,7 +507,10 @@ export default function InvestasiCreateNew() {
               },
               input: {
                 backgroundColor: MainColor.white,
-              }
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
+              },
             }}
             withAsterisk
             label="Pembagian Deviden"

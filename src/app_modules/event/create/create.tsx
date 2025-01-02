@@ -78,6 +78,9 @@ export default function Event_Create({
             },
             input: {
               backgroundColor: MainColor.white,
+            },
+            dropdown: {
+              backgroundColor: MainColor.white,
             }
           }}
           withAsterisk

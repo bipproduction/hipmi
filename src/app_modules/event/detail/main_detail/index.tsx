@@ -15,6 +15,7 @@ import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
 import { Event_countTotalPesertaById } from "../../fun/count/count_total_peserta_by_id";
 import { Event_funJoinEvent } from "../../fun/create/fun_join_event";
 import { Event_getListPesertaById } from "../../fun/get/get_list_peserta_by_id";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Event_DetailMain({
   userLoginId,
@@ -56,11 +57,12 @@ export default function Event_DetailMain({
             Anda Telah Ikut Serta
           </Button>
         ) : (
-          <Button
+            <Button
+            style={{ backgroundColor: MainColor.green }}
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}
-            color="green"
+            c={AccentColor.white}
             onClick={() => {
               onJoin(
                 userLoginId,

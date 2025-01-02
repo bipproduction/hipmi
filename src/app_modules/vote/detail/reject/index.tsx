@@ -14,6 +14,7 @@ import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_
 import { gs_vote_status } from "../../global_state";
 import { MODEL_VOTING } from "../../model/interface";
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Vote_DetailReject({
   dataVote,
@@ -68,16 +69,18 @@ function ButtonAction({ voteId }: { voteId: string }) {
       <SimpleGrid cols={2}>
         <Button
           radius={"xl"}
-          color="orange"
+          style={{ backgroundColor: AccentColor.yellow, fontWeight:"bold" }}
+          c={MainColor.darkblue}
           onClick={() => {
-            setOpenModal1(true);
+          setOpenModal1(true);
           }}
         >
           Edit Kembali
         </Button>{" "}
         <Button
           radius={"xl"}
-          color="red"
+          c={AccentColor.white}
+          style={{ backgroundColor: MainColor.red, fontWeight:"bold" }}
           onClick={() => {
             setOpenModal2(true);
           }}
@@ -93,6 +96,7 @@ function ButtonAction({ voteId }: { voteId: string }) {
         buttonKiri={
           <Button
             radius={"xl"}
+            c={AccentColor.white}
             onClick={() => {
               setOpenModal1(false);
             }}
@@ -105,10 +109,11 @@ function ButtonAction({ voteId }: { voteId: string }) {
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}
+            style={{ backgroundColor: AccentColor.yellow }}
             onClick={() => {
               onUpdate();
             }}
-            color="orange"
+            c={MainColor.darkblue}
           >
             Simpan
           </Button>

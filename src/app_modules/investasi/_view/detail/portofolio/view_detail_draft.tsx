@@ -1,7 +1,7 @@
 "use client";
 
 import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -119,9 +119,8 @@ export default function Investasi_ViewDetailDraft({
         <Group position="apart" grow>
           <Button
             radius={50}
-            bg={MainColor.yellow}
-            color="yellow"
-            c={"black"}
+            style={{ backgroundColor: AccentColor.yellow}}
+            c={MainColor.darkblue}
             onClick={() => setOpenModal(true)}
           >
             Ajukan Review
@@ -129,8 +128,8 @@ export default function Investasi_ViewDetailDraft({
 
           <Button
             radius={50}
-            color="red"
-            c={"black"}
+            style={{ backgroundColor: MainColor.red}}
+            c={AccentColor.white}
             onClick={() => setOpenModalDelete(true)}
           >
             Hapus
@@ -144,19 +143,20 @@ export default function Investasi_ViewDetailDraft({
         close={() => setOpenModal(false)}
         title={"Anda yakin ingin mengajukan review ?"}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             style={{
-              transition: "0.5s",
+              transition: "0.5s", color: "black",
+              backgroundColor: AccentColor.yellow,
             }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}
-            color={"orange"}
+            c={MainColor.darkblue}
             onClick={() => onChangeStatus()}
           >
             Simpan
@@ -178,11 +178,12 @@ export default function Investasi_ViewDetailDraft({
           <Button
             style={{
               transition: "0.5s",
+              backgroundColor: MainColor.red
             }}
             loaderPosition="center"
             loading={isLoadingDelete}
             radius={"xl"}
-            color={"red"}
+            c={AccentColor.white}
             onClick={() => {
               onDelete();
             }}

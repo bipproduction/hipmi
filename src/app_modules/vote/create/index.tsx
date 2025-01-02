@@ -113,8 +113,14 @@ export default function Vote_Create() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Judul"
             withAsterisk
@@ -131,8 +137,14 @@ export default function Vote_Create() {
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
                 },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
+                }
               }}
               label="Deskripsi"
               autosize
@@ -157,8 +169,14 @@ export default function Vote_Create() {
           <DatePickerInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Jangka Waktu"
             placeholder="Masukan jangka waktu voting"
@@ -180,7 +198,7 @@ export default function Vote_Create() {
 
         <Stack spacing={0}>
           <Center>
-            <Text fw={"bold"} fz={"sm"} c={"white"}>
+            <Text fw={"bold"} fz={"sm"} c={MainColor.white}>
               Daftar Pilihan
             </Text>
           </Center>
@@ -192,8 +210,14 @@ export default function Vote_Create() {
                   <TextInput
                     styles={{
                       label: {
-                        color: "white",
+                        color: MainColor.white,
                       },
+                      input: {
+                        backgroundColor: MainColor.white,
+                      },
+                      required: {
+                        color: MainColor.red,
+                      }
                     }}
                     label={e.name}
                     withAsterisk

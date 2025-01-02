@@ -64,15 +64,16 @@ export default function Vote_Status() {
                 key={e.id}
                 value={e.id}
                 fw={"bold"}
-                c={"black"}
+                
                 style={{
                   transition: "0.5s",
+                  color: params.id === e.id ? MainColor.darkblue : MainColor.black,
                   backgroundColor:
                     params.id === e.id ? MainColor.yellow : MainColor.white,
                   border:
                     params.id === e.id
                       ? `1px solid ${AccentColor.yellow}`
-                      : `1px solid white`,
+                      : `1px solid ${MainColor.white}`,
                 }}
               >
                 {e.name}
