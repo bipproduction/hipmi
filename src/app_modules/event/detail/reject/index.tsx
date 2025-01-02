@@ -13,6 +13,7 @@ import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_EVENT } from "../../model/interface";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Event_DetailReject({
   dataEvent,
@@ -40,9 +41,10 @@ function ButtonAction({ eventId }: { eventId: string }) {
     <>
       <SimpleGrid cols={2}>
         <Button
+          style={{ backgroundColor: AccentColor.yellow }}
           w={"100%"}
           radius={"xl"}
-          color="yellow"
+          c={MainColor.darkblue}
           onClick={() => {
             setOpenModal1(true);
           }}
@@ -50,9 +52,10 @@ function ButtonAction({ eventId }: { eventId: string }) {
           Edit Kembali
         </Button>
         <Button
+          style={{ backgroundColor: MainColor.red }}
           w={"100%"}
           radius={"xl"}
-          color="red"
+          c={AccentColor.white}
           onClick={() => setOpenModal2(true)}
         >
           Hapus
@@ -65,14 +68,15 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal1}
         close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal1(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal1(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+            style={{ backgroundColor: AccentColor.yellow }}
             radius={"xl"}
-            color={"yellow"}
+            c={MainColor.darkblue}
             onClick={() => {
               onUpdate(router, eventId);
               setOpenModal1(false);
@@ -89,12 +93,13 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal2}
         close={() => setOpenModal2(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal2(false)}>
+          <Button style={{ color: "black" }} radius={"xl"} onClick={() => setOpenModal2(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+            style={{ color: "black" }}
             radius={"xl"}
             color={"red"}
             onClick={() => {

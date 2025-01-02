@@ -47,7 +47,7 @@ export function ComponentGlobal_AvatarAndUsername({
             onClick={() => onCheckProfile()}
           >
             {visible ? (
-              <Avatar radius={"xl"} size={40}>
+              <Avatar  radius={"xl"} size={40}>
                 <ComponentGlobal_Loader />
               </Avatar>
             ) : (

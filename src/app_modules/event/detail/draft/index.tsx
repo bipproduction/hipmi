@@ -18,6 +18,7 @@ import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_EVENT } from "../../model/interface";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function Event_DetailDraft({
   dataEvent,
@@ -125,7 +126,8 @@ function ButtonAction({
       <Group grow>
         <Button
           radius={"xl"}
-          color="yellow"
+          c={MainColor.darkblue}
+          style={{ backgroundColor: AccentColor.yellow }}
           onClick={() => {
             setOpenModal1(true);
           }}
@@ -134,7 +136,8 @@ function ButtonAction({
         </Button>
         <Button
           radius={"xl"}
-          color="red"
+          c={AccentColor.white}
+          style={{ backgroundColor: MainColor.red }}
           onClick={() => {
             setOpenModal2(true);
           }}
@@ -149,19 +152,20 @@ function ButtonAction({
         opened={openModal1}
         close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal1(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal1(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+          style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoadingAjukan ? true : false}
             radius={"xl"}
             onClick={() => {
               onAjukan();
             }}
-            color="yellow"
+            c={MainColor.darkblue}
           >
             Ajukan
           </Button>

@@ -50,8 +50,14 @@ export default function Event_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           label="Judul"
           placeholder="judul"
@@ -76,7 +82,16 @@ export default function Event_Edit({
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            },
+            dropdown: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
@@ -100,8 +115,14 @@ export default function Event_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           label="Lokasi"
           placeholder="lokasi acara"
@@ -136,8 +157,14 @@ export default function Event_Edit({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -174,8 +201,14 @@ export default function Event_Edit({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -216,8 +249,14 @@ export default function Event_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Deskripsi"
             placeholder="Deskripsikan acara yang akan di selenggarakan"
@@ -264,7 +303,7 @@ export default function Event_Edit({
           onClick={() => onUpdate(router, value, setLoading)}
           bg={MainColor.yellow}
           color="yellow"
-          c={"black"}
+          c={MainColor.darkblue}
         >
           Update
         </Button>

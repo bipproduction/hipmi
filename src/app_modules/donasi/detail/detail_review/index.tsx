@@ -109,12 +109,13 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ color: "black" }} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+          style={{ color: "black" }}
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}

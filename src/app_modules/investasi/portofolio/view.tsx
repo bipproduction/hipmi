@@ -64,12 +64,13 @@ export default function PortofolioInvestasi({
                 c={"black"}
                 style={{
                   transition: "0.5s",
-                  backgroundColor:
-                    activeTab === e.name ? MainColor.yellow : "white",
-                  border:
-                    activeTab === e.name
-                      ? `1px solid ${AccentColor.yellow}`
-                      : `1px solid white`,
+                  color: activeTab === e.id ? MainColor.darkblue : MainColor.black,
+                  // backgroundColor:
+                  //   activeTab === e.name ? MainColor.yellow : AccentColor.white,
+                  // border:
+                  //   activeTab === e.name
+                  //     ? `1px solid ${AccentColor.yellow}`
+                  //     : `1px solid white`,
                 }}
               >
                 {e.name}
