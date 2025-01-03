@@ -22,7 +22,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
   profileId: string;
   dataPortofolio: MODEL_PORTOFOLIO_OLD;
   dataMedsos: any;
-  imageId: string
+  imageId: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -36,11 +36,18 @@ export function Portofolio_ComponentButtonSelanjutnya({
       deskripsi: dataPortofolio.deskripsi,
     };
 
+    if (_.values(porto).includes("")) {
+      ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
+      return;
+    }
+
+    if (dataPortofolio.tlpn.length < 10) {
+      ComponentGlobal_NotifikasiPeringatan("Nomor telepon minimal 10 angka");
+      return;
+    }
+
     try {
       setLoading(true);
-      if (_.values(porto).includes("")) {
-        return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-      }
       const res = await funCreatePortofolio({
         profileId: profileId,
         data: dataPortofolio as any,
