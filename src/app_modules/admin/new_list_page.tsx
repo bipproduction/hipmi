@@ -297,10 +297,10 @@ export const newListAdminPage = [
     child: [],
   },
 
-  // Developer
+  // Developer | Super Admin
   {
-    id: "Developer",
-    name: "Developer",
+    id: "Super Admin",
+    name: "Super Admin",
     path: RouterAdminDeveloper.main,
     icon: <IconDashboard />,
     child: [],
