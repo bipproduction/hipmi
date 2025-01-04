@@ -5,7 +5,8 @@ import {
   UIGlobal_LayoutHeaderTamplate,
   UIGlobal_LayoutTamplate,
 } from "@/app_modules/_global/ui";
-import { Grid, Skeleton, Stack } from "@mantine/core";
+import { Button, Grid, Skeleton, Stack } from "@mantine/core";
+import Link from "next/link";
 
 export default function Voting_ComponentSkeletonViewPuh() {
   return (
@@ -13,6 +14,25 @@ export default function Voting_ComponentSkeletonViewPuh() {
       <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Skeleton Maker" />}
       >
+        <Button
+         
+        >
+          <Link
+            color="white"
+            style={{
+              color: "white",
+              textDecoration: "none",
+            }}
+            target="_blank"
+            href={
+              "https://wa.me/+6281339158911?text=Hallo , Apa boleh saya minta informasi tentang DariBaliMice?"
+            }
+          >
+            {" "}
+            Kirim
+          </Link>
+        </Button>
+
         <Stack>
           <ComponentGlobal_CardStyles marginBottom={"0"}>
             <Stack>

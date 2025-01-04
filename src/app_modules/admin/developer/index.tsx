@@ -44,7 +44,7 @@ export default function AdminDeveloper({
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name="Developer" />
+        <ComponentAdminGlobal_HeaderTamplate name="Super Admin" />
         <SimpleGrid cols={2} spacing={50}>
           {/* <TableAdmin
             dataAdmin={dataAdmin}
@@ -148,7 +148,7 @@ function NewTableUser({
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Table User NEW</Title>
+          <Title order={4}>Table User</Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
