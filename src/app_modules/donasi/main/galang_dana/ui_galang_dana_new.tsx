@@ -57,15 +57,16 @@ export default function GalangDanaDonasiNew() {
                 key={e.id}
                 value={e.id}
                 fw={"bold"}
-                c={"black"}
                 style={{
                   transition: "0.5s",
+                  color:
+                    param.id === e.id ? MainColor.darkblue : MainColor.black,
                   backgroundColor:
-                    param.id === e.id ? MainColor.yellow : "white",
+                    param.id === e.id ? MainColor.yellow : MainColor.white,
                   border:
                     param.id === e.id
                       ? `1px solid ${AccentColor.yellow}`
-                      : `1px solid white`,
+                      : `1px solid ${MainColor.white}`,
                 }}
               >
                 {e.name}

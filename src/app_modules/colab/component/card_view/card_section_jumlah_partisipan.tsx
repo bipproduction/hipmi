@@ -1,5 +1,6 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import { Card, Center, Divider, Grid, Stack, Text } from "@mantine/core";
 
 export default function ComponentColab_JumlahPartisipan({
@@ -15,12 +16,12 @@ export default function ComponentColab_JumlahPartisipan({
           <Center>
             <Grid>
               <Grid.Col span={"content"}>
-                <Text c={"white"} fz={"xs"} fw={"bold"}>
+                <Text c={MainColor.white} fz={"xs"} fw={"bold"}>
                   {jumlah?.length ? jumlah?.length : 0}
                 </Text>
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text c={"white"} fz={"xs"} fw={"bold"}>
+                <Text c={MainColor.white} fz={"xs"} fw={"bold"}>
                   Partisipan
                 </Text>
               </Grid.Col>

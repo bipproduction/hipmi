@@ -52,15 +52,15 @@ export default function Colab_Proyek() {
               key={e.id}
               value={e.value}
               fw={"bold"}
-              c={"black"}
               style={{
                 transition: "0.5s",
+                color: activeTab === e.value ? MainColor.darkblue : MainColor.black,
                 backgroundColor:
-                  activeTab === e.value ? MainColor.yellow : "white",
+                  activeTab === e.value ? MainColor.yellow : MainColor.white,
                 border:
                   activeTab === e.value
                     ? `1px solid ${AccentColor.yellow}`
-                    : `1px solid white`,
+                    : `1px solid ${MainColor.white}`,
               }}
             >
               <Stack align="center" justify="center" spacing={0}>

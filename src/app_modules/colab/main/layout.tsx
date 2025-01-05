@@ -60,7 +60,7 @@ export default function LayoutColab_Main({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={hotMenu === e.id ? MainColor.yellow : "white"}
+                  c={hotMenu === e.id ? MainColor.yellow : MainColor.white}
                   onClick={() => {
                     router.replace(e.path, { scroll: false });
                     setHotMenu(e.id);
@@ -69,7 +69,7 @@ export default function LayoutColab_Main({
                   {e.icon}
                 </ActionIcon>
                 <Text
-                  c={hotMenu === e.id ? MainColor.yellow : "white"}
+                  c={hotMenu === e.id ? MainColor.yellow : MainColor.white}
                   fz={"xs"}
                   lineClamp={1}
                 >

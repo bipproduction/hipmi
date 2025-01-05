@@ -16,6 +16,7 @@ import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
 import { IRealtimeData } from "@/app/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function DetailDraftDonasi({
   dataDonasi,
@@ -92,8 +93,10 @@ function ButtonAjukanPenggalangan({
     <>
       <Button
         radius={"xl"}
-        bg={"orange"}
-        color="orange"
+        style={{
+          backgroundColor: AccentColor.yellow
+        }}
+        c={MainColor.darkblue}
         onClick={() => setOpenModal(true)}
       >
         Ajukan Kembali
@@ -104,20 +107,19 @@ function ButtonAjukanPenggalangan({
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button style={{ color: "black"}} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             style={{
-              color: "black"
+              backgroundColor: AccentColor.yellow
             }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}
-            bg={"orange"}
-            color="orange"
+            c={MainColor.darkblue}
             onClick={() => onChangeStatus()}
           >
             Ajukan

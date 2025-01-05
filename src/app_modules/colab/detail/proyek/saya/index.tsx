@@ -127,7 +127,7 @@ function CheckBoxPartisipan() {
             <Stack spacing={5}>
               <Text c={"red"} fz={10}>
                 *
-                <Text px={"xs"} span inherit c={"white"}>
+                <Text px={"xs"} span inherit c={MainColor.white}>
                   Pilih user yang akan menjadi tim proyek anda
                 </Text>
               </Text>
@@ -274,12 +274,13 @@ function ButtonAction({ value }: { value: string[] }) {
       >
         <Stack>
           <Group position="apart">
-            <Title order={6}>Nama Grup Diskusi</Title>
+            <Title c={MainColor.white} order={6}>Nama Grup Diskusi</Title>
             <ActionIcon onClick={close} variant="transparent">
-              <IconX color="white" />
+              <IconX color={MainColor.white} />
             </ActionIcon>
           </Group>
           <TextInput
+            styles={{ input: { backgroundColor: MainColor.white } }}
             placeholder="Masukan nama grup diskusi .."
             radius={"xl"}
             onChange={(val) => {

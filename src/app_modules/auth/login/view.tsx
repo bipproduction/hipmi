@@ -18,6 +18,7 @@ import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 
+
 export default function Login({ version }: { version: string }) {
   const router = useRouter();
   const [phone, setPhone] = useState("");
@@ -76,7 +77,13 @@ export default function Login({ version }: { version: string }) {
               <Text c={MainColor.white}>Nomor telepon</Text>
             </Center>
             <PhoneInput
-              inputStyle={{ width: "100%" }}
+              
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  backgroundColor: MainColor.login,
+                }  
+              }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
               defaultCountry="id"
               onChange={(val) => {
                 setPhone(val);
