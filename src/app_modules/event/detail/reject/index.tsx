@@ -14,6 +14,7 @@ import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_EVENT } from "../../model/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Event_DetailReject({
   dataEvent,
@@ -21,6 +22,7 @@ export default function Event_DetailReject({
   dataEvent: MODEL_EVENT;
 }) {
   const [data, setData] = useState(dataEvent);
+  
   return (
     <>
       <Stack spacing={"lg"}>
@@ -32,11 +34,50 @@ export default function Event_DetailReject({
   );
 }
 
-function ButtonAction({ eventId }: { eventId: string }) {
+
+function ButtonAction({ eventId,  }: { eventId: string }) {
   const router = useRouter();
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [isLoading2, setLoading2] = useState(false);
 
+  async function onUpdate(router: AppRouterInstance, eventId: string, setLoading: any) {
+    await Event_funEditStatusById("3", eventId).then((res) => {
+      try {
+        setLoading(true);
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          router.push(RouterEvent.status({ id: "3" }));
+        } else {
+          setLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setLoading(false);
+        clientLogger.error("Error update event", error);
+      }
+     
+    });
+  }
+  
+  async function onDelete(router: AppRouterInstance, eventId: string, setLoading2: any) {
+    const res = await Event_funDeleteById(eventId);
+    try {
+      setLoading2(true);
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+        router.back();
+      } else {
+        setLoading2(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading2(false);
+      clientLogger.error("Error delete event", error);
+    }
+  }
+  
   return (
     <>
       <SimpleGrid cols={2}>
@@ -74,12 +115,13 @@ function ButtonAction({ eventId }: { eventId: string }) {
         }
         buttonKanan={
           <Button
+            loaderPosition="center"
             style={{ backgroundColor: AccentColor.yellow }}
             radius={"xl"}
             c={MainColor.darkblue}
+            loading={isLoading ? true : false}
             onClick={() => {
-              onUpdate(router, eventId);
-              setOpenModal1(false);
+              onUpdate(router, eventId, setLoading);
             }}
           >
             Edit
@@ -93,18 +135,19 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal2}
         close={() => setOpenModal2(false)}
         buttonKiri={
-          <Button style={{ color: "black" }} radius={"xl"} onClick={() => setOpenModal2(false)}>
+          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal2(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
-            style={{ color: "black" }}
+            loading={isLoading2 ? true : false}
+            loaderPosition="center"
+            style={{ color: AccentColor.white }}
             radius={"xl"}
             color={"red"}
             onClick={() => {
-              onDelete(router, eventId);
-              setOpenModal2(false);
+              onDelete(router, eventId, setLoading2);
             }}
           >
             Hapus
@@ -115,23 +158,3 @@ function ButtonAction({ eventId }: { eventId: string }) {
   );
 }
 
-async function onUpdate(router: AppRouterInstance, eventId: string) {
-  await Event_funEditStatusById("3", eventId).then((res) => {
-    if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      router.push(RouterEvent.status({ id: "3" }));
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
-    }
-  });
-}
-
-async function onDelete(router: AppRouterInstance, eventId: string) {
-  const res = await Event_funDeleteById(eventId);
-  if (res.status === 200) {
-    ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
-    router.back();
-  } else {
-    ComponentGlobal_NotifikasiGagal(res.message);
-  }
-}

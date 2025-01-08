@@ -254,7 +254,7 @@ export default function ComponentColab_DetailListPartisipasiUser({
             borderRight: `1px solid ${AccentColor.blue}`,
             borderLeft: `1px solid ${AccentColor.blue}`,
             borderRadius: "20px 20px 0px 0px",
-            color: "white",
+            color: MainColor.white,
             paddingBottom: "5%",
           },
         }}
@@ -262,16 +262,21 @@ export default function ComponentColab_DetailListPartisipasiUser({
         <Stack spacing={"xs"}>
           <Group position="right">
             <ActionIcon onClick={close} variant="transparent">
-              <IconX color="white" />
+              <IconX color={MainColor.white} />
             </ActionIcon>
           </Group>
           <Textarea
             maxLength={300}
             label={
-              <Text c={"white"} mb={"sm"} fw={"bold"}>
+              <Text c={MainColor.white} mb={"sm"} fw={"bold"}>
                 Deskripsi Diri
               </Text>
             }
+            styles={{
+              input: {
+                backgroundColor: MainColor.white
+              }
+            }}
             placeholder="Deskripsikan diri anda yang sesuai dengan proyek ini.."
             minRows={4}
             onChange={(val) => {

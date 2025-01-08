@@ -30,8 +30,14 @@ export default function Colab_Edit({
           maxLength={100}
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            }
           }}
           label="Judul"
           withAsterisk
@@ -49,8 +55,14 @@ export default function Colab_Edit({
           maxLength={100}
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            }
           }}
           label="Lokasi"
           withAsterisk
@@ -67,8 +79,17 @@ export default function Colab_Edit({
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            },
+            dropdown: {
+              backgroundColor: MainColor.white,
+            }
           }}
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
@@ -113,8 +134,14 @@ export default function Colab_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Tujuan Proyek"
             placeholder="Masukan tujuan proyek"
@@ -138,7 +165,10 @@ export default function Colab_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             label="Keuntungan "
