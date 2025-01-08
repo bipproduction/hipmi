@@ -105,8 +105,17 @@ export default function CreateDonasiNew() {
             <Select
                styles={{
                   label: {
-                     color: "white",
+                     color: MainColor.white,
                   },
+                  input: {
+                     backgroundColor: MainColor.white
+                  },
+                  required: {
+                     color: MainColor.red
+                  },
+                  dropdown: {
+                     backgroundColor: MainColor.white
+                  }
                }}
                label="Kategori"
                placeholder={loadingMaster ? "Loading..." : "Pilih kategori penggalangan dana"}
@@ -127,8 +136,14 @@ export default function CreateDonasiNew() {
                <TextInput
                   styles={{
                      label: {
-                        color: "white",
+                        color: MainColor.white,
                      },
+                     input: {
+                        backgroundColor: MainColor.white
+                     },
+                     required: {
+                        color: MainColor.red
+                     }
                   }}
                   withAsterisk
                   label="Judul Donasi"
@@ -141,8 +156,14 @@ export default function CreateDonasiNew() {
                <TextInput
                   styles={{
                      label: {
-                        color: "white",
+                        color: MainColor.white,
                      },
+                     input: {
+                        backgroundColor: MainColor.white
+                     },
+                     required: {
+                        color: MainColor.red
+                     }
                   }}
                   icon={<Text fw={"bold"}>Rp.</Text>}
                   min={0}
@@ -175,8 +196,17 @@ export default function CreateDonasiNew() {
                <Select
                   styles={{
                      label: {
-                        color: "white",
+                        color: MainColor.white
                      },
+                     input: {
+                        backgroundColor: MainColor.white
+                     },
+                     required: {
+                        color: MainColor.red
+                     },
+                     dropdown: {
+                        backgroundColor: MainColor.white
+                     }
                   }}
                   label="Durasi"
                   placeholder={loadingMaster ? "Loading..." : "Jangka waktu penggalangan dana"}
@@ -202,8 +232,8 @@ export default function CreateDonasiNew() {
                      </AspectRatio>
                   ) : (
                      <Stack justify="center" align="center" h={"100%"}>
-                        <IconUpload color="white" />
-                        <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
+                        <IconUpload color={MainColor.white} />
+                        <Text fz={10} fs={"italic"} c={MainColor.white} fw={"bold"}>
                            Upload Gambar
                         </Text>
                      </Stack>

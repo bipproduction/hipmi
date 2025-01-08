@@ -158,8 +158,14 @@ export function Investasi_ViewEditInvestasiNew() {
                      <TextInput
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           }
                         }}
                         withAsterisk
                         label="Judul Investasi"
@@ -177,8 +183,14 @@ export function Investasi_ViewEditInvestasiNew() {
                      <TextInput
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           }
                         }}
                         icon={<Text fw={"bold"}>Rp.</Text>}
                         min={0}
@@ -213,8 +225,14 @@ export function Investasi_ViewEditInvestasiNew() {
                      <TextInput
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           }
                         }}
                         icon={<Text fw={"bold"}>Rp.</Text>}
                         min={0}
@@ -258,20 +276,28 @@ export function Investasi_ViewEditInvestasiNew() {
                         readOnly
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
-
                            input: {
-                              backgroundColor: "whitesmoke",
+                              backgroundColor: MainColor.white
                            },
+                           required: {
+                              color: MainColor.red
+                           }
                         }}
                      />
 
                      <TextInput
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           }
                         }}
                         rightSection={
                            <Text fw={"bold"} c={"gray"}>
@@ -294,8 +320,17 @@ export function Investasi_ViewEditInvestasiNew() {
                      <Select
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           },
+                           dropdown: {
+                              backgroundColor: MainColor.white,
+                           }
                         }}
                         withAsterisk
                         label="Pencarian Investor"
@@ -316,8 +351,17 @@ export function Investasi_ViewEditInvestasiNew() {
                      <Select
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           },
+                           dropdown: {
+                              backgroundColor: MainColor.white,
+                           }
                         }}
                         withAsterisk
                         label="Periode Deviden"
@@ -335,8 +379,17 @@ export function Investasi_ViewEditInvestasiNew() {
                      <Select
                         styles={{
                            label: {
-                              color: "white",
+                              color: MainColor.white,
                            },
+                           input: {
+                              backgroundColor: MainColor.white
+                           },
+                           required: {
+                              color: MainColor.red
+                           },
+                           dropdown: {
+                              backgroundColor: MainColor.white,
+                           }
                         }}
                         withAsterisk
                         label="Pembagian Deviden"

@@ -88,7 +88,7 @@ export default function Donasi_ProsesTransaksi({
               padding: "15px",
               cursor: "pointer",
               borderRadius: "10px",
-              color: "white",
+              color: MainColor.white,
             }}
           >
             <Stack spacing={"md"}>
@@ -99,7 +99,7 @@ export default function Donasi_ProsesTransaksi({
                   padding: "15px",
                   cursor: "pointer",
                   borderRadius: "10px",
-                  color: "white",
+                  color: MainColor.white,
                 }}
               >
                 <Stack align="center" justify="center">
@@ -121,7 +121,7 @@ export default function Donasi_ProsesTransaksi({
               padding: "15px",
               cursor: "pointer",
               borderRadius: "10px",
-              color: "white",
+              color: MainColor.white,
             }}
           >
             <Paper
@@ -131,7 +131,7 @@ export default function Donasi_ProsesTransaksi({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
               }}
             >
               <Group position="center">
@@ -152,7 +152,7 @@ export default function Donasi_ProsesTransaksi({
                   target="_blank"
                   href={`https://wa.me/+${nomorAdmin.nomor}?text=Hallo Admin , Saya ada kendala dalam proses transfer donasi!`}
                 >
-                  <IconBrandWhatsapp size={40} color={Warna.hijau_cerah} />
+                  <IconBrandWhatsapp size={40} color={MainColor.green} />
                 </Link>
               </Group>
             </Paper>

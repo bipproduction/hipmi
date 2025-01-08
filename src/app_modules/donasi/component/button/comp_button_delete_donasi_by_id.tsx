@@ -13,6 +13,7 @@ import {
 import { useAtom } from "jotai";
 import { gs_donasi_tabs_posting } from "../../global_state";
 import { useRouter } from "next/navigation";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export function Donasi_ComponentButtonDeleteDonasiById({
   donasiId,
@@ -60,7 +61,8 @@ export function Donasi_ComponentButtonDeleteDonasiById({
     <>
       <Button
         radius={"xl"}
-        color="red"
+        style={{ backgroundColor: MainColor.red }}
+        c={AccentColor.white}
         onClick={() => {
           setOpenModal(true);
         }}

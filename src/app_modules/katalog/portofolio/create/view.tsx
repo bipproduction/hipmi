@@ -71,12 +71,12 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
-              // required: {
-              //   color: MainColor.red,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
             }}
             withAsterisk
             label="Nama Bisnis"
@@ -94,12 +94,15 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
-              // required: {
-              //   color: MainColor.red,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              dropdown: {
+                backgroundColor: MainColor.white
+              }
             }}
             withAsterisk
             label="Bidang Bisnis"
@@ -121,12 +124,12 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
-              // required: {
-              //   color: MainColor.red,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
             }}
             withAsterisk
             label="Alamat Bisnis"
@@ -150,7 +153,12 @@ export default function CreatePortofolio({
 
             <PhoneInput
               placeholder="Nomor telepon"
-              inputStyle={{ width: "100%" }}
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  backgroundColor: MainColor.login,
+                }  
+              }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
               defaultCountry="id"
               onChange={(val) => {
                 const valPhone = val.substring(1);
@@ -192,12 +200,12 @@ export default function CreatePortofolio({
                 label: {
                   color: MainColor.white,
                 },
-                // input: {
-                //   backgroundColor: MainColor.white,
-                // },
-                // required: {
-                //   color: MainColor.red,
-                // },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
+                },
               }}
               maxLength={300}
               autosize
@@ -336,9 +344,9 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Facebook"
             maxLength={100}
@@ -355,9 +363,9 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Instagram"
             maxLength={100}
@@ -374,9 +382,9 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Tiktok"
             maxLength={100}
@@ -393,9 +401,9 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Twitter"
             maxLength={100}
@@ -412,9 +420,9 @@ export default function CreatePortofolio({
               label: {
                 color: MainColor.white,
               },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
+              input: {
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Youtube"
             maxLength={100}

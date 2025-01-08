@@ -1,6 +1,7 @@
 "use client";
 
 import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -119,9 +120,9 @@ export default function Investasi_ViewDetailReject({
           {/* Tombol Ajukan */}
           <Button
             radius={"xl"}
-            bg={"orange.7"}
-            color="yellow"
+            style={{ backgroundColor: AccentColor.yellow }}
             onClick={() => onAjukan()}
+            c={MainColor.darkblue}
           >
             Edit Kembali
           </Button>
@@ -129,8 +130,8 @@ export default function Investasi_ViewDetailReject({
           {/* Tombol Hapus */}
           <Button
             radius={"xl"}
-            bg={"red.7"}
-            color="red"
+            style={{ backgroundColor: MainColor.red }}
+            c={AccentColor.white}
             onClick={() => setOpenModal(true)}
           >
             Hapus

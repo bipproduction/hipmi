@@ -51,7 +51,7 @@ export default function Colab_Create() {
     }
   }
 
-  
+
   if (listIndustri == null) {
     return (
       <>
@@ -66,9 +66,9 @@ export default function Colab_Create() {
         <TextInput
           maxLength={100}
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
           }}
           label="Judul"
           withAsterisk
@@ -83,9 +83,9 @@ export default function Colab_Create() {
 
         <TextInput
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
           }}
           maxLength={100}
           label="Lokasi"
@@ -101,9 +101,10 @@ export default function Colab_Create() {
 
         <Select
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
+            dropdown: { backgroundColor: MainColor.white },
           }}
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
@@ -123,9 +124,9 @@ export default function Colab_Create() {
         <Stack spacing={5}>
           <Textarea
             styles={{
-              label: {
-                color: "white",
-              },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             maxLength={500}
             label="Tujuan Proyek"
@@ -148,9 +149,8 @@ export default function Colab_Create() {
         <Stack spacing={5}>
           <Textarea
             styles={{
-              label: {
-                color: "white",
-              },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
             }}
             maxLength={500}
             label="Keuntungan "
@@ -210,10 +210,10 @@ function ButtonAction({ value }: { value: any }) {
       <Button
         disabled={
           !value.title ||
-          !value.lokasi ||
-          !value.purpose ||
-          !value.benefit ||
-          value.projectCollaborationMaster_IndustriId === 0
+            !value.lokasi ||
+            !value.purpose ||
+            !value.benefit ||
+            value.projectCollaborationMaster_IndustriId === 0
             ? true
             : false
         }

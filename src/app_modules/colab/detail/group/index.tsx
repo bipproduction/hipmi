@@ -229,13 +229,13 @@ export default function Colab_GroupChatView({
                     {loadingBack ? (
                       <ComponentGlobal_Loader />
                     ) : (
-                      <IconChevronLeft color="white" />
+                      <IconChevronLeft color={MainColor.white} />
                     )}
                   </ActionIcon>
                 </Grid.Col>
                 <Grid.Col span={8}>
                   <Center>
-                    <Title c={"white"} order={5} lineClamp={1}>
+                    <Title color={MainColor.white} order={5} lineClamp={1}>
                       {selectRoom?.name}
                     </Title>
                   </Center>
@@ -255,7 +255,7 @@ export default function Colab_GroupChatView({
                       {loadingInfo ? (
                         <ComponentGlobal_Loader />
                       ) : (
-                        <IconInfoSquareRounded color="white" />
+                        <IconInfoSquareRounded color={MainColor.white} />
                       )}
                     </ActionIcon>
                   </Group>
@@ -380,10 +380,11 @@ export default function Colab_GroupChatView({
           >
             KIzRIM PESAN
           </Button> */}
-            <Stack justify="center" h={"100%"} px={"sm"}>
+            <Stack  justify="center" h={"100%"} px={"sm"}>
               <Grid align="center">
                 <Grid.Col span={"auto"}>
                   <Textarea
+                  styles={{ input: { backgroundColor: MainColor.white} }}
                     minRows={1}
                     radius={"md"}
                     placeholder="Ketik pesan anda..."
@@ -395,8 +396,12 @@ export default function Colab_GroupChatView({
                   <ActionIcon
                     disabled={msg === "" ? true : false}
                     variant="filled"
-                    bg={AccentColor.softblue}
-                    color={"cyan"}
+                    styles={{
+                      root: {
+                        backgroundColor: MainColor.white,
+                      },
+                    }}
+                    color={MainColor.darkblue}
                     radius={"xl"}
                     size={"xl"}
                     onClick={() => {

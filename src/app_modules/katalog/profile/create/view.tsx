@@ -8,6 +8,7 @@ import { gmailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function CreateProfile() {
   const [imgPP, setImgPP] = useState<any | null>();
@@ -42,7 +43,9 @@ export default function CreateProfile() {
         <Stack mb={"lg"}>
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             label={"Nama"}
@@ -57,7 +60,9 @@ export default function CreateProfile() {
           />
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             icon={<IconAt size={15} />}
@@ -80,7 +85,9 @@ export default function CreateProfile() {
           />
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             label="Alamat"
@@ -96,7 +103,10 @@ export default function CreateProfile() {
 
           <Select
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
+              dropdown: { backgroundColor: MainColor.white }
             }}
             withAsterisk
             label="Jenis Kelamin"
