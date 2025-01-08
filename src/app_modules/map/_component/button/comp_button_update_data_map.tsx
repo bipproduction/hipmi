@@ -8,12 +8,16 @@ import {
 } from "@/app_modules/_global/notif_global";
 import { Button } from "@mantine/core";
 
+import { DIRECTORY_ID } from "@/app/lib";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
+import { clientLogger } from "@/util/clientLogger";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { map_funEditMap } from "../../fun/edit/fun_edit_map";
 import { MODEL_MAP } from "../../lib/interface";
-import { useRouter } from "next/navigation";
-import { DIRECTORY_ID } from "@/app/lib";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { useState } from "react";
 
 export function ComponentMap_ButtonUpdateDataMap({
   data,
@@ -25,30 +29,59 @@ export function ComponentMap_ButtonUpdateDataMap({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   async function onSavePin() {
-    if (file !== null) {
-      const uploadFileToStorage = await funGlobal_UploadToStorage({
-        file: file,
-        dirId: DIRECTORY_ID.map_image,
-      });
-      if (!uploadFileToStorage.success)
-        return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+    try {
+      setIsLoading(true);
 
-      const res = await map_funEditMap({
-        data: data,
-        fileId: uploadFileToStorage.data.id,
-      });
-      res.status === 200
-        ? (ComponentGlobal_NotifikasiBerhasil(res.message), router.back())
-        : ComponentGlobal_NotifikasiGagal(res.message);
-    } else {
-      const res = await map_funEditMap({
-        data: data,
-      });
-      res.status === 200
-        ? (ComponentGlobal_NotifikasiBerhasil(res.message), router.back())
-        : ComponentGlobal_NotifikasiGagal(res.message);
+      if (file !== null) {
+        const deleteLogo = await funGlobal_DeleteFileById({
+          fileId: data.imageId,
+          dirId: DIRECTORY_ID.map_image,
+        });
+
+        if (!deleteLogo.success) {
+          setIsLoading(false);
+          clientLogger.error("Error delete logo", deleteLogo.message);
+        }
+
+        const uploadFileToStorage = await funGlobal_UploadToStorage({
+          file: file,
+          dirId: DIRECTORY_ID.map_image,
+        });
+        if (!uploadFileToStorage.success) {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+          return;
+        }
+
+        const res = await map_funEditMap({
+          data: data,
+          fileId: uploadFileToStorage.data.id,
+        });
+
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          router.back();
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } else {
+        const res = await map_funEditMap({
+          data: data,
+        });
+
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          router.back();
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error update logo", error);
     }
-    setIsLoading(true);
   }
 
   return (

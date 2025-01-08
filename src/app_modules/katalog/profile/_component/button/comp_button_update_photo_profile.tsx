@@ -1,21 +1,21 @@
 "use client";
 
+import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { Box, Button, Center } from "@mantine/core";
+import { clientLogger } from "@/util/clientLogger";
+import { Box, Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { profile_funUpdatePhoto } from "../../fun";
-import {
-  funGlobal_DeleteFileById,
-  funGlobal_UploadToStorage,
-} from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
-import { clientLogger } from "@/util/clientLogger";
 
 export function Profile_ComponentButtonUpdatePhotoProfile({
   file,
@@ -31,41 +31,45 @@ export function Profile_ComponentButtonUpdatePhotoProfile({
   async function onUpdate() {
     try {
       setLoading(true);
-      const deletePhoto = await funGlobal_DeleteFileById({
-        fileId: fileId,
-        dirId: DIRECTORY_ID.profile_foto,
-      });
 
-      if (!deletePhoto.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal update foto profile");
-        return;
-      }
-
+      // Upload foto baru
       const uploadPhoto = await funGlobal_UploadToStorage({
         file: file,
         dirId: DIRECTORY_ID.profile_foto,
       });
 
       if (!uploadPhoto.success) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
         return;
+      }
+
+      // Hapus gambar lama
+      const deletePhoto = await funGlobal_DeleteFileById({
+        fileId: fileId,
+        dirId: DIRECTORY_ID.profile_foto,
+      });
+
+      if (!deletePhoto.success) {
+        setLoading(false);
+        clientLogger.error("Error delete logo", deletePhoto.message);
       }
 
       const res = await profile_funUpdatePhoto({
         fileId: uploadPhoto.data.id,
         profileId: profileId,
       });
-      
+
       if (res.status === 200) {
         ComponentGlobal_NotifikasiBerhasil(res.message);
         router.back();
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
     } catch (error) {
-      clientLogger.error("Error update photo profile", error);
-    } finally {
       setLoading(false);
+      clientLogger.error("Error update photo profile", error);
     }
   }
   return (

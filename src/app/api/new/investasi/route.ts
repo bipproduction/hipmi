@@ -14,7 +14,8 @@ export async function GET(request: Request) {
       const kategori = searchParams.get("cat")
       const status = searchParams.get("status")
       const page = searchParams.get("page")
-      const dataSkip = Number(page) * 5 - 5;
+      const dataTake = 10
+      const dataSkip = Number(page) * dataTake - dataTake;
 
       if (kategori == "bursa") {
          const data = await prisma.investasi.findMany({
@@ -61,7 +62,7 @@ export async function GET(request: Request) {
          // cek data yang lewat
          // klo ada,  update status
          const dataAwal = await prisma.investasi.findMany({
-            take: 5,
+            take: dataTake,
             skip: dataSkip,
             orderBy: [
                {
@@ -100,28 +101,28 @@ export async function GET(request: Request) {
          }
 
          const data = await prisma.investasi.findMany({
-            take: 5,
-            skip: dataSkip,
-            orderBy: {
-               updatedAt: "desc",
-            },
-            where: {
-               authorId: userLoginId,
-               masterStatusInvestasiId: status,
-            },
-            select: {
-               id: true,
-               title: true,
-               targetDana: true,
-               imageId: true,
-               countDown: true,
-               updatedAt: true,
-               MasterPencarianInvestor: {
-                  select: {
-                     name: true
-                  }
-               }
-            }
+           take: dataTake,
+           skip: dataSkip,
+           orderBy: {
+             updatedAt: "desc",
+           },
+           where: {
+             authorId: userLoginId,
+             masterStatusInvestasiId: status,
+           },
+           select: {
+             id: true,
+             title: true,
+             targetDana: true,
+             imageId: true,
+             countDown: true,
+             updatedAt: true,
+             MasterPencarianInvestor: {
+               select: {
+                 name: true,
+               },
+             },
+           },
          });
 
          dataFix = data.map((v: any) => ({

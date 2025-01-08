@@ -84,6 +84,7 @@ export default function Portofolio_EditLogoBisnis({
         <ComponentPortofolio_ButtonEditLogoBisnis
           file={file as any}
           portofolioId={dataPorto.id}
+          fileRemoveId={dataPorto.logoId}
         />
       </Stack>
     </>

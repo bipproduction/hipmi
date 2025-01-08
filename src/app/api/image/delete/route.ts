@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
   const data = await req.json();
-
-  console.log("data request =>", data);
   const id = data.fileId;
   const dirId = data.dirId;
 

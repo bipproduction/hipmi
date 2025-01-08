@@ -7,7 +7,7 @@ import {
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { gmailRegex } from "@/app_modules/katalog/component/regular_expressions";
+import { emailRegex } from "@/app_modules/katalog/component/regular_expressions";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ export function Profile_ComponentCreateNewProfile({
     };
     if (_.values(newData).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-    if (!newData.email.match(gmailRegex))
+    if (!newData.email.match(emailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     if (fotoProfileId == "")

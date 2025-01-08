@@ -1,6 +1,6 @@
 export const apiGetPortofolioByProfile = async (path?: string) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
-  if (!token) return null;
+  if (!token) return await token.json().catch(() => null);
 
   const response = await fetch(`/api/new/portofolio${path ? path : ""}`, {
     headers: {
@@ -18,7 +18,7 @@ export const apiGetPortofolioByProfile = async (path?: string) => {
 
 export const apiGetOnePortofolioById = async (path: string, cat: string) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
-  if (!token) return null;
+  if (!token) return await token.json().catch(() => null);
 
   const response = await fetch(`/api/new/portofolio/${path}?cat=${cat}`, {
     headers: {
@@ -36,7 +36,7 @@ export const apiGetOnePortofolioById = async (path: string, cat: string) => {
 
 export const apiDeletePortofolio = async (path: string) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
-  if (!token) return null;
+  if (!token) return await token.json().catch(() => null);
 
   const response = await fetch(`/api/new/portofolio/${path}`, {
     method: "DELETE",
@@ -45,7 +45,6 @@ export const apiDeletePortofolio = async (path: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
 
   return await response.json().catch(() => null);
 };

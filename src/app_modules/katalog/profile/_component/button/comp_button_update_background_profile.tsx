@@ -29,16 +29,8 @@ export function Profile_ComponentButtonUpdateBackgroundProfile({
   async function onUpdate() {
     try {
       setLoading(true);
-      const deletePhoto = await funGlobal_DeleteFileById({
-        fileId: fileId,
-        dirId: DIRECTORY_ID.profile_background,
-      });
 
-      if (!deletePhoto.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal update background");
-        return;
-      }
-
+      // Upload gambar baru
       const uploadFile = await funGlobal_UploadToStorage({
         file: file,
         dirId: DIRECTORY_ID.profile_background,
@@ -46,9 +38,19 @@ export function Profile_ComponentButtonUpdateBackgroundProfile({
 
       if (!uploadFile.success) {
         setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan(
-          "Gagal upload background"
-        );
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload background");
+        return;
+      }
+
+      // Hapus gambar lama
+      const deletePhoto = await funGlobal_DeleteFileById({
+        fileId: fileId,
+        dirId: DIRECTORY_ID.profile_background,
+      });
+
+      if (!deletePhoto.success) {
+        setLoading(false);
+        clientLogger.error("Error delete background", deletePhoto.message);
       }
 
       const res = await profile_funUpdateBackground({
@@ -60,12 +62,12 @@ export function Profile_ComponentButtonUpdateBackgroundProfile({
         ComponentGlobal_NotifikasiBerhasil(res.message);
         router.back();
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
     } catch (error) {
-      clientLogger.error("Error upload background", error);
-    } finally {
       setLoading(false);
+      clientLogger.error("Error upload background", error);
     }
   }
 

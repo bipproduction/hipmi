@@ -18,11 +18,12 @@ import BodyHome from "./component/body_home";
 import FooterHome from "./component/footer_home";
 import { apiGetDataHome } from "./fun/get/api_home";
 import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "../components/CustomSkeleton";
 
 export default function HomeViewNew() {
   const [countNtf, setCountNtf] = useAtom(gs_count_ntf);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
-  const [dataUser, setDataUser] = useState<any>({});
+  const [dataUser, setDataUser] = useState<any | null>(null);
   const [categoryPage, setCategoryPage] = useAtom(gs_notifikasi_kategori_app);
   const router = useRouter();
 
@@ -67,61 +68,69 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              <ActionIcon
-                radius={"xl"}
-                disabled={countNtf == null}
-                variant={"transparent"}
-                onClick={() => {
-                  if (
-                    dataUser.profile != undefined ||
-                    dataUser?.profile != null
-                  ) {
-                    router.push(RouterUserSearch.main, { scroll: false });
-                  } else {
-                    router.push(RouterProfile.create, { scroll: false });
-                  }
-                }}
-              >
-                <IconUserSearch color={MainColor.white} />
-              </ActionIcon>
+              dataUser?.profile == null ? (
+                <CustomSkeleton width={20} height={20} circle />
+              ) : (
+                <ActionIcon
+                  radius={"xl"}
+                  disabled={countNtf == null}
+                  variant={"transparent"}
+                  onClick={() => {
+                    if (
+                      dataUser.profile != undefined ||
+                      dataUser?.profile != null
+                    ) {
+                      router.push(RouterUserSearch.main, { scroll: false });
+                    } else {
+                      router.push(RouterProfile.create, { scroll: false });
+                    }
+                  }}
+                >
+                  <IconUserSearch color={MainColor.white} />
+                </ActionIcon>
+              )
             }
             customButtonRight={
-              <ActionIcon
-                variant="transparent"
-                disabled={countNtf == null}
-                onClick={() => {
-                  if (
-                    dataUser.profile != undefined ||
-                    dataUser?.profile != null
-                  ) {
-                    setCategoryPage("Semua");
-                    router.push(
-                      RouterNotifikasi.categoryApp({ name: "semua" }),
-                      {
-                        scroll: false,
-                      }
-                    );
-                  } else {
-                    router.push(RouterProfile.create, { scroll: false });
-                  }
-                }}
-              >
-                {countNtf != null && countNtf > 0 ? (
-                  <Indicator
-                    processing
-                    color={MainColor.yellow}
-                    label={
-                      <Text fz={10} c={MainColor.darkblue}>
-                        {countNtf > 99 ? "99+" : countNtf}
-                      </Text>
+              dataUser?.profile == null ? (
+                <CustomSkeleton width={20} height={20} circle />
+              ) : (
+                <ActionIcon
+                  variant="transparent"
+                  disabled={countNtf == null}
+                  onClick={() => {
+                    if (
+                      dataUser.profile != undefined ||
+                      dataUser?.profile != null
+                    ) {
+                      setCategoryPage("Semua");
+                      router.push(
+                        RouterNotifikasi.categoryApp({ name: "semua" }),
+                        {
+                          scroll: false,
+                        }
+                      );
+                    } else {
+                      router.push(RouterProfile.create, { scroll: false });
                     }
-                  >
+                  }}
+                >
+                  {countNtf != null && countNtf > 0 ? (
+                    <Indicator
+                      processing
+                      color={MainColor.yellow}
+                      label={
+                        <Text fz={10} c={MainColor.darkblue}>
+                          {countNtf > 99 ? "99+" : countNtf}
+                        </Text>
+                      }
+                    >
+                      <IconBell color={MainColor.white} />
+                    </Indicator>
+                  ) : (
                     <IconBell color={MainColor.white} />
-                  </Indicator>
-                ) : (
-                  <IconBell color={MainColor.white} />
-                )}
-              </ActionIcon>
+                  )}
+                </ActionIcon>
+              )
             }
           />
         }
