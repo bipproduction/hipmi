@@ -26,9 +26,13 @@ import { map_funCustomPinMap } from "../fun";
 import { defaultMapZoom } from "../lib/default_lat_long";
 import { MODEL_MAP } from "../lib/interface";
 import { APIs, DIRECTORY_ID } from "@/app/lib";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
 import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { clientLogger } from "@/util/clientLogger";
 
 export function UiMap_CustomPin({
   dataMap,
@@ -172,34 +176,67 @@ export function UiMap_CustomPin({
           <AttributionControl customAttribution="Map design by PT. Bali Interaktif Perkasa" />
         </Map>
 
-        <ButtonSimpan mapId={data.id} filePin={filePin} />
+        <ButtonSimpan
+          mapId={data.id}
+          filePin={filePin}
+          fileRemoveId={data.pinId}
+        />
       </Stack>
     </>
   );
 }
 
-function ButtonSimpan({ mapId, filePin }: { mapId: string; filePin: File }) {
+function ButtonSimpan({
+  mapId,
+  filePin,
+  fileRemoveId,
+}: {
+  mapId: string;
+  filePin: File;
+  fileRemoveId: string;
+}) {
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
 
   async function onCustom() {
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
-      file: filePin,
-      dirId: DIRECTORY_ID.map_pin,
-    });
+    try {
+      setLoading(true);
+      const deletePin = await funGlobal_DeleteFileById({
+        fileId: fileRemoveId,
+        dirId: DIRECTORY_ID.map_pin,
+      });
+      if (!deletePin.success) {
+        setLoading(false);
+        clientLogger.error("Error delete logo", deletePin.message);
+      }
 
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+      const uploadFileToStorage = await funGlobal_UploadToStorage({
+        file: filePin,
+        dirId: DIRECTORY_ID.map_pin,
+      });
 
-    const res = await map_funCustomPinMap({
-      mapId: mapId,
-      fileId: uploadFileToStorage.data.id,
-    });
-    res.status === 200
-      ? (ComponentGlobal_NotifikasiBerhasil(res.message),
-        setLoading(true),
-        router.back())
-      : ComponentGlobal_NotifikasiGagal(res.message);
+      if (!uploadFileToStorage.success) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+        return;
+      }
+
+      const res = await map_funCustomPinMap({
+        mapId: mapId,
+        fileId: uploadFileToStorage.data.id,
+      });
+
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+        router.back();
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error custom pin", error);
+    }
   }
 
   return (

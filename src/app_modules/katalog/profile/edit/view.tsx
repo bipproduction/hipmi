@@ -1,17 +1,18 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
-import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { gmailRegex, validRegex } from "../../component/regular_expressions";
+import { gmailRegex } from "../../component/regular_expressions";
 import { Profile_funEditById } from "../fun/update/fun_edit_profile_by_id";
 import { MODEL_PROFILE } from "../model/interface";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
   const router = useRouter();
@@ -29,15 +30,20 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
     if (!body.email.match(gmailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
-    await Profile_funEditById(body).then((res) => {
+    try {
+      setLoading(true);
+      const res = await Profile_funEditById(body);
       if (res.status === 200) {
-        setLoading(true);
         ComponentGlobal_NotifikasiBerhasil(res.message);
-        setTimeout(() => router.back(), 1000);
+        router.back();
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
-    });
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error update foto profile", error);
+    }
   }
 
   if (!dataProfile)
@@ -49,7 +55,6 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
 
   return (
     <>
-      {/* <pre>{JSON.stringify(dataProfile, null, 2)}</pre> */}
       <Stack px={"sm"}>
         <TextInput
           styles={{
@@ -96,7 +101,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             },
             input: {
               backgroundColor: MainColor.white,
-            }
+            },
           }}
           withAsterisk
           label="Nama"
@@ -125,7 +130,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             },
             input: {
               backgroundColor: MainColor.white,
-            }
+            },
           }}
           withAsterisk
           label="Email"
@@ -156,7 +161,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             },
             input: {
               backgroundColor: MainColor.white,
-            }
+            },
           }}
           withAsterisk
           label="Alamat"
@@ -185,7 +190,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             },
             input: {
               backgroundColor: MainColor.white,
-            }
+            },
           }}
           withAsterisk
           label="Jenis Kelamin"
@@ -216,7 +221,6 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         </Button>
       </Stack>
 
-      {/* <pre>{JSON.stringify(dataProfile, null, 2)}</pre> */}
     </>
   );
 }

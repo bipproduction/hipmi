@@ -37,13 +37,13 @@ export default function ComponentPortofolio_ButtonDeleteNew({
         ComponentGlobal_NotifikasiBerhasil(response.message);
         router.back();
       } else {
+        setLoadingDel(false);
         ComponentGlobal_NotifikasiGagal(response?.message);
       }
     } catch (error) {
+      setLoadingDel(false);
       clientLogger.error("Error delete portofolio", error);
       ComponentGlobal_NotifikasiGagal("Gagal menghapus portofolio");
-    } finally {
-      setLoadingDel(false);
     }
   }
 

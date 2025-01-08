@@ -1,20 +1,14 @@
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { PortofolioLayoutNew } from "@/app_modules/katalog/portofolio";
 
-export default async function Layout({ children, params, }: { children: any; params: { id: string }; }) {
-  // let portoId = params.id;
-  // const getPorto = await portofolio_getOneById(portoId);
-  // const userLoginId = await funGetUserIdByToken();
+export default async function Layout({ children, }: { children: any;  }) {
+  const userLoginId = await funGetUserIdByToken();
 
   return (
     <>
-      {/* <PortofolioLayout
-        portoId={portoId}
-        userLoginId={userLoginId as string}
-        authorId={getPorto?.Profile?.User?.id as any}
-      >
+      <PortofolioLayoutNew userLoginId={userLoginId}>
         {children}
-      </PortofolioLayout> */}
-      <PortofolioLayoutNew>{children}</PortofolioLayoutNew>
+      </PortofolioLayoutNew>
     </>
   );
 }

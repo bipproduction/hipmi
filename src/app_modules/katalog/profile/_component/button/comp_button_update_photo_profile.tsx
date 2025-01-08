@@ -37,8 +37,8 @@ export function Profile_ComponentButtonUpdatePhotoProfile({
       });
 
       if (!deletePhoto.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal update foto profile");
-        return;
+        setLoading(false);
+        clientLogger.error("Error delete logo", deletePhoto.message);
       }
 
       const uploadPhoto = await funGlobal_UploadToStorage({
@@ -47,6 +47,7 @@ export function Profile_ComponentButtonUpdatePhotoProfile({
       });
 
       if (!uploadPhoto.success) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload foto profile");
         return;
       }
@@ -55,17 +56,17 @@ export function Profile_ComponentButtonUpdatePhotoProfile({
         fileId: uploadPhoto.data.id,
         profileId: profileId,
       });
-      
+
       if (res.status === 200) {
         ComponentGlobal_NotifikasiBerhasil(res.message);
         router.back();
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
     } catch (error) {
-      clientLogger.error("Error update photo profile", error);
-    } finally {
       setLoading(false);
+      clientLogger.error("Error update photo profile", error);
     }
   }
   return (

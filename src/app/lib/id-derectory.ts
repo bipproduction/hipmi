@@ -1,6 +1,6 @@
 const DIRECTORY_ID = {
-  profile_foto: "cm0x93rgo000jbp5tj8baoaus",
-  profile_background: "cm0x93ze8000lbp5t1a8uc9wl",
+  profile_foto: "cm5ni43ub001pxpug0qw4p11e",
+  profile_background: "cm5ni4hnq001l12p9gpagxgtv",
   portofolio_logo: "cm0yjl6ug000310njwmk6j0tx",
   map_pin: "cm0yjq8up000710njv5klra32",
   map_image: "cm0yjqnxl000910njplqho07w",
