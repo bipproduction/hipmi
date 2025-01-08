@@ -24,6 +24,7 @@ import { useState } from "react";
 import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
 import { MODEL_EVENT } from "../model/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Event_Edit({
   dataEvent,
@@ -320,14 +321,19 @@ async function onUpdate(
   if (_.values(value).includes(""))
     return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
 
-  const res = await Event_funEditById(value);
-  setLoading(true);
+  try {
+    setLoading(true);
+    const res = await Event_funEditById(value);
 
   if (res.status === 200) {
     ComponentGlobal_NotifikasiBerhasil(res.message);
     router.back();
-    setLoading(false);
   } else {
+    setLoading(false);
     ComponentGlobal_NotifikasiGagal(res.message);
+  }
+  } catch (error) {
+    setLoading(false);
+    clientLogger.error("Error update event", error);
   }
 }

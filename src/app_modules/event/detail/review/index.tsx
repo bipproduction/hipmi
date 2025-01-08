@@ -55,7 +55,7 @@ function ButtonAction({ eventId }: { eventId: string }) {
         }
         buttonKanan={
           <Button
-          style={{ backgroundColor: MainColor.orange }}
+          style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}

@@ -19,6 +19,7 @@ import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_EVENT } from "../../model/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Event_DetailDraft({
   dataEvent,
@@ -68,12 +69,18 @@ function ButtonAction({
 
   async function onDelete() {
     const res = await Event_funDeleteById(eventId);
-    if (res.status === 200) {
-      router.back();
-      ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+    try {
       setLoadingDelete(true);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+      if (res.status === 200) {
+        router.back();
+        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+      } else {
+        setLoadingDelete(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoadingDelete(false);
+      clientLogger.error("Error delete event", error);
     }
   }
 
@@ -158,7 +165,7 @@ function ButtonAction({
         }
         buttonKanan={
           <Button
-          style={{ backgroundColor: AccentColor.yellow }}
+            style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoadingAjukan ? true : false}
             radius={"xl"}
