@@ -10,7 +10,7 @@ import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { gmailRegex } from "../../component/regular_expressions";
+import { emailRegex } from "../../component/regular_expressions";
 import { Profile_funEditById } from "../fun/update/fun_edit_profile_by_id";
 import { MODEL_PROFILE } from "../model/interface";
 
@@ -27,7 +27,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
     // console.log(body)
     if (_.values(body).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
-    if (!body.email.match(gmailRegex))
+    if (!body.email.match(emailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     try {
@@ -139,7 +139,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
             dataProfile?.email === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan email " />
             ) : dataProfile?.email?.length > 0 &&
-              !dataProfile?.email.match(gmailRegex) ? (
+              !dataProfile?.email.match(emailRegex) ? (
               <ComponentGlobal_ErrorInput text="Invalid email" />
             ) : (
               ""

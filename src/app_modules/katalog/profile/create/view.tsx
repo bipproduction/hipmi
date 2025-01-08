@@ -4,7 +4,7 @@ import { ComponentGlobal_ErrorInput } from "@/app_modules/_global/component";
 import { Select, Stack, TextInput } from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
 import { useState } from "react";
-import { gmailRegex } from "../../component/regular_expressions";
+import { emailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
@@ -70,7 +70,7 @@ export default function CreateProfile() {
             maxLength={100}
             placeholder="Contoh: User@gmail.com"
             error={
-              value.email.length > 0 && !value.email.match(gmailRegex) ? (
+              value.email.length > 0 && !value.email.match(emailRegex) ? (
                 <ComponentGlobal_ErrorInput text="Invalid Email" />
               ) : (
                 ""
