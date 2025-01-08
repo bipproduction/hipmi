@@ -17,7 +17,7 @@ export default function Portofolio_UiSosialMediaNew() {
       try {
          setLoading(true)
          const response = await apiGetOnePortofolioById(param.id, "sosmed");
-         if (response.success) {
+         if (response) {
             setDataPorto(response.data);
          }
       } catch (error) {

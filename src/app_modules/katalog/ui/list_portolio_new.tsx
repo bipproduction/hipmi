@@ -19,7 +19,7 @@ export default function ListPortofolioProfileNew() {
       try {
          setLoading(true)
          const response = await apiGetPortofolioByProfile(`?profile=${param.id}&cat=profile`)
-         if (response.success) {
+         if (response) {
             setDataPortofolio(response.data);
          }
       } catch (error) {

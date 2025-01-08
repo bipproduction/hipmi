@@ -13,7 +13,7 @@ import {
   Paper,
   SimpleGrid,
   Stack,
-  Text
+  Text,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconUserSearch } from "@tabler/icons-react";
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiGetDataHome } from "../fun/get/api_home";
 import { listMenuHomeBody, menuHomeJob } from "./list_menu_home";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function BodyHome() {
   const router = useRouter();
@@ -37,24 +38,31 @@ export default function BodyHome() {
 
   async function cekUserLogin() {
     try {
-      const response = await apiGetDataHome("?cat=cek_profile");
-      if (response.success) {
+      const response = await apiGetDataHome({
+        path: "?cat=cek_profile",
+      });
+
+      if (response) {
         setDataUser(response.data);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error get data user", error);
     }
   }
 
   async function getHomeJob() {
     try {
       setLoadingJob(true);
-      const response = await apiGetDataHome("?cat=job");
-      if (response.success) {
+
+      const response = await apiGetDataHome({
+        path: "?cat=job",
+      });
+
+      if (response) {
         setDataJob(response.data);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error get data job", error);
     } finally {
       setLoadingJob(false);
     }
@@ -197,12 +205,22 @@ export default function BodyHome() {
                   <Box key={i} mb={"md"}>
                     <Grid>
                       <Grid.Col span={6}>
-                        <CustomSkeleton height={10} mt={0} radius="xl" width={"75%"} />
-                        <CustomSkeleton height={10} mt={10} radius="xl"  />
-                      </Grid.Col >
+                        <CustomSkeleton
+                          height={10}
+                          mt={0}
+                          radius="xl"
+                          width={"75%"}
+                        />
+                        <CustomSkeleton height={10} mt={10} radius="xl" />
+                      </Grid.Col>
                       <Grid.Col span={6}>
-                        <CustomSkeleton height={10} mt={0} radius="xl" width={"75%"} />
-                        <CustomSkeleton height={10} mt={10} radius="xl"  />
+                        <CustomSkeleton
+                          height={10}
+                          mt={0}
+                          radius="xl"
+                          width={"75%"}
+                        />
+                        <CustomSkeleton height={10} mt={10} radius="xl" />
                       </Grid.Col>
                     </Grid>
                   </Box>

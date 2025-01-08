@@ -22,7 +22,7 @@ export default function LayoutKatalogNew({ children }: { children: any }) {
          setLoading(true)
          const response = await apiGetUserProfile(`?profile=${param.id}`)
          const response2 = await funGetUserIdByToken()
-         if (response.success) {
+         if (response) {
             setAuthorId(response.data.id)
             setUserRoleId(response.data.masterUserRoleId)
             setUserLoginId(response2)

@@ -65,7 +65,7 @@ export default function ProfileDetail() {
     try {
       setLoading(true);
       const response = await apiGetUserProfile(`?profile=${param.id}`);
-      if (response.success) {
+      if (response) {
         setDataProfile(response.data);
       }
     } catch (error) {

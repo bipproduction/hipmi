@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
   const data = await req.json();
+
+  console.log("data request =>", data);
   const id = data.fileId;
   const dirId = data.dirId;
 
@@ -25,9 +27,7 @@ export async function DELETE(req: Request) {
       backendLogger.info("Server status code: " + res.status);
       const data = await res.json();
       if (res.ok) {
-        backendLogger.info(
-          `Success delete ${keyOfDirectory}`
-        );
+        backendLogger.info(`Success delete ${keyOfDirectory}`);
         return NextResponse.json({ success: true });
       } else {
         const errorText = await res.json();

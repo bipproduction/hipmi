@@ -38,7 +38,7 @@ export default function Portofolio_UiDetailDataNew() {
     try {
       setLoading(true);
       const response = await apiGetOnePortofolioById(param.id, "bisnis");
-      if (response.success) {
+      if (response) {
         setDataPorto(response.data);
       }
     } catch (error) {

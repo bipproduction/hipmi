@@ -17,6 +17,7 @@ import { apiGetDataHome } from "../fun/get/api_home";
 import { Home_ComponentAvatarProfile } from "./comp_avatar_profile";
 import { listMenuHomeFooter } from "./list_menu_home";
 import { MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function FooterHome() {
   const router = useRouter();
@@ -28,12 +29,14 @@ export default function FooterHome() {
 
   async function cekUserLogin() {
     try {
-      const response = await apiGetDataHome("?cat=cek_profile");
-      if (response.success) {
+      const response = await apiGetDataHome({
+        path: "?cat=cek_profile",
+      });
+      if (response) {
         setDataUser(response.data);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error get data profile",error);
     }
   }
 
@@ -104,7 +107,10 @@ export default function FooterHome() {
               }
             }}
           >
-            <ActionIcon variant={"transparent"}>
+            <ActionIcon 
+            
+            
+            variant={"transparent"}>
               {dataUser.profile === undefined || dataUser?.profile === null ? (
                 <IconUserCircle color={MainColor.white} />
               ) : (
