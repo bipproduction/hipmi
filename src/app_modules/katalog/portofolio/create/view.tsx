@@ -170,30 +170,6 @@ export default function CreatePortofolio({
             />
           </Stack>
 
-          {/* <TextInput
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              // input: {
-              //   backgroundColor: MainColor.white,
-              // },
-              // required: {
-              //   color: MainColor.red,
-              // },
-            }}
-            withAsterisk
-            label="Nomor Telepon "
-            placeholder="Nomor telepon "
-            type="number"
-            onChange={(val) => {
-              setDataPortofolio({
-                ...dataPortofolio,
-                tlpn: val.target.value,
-              });
-            }}
-          /> */}
-
           <Stack spacing={5}>
             <Textarea
               styles={{

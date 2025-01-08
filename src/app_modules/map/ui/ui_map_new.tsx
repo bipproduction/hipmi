@@ -26,7 +26,7 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
       try {
          setLoading(true)
          const response = await apiGetAllMap()
-         if (response.success) {
+         if (response) {
             setData(response.data)
          }
       } catch (error) {

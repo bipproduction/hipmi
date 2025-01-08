@@ -89,9 +89,9 @@ export default function ComponentPortofolio_ButtonMoreNew() {
          const response = await apiGetOnePortofolioById(param.id, "bisnis")
          const response3 = await apiGetOnePortofolioById(param.id, "lokasi")
          const response2 = await funGetUserIdByToken()
-         if (response.success) {
+         if (response) {
             setAuthorId(response.data.authorId)
-            setMapId((response3.data?.mapId !== null && response3.data?.mapId !== undefined) ? true : false)
+            setMapId((response3 !== null && response3.data?.mapId !== undefined) ? true : false)
             setUserLoginId(response2)
          }
       } catch (error) {

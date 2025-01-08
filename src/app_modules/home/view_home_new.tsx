@@ -17,6 +17,7 @@ import { gs_notifikasi_kategori_app } from "../notifikasi/lib";
 import BodyHome from "./component/body_home";
 import FooterHome from "./component/footer_home";
 import { apiGetDataHome } from "./fun/get/api_home";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function HomeViewNew() {
   const [countNtf, setCountNtf] = useAtom(gs_count_ntf);
@@ -48,12 +49,14 @@ export default function HomeViewNew() {
 
   async function cekUserLogin() {
     try {
-      const response = await apiGetDataHome("?cat=cek_profile");
-      if (response.success) {
+      const response = await apiGetDataHome({
+        path: "?cat=cek_profile",
+      });
+      if (response) {
         setDataUser(response.data);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error get data home", error);
     }
   }
 

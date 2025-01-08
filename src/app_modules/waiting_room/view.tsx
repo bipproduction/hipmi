@@ -2,22 +2,14 @@
 
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import {
-  Button,
-  Center,
-  Group,
-  Skeleton,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { clientLogger } from "@/util/clientLogger";
+import { Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { redirect, useRouter } from "next/navigation";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentGlobal_CardStyles } from "../_global/component";
 import { apiGetACtivationUser } from "../_global/lib/api_user";
-import { clientLogger } from "@/util/clientLogger";
-import _ from "lodash";
 
 export default function WaitingRoom_View({
   userLoginId,
@@ -49,7 +41,6 @@ export default function WaitingRoom_View({
     try {
       const respone = await apiGetACtivationUser();
       if (respone) {
-        console.log(respone.data);
         setData(respone.data);
       }
     } catch (error) {
