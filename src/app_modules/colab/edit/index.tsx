@@ -13,6 +13,7 @@ import {
   MODEL_COLLABORATION,
   MODEL_COLLABORATION_MASTER,
 } from "../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Colab_Edit({
   selectedData,
@@ -211,12 +212,18 @@ function ButtonAction({ value }: { value: any }) {
     //   return ComponentGlobal_NotifikasiPeringatan("Minimal Ada 2 Partisipan");
 
     await colab_funEditById(value as any).then((res) => {
-      if (res.status === 200) {
+      try {
         setLoading(true);
-        router.back();
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+        if (res.status === 200) {
+          router.back();
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+        } else {
+        setLoading(false)
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setLoading(false)
+        clientLogger.error("Error update proyek", error);
       }
     });
   }

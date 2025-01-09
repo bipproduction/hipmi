@@ -195,13 +195,21 @@ function ButtonAction({ value }: { value: any }) {
       return ComponentGlobal_NotifikasiPeringatan("Pilih Industri");
 
     const res = await colab_funCreateProyek(value);
-    if (res.status === 201) {
-      setLoading(true);
-      router.back();
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    try {
+      setLoading(true)
+      if (res.status === 201) {
+        setLoading(true);
+        router.back();
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+      } else {
+        setLoading(false)
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading(false)
+      clientLogger.error("Error create proyek", error);
     }
+    
   }
 
 

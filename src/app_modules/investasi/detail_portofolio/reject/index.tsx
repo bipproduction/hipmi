@@ -14,6 +14,8 @@ import { ComponentInvestasi_DetailDataNonPublish } from "../../component/detail/
 import { investasi_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import funDeleteInvestasi from "../../fun/fun_delete_investasi";
 import { gs_investasi_status } from "../../g_state";
+import { clientLogger } from "@/util/clientLogger";
+import { AccentColor } from "@/app_modules/_global/color";
 
 export default function DetailRejectInvestasi({
   dataInvestasi,
@@ -22,8 +24,10 @@ export default function DetailRejectInvestasi({
 }) {
   const router = useRouter();
   const [investasi, setInvestasi] = useState(dataInvestasi);
-  const [activeTab, setActiveTab] = useAtom(gs_investasi_status);
-  const [openModal, setOpenModal] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [isLoading2, setLoading2] = useState(false);
+  const [openModal1, setOpenModal1] = useState(false);
+  const [openModal2, setOpenModal2] = useState(false);
 
   async function onAjukan() {
     const res = await investasi_funEditStatusById({
@@ -31,23 +35,37 @@ export default function DetailRejectInvestasi({
       statusId: "3",
     });
 
-    if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil("Project Diajukan Kembali");
-      setActiveTab("Draft");
-      router.push(RouterInvestasi_OLD.portofolio);
-    } else {
-      ComponentGlobal_NotifikasiGagal("Gagal Pengajuan");
+    try {
+      setLoading(true);
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil("Project Diajukan Kembali");
+        setOpenModal2(false);
+        router.push(RouterInvestasi_OLD.portofolio);
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal("Gagal Pengajuan");
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error ajukan kembali", error);
     }
   }
 
   async function onDelete() {
     await funDeleteInvestasi(investasi.id).then((res) => {
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setOpenModal(false);
-        router.push(RouterInvestasi_OLD.portofolio);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+      try {
+        setLoading2(true);
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          setOpenModal1(false);
+          router.push(RouterInvestasi_OLD.portofolio);
+        } else {
+          setLoading2(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setLoading2(false);
+        clientLogger.error("Error delete investasi", error);
       }
     });
     // setActiveTab("Reject");
@@ -59,16 +77,44 @@ export default function DetailRejectInvestasi({
 
       <UIGlobal_Modal
         title={"Anda Yakin Menghapus Data?"}
-        opened={openModal}
-        close={() => setOpenModal(false)}
+        opened={openModal1}
+        close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button radius={"xl"} onClick={() => setOpenModal1(false)}>
             Batal
           </Button>
         }
         buttonKanan={
-          <Button bg={"red"} radius={"xl"} onClick={() => onDelete()}>
+          <Button
+            bg={"red"}
+            loading={isLoading2 ? true : false}
+            loaderPosition="center"
+            radius={"xl"}
+            onClick={() => onDelete()}>
             Hapus
+          </Button>
+        }
+      />
+
+      <UIGlobal_Modal
+        title={"Anda Yakin Mengajukan Kembali?"}
+        opened={openModal2}
+        close={() => setOpenModal2(false)}
+        buttonKiri={
+          <Button
+            radius={"xl"}
+            onClick={() => setOpenModal2(false)}>
+            Batal
+          </Button>
+        }
+        buttonKanan={
+          <Button
+            loading={isLoading ? true : false}
+            loaderPosition="center"
+            bg={AccentColor.yellow}
+            radius={"xl"}
+            onClick={() => onAjukan()}>
+            Ajukan
           </Button>
         }
       />
@@ -89,10 +135,11 @@ export default function DetailRejectInvestasi({
             radius={50}
             bg={"orange.7"}
             color="yellow"
-            onClick={() => onAjukan()}
+            onClick={() => setOpenModal2(true)}
           >
             Edit Kembali
           </Button>
+
 
           {/* Tombol Hapus */}
           <Button
@@ -100,7 +147,7 @@ export default function DetailRejectInvestasi({
             radius={50}
             bg={"red.7"}
             color="yellow"
-            onClick={() => setOpenModal(true)}
+            onClick={() => setOpenModal1(true)}
           >
             Hapus
           </Button>
