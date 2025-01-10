@@ -22,6 +22,7 @@ import { WibuRealtime } from "wibu-pkg";
 import { useShallowEffect } from "@mantine/hooks";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
 import _ from "lodash";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Vote_DetailDraft({
   dataVote,
@@ -109,12 +110,19 @@ function ButtonAction({
 
   async function onDelete() {
     await Vote_funDeleteById(voteId).then((res) => {
-      if (res.status === 200) {
-        setOpenModal2(false);
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
-        router.replace(RouterVote.status({ id: "3" }));
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+      try {
+        setIsLoading(true);
+        if (res.status === 200) {
+          setOpenModal2(false);
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
+          router.replace(RouterVote.status({ id: "3" }));
+        } else {
+         setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        clientLogger.error("Error delete vote", error);
       }
     });
   }
@@ -194,6 +202,8 @@ function ButtonAction({
         buttonKanan={
           <Button
             radius={"xl"}
+            loaderPosition="center"
+            loading={isLoading ? true : false}
             onClick={() => {
               onDelete();
             }}

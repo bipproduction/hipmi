@@ -118,7 +118,6 @@ function ButtonAction({
             c={MainColor.darkblue}
             onClick={() => {
               onUpdate();
-              console.log(statusId);
             }}
           >
             Simpan

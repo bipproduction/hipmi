@@ -15,6 +15,7 @@ import { gs_vote_status } from "../../global_state";
 import { MODEL_VOTING } from "../../model/interface";
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Vote_DetailReject({
   dataVote,
@@ -42,24 +43,37 @@ function ButtonAction({ voteId }: { voteId: string }) {
 
   async function onUpdate() {
     await Vote_funEditStatusByStatusId(voteId, "3").then((res) => {
-      if (res.status === 200) {
+      try {
         setIsLoading(true);
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Masuk Draft", 2000);
-        router.replace(RouterVote.status({ id: "3" }));
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Masuk Draft", 2000);
+          router.replace(RouterVote.status({ id: "3" }));
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        clientLogger.error("Error update voting", error);
       }
     });
   }
 
   async function onDelete() {
     await Vote_funDeleteById(voteId).then((res) => {
-      if (res.status === 200) {
-        setOpenModal2(false);
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
-        router.replace(RouterVote.status({ id: "4" }));
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+      try {
+        setIsLoading(true);
+        if (res.status === 200) {
+          setOpenModal2(false);
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
+          router.replace(RouterVote.status({ id: "4" }));
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        clientLogger.error("Error delete vote", error);
       }
     });
   }
@@ -69,10 +83,10 @@ function ButtonAction({ voteId }: { voteId: string }) {
       <SimpleGrid cols={2}>
         <Button
           radius={"xl"}
-          style={{ backgroundColor: AccentColor.yellow, fontWeight:"bold" }}
+          style={{ backgroundColor: AccentColor.yellow, fontWeight: "bold" }}
           c={MainColor.darkblue}
           onClick={() => {
-          setOpenModal1(true);
+            setOpenModal1(true);
           }}
         >
           Edit Kembali
@@ -80,7 +94,7 @@ function ButtonAction({ voteId }: { voteId: string }) {
         <Button
           radius={"xl"}
           c={AccentColor.white}
-          style={{ backgroundColor: MainColor.red, fontWeight:"bold" }}
+          style={{ backgroundColor: MainColor.red, fontWeight: "bold" }}
           onClick={() => {
             setOpenModal2(true);
           }}
@@ -137,6 +151,8 @@ function ButtonAction({ voteId }: { voteId: string }) {
         }
         buttonKanan={
           <Button
+            loading={isLoading ? true : false}
+            loaderPosition="center"
             radius={"xl"}
             onClick={() => {
               onDelete();

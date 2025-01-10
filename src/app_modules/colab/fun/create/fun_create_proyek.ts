@@ -26,5 +26,5 @@ export default async function colab_funCreateProyek(
 
   if (!data) return { status: 400, message: "Gagal Membuat Proyek" };
   revalidatePath(RouterColab.beranda);
-  return { data, status: 201, message: "Berhasil Membuar Proyek" };
+  return { data, status: 201, message: "Berhasil Membuat Proyek" };
 }
