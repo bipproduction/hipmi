@@ -163,6 +163,7 @@ function ButtonAction({
             onClick={() => {
               setOpenModal1(false);
             }}
+            style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
           >
             Batal
           </Button>
@@ -190,7 +191,7 @@ function ButtonAction({
         close={() => setOpenModal2(false)}
         buttonKiri={
           <Button
-            c={AccentColor.white}
+          style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
             radius={"xl"}
             onClick={() => {
               setOpenModal2(false);

@@ -109,7 +109,7 @@ function ButtonAction({ eventId,  }: { eventId: string }) {
         opened={openModal1}
         close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal1(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal1(false)}>
             Batal
           </Button>
         }
@@ -135,7 +135,7 @@ function ButtonAction({ eventId,  }: { eventId: string }) {
         opened={openModal2}
         close={() => setOpenModal2(false)}
         buttonKiri={
-          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal2(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal2(false)}>
             Batal
           </Button>
         }
@@ -143,9 +143,9 @@ function ButtonAction({ eventId,  }: { eventId: string }) {
           <Button
             loading={isLoading2 ? true : false}
             loaderPosition="center"
-            style={{ color: AccentColor.white }}
+            style={{ backgroundColor: MainColor.red }}
             radius={"xl"}
-            color={"red"}
+            c={AccentColor.white}
             onClick={() => {
               onDelete(router, eventId, setLoading2);
             }}

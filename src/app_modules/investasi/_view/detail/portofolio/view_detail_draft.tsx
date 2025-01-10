@@ -13,6 +13,7 @@ import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { investasi_funEditStatusById } from "@/app_modules/investasi/fun/edit/fun_edit_status_by_id";
 import funDeleteInvestasi from "@/app_modules/investasi/fun/fun_delete_investasi";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
 import { Button, Group, Stack } from "@mantine/core";
 import _ from "lodash";
@@ -39,72 +40,83 @@ export default function Investasi_ViewDetailDraft({
       statusId: "2",
     });
 
-    if (res.status === 200) {
+    try {
       setIsLoading(true);
-      ComponentGlobal_NotifikasiBerhasil("Review Berhasil Diajukan");
-      router.replace(NEW_RouterInvestasi.portofolio({ id: "2" }));
-
-      const dataNotif = {
-        appId: res.data?.id,
-        userId: res.data?.authorId,
-        pesan: res.data?.title,
-        status: res.data?.MasterStatusInvestasi?.name,
-        kategoriApp: "INVESTASI",
-        title: "Mengajukan review",
-      };
-
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotif as any,
-      });
-
-      if (notif.status === 201) {
-        mqtt_client.publish("ADMIN", JSON.stringify({ count: 1 }));
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil("Review Berhasil Diajukan");
+        router.replace(NEW_RouterInvestasi.portofolio({ id: "2" }));
+  
+        const dataNotif = {
+          appId: res.data?.id,
+          userId: res.data?.authorId,
+          pesan: res.data?.title,
+          status: res.data?.MasterStatusInvestasi?.name,
+          kategoriApp: "INVESTASI",
+          title: "Mengajukan review",
+        };
+  
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotif as any,
+        });
+  
+        if (notif.status === 201) {
+          mqtt_client.publish("ADMIN", JSON.stringify({ count: 1 }));
+        }
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error update investasi", error);
     }
   }
 
   async function onDelete() {
     const res = await funDeleteInvestasi(data.id);
-    if (res.status === 200) {
+    try {
       setIsLoadingDelete(true);
-
-      const delImage = await funGlobal_DeleteFileById({
-        fileId: data.imageId,
-      });
-      if (!delImage.success) {
-        ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus image ");
-      }
-
-      const delFileProspektus = await funGlobal_DeleteFileById({
-        fileId: data.prospektusFileId,
-      });
-      if (!delFileProspektus.success) {
-        ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus prospektus ");
-      }
-
-      if (!_.isEmpty(data.DokumenInvestasi)) {
-        for (let i of data.DokumenInvestasi) {
-          const delFileDokumen = await funGlobal_DeleteFileById({
-            fileId: i.fileId,
-          });
-
-          if (!delFileDokumen.success) {
-            ComponentAdminGlobal_NotifikasiPeringatan(
-              "Gagal hapus prospektus "
-            );
+      if (res.status === 200) {
+  
+        const delImage = await funGlobal_DeleteFileById({
+          fileId: data.imageId,
+        });
+        if (!delImage.success) {
+          ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus image ");
+        }
+  
+        const delFileProspektus = await funGlobal_DeleteFileById({
+          fileId: data.prospektusFileId,
+        });
+        if (!delFileProspektus.success) {
+          ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus prospektus ");
+        }
+  
+        if (!_.isEmpty(data.DokumenInvestasi)) {
+          for (let i of data.DokumenInvestasi) {
+            const delFileDokumen = await funGlobal_DeleteFileById({
+              fileId: i.fileId,
+            });
+  
+            if (!delFileDokumen.success) {
+              ComponentAdminGlobal_NotifikasiPeringatan(
+                "Gagal hapus prospektus "
+              );
+            }
           }
         }
+  
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+        setOpenModal(false);
+        router.replace(NEW_RouterInvestasi.portofolio({ id: "3" }));
+        setIsLoadingDelete(false);
+      } else {
+        ComponentGlobal_NotifikasiGagal(res.message);
+        setIsLoadingDelete(false);
       }
-
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      setOpenModal(false);
-      router.replace(NEW_RouterInvestasi.portofolio({ id: "3" }));
+    } catch (error) {
       setIsLoadingDelete(false);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
-      setIsLoadingDelete(false);
+      clientLogger.error("Error delete investasi", error);
     }
   }
 
@@ -143,7 +155,8 @@ export default function Investasi_ViewDetailDraft({
         close={() => setOpenModal(false)}
         title={"Anda yakin ingin mengajukan review ?"}
         buttonKiri={
-          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
@@ -170,7 +183,8 @@ export default function Investasi_ViewDetailDraft({
         close={() => setOpenModalDelete(false)}
         title={"Anda yakin ingin menghapus ?"}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModalDelete(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white}  radius={"xl"} onClick={() => setOpenModalDelete(false)}>
             Batal
           </Button>
         }
