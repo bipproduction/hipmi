@@ -56,7 +56,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
   return (
     <>
       <Stack px={"sm"}>
-        <TextInput
+        {/* <TextInput
           styles={{
             label: {
               color: MainColor.white,
@@ -92,7 +92,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
               },
             });
           }}
-        />
+        /> */}
 
         <TextInput
           styles={{

@@ -3,7 +3,11 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 export async function POST(request: Request) {
+  let fixFormData;
   const formData = await request.formData();
+  const file: any = formData.get("file");
+  const mimeType = file.type;
+  console.log("MIME Type:", mimeType);
 
   const valueOfDir = formData.get("dirId");
   const keyOfDirectory = await funGetDirectoryNameByValue({
@@ -12,30 +16,33 @@ export async function POST(request: Request) {
 
   if (request.method === "POST") {
     try {
-      const file: any = formData.get("file");
-      console.log("ini file baru>", file);
+      if (mimeType != "application/pdf") {
+        // Resize ukuran
+        const imageBuffer = await file.arrayBuffer();
+        const resize = await sharp(imageBuffer).resize(2000).toBuffer();
 
-      // Resize ukuran
-      const imageBuffer = await file.arrayBuffer();
-      const resize = await sharp(imageBuffer).resize(2000).toBuffer();
+        // Convert buffer ke Blob
+        const blob = new Blob([resize], { type: file.type });
 
-      // Convert buffer ke Blob
-      const blob = new Blob([resize], { type: file.type });
+        // Convert Blob ke File
+        const resizedFile = new File([blob], file.name, {
+          type: file.type,
+          lastModified: new Date().getTime(),
+        });
 
-      // Convert Blob ke File
-      const resizedFile = new File([blob], file.name, {
-        type: file.type,
-        lastModified: new Date().getTime(),
-      });
+        // Buat FormData baru
+        const newFormData = new FormData();
+        newFormData.append("file", resizedFile);
+        newFormData.append("dirId", formData.get("dirId") as string);
 
-      // Buat FormData baru
-      const newFormData = new FormData();
-      newFormData.append("file", resizedFile);
-      newFormData.append("dirId", formData.get("dirId") as string);
+        fixFormData = newFormData;
+      } else {
+        fixFormData = formData;
+      }
 
       const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
         method: "POST",
-        body: newFormData,
+        body: fixFormData,
         headers: {
           Authorization: `Bearer ${process.env.WS_APIKEY}`,
         },

@@ -12,12 +12,11 @@ import {
 } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
 import { clientLogger } from "@/util/clientLogger";
-import { Box, Button, Center, Stack, Text, Title } from "@mantine/core";
+import { Box, Button, Center, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-
 
 export default function Login({ version }: { version: string }) {
   const router = useRouter();
@@ -65,23 +64,30 @@ export default function Login({ version }: { version: string }) {
     <>
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" h={"100vh"} spacing={100}>
-          <Stack align="center" spacing={0}>
-            <Title order={3} c={MainColor.yellow}>
-              WELCOME TO
-            </Title>
-            <Title order={2} c={MainColor.yellow}>HIPMI BADUNG APPS</Title>
+          <Stack spacing={0}>
+            <Stack align="center" spacing={0}>
+              <Title order={3} c={MainColor.yellow}>
+                WELCOME TO
+              </Title>
+              <Title order={2} c={MainColor.yellow}>
+                HIPMI BADUNG APPS
+              </Title>
+            </Stack>
+            <Group position="right" w={"100%"}>
+              <Text c={MainColor.white} ff={"serif"} fz={10}>
+                powered by muku.id
+              </Text>
+            </Group>
           </Stack>
-
           <Stack w={300}>
             <Center>
               <Text c={MainColor.white}>Nomor telepon</Text>
             </Center>
             <PhoneInput
-              
               countrySelectorStyleProps={{
                 buttonStyle: {
                   backgroundColor: MainColor.login,
-                }  
+                },
               }}
               inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
               defaultCountry="id"

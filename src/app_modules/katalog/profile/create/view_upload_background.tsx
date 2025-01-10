@@ -8,8 +8,6 @@ import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,
 } from "@/app_modules/_global/fun";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { clientLogger } from "@/util/clientLogger";
 import {
@@ -20,8 +18,7 @@ import {
   FileButton,
   Image,
   Stack,
-  Text,
-  Loader,
+  Text
 } from "@mantine/core";
 import { IconCamera, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
@@ -45,11 +42,7 @@ export default function Profile_ViewUploadBackground({
         <Stack spacing={"lg"}>
           <ComponentGlobal_BoxInformation informasi="Upload foto latar belakang profile anda." />
           <ComponentGlobal_BoxUploadImage>
-            {isLoading ? (
-              <Center h={"100%"}>
-                <Loader variant="oval" size={50} color="cyan" />
-              </Center>
-            ) : imgBG ? (
+            {imgBG ? (
               <AspectRatio ratio={1 / 1} mah={265} mx={"auto"}>
                 <Image
                   style={{ maxHeight: 250, margin: "auto", padding: "5px" }}
@@ -77,14 +70,14 @@ export default function Profile_ViewUploadBackground({
                     new Blob([new Uint8Array(await files.arrayBuffer())])
                   );
 
-                  if (files.size > MAX_SIZE) {
-                    ComponentGlobal_NotifikasiPeringatan(
-                      PemberitahuanMaksimalFile
-                    );
-                    onSetImgBG(null);
+                  // if (files.size > MAX_SIZE) {
+                  //   ComponentGlobal_NotifikasiPeringatan(
+                  //     PemberitahuanMaksimalFile
+                  //   );
+                  //   onSetImgBG(null);
 
-                    return;
-                  }
+                  //   return;
+                  // }
 
                   if (backgroundProfileId != "") {
                     const deleteFotoBg = await funGlobal_DeleteFileById({
@@ -152,6 +145,8 @@ export default function Profile_ViewUploadBackground({
               {(props) => (
                 <Button
                   {...props}
+                  loading={isLoading}
+                  loaderPosition="center"
                   radius={"xl"}
                   leftIcon={<IconCamera />}
                   bg={MainColor.yellow}
