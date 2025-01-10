@@ -20,6 +20,9 @@ import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import adminUserAccess_getListUser from "../fun/get/get_list_all_user";
+import { WibuRealtime } from "wibu-pkg";
+import { gs_access_user, IRealtimeData } from "@/app/lib/global_state";
+import { useAtom } from "jotai";
 
 export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
   const [data, setData] = useState<MODEL_USER[]>(listUser.data);
@@ -30,11 +33,11 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [userId, setUserId] = useState("");
 
-  async function onAccess(id: string) {
+  async function onAccess(id: string, nomor: string) {
     try {
       setUserId(id);
       setIsLoadingAccess(true);
-      await adminUserAccess_funEditAccess(id, true).then(async (res) => {
+      await adminUserAccess_funEditAccess(id, true, nomor).then(async (res) => {
         if (res.status === 200) {
           const value = await adminUserAccess_getListUser({
             page: 1,
@@ -42,6 +45,19 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
           });
           setData(value.data as any);
           setNPage(value.nPage);
+
+          const dataNotifikasi: IRealtimeData = {
+            status: true as any,
+            userId: id,
+            kategoriApp: "ACCESS",
+          };
+
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+
           ComponentGlobal_NotifikasiBerhasil(res.message);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
@@ -118,7 +134,7 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
               radius={"xl"}
               color="Green"
               onClick={() => {
-                onAccess(e.id);
+                onAccess(e.id, e.nomor);
               }}
             >
               Grand Access

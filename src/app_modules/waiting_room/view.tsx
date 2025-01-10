@@ -3,13 +3,17 @@
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
 import { clientLogger } from "@/util/clientLogger";
-import { Skeleton, Stack, Text } from "@mantine/core";
+import { Button, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentGlobal_CardStyles } from "../_global/component";
 import { apiGetACtivationUser } from "../_global/lib/api_user";
+import { gs_access_user } from "@/app/lib/global_state";
+import { useAtom } from "jotai";
+import { MainColor } from "../_global/color";
+import CustomSkeleton from "../components/CustomSkeleton";
 
 export default function WaitingRoom_View({
   userLoginId,
@@ -18,6 +22,8 @@ export default function WaitingRoom_View({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isLoadingHome, setIsLoadingHome] = useState(false);
+
   async function onClickLogout() {
     setLoading(true);
     const res = await fetch(`/api/auth/logout?id=${userLoginId}`, {
@@ -31,7 +37,15 @@ export default function WaitingRoom_View({
     }
   }
 
-  const [data, setData] = useState<boolean | null>(null);
+  const [isAccess, setIsAccess] = useState<boolean | null>(null);
+  const [isAccessUser, setIsAccessUser] = useAtom(gs_access_user);
+
+  useShallowEffect(() => {
+    if (isAccessUser) {
+      setIsAccess(true);
+      setIsAccessUser(false);
+    }
+  }, [isAccessUser]);
 
   useShallowEffect(() => {
     onLoadData();
@@ -41,7 +55,7 @@ export default function WaitingRoom_View({
     try {
       const respone = await apiGetACtivationUser();
       if (respone) {
-        setData(respone.data);
+        setIsAccess(respone.data);
       }
     } catch (error) {
       clientLogger.error("Error get cookies user", error);
@@ -53,11 +67,12 @@ export default function WaitingRoom_View({
       <UIGlobal_LayoutDefault>
         <Stack justify="cneter" h={"90vh"} mt={"xl"}>
           <ComponentGlobal_CardStyles>
-            {_.isNull(data) ? (
-              <Stack>
-                {Array.from(new Array(4)).map((e, i) => (
-                  <Skeleton key={i} h={20} w={"100%"} />
-                ))}
+            {_.isNull(isAccess) ? (
+              <Stack align="center">
+                <CustomSkeleton height={20} width={"100%"} />
+                <CustomSkeleton height={20} width={"70%"} />
+                <CustomSkeleton height={20} width={"100%"} />
+                <CustomSkeleton height={20} width={"70%"} />
               </Stack>
             ) : (
               <Stack align="center">
@@ -71,16 +86,28 @@ export default function WaitingRoom_View({
                     Whatsapp setelah disetujui.
                   </Text>
                 </Stack>
-
-                {/* <Button
-                color="red"
-                loaderPosition="center"
-                loading={loading}
-                radius={"xl"}
-                onClick={() => onClickLogout()}
-              >
-                Keluar
-              </Button> */}
+                {isAccess && (
+                  <Button
+                    color="yellow"
+                    bg={MainColor.yellow}
+                    c={MainColor.darkblue}
+                    loaderPosition="center"
+                    loading={isLoadingHome}
+                    radius={"xl"}
+                    onClick={() => {
+                      try {
+                        setIsLoadingHome(true);
+                        router.replace("/", { scroll: false });
+                      } catch (error) {
+                        clientLogger.error("Error button to home", error);
+                      } finally {
+                        setIsLoadingHome(false);
+                      }
+                    }}
+                  >
+                    Home
+                  </Button>
+                )}
               </Stack>
             )}
           </ComponentGlobal_CardStyles>

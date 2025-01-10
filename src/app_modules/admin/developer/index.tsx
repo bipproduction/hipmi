@@ -256,6 +256,10 @@ function NewTableAdmin({
         search: isSearch,
         page: isChoosePage,
       });
+
+      
+
+
       setDataAdmin(loadData.data);
       setNPage(loadData.nPage);
       const loadDataUser = await adminDeveloper_funGetListAllUser({ page: 1 });

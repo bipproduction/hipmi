@@ -43,7 +43,7 @@ export async function GET(request: Request) {
             where: {
                id: userLoginId,
             },
-            select: {
+            include: {
                Profile: {
                   select: {
                      id: true,

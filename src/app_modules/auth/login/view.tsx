@@ -69,7 +69,7 @@ export default function Login({ version }: { version: string }) {
             <Title order={3} c={MainColor.yellow}>
               WELCOME TO
             </Title>
-            <Title c={MainColor.yellow}>HIPMI APPS</Title>
+            <Title order={2} c={MainColor.yellow}>HIPMI BADUNG APPS</Title>
           </Stack>
 
           <Stack w={300}>

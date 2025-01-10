@@ -68,7 +68,7 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              dataUser?.profile == null ? (
+              dataUser == null ? (
                 <CustomSkeleton width={20} height={20} circle />
               ) : (
                 <ActionIcon
@@ -91,7 +91,7 @@ export default function HomeViewNew() {
               )
             }
             customButtonRight={
-              dataUser?.profile == null ? (
+              dataUser == null ? (
                 <CustomSkeleton width={20} height={20} circle />
               ) : (
                 <ActionIcon

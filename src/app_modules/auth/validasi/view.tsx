@@ -87,9 +87,6 @@ export default function Validasi() {
         body: JSON.stringify({
           nomor: data.nomor,
         }),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       const result = await res.json();
@@ -100,6 +97,7 @@ export default function Validasi() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+
         router.push(RouterHome.main_home, { scroll: false });
         return;
       }
@@ -110,30 +108,33 @@ export default function Validasi() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+
         router.push(RouterAdminDashboard.splash_admin, { scroll: false });
         return;
       }
 
       if (res.status === 404) {
+        setLoading(false);
         router.push("/register", { scroll: false });
         ComponentGlobal_NotifikasiBerhasil(result.message);
         return;
       }
 
       if (res.status === 400) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(result.message);
         return;
       }
 
       if (res.status == 500) {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(result.message);
         return;
       }
     } catch (error) {
-      clientLogger.error("Error validasi:", error);
-    } finally {
       setLoading(false);
-    }
+      clientLogger.error("Error validasi:", error);
+    } 
   }
 
   async function onBack() {
