@@ -49,7 +49,7 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button style={{ color: AccentColor.white }} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }

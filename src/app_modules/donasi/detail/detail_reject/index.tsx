@@ -127,7 +127,8 @@ function ButtonAction({
         opened={openModaEdit}
         close={() => setOpenModalEdit(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModalEdit(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalEdit(false)}>
             Batal
           </Button>
         }
@@ -151,7 +152,8 @@ function ButtonAction({
         opened={openModalDelete}
         close={() => setOpenModalDelete(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModalDelete(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalDelete(false)}>
             Batal
           </Button>
         }
@@ -160,7 +162,8 @@ function ButtonAction({
             loaderPosition="center"
             loading={isLoadingDelete}
             radius={"xl"}
-            color="red"
+            style={{ backgroundColor: MainColor.red }}
+            c={AccentColor.white}
             onClick={() => onDelete()}
           >
             Hapus

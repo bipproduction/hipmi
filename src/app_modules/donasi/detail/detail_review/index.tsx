@@ -111,7 +111,8 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }

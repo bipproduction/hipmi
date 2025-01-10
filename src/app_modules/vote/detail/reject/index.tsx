@@ -110,6 +110,7 @@ function ButtonAction({ voteId }: { voteId: string }) {
         buttonKiri={
           <Button
             radius={"xl"}
+            style={{ backgroundColor: AccentColor.blue }}
             c={AccentColor.white}
             onClick={() => {
               setOpenModal1(false);
@@ -145,6 +146,8 @@ function ButtonAction({ voteId }: { voteId: string }) {
             onClick={() => {
               setOpenModal2(false);
             }}
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
           >
             Batal
           </Button>
