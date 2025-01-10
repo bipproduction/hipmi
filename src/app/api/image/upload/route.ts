@@ -1,6 +1,7 @@
 import { funGetDirectoryNameByValue } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 export async function POST(request: Request) {
   const formData = await request.formData();
 
@@ -11,9 +12,30 @@ export async function POST(request: Request) {
 
   if (request.method === "POST") {
     try {
+      const file: any = formData.get("file");
+      console.log("ini file baru>", file);
+
+      // Resize ukuran
+      const imageBuffer = await file.arrayBuffer();
+      const resize = await sharp(imageBuffer).resize(2000).toBuffer();
+
+      // Convert buffer ke Blob
+      const blob = new Blob([resize], { type: file.type });
+
+      // Convert Blob ke File
+      const resizedFile = new File([blob], file.name, {
+        type: file.type,
+        lastModified: new Date().getTime(),
+      });
+
+      // Buat FormData baru
+      const newFormData = new FormData();
+      newFormData.append("file", resizedFile);
+      newFormData.append("dirId", formData.get("dirId") as string);
+
       const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
         method: "POST",
-        body: formData,
+        body: newFormData,
         headers: {
           Authorization: `Bearer ${process.env.WS_APIKEY}`,
         },

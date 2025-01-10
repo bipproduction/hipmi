@@ -26,8 +26,8 @@ import { clientLogger } from "@/util/clientLogger";
 
 export default function BodyHome() {
   const router = useRouter();
-  const [dataUser, setDataUser] = useState<any>({});
-  const [dataJob, setDataJob] = useState<any[]>([]);
+  const [dataUser, setDataUser] = useState<any | null>(null);
+  const [dataJob, setDataJob] = useState<any[] | null>(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -46,9 +46,11 @@ export default function BodyHome() {
         setDataUser(response.data);
       }
     } catch (error) {
-      clientLogger.error("Error get data user", error);
-    }
+      clientLogger.error("Error get data profile", error);
+    } 
   }
+
+
 
   async function getHomeJob() {
     try {
@@ -70,19 +72,6 @@ export default function BodyHome() {
 
   return (
     <Box>
-      {/* <Paper
-        radius={"xl"}
-        h={150}
-        mb={"xs"}
-        style={{
-          borderRadius: "10px 10px 10px 10px",
-          border: `2px solid ${AccentColor.blue}`,
-          position: "relative",
-        }}
-      >
-       
-      </Paper> */}
-
       <Image
         height={140}
         fit={"cover"}
@@ -112,16 +101,11 @@ export default function BodyHome() {
                 border: `2px solid ${AccentColor.blue}`,
               }}
               onClick={() => {
-                if (
-                  dataUser.profile == undefined ||
-                  dataUser?.profile == null ||
-                  dataJob.length == undefined ||
-                  dataJob.length == null
-                ) {
+                if (dataUser == null) {
                   return null;
                 } else if (
-                  dataUser.profile == undefined ||
-                  dataUser?.profile == null
+                  Object.keys(dataUser).length == 0 ||
+                  dataJob?.length == null
                 ) {
                   router.push(RouterProfile.create, { scroll: false });
                 } else {
@@ -163,16 +147,11 @@ export default function BodyHome() {
         >
           <Stack
             onClick={() => {
-              if (
-                dataUser.profile == undefined ||
-                dataUser?.profile == null ||
-                dataJob.length == undefined ||
-                dataJob.length == null
-              ) {
+              if (dataUser == null) {
                 return null;
               } else if (
-                dataUser.profile == undefined ||
-                dataUser?.profile == null
+                Object.keys(dataUser).length == 0 ||
+                dataJob?.length == null
               ) {
                 router.push(RouterProfile.create, { scroll: false });
               } else {
@@ -229,7 +208,7 @@ export default function BodyHome() {
               <ComponentGlobal_IsEmptyData text="Tidak ada data" height={10} />
             ) : (
               <SimpleGrid cols={2} spacing="md">
-                {dataJob.map((e, i) => (
+                {dataJob?.map((e, i) => (
                   <Stack key={e.id}>
                     <Group spacing={"xs"}>
                       <Stack h={"100%"} align="center" justify="flex-start">

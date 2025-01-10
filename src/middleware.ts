@@ -5,6 +5,8 @@ import { apies, pages } from "./lib/routes";
 type MiddlewareConfig = {
   apiPath: string;
   loginPath: string;
+  // validasiPath: string;
+  // registarasiPath: string;
   userPath: string;
   publicRoutes: string[];
   encodedKey: string;
@@ -16,6 +18,8 @@ type MiddlewareConfig = {
 const middlewareConfig: MiddlewareConfig = {
   apiPath: "/api",
   loginPath: "/login",
+  // validasiPath: "/validasi",
+  // registarasiPath: "/register",
   userPath: "/dev/home",
   publicRoutes: [
     // API
@@ -45,6 +49,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/auth/login",
     "/auth/api/login",
     "/waiting-room",
+    "/zCoba/*",
 
     // ASSETS
     "/aset/global/main_background.png",
@@ -61,6 +66,8 @@ export const middleware = async (req: NextRequest) => {
     apiPath,
     encodedKey,
     loginPath,
+    // validasiPath,
+    // registarasiPath,
     publicRoutes,
     sessionKey,
     validationApiRoute,
@@ -75,7 +82,12 @@ export const middleware = async (req: NextRequest) => {
   }
 
   // Skip authentication for public routes
-  const isPublicRoute = [...publicRoutes, loginPath].some((route) => {
+  const isPublicRoute = [
+    ...publicRoutes,
+    loginPath,
+    // validasiPath,
+    // registarasiPath,
+  ].some((route) => {
     const pattern = route.replace(/\*/g, ".*");
     return new RegExp(`^${pattern}$`).test(pathname);
   });
@@ -88,7 +100,13 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
-  if (isPublicRoute && pathname !== loginPath) {
+  if (
+    isPublicRoute &&
+    pathname !== loginPath 
+    // &&
+    // pathname !== validasiPath &&
+    // pathname !== registarasiPath
+  ) {
     return setCorsHeaders(NextResponse.next());
   }
 
@@ -96,6 +114,7 @@ export const middleware = async (req: NextRequest) => {
     req.cookies.get(sessionKey)?.value ||
     req.headers.get("Authorization")?.split(" ")[1];
 
+  // ==================== Authentication: Login, Validasi, Registrasi ==================== //
   // Token verification
   const user = await verifyToken({ token, encodedKey });
 
@@ -107,10 +126,27 @@ export const middleware = async (req: NextRequest) => {
     return setCorsHeaders(NextResponse.next());
   }
 
+  // // Handle validation page access
+  // if (pathname === validasiPath) {
+  //   if (user) {
+  //     return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
+  //   }
+  //   return setCorsHeaders(NextResponse.next());
+  // }
+
+  // // Handle register page access
+  // if (pathname === registarasiPath) {
+  //   if (user) {
+  //     return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
+  //   }
+  //   return setCorsHeaders(NextResponse.next());
+  // }
+
   // Handle protected routes
   if (!user) {
     return setCorsHeaders(NextResponse.redirect(new URL(loginPath, req.url)));
   }
+  // ==================== Authentication: Login, Validasi, Registrasi ==================== //
 
   if (pathname.startsWith("/dev")) {
     const userValidate = await fetch(new URL("/api/user-validate", req.url), {

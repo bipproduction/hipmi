@@ -51,7 +51,7 @@ export default function FooterHome() {
       bottom={0}
       h={"9vh"}
     >
-      {dataUser?.profile === undefined || dataUser?.profile === null ? (
+      {dataUser == null ? (
         <SimpleGrid cols={4}>
           {Array.from(new Array(4)).map((_, i) => (
             <Center h={"9vh"} key={i}>
@@ -69,15 +69,9 @@ export default function FooterHome() {
                 align="center"
                 spacing={0}
                 onClick={() => {
-                  if (
-                    dataUser.profile === undefined ||
-                    dataUser?.profile === null
-                  ) {
+                  if (dataUser == null) {
                     return null;
-                  } else if (
-                    dataUser.profile === undefined ||
-                    dataUser?.profile === null
-                  ) {
+                  } else if (Object.keys(dataUser).length === 0) {
                     router.push(RouterProfile.create, { scroll: false });
                   } else {
                     if (e.link == "") {
