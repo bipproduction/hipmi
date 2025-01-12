@@ -22,6 +22,7 @@ const middlewareConfig: MiddlewareConfig = {
   // registarasiPath: "/register",
   userPath: "/dev/home",
   publicRoutes: [
+    
     // API
     "/",
     "/api/voting/*",
