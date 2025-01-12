@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HIPMI Feature Checklist</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+      }
+      h3 {
+        color: #444;
+        margin-top: 20px;
+        background-color: #e0e0e0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      li {
+        background-color: #fff;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+      }
+      input[type="checkbox"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+      }
+      li:hover {
+        background-color: #f0f0f0;
+      }
+      li.checked {
+        text-decoration: line-through;
+        color: #888;
+        background-color: #f0f0f0;
+      }
+      #progress-bar {
+        width: 100%;
+        background-color: #e0e0e0;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+      }
+      #progress {
+        width: 0%;
+        height: 20px;
+        background-color: #4caf50;
+        border-radius: 5px;
+        transition: width 0.5s ease;
+      }
+      #reset-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+      #reset-btn:hover {
+        background-color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HIPMI Feature Checklist</h1>
+
+    <div id="progress-bar">
+      <div id="progress"></div>
+    </div>
+
+    <div id="checklist">
+      <h3>Authentication</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="login" /> <label for="login">Login</label>
+        </li>
+        <li>
+          <input type="checkbox" id="validasi" />
+          <label for="validasi">Validasi</label>
+        </li>
+        <li>
+          <input type="checkbox" id="register" />
+          <label for="register">Register</label>
+        </li>
+      </ul>
+
+      <h3>Profile</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-profile" />
+          <label for="buat-profile">Buat profile baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-data" />
+          <label for="edit-data">Edit Data</label>
+        </li>
+        <li>
+          <input type="checkbox" id="update-foto-profile" />
+          <label for="update-foto-profile">Update foto profile</label>
+        </li>
+        <li>
+          <input type="checkbox" id="update-foto-background" />
+          <label for="update-foto-background">Update foto background</label>
+        </li>
+      </ul>
+
+      <h3>Portofolio</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-portofolio" />
+          <label for="buat-portofolio">Buat portofolio baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-detail-portofolio" />
+          <label for="edit-detail-portofolio">Edit detail portofolio</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-logo-map" />
+          <label for="edit-logo-map">Edit logo map</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-sosial-media" />
+          <label for="edit-sosial-media">Edit data sosial media</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-data-map" />
+          <label for="edit-data-map">Edit data map</label>
+        </li>
+        <li>
+          <input type="checkbox" id="custom-pin-map" />
+          <label for="custom-pin-map">Custom pin map</label>
+        </li>
+      </ul>
+
+      <h3>User Search</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="cari-pengguna" />
+          <label for="cari-pengguna"
+            >Cari pengguna lain & masuk ke katalog nya</label
+          >
+        </li>
+      </ul>
+
+      <h3>Business Map</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buka-pin-map" />
+          <label for="buka-pin-map">Buka pin map user lain</label>
+        </li>
+        <li>
+          <input type="checkbox" id="lihat-detail-map" />
+          <label for="lihat-detail-map">Lihat detailnya</label>
+        </li>
+        <li>
+          <input type="checkbox" id="buka-google-maps" />
+          <label for="buka-google-maps">Buka map (Google Maps)</label>
+        </li>
+      </ul>
+
+      <h3>Event</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-event-bebas" />
+          <label for="buat-event-bebas">Buat event baru (tanggal bebas)</label>
+        </li>
+        <li>
+          <input type="checkbox" id="batalkan-review" />
+          <label for="batalkan-review">Batalkan review</label>
+        </li>
+        <li>
+          <input type="checkbox" id="edit-event" />
+          <label for="edit-event">Edit event</label>
+        </li>
+        <li>
+          <input type="checkbox" id="ajukan-event" />
+          <label for="ajukan-event">Ajukan event</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-admin-event" />
+          <label for="tunggu-acc-admin-event">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="reload-beranda" />
+          <label for="reload-beranda"
+            >Reload data beranda (dengan button reload)</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="join-detail-event" />
+          <label for="join-detail-event">Join melalui detail event</label>
+        </li>
+        <li>
+          <input type="checkbox" id="scan-qr-join" />
+          <label for="scan-qr-join"
+            >Scan QrCode dan join melalui halaman konfirmasi</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="buat-event-hari-ini" />
+          <label for="buat-event-hari-ini"
+            >Buat event baru (tanggal dan jam hari ini)</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-admin-event-2" />
+          <label for="tunggu-acc-admin-event-2">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="scan-qr-konfirmasi" />
+          <label for="scan-qr-konfirmasi"
+            >Scan QrCode dan join melalui halaman konfirmasi</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="cek-kontribusi-user" />
+          <label for="cek-kontribusi-user">Cek kontribusi user</label>
+        </li>
+        <li>
+          <input type="checkbox" id="cek-riwayat-semua" />
+          <label for="cek-riwayat-semua">Cek Riwayat Semua</label>
+        </li>
+        <li>
+          <input type="checkbox" id="cek-riwayat-saya" />
+          <label for="cek-riwayat-saya">Cek Riwayat Saya</label>
+        </li>
+      </ul>
+
+      <h3>Collaboration</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-kolaborasi" />
+          <label for="buat-kolaborasi">Buat kolaborasi baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="user-join-kolaborasi" />
+          <label for="user-join-kolaborasi">User lain join</label>
+        </li>
+        <li>
+          <input type="checkbox" id="pilih-user-kolaborasi" />
+          <label for="pilih-user-kolaborasi"
+            >User pemilik proyek kolaborasi memilih user yang ada di list</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="grup-proyek-kolaborasi" />
+          <label for="grup-proyek-kolaborasi"
+            >Grup proyek kolabari terbentuk dan memulai chat</label
+          >
+        </li>
+      </ul>
+
+      <h3>Voting</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-voting" />
+          <label for="buat-voting">Buat voting baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-voting" />
+          <label for="tunggu-acc-voting">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="user-voting" />
+          <label for="user-voting">User lain melakukan voting</label>
+        </li>
+        <li>
+          <input type="checkbox" id="cek-kontribusi-voting" />
+          <label for="cek-kontribusi-voting"
+            >Setelah melakukan voting cek kontribusi nya di halaman
+            kontribusi</label
+          >
+        </li>
+      </ul>
+
+      <h3>Investasi</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-investasi" />
+          <label for="buat-investasi">Buat invetasi baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-investasi" />
+          <label for="tunggu-acc-investasi">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="user-investasi-baru" />
+          <label for="user-investasi-baru"
+            >User lain melakukan investasi baru</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="lampirkan-bukti-transfer" />
+          <label for="lampirkan-bukti-transfer"
+            >User lain melampirkan bukti transfer</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="validasi-admin-investasi" />
+          <label for="validasi-admin-investasi">Admin melakukan validasi</label>
+        </li>
+        <li>
+          <input type="checkbox" id="investor-lihat-transaksi" />
+          <label for="investor-lihat-transaksi"
+            >User investor melihat hasilnya pada halaman transaksi</label
+          >
+        </li>
+      </ul>
+
+      <h3>Donasi</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-donasi" />
+          <label for="buat-donasi">Buat donasi baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-donasi" />
+          <label for="tunggu-acc-donasi">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="user-donasi-baru" />
+          <label for="user-donasi-baru">User lain melakukan donasi baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="lampirkan-bukti-donasi" />
+          <label for="lampirkan-bukti-donasi"
+            >User lain melampirkan bukti transfer</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="validasi-admin-donasi" />
+          <label for="validasi-admin-donasi">Admin melakukan validasi</label>
+        </li>
+        <li>
+          <input type="checkbox" id="donatur-lihat-donasi" />
+          <label for="donatur-lihat-donasi"
+            >User donatur melihat hasilnya pada halaman donasi saya</label
+          >
+        </li>
+      </ul>
+
+      <h3>Job</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-job-baru" />
+          <label for="buat-job-baru">Buat job baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tunggu-acc-job" />
+          <label for="tunggu-acc-job">Tunggu acc admin</label>
+        </li>
+        <li>
+          <input type="checkbox" id="update-beranda-job" />
+          <label for="update-beranda-job"
+            >User lain melihat update diberanda</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="share-whatsapp" />
+          <label for="share-whatsapp">Share melalui whatsapp</label>
+        </li>
+      </ul>
+
+      <h3>Forum</h3>
+      <ul>
+        <li>
+          <input type="checkbox" id="buat-forum-baru" />
+          <label for="buat-forum-baru">Buat forum baru</label>
+        </li>
+        <li>
+          <input type="checkbox" id="user-komentar" />
+          <label for="user-komentar">User lain berkomentar</label>
+        </li>
+        <li>
+          <input type="checkbox" id="kontrol-komentar" />
+          <label for="kontrol-komentar"
+            >User pemilik forum menutup atau membuka kolom komentar</label
+          >
+        </li>
+        <li>
+          <input type="checkbox" id="user-report" />
+          <label for="user-report">User lain melakukan report</label>
+        </li>
+      </ul>
+    </div>
+
+    <button id="reset-btn">Reset Semua Checklist</button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const progressBar = document.getElementById("progress");
+        const resetBtn = document.getElementById("reset-btn");
+
+        // Load saved state from localStorage
+        checkboxes.forEach((checkbox) => {
+          const savedState = localStorage.getItem(checkbox.id);
+          if (savedState === "checked") {
+            checkbox.checked = true;
+            checkbox.parentElement.classList.add("checked");
+          }
+        });
+
+        // Update progress
+        function updateProgress() {
+          const totalCheckboxes = checkboxes.length;
+          const checkedCheckboxes = document.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          ).length;
+          const progressPercentage =
+            (checkedCheckboxes / totalCheckboxes) * 100;
+          progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Initial progress update
+        updateProgress();
+
+        // Add event listeners to checkboxes
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            // Toggle 'checked' class on parent li
+            checkbox.parentElement.classList.toggle(
+              "checked",
+              checkbox.checked
+            );
+
+            // Save state to localStorage
+            localStorage.setItem(
+              checkbox.id,
+              checkbox.checked ? "checked" : "unchecked"
+            );
+
+            // Update progress bar
+            updateProgress();
+          });
+        });
+
+        // Reset button functionality
+        resetBtn.addEventListener("click", () => {
+          checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+            checkbox.parentElement.classList.remove("checked");
+            localStorage.removeItem(checkbox.id);
+          });
+          updateProgress();
+        });
+      });
+    </script>
+  </body>
+</html>

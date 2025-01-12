@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Register_SkeletonView from "./skeleton";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Register() {
   const router = useRouter();
@@ -70,18 +71,31 @@ export default function Register() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
-        router.push("/dev/home", { scroll: false });
+
+        router.push("/waiting-room", { scroll: false });
         return;
       }
 
       if (res.status === 400) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+        return;
+      }
+
+      if (res.status === 405) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(result.message);
+        return;
+      }
+
+      if (res.status === 500) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(result.message);
         return;
       }
     } catch (error) {
-      console.log(error);
-    } finally {
       setLoading(false);
+      clientLogger.error("Error registrasi", error);
     }
   }
 

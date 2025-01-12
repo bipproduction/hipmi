@@ -16,6 +16,7 @@ import { MODEL_DONASI } from "../../model/interface";
 import { donasi_checkStatus } from "../../fun";
 import { WibuRealtime } from "wibu-pkg";
 import { IRealtimeData } from "@/app/lib/global_state";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function DetailReviewDonasi({
   dataDonasi,
@@ -95,10 +96,11 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         mt={"lg"}
         style={{
           transition: "0.5s",
+          backgroundColor: MainColor.orange
         }}
         radius={"xl"}
-        bg={"orange"}
-        color="orange"
+        
+        c={MainColor.darkblue}
         onClick={() => setOpenModal(true)}
       >
         Batalkan Review
@@ -109,16 +111,18 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+          style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}
-            color="orange"
+            c={MainColor.darkblue}
             onClick={() => {
               onChangeStatus();
             }}

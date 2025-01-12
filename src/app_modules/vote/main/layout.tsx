@@ -70,7 +70,7 @@ export default function LayoutVote_Main({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={hotMenu === e.id ? MainColor.yellow : "white"}
+                  c={hotMenu === e.id ? MainColor.yellow : MainColor.white}
                   onClick={() =>
                     e.path === ""
                       ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")

@@ -1,11 +1,12 @@
+
 import { decrypt } from "@/app/auth/_lib/decrypt";
 import _ from "lodash";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
-  // const data = await req.text();
-  // console.log(data);
   const c = cookies().get(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!);
 
   if (!c || !c?.value || _.isEmpty(c?.value) || _.isUndefined(c?.value)) {
@@ -18,5 +19,7 @@ export async function GET() {
     encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
   });
 
-  return NextResponse.json({ status: 200, message: "OK", data: dataUser });
+  const id = dataUser?.id
+
+  return NextResponse.json({ status: 200, message: "OK", data: id });
 }

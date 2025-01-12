@@ -30,6 +30,8 @@ import {
   funGlobal_UploadToStorage,
 } from "@/app_modules/_global/fun";
 import { DIRECTORY_ID } from "@/app/lib";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 export default function CreatePortofolio({
   bidangBisnis,
@@ -70,11 +72,11 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             withAsterisk
             label="Nama Bisnis"
@@ -88,16 +90,18 @@ export default function CreatePortofolio({
             }}
           />
           <Select
-            
             styles={{
               label: {
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
+              },
+              dropdown: {
+                backgroundColor: MainColor.white
               }
             }}
             withAsterisk
@@ -114,17 +118,18 @@ export default function CreatePortofolio({
               });
             }}
           />
+
           <TextInput
             styles={{
               label: {
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             withAsterisk
             label="Alamat Bisnis"
@@ -137,29 +142,34 @@ export default function CreatePortofolio({
               });
             }}
           />
-          <TextInput
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white
-              },
-              required: {
-                color: MainColor.red,
-              }
-            }}
-            withAsterisk
-            label="Nomor Telepon "
-            placeholder="Nomor telepon "
-            type="number"
-            onChange={(val) => {
-              setDataPortofolio({
-                ...dataPortofolio,
-                tlpn: val.target.value,
-              });
-            }}
-          />
+
+          <Stack spacing={5}>
+            <Text c={MainColor.white} fz={"sm"}>
+              Nomor Telepon{" "}
+              <Text c={"red"} span inherit>
+                *
+              </Text>
+            </Text>
+
+            <PhoneInput
+              placeholder="Nomor telepon"
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  backgroundColor: MainColor.login,
+                }  
+              }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
+              defaultCountry="id"
+              onChange={(val) => {
+                const valPhone = val.substring(1);
+                setDataPortofolio({
+                  ...dataPortofolio,
+                  tlpn: valPhone,
+                });
+              }}
+            />
+          </Stack>
+
           <Stack spacing={5}>
             <Textarea
               styles={{
@@ -167,11 +177,11 @@ export default function CreatePortofolio({
                   color: MainColor.white,
                 },
                 input: {
-                  backgroundColor: MainColor.white
+                  backgroundColor: MainColor.white,
                 },
                 required: {
                   color: MainColor.red,
-                }
+                },
               }}
               maxLength={300}
               autosize
@@ -208,7 +218,9 @@ export default function CreatePortofolio({
               </AspectRatio>
             ) : (
               <Stack spacing={5} justify="center" align="center" h={"100%"}>
-                <Title c={MainColor.white} order={3}>Upload Logo Bisnis</Title>
+                <Title c={MainColor.white} order={3}>
+                  Upload Logo Bisnis
+                </Title>
                 <Text c={MainColor.white} fs={"italic"} fz={10} align="center">
                   Masukan logo bisnis anda untuk ditampilkan dalam portofolio
                 </Text>
@@ -309,8 +321,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Facebook"
             maxLength={100}
@@ -328,8 +340,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Instagram"
             maxLength={100}
@@ -347,8 +359,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Tiktok"
             maxLength={100}
@@ -366,8 +378,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Twitter"
             maxLength={100}
@@ -385,8 +397,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Youtube"
             maxLength={100}

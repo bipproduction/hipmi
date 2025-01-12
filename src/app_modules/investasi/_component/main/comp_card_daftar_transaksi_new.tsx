@@ -1,5 +1,5 @@
 import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { Card, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ export function Investasi_ComponentCardDaftarTransaksiNew({ data }: { data: IDat
                backgroundColor: AccentColor.darkblue,
                border: `2px solid ${AccentColor.blue}`,
                borderRadius: "10px",
-               color: "white",
+               color: MainColor.white,
             }}
             mb={"md"}
             onClick={() =>

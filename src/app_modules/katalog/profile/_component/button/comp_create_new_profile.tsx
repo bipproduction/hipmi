@@ -7,13 +7,14 @@ import {
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { gmailRegex } from "@/app_modules/katalog/component/regular_expressions";
+import { emailRegex } from "@/app_modules/katalog/component/regular_expressions";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import funCreateNewProfile from "../../fun/fun_create_profile";
 import { MODEL_PROFILE } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Profile_ComponentCreateNewProfile({
   value,
@@ -36,7 +37,7 @@ export function Profile_ComponentCreateNewProfile({
     };
     if (_.values(newData).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-    if (!newData.email.match(gmailRegex))
+    if (!newData.email.match(emailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     if (fotoProfileId == "")
@@ -48,7 +49,6 @@ export function Profile_ComponentCreateNewProfile({
 
     try {
       setLoading(true);
-
       const create = await funCreateNewProfile({
         data: newData as any,
         imageId: fotoProfileId,
@@ -57,20 +57,21 @@ export function Profile_ComponentCreateNewProfile({
 
       if (create.status === 201) {
         ComponentGlobal_NotifikasiBerhasil("Berhasil membuat profile", 3000);
-        router.push(RouterHome.main_home, { scroll: false });
+        router.replace(RouterHome.main_home, { scroll: false });
       }
 
       if (create.status === 400) {
+        setLoading(true);
         ComponentGlobal_NotifikasiGagal(create.message);
       }
 
       if (create.status === 500) {
+        setLoading(true);
         ComponentGlobal_NotifikasiGagal(create.message);
       }
     } catch (error) {
-      console.log("Terjadi kesalahan", error);
-    } finally {
-      setLoading(false);
+      setLoading(true);
+      clientLogger.error("Error create new profile:", error);
     }
   }
 

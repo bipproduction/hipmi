@@ -19,15 +19,15 @@ export default function ComponentColab_DetailData({
           <Stack spacing={"sm"}>
             <Grid>
               <Grid.Col span={2}>
-                <Text fw={"bold"} fz={"sm"}>
+                <Text fw={"bold"} >
                   Industri
                 </Text>
               </Grid.Col>
               <Grid.Col span={1}>
-                <Text fz={"sm"}>:</Text>
+                <Text >:</Text>
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text fz={"sm"}>
+                <Text >
                   {data?.ProjectCollaborationMaster_Industri.name
                     ? data.ProjectCollaborationMaster_Industri.name
                     : "Industri"}
@@ -37,31 +37,31 @@ export default function ComponentColab_DetailData({
 
             <Grid>
               <Grid.Col span={2}>
-                <Text fw={"bold"} fz={"sm"}>
+                <Text fw={"bold"} >
                   Lokasi
                 </Text>
               </Grid.Col>
               <Grid.Col span={1}>
-                <Text fz={"sm"}>:</Text>
+                <Text >:</Text>
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text fz={"sm"} lineClamp={1}>
+                <Text  lineClamp={1}>
                   {data?.lokasi ? data.lokasi : " Lokasi dari proyek"}
                 </Text>
               </Grid.Col>
             </Grid>
 
             <Stack spacing={5}>
-              <Text fw={"bold"} fz={"sm"}>
+              <Text fw={"bold"} >
                 Tujuan proyek
               </Text>
-              <Text fz={"sm"}>{data?.purpose ? data?.purpose : "-"}</Text>
+              <Text >{data?.purpose ? data?.purpose : "-"}</Text>
             </Stack>
             <Stack spacing={5}>
-              <Text fw={"bold"} fz={"sm"}>
+              <Text fw={"bold"} >
                 Keuntungan
               </Text>
-              <Text fz={"sm"}>{data?.benefit ? data?.benefit : "-"}</Text>
+              <Text >{data?.benefit ? data?.benefit : "-"}</Text>
             </Stack>
           </Stack>
         </Box>

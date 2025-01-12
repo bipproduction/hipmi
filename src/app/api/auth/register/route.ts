@@ -1,5 +1,6 @@
 import { sessionCreate } from "@/app/auth/_lib/session_create";
 import prisma from "@/app/lib/prisma";
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
         data: {
           username: data.username,
           nomor: data.nomor,
-          active: true,
+          active: false,
         },
       });
 
@@ -38,7 +39,15 @@ export async function POST(req: Request) {
         { status: 200 }
       );
     } catch (error) {
-      console.log(error);
+      backendLogger.log("Error registrasi:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Server Error",
+          reason: (error as Error).message,
+        },
+        { status: 500 }
+      );
     }
   }
 

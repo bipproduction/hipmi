@@ -25,7 +25,7 @@ export default function ComponentDonasi_CeritaPenggalangMain({
       <Stack
         spacing={"xs"}
         style={{
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Title order={4}>Cerita Penggalang Dana</Title>
@@ -35,7 +35,7 @@ export default function ComponentDonasi_CeritaPenggalangMain({
             backgroundColor: AccentColor.darkblue,
             border: `2px solid ${AccentColor.blue}`,
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <Stack>

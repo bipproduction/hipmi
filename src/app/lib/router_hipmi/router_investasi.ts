@@ -8,8 +8,8 @@ export const NEW_RouterInvestasi = {
    * @param param status id | 1: Publish, 2: Review, 3: Draft, 4: Reject
    * @type string
    */
-  portofolio: ({ id }: { id: "1" | "2" | "3" | "4" }) =>
-    `/dev/investasi/main/portofolio/${id}`,
+  portofolio: ({ id }: { id: "1" | "2" | "3" | "4" }) => `/dev/investasi/main/portofolio/${id}`,
+  // portofolio: ({ id }: { id?: string }) => `/dev/investasi/main/portofolio/${id}`,
 
   // TRANSAKSI
   pembelian: "/dev/investasi/transaksi/pembelian/",

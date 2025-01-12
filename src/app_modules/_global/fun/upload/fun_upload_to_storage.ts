@@ -10,6 +10,10 @@ export async function funGlobal_UploadToStorage({
   const Env_WS_APIKEY = TokenStorage.value;
 
   const allowedMimeTypes = [
+    "image/heif", // Format HEIF standar
+    "image/heic", // Format HEIF untuk container HEIC
+    "image/heif-sequence", // Untuk sequence/animasi HEIF
+    "image/heic-sequence", // Untuk sequence/animasi HEIC
     "image/png",
     "image/jpeg",
     "image/gif",

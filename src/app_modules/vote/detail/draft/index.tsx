@@ -1,7 +1,7 @@
 "use client";
 
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
@@ -22,6 +22,7 @@ import { WibuRealtime } from "wibu-pkg";
 import { useShallowEffect } from "@mantine/hooks";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
 import _ from "lodash";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Vote_DetailDraft({
   dataVote,
@@ -109,12 +110,19 @@ function ButtonAction({
 
   async function onDelete() {
     await Vote_funDeleteById(voteId).then((res) => {
-      if (res.status === 200) {
-        setOpenModal2(false);
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
-        router.replace(RouterVote.status({ id: "3" }));
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+      try {
+        setIsLoading(true);
+        if (res.status === 200) {
+          setOpenModal2(false);
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
+          router.replace(RouterVote.status({ id: "3" }));
+        } else {
+         setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        clientLogger.error("Error delete vote", error);
       }
     });
   }
@@ -124,8 +132,8 @@ function ButtonAction({
       <SimpleGrid cols={2}>
         <Button
           radius={"xl"}
-          bg={MainColor.yellow}
-          color="yellow"
+          style={{ backgroundColor: AccentColor.yellow }}
+          c={MainColor.darkblue}
           onClick={() => {
             setOpenModal1(true);
           }}
@@ -134,7 +142,8 @@ function ButtonAction({
         </Button>
         <Button
           radius={"xl"}
-          color="red"
+          style={{ backgroundColor: MainColor.red }}
+          c={AccentColor.white}
           onClick={() => {
             setOpenModal2(true);
           }}
@@ -154,6 +163,7 @@ function ButtonAction({
             onClick={() => {
               setOpenModal1(false);
             }}
+            style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
           >
             Batal
           </Button>
@@ -166,8 +176,8 @@ function ButtonAction({
             onClick={() => {
               onUpdate();
             }}
-            color="yellow"
-            bg={MainColor.yellow}
+            c={MainColor.darkblue}
+            style={{ backgroundColor: AccentColor.yellow  }}
           >
             Ajukan
           </Button>
@@ -181,6 +191,7 @@ function ButtonAction({
         close={() => setOpenModal2(false)}
         buttonKiri={
           <Button
+          style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
             radius={"xl"}
             onClick={() => {
               setOpenModal2(false);
@@ -192,6 +203,8 @@ function ButtonAction({
         buttonKanan={
           <Button
             radius={"xl"}
+            loaderPosition="center"
+            loading={isLoading ? true : false}
             onClick={() => {
               onDelete();
             }}

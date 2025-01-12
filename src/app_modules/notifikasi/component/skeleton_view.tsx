@@ -1,25 +1,26 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import { Stack, Group, Skeleton, Divider } from "@mantine/core";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Divider, Group, Stack } from "@mantine/core";
 
 export default function Notifikasi_ComponentSkeletonView() {
   return (
     <>
-      {Array.from({ length: 10 }).map((_, i) => (
+      {Array.from({ length: 3 }).map((_, i) => (
         <ComponentGlobal_CardStyles key={i}>
           <Stack>
             <Group position="apart">
-              <Skeleton h={15} w={70} radius={"xl"} />
-              <Skeleton h={15} w={100} radius={"xl"} />
+              <CustomSkeleton h={15} w={70} radius={"xl"} />
+              <CustomSkeleton h={15} w={100} radius={"xl"} />
             </Group>
 
-            <Divider color="gray" />
-            <Skeleton h={15} w={50} radius={"xl"} />
-            <Skeleton h={15} w={"100%"} radius={"xl"} />
-            <Skeleton h={15} w={"100%"} radius={"xl"} />
+            <Divider color="#1F5B9E" />
+            <CustomSkeleton h={15} w={50} radius={"xl"} />
+            <CustomSkeleton h={15} w={"100%"} radius={"xl"} />
+            <CustomSkeleton h={15} w={"100%"} radius={"xl"} />
 
             <Group position="apart">
-              <Skeleton h={15} w={100} radius={"xl"} />
-              <Skeleton h={15} w={50} radius={"xl"} />
+              <CustomSkeleton h={15} w={100} radius={"xl"} />
+              <CustomSkeleton h={15} w={50} radius={"xl"} />
             </Group>
           </Stack>
         </ComponentGlobal_CardStyles>

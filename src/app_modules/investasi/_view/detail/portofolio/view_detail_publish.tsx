@@ -80,7 +80,7 @@ export default function Investasi_ViewDetailPublish({
 
           {/* Title dan Persentase */}
           <Center>
-            <Title order={3} align="center">
+            <Title color={MainColor.white} order={3} align="center">
               {_.startCase(data.title)}
             </Title>
           </Center>
@@ -90,12 +90,12 @@ export default function Investasi_ViewDetailPublish({
           <Stack>
             <Investasi_ComponentTitleAndValueInDetail
               title="Investor"
-              value={<Text>{data.Investasi_Invoice.length} </Text>}
+              value={<Text c={MainColor.white}>{data.Investasi_Invoice.length} </Text>}
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Target Dana"
               value={
-                <Text>
+                <Text c={MainColor.white}>
                   Rp.{" "}
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 20,
@@ -107,7 +107,7 @@ export default function Investasi_ViewDetailPublish({
             <Investasi_ComponentTitleAndValueInDetail
               title="Harga Per Lembar"
               value={
-                <Text>
+                <Text c={MainColor.white}>
                   Rp.{" "}
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
@@ -117,14 +117,14 @@ export default function Investasi_ViewDetailPublish({
             />
 
             <Investasi_ComponentTitleAndValueInDetail
-              title={<Text fs={"italic"}>Return Of Invesment (RoI)</Text>}
-              value={<Text>{data.roi} %</Text>}
+              title={<Text c={MainColor.white} fs={"italic"}>Return Of Invesment (RoI)</Text>}
+              value={<Text c={MainColor.white}>{data.roi} %</Text>}
             />
 
             <Investasi_ComponentTitleAndValueInDetail
               title="Total Lembar"
               value={
-                <Text>
+                <Text c={MainColor.white}>
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
                   }).format(+data.totalLembar)}{" "}
@@ -136,7 +136,7 @@ export default function Investasi_ViewDetailPublish({
             <Investasi_ComponentTitleAndValueInDetail
               title="Sisa Lembar"
               value={
-                <Text>
+                <Text c={MainColor.white}>
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
                   }).format(+data.sisaLembar)}{" "}
@@ -147,15 +147,15 @@ export default function Investasi_ViewDetailPublish({
 
             <Investasi_ComponentTitleAndValueInDetail
               title="Jadwal Pembagian"
-              value={<Text>{data.MasterPembagianDeviden.name} Bulan </Text>}
+              value={<Text c={MainColor.white}>{data.MasterPembagianDeviden.name} Bulan </Text>}
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Pembagian Deviden"
-              value={<Text>{data.MasterPeriodeDeviden.name}</Text>}
+              value={<Text c={MainColor.white}>{data.MasterPeriodeDeviden.name}</Text>}
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Pencarian Investor"
-              value={<Text>{data.MasterPencarianInvestor.name} Hari </Text>}
+              value={<Text c={MainColor.white}>{data.MasterPencarianInvestor.name} Hari </Text>}
             />
           </Stack>
 

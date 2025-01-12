@@ -2,28 +2,28 @@
 
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import {
-  Button,
-  Center,
-  Group,
-  Skeleton,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { clientLogger } from "@/util/clientLogger";
+import { Button, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { redirect, useRouter } from "next/navigation";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ComponentGlobal_CardStyles } from "../_global/component";
+import { apiGetACtivationUser } from "../_global/lib/api_user";
+import { gs_access_user } from "@/app/lib/global_state";
+import { useAtom } from "jotai";
+import { MainColor } from "../_global/color";
+import CustomSkeleton from "../components/CustomSkeleton";
 
 export default function WaitingRoom_View({
-  activationUser,
   userLoginId,
 }: {
-  activationUser: boolean;
-  userLoginId: string;
+  userLoginId?: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isLoadingHome, setIsLoadingHome] = useState(false);
+
   async function onClickLogout() {
     setLoading(true);
     const res = await fetch(`/api/auth/logout?id=${userLoginId}`, {
@@ -37,71 +37,81 @@ export default function WaitingRoom_View({
     }
   }
 
-  useShallowEffect(() => {
-    if (activationUser == true) {
-      return redirect("/");
-    }
-  }, [activationUser]);
+  const [isAccess, setIsAccess] = useState<boolean | null>(null);
+  const [isAccessUser, setIsAccessUser] = useAtom(gs_access_user);
 
-  const listhHuruf = [
-    {
-      huruf: "H",
-    },
-    {
-      huruf: "I",
-    },
-    {
-      huruf: "P",
-    },
-    {
-      huruf: "M",
-    },
-    {
-      huruf: "I",
-    },
-  ];
-  const customLOader = (
-    <Center>
-      <Group>
-        {listhHuruf.map((e, i) => (
-          <Center key={i} h={"100%"}>
-            <Skeleton height={50} circle radius={"100%"} />
-            <Text sx={{ position: "absolute" }} c={"gray.5"} fw={"bold"}>
-              {e.huruf}
-            </Text>
-          </Center>
-        ))}
-      </Group>
-    </Center>
-  );
+  useShallowEffect(() => {
+    if (isAccessUser) {
+      setIsAccess(true);
+      setIsAccessUser(false);
+    }
+  }, [isAccessUser]);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetACtivationUser();
+      if (respone) {
+        setIsAccess(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get cookies user", error);
+    }
+  }
 
   return (
     <>
       <UIGlobal_LayoutDefault>
-        <Center h={"100vh"}>
-          <Stack align="center" spacing={50}>
-            {/* {customLOader} */}
-
-            <Stack align="center" spacing={5}>
-              <Title order={3} c={"white"}>
-                Anda telah berhasil mendaftar,
-              </Title>
-              <Title order={3} c={"white"}>
-                Mohon menunggu konfirmansi Admin !
-              </Title>
-            </Stack>
-
-            <Button
-              color="red"
-              loaderPosition="center"
-              loading={loading}
-              radius={"xl"}
-              onClick={() => onClickLogout()}
-            >
-              Keluar
-            </Button>
-          </Stack>
-        </Center>
+        <Stack justify="cneter" h={"90vh"} mt={"xl"}>
+          <ComponentGlobal_CardStyles>
+            {_.isNull(isAccess) ? (
+              <Stack align="center">
+                <CustomSkeleton height={20} width={"100%"} />
+                <CustomSkeleton height={20} width={"70%"} />
+                <CustomSkeleton height={20} width={"100%"} />
+                <CustomSkeleton height={20} width={"70%"} />
+              </Stack>
+            ) : (
+              <Stack align="center">
+                <Stack align="center" spacing={5} fs={"italic"}>
+                  <Text fw={"bold"} c={"white"} align="center">
+                    Permohonan akses Anda sedang dalam proses verifikasi oleh
+                    admin.
+                  </Text>
+                  <Text fw={"bold"} c={"white"} align="center">
+                    Harap tunggu, Anda akan menerima pemberitahuan melalui
+                    Whatsapp setelah disetujui.
+                  </Text>
+                </Stack>
+                {isAccess && (
+                  <Button
+                    color="yellow"
+                    bg={MainColor.yellow}
+                    c={MainColor.darkblue}
+                    loaderPosition="center"
+                    loading={isLoadingHome}
+                    radius={"xl"}
+                    onClick={() => {
+                      try {
+                        setIsLoadingHome(true);
+                        router.replace("/", { scroll: false });
+                      } catch (error) {
+                        clientLogger.error("Error button to home", error);
+                      } finally {
+                        setIsLoadingHome(false);
+                      }
+                    }}
+                  >
+                    Home
+                  </Button>
+                )}
+              </Stack>
+            )}
+          </ComponentGlobal_CardStyles>
+        </Stack>
       </UIGlobal_LayoutDefault>
     </>
   );

@@ -101,19 +101,19 @@ export function Investasi_ViewMetodePembayaran({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
                 marginBottom: "15px",
               }}
             >
               <Radio
                 styles={{
                   radio: {
-                    color: "yellow",
+                    color: "yellow", backgroundColor: MainColor.white
                   },
                 }}
                 value={e.id}
                 label={
-                  <Title order={6} color="white">
+                  <Title order={6} color={MainColor.white}>
                     {e.namaBank}
                   </Title>
                 }

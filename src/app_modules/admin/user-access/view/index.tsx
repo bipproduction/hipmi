@@ -1,6 +1,9 @@
 "use client";
 
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Button,
   Center,
@@ -14,48 +17,83 @@ import {
   Title,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import { useState } from "react";
+import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import adminUserAccess_getListUser from "../fun/get/get_list_all_user";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { WibuRealtime } from "wibu-pkg";
+import { gs_access_user, IRealtimeData } from "@/app/lib/global_state";
+import { useAtom } from "jotai";
 
 export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
   const [data, setData] = useState<MODEL_USER[]>(listUser.data);
   const [isActivePage, setActivePage] = useState(1);
   const [isNPage, setNPage] = useState(listUser.nPage);
   const [isSearch, setSearch] = useState("");
+  const [isLoadingAccess, setIsLoadingAccess] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const [userId, setUserId] = useState("");
 
-  async function onAccess(id: string) {
-    await adminUserAccess_funEditAccess(id, true).then(async (res) => {
-      if (res.status === 200) {
-        const value = await adminUserAccess_getListUser({
-          page: 1,
-          search: isSearch,
-        });
-        setData(value.data as any);
-        setNPage(value.nPage);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
-      }
-    });
+  async function onAccess(id: string, nomor: string) {
+    try {
+      setUserId(id);
+      setIsLoadingAccess(true);
+      await adminUserAccess_funEditAccess(id, true, nomor).then(async (res) => {
+        if (res.status === 200) {
+          const value = await adminUserAccess_getListUser({
+            page: 1,
+            search: isSearch,
+          });
+          setData(value.data as any);
+          setNPage(value.nPage);
+
+          const dataNotifikasi: IRealtimeData = {
+            status: true as any,
+            userId: id,
+            kategoriApp: "ACCESS",
+          };
+
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+        } else {
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      });
+    } catch (error) {
+      clientLogger.error("Error grand access", error);
+    } finally {
+      setIsLoadingAccess(false);
+      setUserId("");
+    }
   }
 
-  async function onDelAccess(id: string) {
-    await adminUserAccess_funEditAccess(id, false).then(async (res) => {
-      if (res.status === 200) {
-        const value = await adminUserAccess_getListUser({
-          page: 1,
-          search: isSearch,
-        });
-        setData(value.data as any);
-        setNPage(value.nPage);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
-      }
-    });
+  async function onDelete(id: string) {
+    try {
+      setUserId(id);
+      setIsLoadingDelete(true);
+      await adminUserAccess_funEditAccess(id, false).then(async (res) => {
+        if (res.status === 200) {
+          const value = await adminUserAccess_getListUser({
+            page: 1,
+            search: isSearch,
+          });
+          setData(value.data as any);
+          setNPage(value.nPage);
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+        } else {
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      });
+    } catch (error) {
+      clientLogger.error("Error delete access", error);
+    } finally {
+      setIsLoadingDelete(false);
+      setUserId("");
+    }
   }
 
   async function onSearch(s: any) {
@@ -91,22 +129,26 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
         {e.active === false ? (
           <Center>
             <Button
+              loaderPosition="center"
+              loading={isLoadingAccess && userId === e.id}
               radius={"xl"}
               color="Green"
               onClick={() => {
-                onAccess(e.id);
+                onAccess(e.id, e.nomor);
               }}
             >
-              Give Access
+              Grand Access
             </Button>
           </Center>
         ) : (
           <Center>
             <Button
+              loaderPosition="center"
+              loading={isLoadingDelete && userId === e.id}
               radius={"xl"}
               color="red"
               onClick={() => {
-                onDelAccess(e.id);
+                onDelete(e.id);
               }}
             >
               Delete Access

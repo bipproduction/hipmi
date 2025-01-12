@@ -23,6 +23,7 @@ import {
   Investasi_ViewDetailReview,
 } from "../../_view";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { MainColor } from "@/app_modules/_global/color";
 
 export function Investasi_UiDetailPortofolio({
   dataInvestasi,
@@ -69,7 +70,7 @@ export function Investasi_UiDetailPortofolio({
                   variant="transparent"
                   onClick={() => setOpenDrawer(true)}
                 >
-                  <IconDotsVertical color="white" />
+                  <IconDotsVertical color={MainColor.white} />
                 </ActionIcon>
               }
             />
@@ -93,7 +94,7 @@ export function Investasi_UiDetailPortofolio({
                 <Stack key={i} align="center" spacing={"xs"}>
                   <ActionIcon
                     variant="transparent"
-                    c="white"
+                    c={MainColor.white}
                     onClick={() => {
                       setPageId(e?.id);
                       setLoading(true);
@@ -109,7 +110,7 @@ export function Investasi_UiDetailPortofolio({
                       e?.icon
                     )}
                   </ActionIcon>
-                  <Text fz={"sm"} align="center" color="white">
+                  <Text fz={"sm"} align="center" color={MainColor.white}>
                     {e?.name}
                   </Text>
                 </Stack>

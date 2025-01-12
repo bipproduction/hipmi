@@ -142,7 +142,13 @@ export default function CreateCeritaPenggalangDonasi({
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
+                },
+                input: {
+                  backgroundColor: MainColor.white
+                },
+                required: {
+                  color: MainColor.red
                 },
               }}
               autosize
@@ -169,7 +175,13 @@ export default function CreateCeritaPenggalangDonasi({
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
+                },
+                input: {
+                  backgroundColor: MainColor.white
+                },
+                required: {
+                  color: MainColor.red
                 },
               }}
               autosize
@@ -205,8 +217,8 @@ export default function CreateCeritaPenggalangDonasi({
                 </AspectRatio>
               ) : (
                 <Stack justify="center" align="center" h={"100%"}>
-                  <IconUpload color="white" />
-                  <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
+                  <IconUpload color={MainColor.white} />
+                  <Text fz={10} fs={"italic"} c={MainColor.white} fw={"bold"}>
                     Upload Gambar
                   </Text>
                 </Stack>
@@ -251,7 +263,13 @@ export default function CreateCeritaPenggalangDonasi({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
               },
             }}
             withAsterisk
@@ -268,7 +286,13 @@ export default function CreateCeritaPenggalangDonasi({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white
+              },
+              required: {
+                color: MainColor.red
               },
             }}
             withAsterisk

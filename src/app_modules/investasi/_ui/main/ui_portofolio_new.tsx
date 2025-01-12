@@ -60,8 +60,8 @@ export function Investasi_UiPortofolioNew() {
                         style={{
                            transition: "ease 0.5s ",
                            backgroundColor:
-                              param.id === e.id ? MainColor.yellow : AccentColor.blue,
-                           color: param.id === e.id ? "black" : "white",
+                              param.id === e.id ? MainColor.yellow : MainColor.white,
+                           color: param.id === e.id ? MainColor.darkblue : MainColor.black,
                         }}
                      >
                         {e.name}

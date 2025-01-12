@@ -24,6 +24,7 @@ import { useState } from "react";
 import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
 import { MODEL_EVENT } from "../model/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Event_Edit({
   dataEvent,
@@ -50,8 +51,14 @@ export default function Event_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           label="Judul"
           placeholder="judul"
@@ -76,7 +83,16 @@ export default function Event_Edit({
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            },
+            dropdown: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
@@ -100,8 +116,14 @@ export default function Event_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           label="Lokasi"
           placeholder="lokasi acara"
@@ -136,8 +158,14 @@ export default function Event_Edit({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -174,8 +202,14 @@ export default function Event_Edit({
         <DateTimePicker
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red
+            }
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -216,8 +250,14 @@ export default function Event_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red
+              }
             }}
             label="Deskripsi"
             placeholder="Deskripsikan acara yang akan di selenggarakan"
@@ -264,7 +304,7 @@ export default function Event_Edit({
           onClick={() => onUpdate(router, value, setLoading)}
           bg={MainColor.yellow}
           color="yellow"
-          c={"black"}
+          c={MainColor.darkblue}
         >
           Update
         </Button>
@@ -281,14 +321,19 @@ async function onUpdate(
   if (_.values(value).includes(""))
     return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
 
-  const res = await Event_funEditById(value);
-  setLoading(true);
+  try {
+    setLoading(true);
+    const res = await Event_funEditById(value);
 
   if (res.status === 200) {
     ComponentGlobal_NotifikasiBerhasil(res.message);
     router.back();
-    setLoading(false);
   } else {
+    setLoading(false);
     ComponentGlobal_NotifikasiGagal(res.message);
+  }
+  } catch (error) {
+    setLoading(false);
+    clientLogger.error("Error update event", error);
   }
 }

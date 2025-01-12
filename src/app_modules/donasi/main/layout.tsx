@@ -62,7 +62,7 @@ export default function LayoutDonasi({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={active === i ? MainColor.yellow : "white"}
+                  c={active === i ? MainColor.yellow : MainColor.white}
                   onClick={() =>
                     e.path === ""
                       ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")
@@ -72,7 +72,7 @@ export default function LayoutDonasi({
                   {e.icon}
                 </ActionIcon>
                 <Text
-                  c={active === i ? MainColor.yellow : "white"}
+                  c={active === i ? MainColor.yellow : MainColor.white}
                   fz={"xs"}
                   lineClamp={1}
                 >
