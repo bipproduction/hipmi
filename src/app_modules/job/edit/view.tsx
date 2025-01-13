@@ -10,28 +10,25 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
+import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
 import { MODEL_JOB } from "../model/interface";
 
-import { APIs } from "@/app/lib";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
   ComponentGlobal_LoadImage,
-  ComponentGlobal_LoadImageCustom,
 } from "@/app_modules/_global/component";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { IconPhoto } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import {
-  Job_ComponentBoxUploadImage,
-  Job_ComponentButtonUpdate,
-} from "../component";
+import { Job_ComponentButtonUpdate } from "../component";
 const ReactQuill = dynamic(
   () => {
     return import("react-quill");
@@ -51,7 +48,7 @@ export default function Job_Edit({ dataJob }: { dataJob: MODEL_JOB }) {
   return (
     <>
       <Stack>
-        <Stack spacing={"xs"}>
+        <Stack spacing={0}>
           <ComponentGlobal_BoxUploadImage>
             {img ? (
               <AspectRatio ratio={1 / 1} mt={5} maw={300} mx={"auto"}>
@@ -66,44 +63,16 @@ export default function Job_Edit({ dataJob }: { dataJob: MODEL_JOB }) {
               <ComponentGlobal_LoadImage fileId={data.imageId} />
             ) : (
               <Stack justify="center" align="center" h={"100%"}>
-                <IconUpload color="white" />
-                <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                  Upload Gambar
-                </Text>
+                <IconPhoto size={100} />
               </Stack>
             )}
           </ComponentGlobal_BoxUploadImage>
 
           <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-
-                  setImg(buffer);
-                  setFile(files);
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  radius={"xl"}
-                  w={100}
-                  style={{
-                    backgroundColor: MainColor.yellow,
-                    border: `1px solid ${AccentColor.yellow}`,
-                  }}
-                >
-                  <IconCamera color="black" />
-                </Button>
-              )}
-            </FileButton>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFile}
+              onSetImage={setImg}
+            />
           </Center>
         </Stack>
 

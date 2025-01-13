@@ -2,15 +2,16 @@
 
 import { clientLogger } from "@/util/clientLogger";
 import { Button, FileButton } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
+import { IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
-import { MainColor } from "../color";
+import { AccentColor, MainColor } from "../color";
+import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
 
 export function ComponentGlobal_ButtonUploadFileImage({
   onSetFile,
   onSetImage,
 }: {
-  onSetFile: File | any;
+  onSetFile: File | null | any;
   onSetImage: any | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,11 +25,11 @@ export function ComponentGlobal_ButtonUploadFileImage({
             new Blob([new Uint8Array(await files.arrayBuffer())])
           );
 
-          // if (files.size > MAX_SIZE) {
-          //   ComponentGlobal_NotifikasiPeringatan(PemberitahuanMaksimalFile);
-          //   return;
-          // } else {
-          // }
+          if (files.size > 100 * 1024 * 1024) {
+            setIsLoading(false);
+            ComponentGlobal_NotifikasiPeringatan("File terlalu besar");
+          }
+
           onSetFile(files);
           onSetImage(buffer);
           setIsLoading(false);
@@ -37,7 +38,7 @@ export function ComponentGlobal_ButtonUploadFileImage({
           clientLogger.error("Upload error:", error);
         }
       }}
-      accept="image/png,image/jpeg"
+      accept="image/png,image/png,image/jpeg,image/gif"
     >
       {(props) => (
         <Button
@@ -45,10 +46,12 @@ export function ComponentGlobal_ButtonUploadFileImage({
           loading={isLoading}
           loaderPosition="center"
           radius={"xl"}
-          leftIcon={<IconCamera />}
-          bg={MainColor.yellow}
-          color="yellow"
-          c={"black"}
+          style={{
+            backgroundColor: MainColor.yellow,
+            border: `1px solid ${AccentColor.yellow}`,
+          }}
+          leftIcon={<IconUpload color="black" size={20} />}
+          c={MainColor.darkblue}
         >
           Upload
         </Button>

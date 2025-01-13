@@ -2,15 +2,13 @@
 
 import {
   AspectRatio,
-  Button,
   Center,
-  FileButton,
   Image,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
@@ -22,21 +20,14 @@ const ReactQuill = dynamic(
 );
 
 import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
-
-import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
   ComponentGlobal_InputCountDown,
 } from "@/app_modules/_global/component";
 import { Job_ComponentButtonSaveCreate } from "../component";
 import { defaultDeskripsi, defaultSyarat } from "../component/default_value";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 
 export default function Job_Create() {
   const [value, setValue] = useState({
@@ -55,7 +46,7 @@ export default function Job_Create() {
     <Stack>
       <ComponentGlobal_BoxInformation informasi="Poster atau gambar lowongan kerja bersifat opsional, tidak wajib untuk dimasukkan dan upload lah gambar yang sesuai dengan deskripsi lowongan kerja. " />
 
-      <Stack spacing={"xs"}>
+      <Stack spacing={0}>
         <ComponentGlobal_BoxUploadImage>
           {img ? (
             <AspectRatio ratio={1 / 1} mah={265} mx={"auto"}>
@@ -68,53 +59,16 @@ export default function Job_Create() {
             </AspectRatio>
           ) : (
             <Stack justify="center" align="center" h={"100%"}>
-              <IconUpload color="white" />
-              <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                Upload Gambar
-              </Text>
+              <IconPhoto size={100} />
             </Stack>
           )}
         </ComponentGlobal_BoxUploadImage>
 
         <Center>
-          <FileButton
-            onChange={async (files: any | null) => {
-              try {
-                const buffer = URL.createObjectURL(
-                  new Blob([new Uint8Array(await files.arrayBuffer())])
-                );
-
-                if (files.size > MAX_SIZE) {
-                  ComponentGlobal_NotifikasiPeringatan(
-                    PemberitahuanMaksimalFile
-                  );
-                  setImg(null);
-
-                  return;
-                }
-
-                setImg(buffer);
-                setFile(files);
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-            accept="image/png,image/jpeg"
-          >
-            {(props) => (
-              <Button
-                {...props}
-                radius={"xl"}
-                w={100}
-                style={{
-                  backgroundColor: MainColor.yellow,
-                  border: `1px solid ${AccentColor.yellow}`,
-                }}
-              >
-                <IconCamera color="black" />
-              </Button>
-            )}
-          </FileButton>
+          <ComponentGlobal_ButtonUploadFileImage
+            onSetFile={setFile}
+            onSetImage={setImg}
+          />
         </Center>
       </Stack>
 
