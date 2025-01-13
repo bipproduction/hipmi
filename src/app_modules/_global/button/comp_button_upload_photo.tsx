@@ -32,10 +32,10 @@ export function ComponentGlobal_ButtonUploadFileImage({
 
           onSetFile(files);
           onSetImage(buffer);
-          setIsLoading(false);
         } catch (error) {
+          clientLogger.error("Upload image error:", error);
+        } finally {
           setIsLoading(false);
-          clientLogger.error("Upload error:", error);
         }
       }}
       accept="image/png,image/png,image/jpeg,image/gif"
