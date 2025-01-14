@@ -41,6 +41,7 @@ export default function UploadFotoProfile({
             onSetImage={setImage}
           />
         </Center>
+        
         <Profile_ComponentButtonUpdatePhotoProfile
           file={file as any}
           profileId={profile.id}

@@ -33,6 +33,17 @@ export function ComponentMap_ButtonUpdateDataMap({
       setIsLoading(true);
 
       if (file !== null) {
+        const uploadFileToStorage = await funGlobal_UploadToStorage({
+          file: file,
+          dirId: DIRECTORY_ID.map_image,
+        });
+
+        if (!uploadFileToStorage.success) {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+          return;
+        }
+
         const deleteLogo = await funGlobal_DeleteFileById({
           fileId: data.imageId,
           dirId: DIRECTORY_ID.map_image,
@@ -41,16 +52,6 @@ export function ComponentMap_ButtonUpdateDataMap({
         if (!deleteLogo.success) {
           setIsLoading(false);
           clientLogger.error("Error delete logo", deleteLogo.message);
-        }
-
-        const uploadFileToStorage = await funGlobal_UploadToStorage({
-          file: file,
-          dirId: DIRECTORY_ID.map_image,
-        });
-        if (!uploadFileToStorage.success) {
-          setIsLoading(false);
-          ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
-          return;
         }
 
         const res = await map_funEditMap({
@@ -91,7 +92,7 @@ export function ComponentMap_ButtonUpdateDataMap({
         loading={isLoading}
         mb={"xl"}
         style={{ transition: "0.5s" }}
-        disabled={data.namePin === "" ? true : false}
+        disabled={data.namePin === "" || file === null}
         radius={"xl"}
         bg={MainColor.yellow}
         color="yellow"
