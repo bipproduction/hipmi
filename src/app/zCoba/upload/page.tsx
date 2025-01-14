@@ -2,9 +2,7 @@
 
 import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_BoxUploadImage } from "@/app_modules/_global/component";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {
   UIGlobal_LayoutHeaderTamplate,
   UIGlobal_LayoutTamplate,
@@ -20,8 +18,6 @@ import {
 } from "@mantine/core";
 import { IconImageInPicture, IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
-import fun_upload from "./fun_upload";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 
 export default function Page() {
   return (

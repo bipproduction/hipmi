@@ -1,5 +1,6 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_ErrorInput } from "@/app_modules/_global/component";
 import { Select, Stack, TextInput } from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
@@ -8,13 +9,12 @@ import { emailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
-import { MainColor } from "@/app_modules/_global/color";
 
 export default function CreateProfile() {
+  const [filePP, setFilePP] = useState<File | null>(null);
   const [imgPP, setImgPP] = useState<any | null>();
+  const [fileBG, setFileBG] = useState<File | null>(null);
   const [imgBG, setImgBG] = useState<any | null>();
-  const [fotoProfileId, setFotoProfileId] = useState("");
-  const [backgroundProfileId, setBackgroundProfileId] = useState("");
 
   const [value, setValue] = useState({
     name: "",
@@ -29,15 +29,15 @@ export default function CreateProfile() {
         <Profile_ViewUploadFoto
           imgPP={imgPP}
           onSetImgPP={setImgPP}
-          fotoProfileId={fotoProfileId}
-          onSetFotoProfileId={setFotoProfileId}
+          filePP={filePP}
+          onSetFilePP={setFilePP}
         />
 
         <Profile_ViewUploadBackground
           imgBG={imgBG}
-          backgroundProfileId={backgroundProfileId}
           onSetImgBG={setImgBG}
-          onSetBackgroundProfileId={setBackgroundProfileId}
+          fileBG={fileBG}
+          onSetFileBG={setFileBG}
         />
 
         <Stack mb={"lg"}>
@@ -106,7 +106,7 @@ export default function CreateProfile() {
               label: { color: MainColor.white },
               input: { backgroundColor: MainColor.white },
               required: { color: MainColor.red },
-              dropdown: { backgroundColor: MainColor.white }
+              dropdown: { backgroundColor: MainColor.white },
             }}
             withAsterisk
             label="Jenis Kelamin"
@@ -125,8 +125,8 @@ export default function CreateProfile() {
 
           <Profile_ComponentCreateNewProfile
             value={value as any}
-            fotoProfileId={fotoProfileId}
-            backgroundProfileId={backgroundProfileId}
+            filePP={filePP as File}
+            fileBG={fileBG as File}
           />
         </Stack>
       </Stack>

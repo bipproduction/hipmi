@@ -1,42 +1,35 @@
-import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color";
-import { ComponentGlobal_BoxInformation } from "@/app_modules/_global/component";
 import {
-  funGlobal_DeleteFileById,
-  funGlobal_UploadToStorage,
-} from "@/app_modules/_global/fun";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import { clientLogger } from "@/util/clientLogger";
+  ComponentGlobal_BoxInformation,
+  ComponentGlobal_ButtonUploadFileImage,
+} from "@/app_modules/_global/component";
 import {
   Avatar,
   Box,
-  Button,
   Center,
-  FileButton,
   Paper,
   Stack
 } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function Profile_ViewUploadFoto({
   imgPP,
   onSetImgPP,
-  fotoProfileId,
-  onSetFotoProfileId,
+  filePP,
+  onSetFilePP,
 }: {
   imgPP: string | null | undefined;
   onSetImgPP: (img: string | null) => void;
-  fotoProfileId: string;
-  onSetFotoProfileId: (id: string) => void;
+  filePP: File | null;
+  onSetFilePP: (file: File | null) => void;
 }) {
-  const [isLoadingButton, setLoadingButton] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   return (
     <>
       <Box>
         <Stack spacing={"lg"}>
-          <ComponentGlobal_BoxInformation informasi="Upload foto profile anda dengan ukuran maksimal file 3 MB." />
+          <ComponentGlobal_BoxInformation informasi="Upload foto profile anda." />
           <Center>
             {imgPP != undefined || imgPP != null ? (
               <Paper shadow="lg" radius={"100%"}>
@@ -70,6 +63,13 @@ export default function Profile_ViewUploadFoto({
           </Center>
 
           <Center>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={onSetFilePP}
+              onSetImage={onSetImgPP}
+            />
+          </Center>
+
+          {/* <Center>
             <FileButton
               onChange={async (files: any | null) => {
                 try {
@@ -186,7 +186,7 @@ export default function Profile_ViewUploadFoto({
                 </Button>
               )}
             </FileButton>
-          </Center>
+          </Center> */}
         </Stack>
       </Box>
     </>

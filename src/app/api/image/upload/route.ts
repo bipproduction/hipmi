@@ -3,18 +3,18 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 export async function POST(request: Request) {
-  let fixFormData;
   const formData = await request.formData();
-  const file: any = formData.get("file");
-  const mimeType = file.type;
-  console.log("MIME Type:", mimeType);
-
   const valueOfDir = formData.get("dirId");
   const keyOfDirectory = await funGetDirectoryNameByValue({
     value: valueOfDir as string,
   });
 
   if (request.method === "POST") {
+    let fixFormData;
+    const file: any = formData.get("file");
+    const mimeType = file.type;
+    // console.log("MIME Type:", mimeType);
+
     try {
       if (mimeType != "application/pdf") {
         // Resize ukuran

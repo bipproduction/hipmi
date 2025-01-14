@@ -1,9 +1,6 @@
-import { DIRECTORY_ID, prisma } from "@/app/lib";
-import { NextResponse } from "next/server";
-import fs from "fs";
-import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
-import { apiDeleteImageById } from "@/app_modules/_global/lib/api_image";
+import { prisma } from "@/app/lib";
 import backendLogger from "@/util/backendLogger";
+import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 // GET ONE DATA PORTOFOLIO BY ID PORTOFOLIO

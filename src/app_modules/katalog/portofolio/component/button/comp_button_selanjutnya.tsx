@@ -9,6 +9,9 @@ import { MODEL_PORTOFOLIO_OLD } from "@/app_modules/model_global/portofolio";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 
+import { DIRECTORY_ID } from "@/app/lib";
+import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import funCreatePortofolio from "../../fun/fun_create_portofolio";
@@ -17,12 +20,12 @@ export function Portofolio_ComponentButtonSelanjutnya({
   profileId,
   dataPortofolio,
   dataMedsos,
-  imageId,
+  file,
 }: {
   profileId: string;
   dataPortofolio: MODEL_PORTOFOLIO_OLD;
   dataMedsos: any;
-  imageId: string;
+  file: File;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -48,31 +51,45 @@ export function Portofolio_ComponentButtonSelanjutnya({
 
     try {
       setLoading(true);
+
+      const uploadFile = await funGlobal_UploadToStorage({
+        file: file,
+        dirId: DIRECTORY_ID.portofolio_logo,
+      });
+
+      if (!uploadFile.success) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+        return;
+      }
+
+      const fileId = uploadFile.data.id;
+
       const res = await funCreatePortofolio({
         profileId: profileId,
         data: dataPortofolio as any,
         medsos: dataMedsos,
-        fileId: imageId,
+        fileId: fileId,
       });
       if (res.status === 201) {
         ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
         router.replace(RouterMap.create + res.id, { scroll: false });
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal("Gagal disimpan");
       }
     } catch (error) {
-      console.error(error);
-    } finally {
       setLoading(false);
+      clientLogger.error("Error create portofolio", error);
     }
   }
   return (
     <>
       <Button
-        disabled={_.values(dataPortofolio).includes("") || imageId == ""}
+        disabled={_.values(dataPortofolio).includes("") || file === null}
         mt={"md"}
         radius={50}
-        loading={loading ? true : false}
+        loading={loading}
         loaderPosition="center"
         onClick={() => {
           onSubmit();

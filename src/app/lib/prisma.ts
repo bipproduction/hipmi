@@ -20,8 +20,8 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 process.on("SIGINT", async () => {
-  console.log("Disconnecting PrismaClient...");
-  await prisma.$disconnect();3
+  // console.log("Disconnecting PrismaClient...");
+  await prisma.$disconnect();
   process.exit(0);
 });
 

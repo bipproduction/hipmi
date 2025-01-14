@@ -1,5 +1,6 @@
 import { Center, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { AccentColor, MainColor } from "../color/color_pallet";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function ComponentGlobal_BoxInformation({
   informasi,
@@ -36,18 +37,18 @@ export default function ComponentGlobal_BoxInformation({
             </Text>
           </Stack>
         ) : (
-          <Group>
-            <Text fz={fonsize ? fonsize : 12} c={"red"} fw={"bold"}>
-              *{" "}
+          <Grid>
+            <Grid.Col span={1}>
+              <IconInfoCircle color={MainColor.white} />
+            </Grid.Col>
+            <Grid.Col span={10}>
               <Text span inherit c={MainColor.white} fw={"normal"}>
                 {informasi}
               </Text>
-            </Text>
-          </Group>
+            </Grid.Col>
+          </Grid>
         )}
       </Paper>
     </>
   );
-
-  
 }
