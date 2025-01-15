@@ -3,13 +3,7 @@ import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_ButtonUploadFileImage,
 } from "@/app_modules/_global/component";
-import {
-  Avatar,
-  Box,
-  Center,
-  Paper,
-  Stack
-} from "@mantine/core";
+import { Avatar, Box, Center, Paper, Stack } from "@mantine/core";
 import { useState } from "react";
 
 export default function Profile_ViewUploadFoto({
@@ -68,125 +62,6 @@ export default function Profile_ViewUploadFoto({
               onSetImage={onSetImgPP}
             />
           </Center>
-
-          {/* <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  setLoadingButton(true);
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-
-                  // if (files.size > MAX_SIZE) {
-                  //   ComponentGlobal_NotifikasiPeringatan(
-                  //     PemberitahuanMaksimalFile
-                  //   );
-                  //   onSetImgPP(null);
-
-                  //   return;
-                  // }
-
-                  if (fotoProfileId != "") {
-                    try {
-                      const deleteFotoProfile = await funGlobal_DeleteFileById({
-                        fileId: fotoProfileId,
-                        dirId: DIRECTORY_ID.profile_foto,
-                      });
-
-                      if (!deleteFotoProfile.success) {
-                        clientLogger.error(
-                          "Client failed delete photo profile:" +
-                            deleteFotoProfile.message
-                        );
-
-                        return;
-                      }
-
-                      if (deleteFotoProfile.success) {
-                        onSetFotoProfileId("");
-                        onSetImgPP(null);
-
-                        const uploadPhoto = await funGlobal_UploadToStorage({
-                          file: files,
-                          dirId: DIRECTORY_ID.profile_foto,
-                        });
-
-                        if (!uploadPhoto.success) {
-                          clientLogger.error(
-                            "Client failed upload photo profile::" +
-                              uploadPhoto.message
-                          );
-                          return;
-                        }
-
-                        if (uploadPhoto.success) {
-                          clientLogger.info(
-                            "Client success upload foto profile"
-                          );
-                          onSetFotoProfileId(uploadPhoto.data.id);
-                          onSetImgPP(buffer);
-                        } else {
-                          clientLogger.error(
-                            "Client failed upload foto:",
-                            uploadPhoto.message
-                          );
-                          ComponentGlobal_NotifikasiPeringatan(
-                            "Gagal upload foto profile"
-                          );
-                        }
-                      }
-                    } catch (error) {
-                      clientLogger.error("Client error upload foto:", error);
-                    }
-                  } else {
-                    try {
-                      const uploadPhoto = await funGlobal_UploadToStorage({
-                        file: files,
-                        dirId: DIRECTORY_ID.profile_foto,
-                      });
-
-                      if (uploadPhoto.success) {
-                        clientLogger.info("Client success upload foto profile");
-                        onSetFotoProfileId(uploadPhoto.data.id);
-                        onSetImgPP(buffer);
-                      } else {
-                        clientLogger.error(
-                          "Client failed upload foto:",
-                          uploadPhoto.message
-                        );
-                        ComponentGlobal_NotifikasiPeringatan(
-                          "Gagal upload foto profile"
-                        );
-                      }
-                    } catch (error) {
-                      clientLogger.error("Client error upload foto:", error);
-                    }
-                  }
-                } catch (error) {
-                  clientLogger.error("Client error upload foto:", error);
-                } finally {
-                  setLoadingButton(false);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  loading={isLoadingButton}
-                  loaderPosition="center"
-                  radius={"xl"}
-                  leftIcon={<IconCamera />}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload
-                </Button>
-              )}
-            </FileButton>
-          </Center> */}
         </Stack>
       </Box>
     </>

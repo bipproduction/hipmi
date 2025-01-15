@@ -1,6 +1,6 @@
 "use client";
 import { UIGlobal_LayoutHeaderTamplate, UIGlobal_LayoutTamplate, } from "@/app_modules/_global/ui";
-import { Investasi_ViewEditInvestasiNew } from "../../_view/edit/vew_edit_investasi_new";
+import { Investasi_ViewEditInvestasiNew } from "../../_view/edit/view_edit_investasi_new";
 
 export function Investasi_UiEditInvestasiNew() {
    return (

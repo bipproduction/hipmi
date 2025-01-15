@@ -42,7 +42,13 @@ export default function ComponentGlobal_BoxInformation({
               <IconInfoCircle color={MainColor.white} />
             </Grid.Col>
             <Grid.Col span={10}>
-              <Text span inherit c={MainColor.white} fw={"normal"}>
+              <Text
+                fz={fonsize ? fonsize : 12}
+                span
+                inherit
+                c={MainColor.white}
+                fw={"normal"}
+              >
                 {informasi}
               </Text>
             </Grid.Col>
