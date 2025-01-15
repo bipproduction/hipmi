@@ -1,7 +1,7 @@
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { Box, Center, Stack } from "@mantine/core";
 
-export { Investasi_SkeletonEditProspektus };
+export { Investasi_SkeletonEditProspektus, Investasi_SkeletonListDokumen };
 
 function Investasi_SkeletonEditProspektus() {
   return (
@@ -29,6 +29,17 @@ function Investasi_SkeletonEditProspektus() {
             <CustomSkeleton h={40} width={"100%"} radius={"xl"} />
           </Box>
         </Box>
+      </Stack>
+    </>
+  );
+}
+
+function Investasi_SkeletonListDokumen() {
+  return (
+    <>
+      <Stack>
+        <CustomSkeleton h={70} radius={"md"} />
+        <CustomSkeleton h={70} radius={"md"} />
       </Stack>
     </>
   );

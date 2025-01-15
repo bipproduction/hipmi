@@ -52,7 +52,10 @@ export function Investasi_ViewEditInvestasiNew() {
   async function onGetOneInvestasiById() {
     try {
       setLoading(true);
-      const response = await apiGetOneInvestasiById(param.id);
+      const response = await apiGetOneInvestasiById({
+        id: param.id,
+
+      });
       if (response.success) {
         setData(response.data);
         setTotalLembar(response.data.totalLembar);
