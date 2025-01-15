@@ -32,4 +32,19 @@ export const RouterEvent = {
   detail_draft: "/dev/event/detail/draft/",
   detail_reject: "/dev/event/detail/reject/",
   detail_riwayat: "/dev/event/detail/riwayat/",
+
+  //peserta
+  daftar_peserta: ({ id }: { id: string }) =>
+    `/dev/event/detail/peserta/${id}`,
+
+  //sponsor
+  daftar_sponsor: ({ id }: { id: string }) =>
+    `/dev/event/detail/sponsor/${id}`,
+  tambah_sponsor: "/dev/event/detail/tambah_sponsor/",
+  detail_sponsor: ({ id }: { id: string }) =>
+    `/dev/event/detail/detail_sponsor/${id}`,
+
+
+
 };
+

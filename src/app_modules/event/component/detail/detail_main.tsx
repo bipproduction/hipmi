@@ -4,7 +4,7 @@ import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Center, Grid, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Center, Grid, SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { MODEL_EVENT } from "../../model/interface";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
@@ -13,6 +13,8 @@ import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail"
 import moment from "moment";
 import "moment/locale/id";
 import { MainColor } from "@/app_modules/_global/color";
+import Event_ComponentBoxDaftarPeserta from "./comp_box_daftar_peserta";
+import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";
 
 export default function ComponentEvent_DetailMainData({
   eventId,
@@ -105,6 +107,16 @@ export default function ComponentEvent_DetailMainData({
                 <Text c={MainColor.white} fw={"bold"}>Deskripsi</Text>
                 <Text c={MainColor.white}>{data ? data?.deskripsi : null}</Text>
               </Stack>
+              <SimpleGrid
+                cols={2}
+                breakpoints={[
+                  { maxWidth: "48rem", cols: 2, spacing: "sm" },
+                  { maxWidth: "36rem", cols: 1, spacing: "sm" },
+                ]}
+              >
+                  <Event_ComponentBoxDaftarPeserta/>
+                  <Event_ComponentBoxDaftarSponsor />
+              </SimpleGrid>
             </Stack>
           </Stack>
         </ComponentGlobal_CardStyles>
