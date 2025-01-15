@@ -1,82 +1,118 @@
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_BoxInformation,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import {
+  Box,
   Button,
   Center,
-  FileButton,
   Grid,
-  Group,
   Stack,
   Text
 } from "@mantine/core";
 import {
-  IconCamera,
-  IconCircleCheck
+  IconCircleCheck,
+  IconFileTypePdf
 } from "@tabler/icons-react";
 
 import { DIRECTORY_ID } from "@/app/lib";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { useRouter } from "next/navigation";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { Investasi_SkeletonEditProspektus } from "../../_component/skeleton_view";
 import { investasi_funUpdateProspektus } from "../../_fun";
+import { apiGetOneInvestasiById } from "../../_lib/api_interface";
 
-export function Investasi_ViewEditProspektus({
-  investasiId,
-}: {
-  investasiId: string;
-}) {
+export function Investasi_ViewEditProspektus() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
   const router = useRouter();
   const [filePdf, setFilePdf] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [fileRemoveId, setFileRemoveId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetOneInvestasiById(investasiId);
+      if (respone.success) {
+        setFileRemoveId(respone.data.prospektusFileId);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data investasi:", error);
+    }
+  }
 
   async function onUpload() {
-    setIsLoading(true);
-    const uploadFilePdf = await funGlobal_UploadToStorage({
-      file: filePdf as any,
-      dirId: DIRECTORY_ID.investasi_prospektus,
-    });
-
-    if (!uploadFilePdf.success) {
-      setIsLoading(false);
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload file pdf");
-    }
-
     try {
+      setIsLoading(true);
+      const uploadFilePdf = await funGlobal_UploadToStorage({
+        file: filePdf as any,
+        dirId: DIRECTORY_ID.investasi_prospektus,
+      });
+
+      if (!uploadFilePdf.success) {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload file pdf");
+        return;
+      }
+
+      const deleteFile = await funGlobal_DeleteFileById({
+        fileId: fileRemoveId as string,
+        dirId: DIRECTORY_ID.investasi_prospektus,
+      });
+
+      if (!deleteFile.success) {
+        setIsLoading(false);
+        clientLogger.error("Error delete file:", deleteFile.message);
+      }
+
       const updte = await investasi_funUpdateProspektus({
         fileId: uploadFilePdf.data.id,
         investasiId: investasiId,
       });
 
       if (updte.status !== 200) {
-        return ComponentGlobal_NotifikasiPeringatan("Gagal update prospektus");
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal update prospektus");
+        return;
       }
 
+      ComponentGlobal_NotifikasiBerhasil(updte.message);
       router.back();
-
-      return ComponentGlobal_NotifikasiBerhasil(updte.message);
     } catch (error) {
-      console.log(error);
-    } finally {
       setIsLoading(false);
+      clientLogger.error("Error update prospektus:", error);
     }
+  }
+
+  if (fileRemoveId == null) {
+    return <Investasi_SkeletonEditProspektus />;
   }
 
   return (
     <>
       <Stack spacing={"sm"}>
-        <ComponentGlobal_BoxInformation informasi="File prospektus wajib untuk diupload, agar calon investor paham dengan prospek investasi yang akan anda jalankan kedepan !" />
+        <ComponentGlobal_BoxInformation informasi="File prospektus wajib untuk diupload, agar calon investor paham dengan prospek investasi yang akan anda jalankan kedepan." />
         <ComponentGlobal_CardStyles marginBottom={"0px"}>
           {!filePdf ? (
-            <Text lineClamp={1} align="center" c={"gray"}>
-              Upload File Prospektus
-            </Text>
+            <Stack justify="center" align="center" h={"100%"}>
+              <IconFileTypePdf size={50} color="gray" />
+            </Stack>
           ) : (
             <Grid align="center">
               <Grid.Col span={2}></Grid.Col>
@@ -94,54 +130,43 @@ export function Investasi_ViewEditProspektus({
           )}
         </ComponentGlobal_CardStyles>
 
-        <Group position="center">
-          <FileButton
+        <Center>
+          <ComponentGlobal_ButtonUploadFileImage
+            onSetFile={setFilePdf}
             accept={"application/pdf"}
-            onChange={async (files: any) => {
-              try {
-                const buffer = URL.createObjectURL(
-                  new Blob([new Uint8Array(await files.arrayBuffer())])
-                );
+            text="Upload File"
+          />
+        </Center>
 
-                setFilePdf(files);
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-          >
-            {(props) => (
-              <Button
-                leftIcon={<IconCamera />}
-                {...props}
-                radius={"xl"}
-                bg={MainColor.yellow}
-                color="yellow"
-                c={"black"}
-              >
-                Upload File
-              </Button>
-            )}
-          </FileButton>
-        </Group>
-
-        <Button
-          loaderPosition="center"
-          loading={isLoading}
-          disabled={filePdf === null}
-          mt={50}
-          radius={50}
-          bg={MainColor.yellow}
-          color="yellow"
-          c={"black"}
+        <Box
           style={{
-            transition: "0.5s",
-          }}
-          onClick={() => {
-            onUpload();
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          Update
-        </Button>
+          <Button
+            px={"sm"}
+            loaderPosition="center"
+            loading={isLoading}
+            disabled={filePdf === null}
+            mt={50}
+            radius={50}
+            bg={MainColor.yellow}
+            color="yellow"
+            c={"black"}
+            style={{
+              transition: "all 0.3s ease",
+              position: "absolute",
+              bottom: 20,
+              width: "90%",
+            }}
+            onClick={() => {
+              onUpload();
+            }}
+          >
+            Update
+          </Button>
+        </Box>
       </Stack>
     </>
   );

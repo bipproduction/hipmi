@@ -2,22 +2,15 @@
 
 import {
   AspectRatio,
-  Button,
   Center,
-  FileButton,
   Image,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
 import { MODEL_JOB } from "../model/interface";
 
-import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,
   ComponentGlobal_ButtonUploadFileImage,

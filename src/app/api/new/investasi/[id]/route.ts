@@ -23,6 +23,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             catatan: true,
             sisaLembar: true,
             imageId: true,
+            prospektusFileId: true,
             masterPencarianInvestorId: true,
             masterPeriodeDevidenId: true,
             masterPembagianDevidenId: true,

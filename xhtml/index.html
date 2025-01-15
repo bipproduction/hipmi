@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <img
+      id="pdf"
+      src="https://wibu-storage.wibudev.com/api/pdf-to-image?url=https://pdfobject.com/pdf/sample.pdf"
+      alt="pdf"
+    /> -->
+    <div id="pdfs"></div>
+  </body>
+  <script type="module">
+    (async () => {
+      const imagePdf = document.getElementById("pdf");
+      const pdfs = document.getElementById("pdfs");
+      const token =
+        "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7ImlkIjoiY20wdXIxeXh3MDAwMDU2bnNqbHI2MTg3cCIsIm5hbWUiOiJiYWdhcyIsImVtYWlsIjoiYmFnYXNAZ21haWwuY29tIn0sImlhdCI6MTcyNTg3MTAzNiwiZXhwIjo0ODgxNjMxMDM2fQ.wFQLcrJj66wFeqIMYk2esMx3ULaHK6RFxkiToaLCuko";
+      const res = await fetch(
+        "https://wibu-storage.wibudev.com/api/pdf-to-image?url=https://wibu-storage.wibudev.com/api/files/cm5jgzg7d001dxpugxseb2ua0",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const jsonData = await res.json();
+    //   console.log(JSON.stringify(jsonData.pages, null, 2));
+    //   imagePdf.src = jsonData.pages[0].imageUrl;
+
+      for (let index = 0; index < jsonData.pages.length; index++) {
+        const element = jsonData.pages[index];
+        const img = document.createElement("img");
+        img.src = element.imageUrl;
+        pdfs.appendChild(img);
+      }
+    })();
+  </script>
+</html>

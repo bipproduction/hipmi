@@ -10,9 +10,15 @@ import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
 export function ComponentGlobal_ButtonUploadFileImage({
   onSetFile,
   onSetImage,
+  text,
+  icon,
+  accept,
 }: {
   onSetFile: File | null | any;
-  onSetImage: any | null;
+  onSetImage?: any | null;
+  text?: string;
+  icon?: string | any
+  accept?: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +34,7 @@ export function ComponentGlobal_ButtonUploadFileImage({
           if (files.size > 100 * 1024 * 1024) {
             setIsLoading(false);
             ComponentGlobal_NotifikasiPeringatan("File terlalu besar");
+            return
           }
 
           onSetFile(files);
@@ -38,7 +45,7 @@ export function ComponentGlobal_ButtonUploadFileImage({
           setIsLoading(false);
         }
       }}
-      accept="image/png,image/png,image/jpeg,image/gif"
+      accept={accept ? accept : "image/png,image/png,image/jpeg,image/gif"}
     >
       {(props) => (
         <Button
@@ -50,10 +57,10 @@ export function ComponentGlobal_ButtonUploadFileImage({
             backgroundColor: MainColor.yellow,
             border: `1px solid ${AccentColor.yellow}`,
           }}
-          leftIcon={<IconUpload color="black" size={20} />}
+          leftIcon={icon ? icon : <IconUpload color="black" size={20} />}
           c={MainColor.darkblue}
         >
-          Upload
+          {text ? text : "Upload"}
         </Button>
       )}
     </FileButton>
