@@ -7,8 +7,6 @@ import PortofolioInvestasi from "./portofolio/view";
 import LayoutPortofolioInvestasi from "./portofolio/layout";
 import EditIntroInvestasi from "./edit_intro/view";
 import LayoutEditIntroInvestasi from "./edit_intro/layout";
-import EditDokumenInvestasi from "./edit_dokumen/view";
-import LayoutEditDokumenInvestasi from "./edit_dokumen/layout";
 import EditBeritaInvestasi from "./edit_berita/view";
 import LayoutEditBeritaInvestasi from "./edit_berita/layout";
 import DetailPropektus from "./detail_prospektus/view";
@@ -56,8 +54,6 @@ export {
   LayoutPortofolioInvestasi,
   EditIntroInvestasi,
   LayoutEditIntroInvestasi,
-  EditDokumenInvestasi,
-  LayoutEditDokumenInvestasi,
   EditBeritaInvestasi,
   LayoutEditBeritaInvestasi,
   DetailPropektus,

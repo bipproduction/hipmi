@@ -1,5 +1,6 @@
 "use client";
 
+import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
 import {
   UIGlobal_Drawer,
   UIGlobal_LayoutHeaderTamplate,
@@ -7,19 +8,13 @@ import {
 } from "@/app_modules/_global/ui";
 import { ActionIcon } from "@mantine/core";
 import { IconCirclePlus, IconDotsVertical } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Investasi_ViewRekapBerita } from "../../_view";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
 
-export function Investasi_UiRekapBerita({
-  investasiId,
-  dataBerita,
-}: {
-  investasiId: string;
-  dataBerita: any[]
-}) {
-  const router = useRouter();
+export function Investasi_UiRekapBerita() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const listPage = [
@@ -32,32 +27,32 @@ export function Investasi_UiRekapBerita({
   ];
 
   return (
-    <UIGlobal_LayoutTamplate
-      header={
-        <UIGlobal_LayoutHeaderTamplate
-          title="Rekap Berita"
-          customButtonRight={
-            <ActionIcon
-              variant="transparent"
-              onClick={() => {
-                setOpenDrawer(true);
-              }}
-            >
-              <IconDotsVertical color="white" />
-            </ActionIcon>
-          }
-        />
-      }
-    >
-
-
-      <Investasi_ViewRekapBerita dataBerita={dataBerita} />
+    <>
+      <UIGlobal_LayoutTamplate
+        header={
+          <UIGlobal_LayoutHeaderTamplate
+            title="Rekap Berita"
+            customButtonRight={
+              <ActionIcon
+                variant="transparent"
+                onClick={() => {
+                  setOpenDrawer(true);
+                }}
+              >
+                <IconDotsVertical color="white" />
+              </ActionIcon>
+            }
+          />
+        }
+      >
+        <Investasi_ViewRekapBerita />
+      </UIGlobal_LayoutTamplate>
 
       <UIGlobal_Drawer
         opened={openDrawer}
         close={() => setOpenDrawer(false)}
         component={listPage}
       />
-    </UIGlobal_LayoutTamplate>
+    </>
   );
 }

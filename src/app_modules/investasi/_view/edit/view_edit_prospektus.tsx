@@ -48,7 +48,9 @@ export function Investasi_ViewEditProspektus() {
 
   async function onLoadData() {
     try {
-      const respone = await apiGetOneInvestasiById(investasiId);
+      const respone = await apiGetOneInvestasiById({
+        id: investasiId,
+      });
       if (respone.success) {
         setFileRemoveId(respone.data.prospektusFileId);
       }
@@ -111,7 +113,7 @@ export function Investasi_ViewEditProspektus() {
         <ComponentGlobal_CardStyles marginBottom={"0px"}>
           {!filePdf ? (
             <Stack justify="center" align="center" h={"100%"}>
-              <IconFileTypePdf size={50} color="gray" />
+              <IconFileTypePdf size={40} color="gray" />
             </Stack>
           ) : (
             <Grid align="center">
