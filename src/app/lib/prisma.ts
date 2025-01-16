@@ -21,9 +21,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 process.on("SIGINT", async () => {
-  console.log("Start in Disconnecting PrismaClient...");
+  // console.log("Start in Disconnecting PrismaClient...");
   const disconnect = await prisma.$disconnect();
-  console.log("End of Disconnecting PrismaClient...", disconnect);
+  // console.log("End of Disconnecting PrismaClient...", disconnect);
   process.exit(0);
 });
 
