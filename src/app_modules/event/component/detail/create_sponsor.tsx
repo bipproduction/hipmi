@@ -4,9 +4,11 @@ import { ComponentGlobal_BoxInformation, ComponentGlobal_BoxUploadImage } from '
 import { Investasi_ComponentButtonCreateNewInvestasi } from '@/app_modules/investasi/_component';
 import { Box, Stack, Loader, AspectRatio, Image, Button, TextInput, Group, Title } from '@mantine/core';
 import { IconCamera, IconPhoto } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 function Event_CreateSponsor() {
+  const router = useRouter();
   const [img, setImg] = useState<any | null>(null);
   const [isLoadingImg, setIsLoadingImg] = useState(false);
   return (
@@ -95,7 +97,7 @@ function Event_CreateSponsor() {
               placeholder="Masukan whatsapp"
 
             />         
-              <Button mt={90} mb={20}  radius={"xl"} color='yellow' c={"black"} bg={MainColor.yellow}>
+              <Button mt={90} mb={20}  radius={"xl"} color='yellow' c={"black"} bg={MainColor.yellow} onClick={() => router.push("/dev/event/detail/sponsor/nominal_sponsor")}>
                 Simpan
               </Button>
           </Stack>

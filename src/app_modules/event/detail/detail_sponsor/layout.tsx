@@ -1,4 +1,5 @@
 'use client';
+import { RouterEvent } from '@/app/lib/router_hipmi/router_event';
 import { UIGlobal_Drawer, UIGlobal_LayoutHeaderTamplate, UIGlobal_LayoutTamplate } from '@/app_modules/_global/ui';
 import { ActionIcon } from '@mantine/core';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
@@ -23,15 +24,17 @@ function LayoutEvent_DetailSponsor({ children }: { children: React.ReactNode }) 
             id: 1,
             name: 'Edit Sponsor',
             icon: <IconEdit />,
-            // path: RouterEvent.tambah_sponsor,
+            path: RouterEvent.tambah_sponsor,
           },
           {
             id: 2,
             name: 'Hapus Sponsor',
-            icon: <IconTrash/>
+            icon: <IconTrash />,
+            
           }
         ]}
       />
+      
     </>
   );
 }
