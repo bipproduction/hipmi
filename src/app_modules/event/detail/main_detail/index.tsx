@@ -79,11 +79,11 @@ export default function Event_DetailMain({
           </Button>
         )}
 
-        <ComponentEvent_ListPeserta
+        {/* <ComponentEvent_ListPeserta
           total={total}
           eventId={eventId}
           isNewPeserta={isNewPeserta}
-        />
+        /> */}
       </Stack>
     </>
   );
