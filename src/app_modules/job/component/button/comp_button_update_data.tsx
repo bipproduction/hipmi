@@ -17,6 +17,7 @@ import { useState } from "react";
 import { job_EditById } from "../../fun/edit/fun_edit_by_id";
 import { gs_job_hot_menu } from "../../global_state";
 import { MODEL_JOB } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Job_ComponentButtonUpdateData({
   value,
@@ -32,41 +33,56 @@ export function Job_ComponentButtonUpdateData({
   const [opened, { open, close }] = useDisclosure(false);
 
   async function onUpdate() {
-    if (file === null) {
-      const update = await job_EditById({
-        data: value,
-      });
-      if (update.status !== 200)
-        return ComponentGlobal_NotifikasiGagal(update.message);
-    } else {
-      const uploadFile = await funGlobal_UploadToStorage({
-        file: file,
-        dirId: DIRECTORY_ID.job_image,
-      });
+    try {
+      setIsLoading(true);
 
-      if (!uploadFile.success)
-        return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
-
-      if (value.imageId !== null) {
-        const delFile = await funGlobal_DeleteFileById({
-          fileId: value.imageId,
+      if (file === null) {
+        const update = await job_EditById({
+          data: value,
         });
-        if (!delFile.success)
-          ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar lama");
+        if (update.status !== 200)
+          return ComponentGlobal_NotifikasiGagal(update.message);
+      } else {
+        const uploadFile = await funGlobal_UploadToStorage({
+          file: file,
+          dirId: DIRECTORY_ID.job_image,
+        });
+
+        if (!uploadFile.success) {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+          return;
+        }
+
+        if (value.imageId !== null) {
+          const delFile = await funGlobal_DeleteFileById({
+            fileId: value.imageId,
+          });
+          if (!delFile.success) {
+            clientLogger.error("Error delete file:", delFile.message);
+          }
+        }
+
+        const updateWithFile = await job_EditById({
+          data: value,
+          fileId: uploadFile.data.id,
+        });
+
+        if (updateWithFile.status !== 200) {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(updateWithFile.message);
+          return;
+        }
       }
 
-      const updateWithFile = await job_EditById({
-        data: value,
-        fileId: uploadFile.data.id,
-      });
-      if (updateWithFile.status !== 200)
-        return ComponentGlobal_NotifikasiGagal(updateWithFile.message);
+      setHotMenu(2);
+      ComponentGlobal_NotifikasiBerhasil("Berhasil Update");
+      router.back();
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error update job:", error);
+      ComponentGlobal_NotifikasiGagal("Gagal update job");
     }
-
-    setHotMenu(2);
-    setIsLoading(true);
-    router.back();
-    return ComponentGlobal_NotifikasiBerhasil("Berhasil Update");
   }
 
   return (

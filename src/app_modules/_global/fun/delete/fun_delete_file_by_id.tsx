@@ -1,6 +1,6 @@
 import { clientLogger } from "@/util/clientLogger";
 
-export async function funGlobal_DeleteFileById({
+export async function funDeteleteFileById({
   fileId,
   dirId,
 }: {
@@ -8,9 +8,23 @@ export async function funGlobal_DeleteFileById({
   dirId?: string;
 }) {
   try {
+    const tokenResponse = await fetch("/api/get-cookie");
+    if (!tokenResponse.ok) {
+      return { success: false, message: "Token not found" };
+    }
+    const { token } = await tokenResponse.json();
+
+    if (!token) {
+      return { success: false, message: "Token not found" };
+    }
+
     const res = await fetch("/api/image/delete", {
       method: "DELETE",
       body: JSON.stringify({ fileId, dirId }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();

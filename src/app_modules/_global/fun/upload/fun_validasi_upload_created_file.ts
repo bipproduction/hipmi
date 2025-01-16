@@ -2,8 +2,8 @@ import { clientLogger } from "@/util/clientLogger";
 import { MAX_SIZE } from "../../lib";
 import { PemberitahuanMaksimalFile } from "../../lib/max_size";
 import { ComponentGlobal_NotifikasiPeringatan } from "../../notif_global";
-import { funGlobal_DeleteFileById } from "../delete/fun_delete_file_by_id";
-import { funGlobal_UploadToStorage } from "./fun_upload_to_storage";
+import { funDeteleteFileById } from "../delete/fun_delete_file_by_id";
+import { funUploadFileToStorage } from "./fun_upload_to_storage";
 
 export async function funValidasiUploadCreatedFile({
   files,
@@ -31,7 +31,7 @@ export async function funValidasiUploadCreatedFile({
     }
 
     if (fileId != "") {
-      const deleteFotoProfile = await funGlobal_DeleteFileById({
+      const deleteFotoProfile = await funDeteleteFileById({
         fileId: fileId,
         dirId: dirId,
       });
@@ -49,7 +49,7 @@ export async function funValidasiUploadCreatedFile({
         onSetFileId("");
         onSetImageBuffer(null);
 
-        const uploadPhoto = await funGlobal_UploadToStorage({
+        const uploadPhoto = await funUploadFileToStorage({
           file: files,
           dirId: dirId,
         });
@@ -73,7 +73,7 @@ export async function funValidasiUploadCreatedFile({
         }
       }
     } else {
-      const uploadPhoto = await funGlobal_UploadToStorage({
+      const uploadPhoto = await funUploadFileToStorage({
         file: files,
         dirId: dirId,
       });

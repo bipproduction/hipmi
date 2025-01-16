@@ -3,43 +3,104 @@ import {
   ComponentGlobal_CardStyles,
   ComponentGlobal_CardLoadingOverlay,
 } from "@/app_modules/_global/component";
-import { Box, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { clientLogger } from "@/util/clientLogger";
+import { Box, Center, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { Investasi_SkeletonListDokumen } from "../../_component/skeleton_view";
+import { apiGetBeritaInvestasiById } from "../../_lib/api_interface";
+import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { ScrollOnly } from "next-scroll-loader";
+import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import _ from "lodash";
 
-export function Investasi_ViewDaftarBerita({
-  dataBerita,
-}: {
-  dataBerita: any[];
-}) {
+export function Investasi_ViewDaftarBerita() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
+
   const router = useRouter();
-  const [data, setData] = useState(dataBerita);
+  const [data, setData] = useState<any[] | null>(null);
+  const [activePage, setActivePage] = useState(1);
+
   const [visible, setVisible] = useState(false);
   const [dataId, setDataId] = useState("");
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetBeritaInvestasiById({
+        id: investasiId,
+        kategori: "get-all",
+        page: `${activePage}`,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get daftar berita", error);
+    }
+  }
+
+  if (data === null) {
+    return <Investasi_SkeletonListDokumen />;
+  }
+
   return (
     <>
-      <Box>
-        {data.map((e, i) => (
-          <ComponentGlobal_CardStyles
-            key={i}
-            onClickHandler={() => {
-              router.push(NEW_RouterInvestasi.berita({ id: e.id }), {
-                scroll: false,
-              });
-              setVisible(true);
-              setDataId(e.id);
+      {_.isEmpty(data) ? (
+        <ComponentGlobal_IsEmptyData />
+      ) : (
+        <Box>
+          <ScrollOnly
+            height="90vh"
+            renderLoading={() => (
+              <Center>
+                <ComponentGlobal_Loader size={25} />
+              </Center>
+            )}
+            data={data}
+            setData={setData as any}
+            moreData={async () => {
+              try {
+                const respone = await apiGetBeritaInvestasiById({
+                  id: investasiId,
+                  kategori: "get-all",
+                  page: `${activePage + 1}`,
+                });
+
+                if (respone.success) {
+                  setActivePage((val) => val + 1);
+
+                  return respone.data;
+                }
+              } catch (error) {
+                clientLogger.error("Error load data dokumen:", error);
+              }
             }}
           >
-            <Title order={6} lineClamp={1}>
-              {e.title}
-            </Title>
-            {visible && dataId === e.id && (
-              <ComponentGlobal_CardLoadingOverlay />
+            {(item) => (
+              <ComponentGlobal_CardStyles
+                onClickHandler={() => {
+                  router.push(NEW_RouterInvestasi.berita({ id: item.id }), {
+                    scroll: false,
+                  });
+                  setVisible(true);
+                }}
+              >
+                <Title order={6} lineClamp={1}>
+                  {item.title}
+                </Title>
+                {visible && <ComponentGlobal_CardLoadingOverlay />}
+              </ComponentGlobal_CardStyles>
             )}
-          </ComponentGlobal_CardStyles>
-        ))}
-      </Box>
+          </ScrollOnly>
+        </Box>
+      )}
     </>
   );
 }

@@ -6,22 +6,13 @@ import {
 } from "@/app_modules/_global/ui";
 import { Investasi_ViewDaftarDokumen } from "../../_view";
 
-export function Investasi_UiDaftarDokmen({
-  dataDokumen,
-  investasiId,
-}: {
-  dataDokumen: any[];
-  investasiId: string
-}) {
+export function Investasi_UiDaftarDokmen() {
   return (
     <>
       <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Daftar Dokumen" />}
       >
-        <Investasi_ViewDaftarDokumen
-          dataDokumen={dataDokumen}
-          investasiId={investasiId}
-        />
+        <Investasi_ViewDaftarDokumen />
       </UIGlobal_LayoutTamplate>
     </>
   );

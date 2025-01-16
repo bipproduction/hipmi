@@ -32,6 +32,7 @@ import { IRealtimeData } from "@/app/lib/global_state";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
 import { WibuRealtime } from "wibu-pkg";
 import { clientLogger } from "@/util/clientLogger";
+import { ComponentGlobal_ButtonUploadFileImage } from "@/app_modules/_global/component";
 
 export function Investasi_ViewInvoice({
   dataInvoice,
@@ -42,6 +43,7 @@ export function Investasi_ViewInvoice({
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState(dataInvoice);
   const [file, setFile] = useState<File | null>(null);
+  const [img, setImg] = useState<any | null>(null);
 
   async function onUpload() {
     try {
@@ -52,6 +54,7 @@ export function Investasi_ViewInvoice({
       });
 
       if (!uploadFileToStorage.success) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload bukti transfer");
         return;
       }
@@ -62,6 +65,7 @@ export function Investasi_ViewInvoice({
       });
 
       if (res.status != 200) {
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
         return;
       }
@@ -93,9 +97,8 @@ export function Investasi_ViewInvoice({
         });
       }
     } catch (error) {
-      clientLogger.error(" Error upload invoice", error);
-    } finally {
       setLoading(false);
+      clientLogger.error(" Error upload invoice", error);
     }
   }
 
@@ -245,29 +248,10 @@ export function Investasi_ViewInvoice({
         >
           <Stack spacing={"sm"}>
             <Center>
-              <FileButton
-                onChange={async (files: any | null) => {
-                  try {
-                    setFile(files);
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }}
-                accept="image/png,image/jpeg"
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    radius={"xl"}
-                    leftIcon={<IconCamera />}
-                    bg={MainColor.yellow}
-                    color="yellow"
-                    c={"black"}
-                  >
-                    Upload
-                  </Button>
-                )}
-              </FileButton>
+              <ComponentGlobal_ButtonUploadFileImage
+                onSetFile={setFile}
+                accept="image/png,image/png,image/jpeg,application/pdf"
+              />
             </Center>
             {file ? (
               <Center>

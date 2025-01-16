@@ -65,6 +65,7 @@ export function Investasi_ComponentButtonCreateNewInvestasi({
         dirId: DIRECTORY_ID.investasi_prospektus,
       });
       if (!uploadFilePdf.success) {
+        setIsLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload file pdf");
         return;
       }
@@ -104,17 +105,16 @@ export function Investasi_ComponentButtonCreateNewInvestasi({
           router.push(NEW_RouterInvestasi.portofolio({ id: "2" }));
           setActiveTab("Review");
           setHotMenu(1);
-          setIsLoading(true);
           ComponentGlobal_NotifikasiBerhasil(res.message);
         }
       } else {
+        setIsLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
     } catch (error) {
-      clientLogger.error("Error create new investasi", error);
-    } finally {
       setIsLoading(false);
-    }
+      clientLogger.error("Error create new investasi", error);
+    } 
   }
 
   return (
