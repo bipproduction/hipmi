@@ -77,7 +77,7 @@ export default function UIGlobal_Drawer({
           </Group>
           <SimpleGrid cols={component.length < 4 ? component.length : 4}>
             {component.map((e, i) => (
-              <Stack key={i} align="center" spacing={"xs"}
+              <Stack key={i} align="center" spacing={"xs"} 
                 onClick={() => {
                   setPageId(e?.id);
                   setIsLoading(true);

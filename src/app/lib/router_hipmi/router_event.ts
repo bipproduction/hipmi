@@ -40,6 +40,7 @@ export const RouterEvent = {
   //sponsor
   daftar_sponsor: ({ id }: { id: string }) =>
     `/dev/event/detail/sponsor/${id}`,
+  edit_sponsor: "/dev/event/detail/sponsor/edit_sponsor/",
   tambah_sponsor: "/dev/event/detail/sponsor/tambah_sponsor/",
   detail_sponsor: ({ id }: { id: string }) =>
     `/dev/event/detail/detail_sponsor/${id}`,
