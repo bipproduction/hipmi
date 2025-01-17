@@ -6,17 +6,13 @@ import {
 } from "@/app_modules/_global/ui";
 import { Investasi_ViewCreateBerita } from "../../_view";
 
-export function Investasi_UiCreateBerita({
-  investasiId,
-}: {
-  investasiId: string;
-}) {
+export function Investasi_UiCreateBerita() {
   return (
     <>
       <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Tambah Berita" />}
       >
-        <Investasi_ViewCreateBerita investasiId={investasiId} />
+        <Investasi_ViewCreateBerita  />
       </UIGlobal_LayoutTamplate>
     </>
   );

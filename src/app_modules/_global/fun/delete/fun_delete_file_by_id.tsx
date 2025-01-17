@@ -10,7 +10,7 @@ export async function funDeteleteFileById({
   try {
     const tokenResponse = await fetch("/api/get-cookie");
     if (!tokenResponse.ok) {
-      throw new Error("Failed to get token");
+      return { success: false, message: "Token not found" };
     }
     const { token } = await tokenResponse.json();
 

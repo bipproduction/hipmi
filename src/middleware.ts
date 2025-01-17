@@ -22,19 +22,19 @@ const middlewareConfig: MiddlewareConfig = {
   // registarasiPath: "/register",
   userPath: "/dev/home",
   publicRoutes: [
-    
     // API
     "/",
     "/api/voting/*",
     "/api/collaboration/*",
     "/api/notifikasi/*",
     "/api/logs/*",
-    // "/api/image/*",
     "/api/job/*",
     "/api/auth/*",
     "/api/origin-url",
-    // "/api/user",
     "/api/event/*",
+    // "/api/image/*",
+    // "/api/user",
+    "/api/new/*",
     // Akses awal
     "/api/get-cookie",
     "/api/user/activation",
@@ -103,7 +103,7 @@ export const middleware = async (req: NextRequest) => {
 
   if (
     isPublicRoute &&
-    pathname !== loginPath 
+    pathname !== loginPath
     // &&
     // pathname !== validasiPath &&
     // pathname !== registarasiPath

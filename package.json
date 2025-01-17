@@ -1,16 +1,16 @@
 {
   "name": "hipmi",
-  "version": "1.2.39",
+  "version": "1.2.40",
   "private": true,
   "prisma": {
-    "seed": "npx tsx prisma/seed.ts --yes"
+    "seed": "bun prisma/seed.ts"
   },
   "scripts": {
-    "dev": "bun --bun run next dev --experimental-https",
-    "build": "NODE_OPTIONS='--max-old-space-size=2048' bun --bun run next build",
-    "build:dev": "bun --bun run next build",
-    "start": "bun --bun run next start",
-    "lint": "bun --bun run next lint",
+    "dev": "next dev --experimental-https",
+    "build": "next build",
+    "build:dev": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "ver": "bunx commit-and-tag-version -- --prerelease"
   },
   "dependencies": {

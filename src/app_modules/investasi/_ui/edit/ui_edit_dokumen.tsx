@@ -6,13 +6,13 @@ import {
 } from "@/app_modules/_global/ui";
 import { Investasi_ViewEditDokumen } from "../../_view";
 
-export function Investasi_UiEditDokumen({ dataDokumen }: { dataDokumen: any }) {
+export function Investasi_UiEditDokumen() {
   return (
     <>
       <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Edit Dokumen" />}
       >
-        <Investasi_ViewEditDokumen dataDokumen={dataDokumen} />
+        <Investasi_ViewEditDokumen />
       </UIGlobal_LayoutTamplate>
     </>
   );

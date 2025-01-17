@@ -1,39 +1,37 @@
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import {
-    ComponentGlobal_BoxInformation,
-    ComponentGlobal_BoxUploadImage,
-    ComponentGlobal_InputCountDown,
-} from "@/app_modules/_global/component";
-import {
-    ComponentGlobal_NotifikasiBerhasil,
-    ComponentGlobal_NotifikasiGagal,
-    ComponentGlobal_NotifikasiPeringatan,
-} from "@/app_modules/_global/notif_global";
-import {
-    AspectRatio,
-    Button,
-    Center,
-    FileButton,
-    Image,
-    Stack,
-    Text,
-    TextInput,
-    Textarea,
-} from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
-
 import { DIRECTORY_ID } from "@/app/lib";
+import { MainColor } from "@/app_modules/_global/color";
+import {
+  ComponentGlobal_BoxInformation,
+  ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
+  ComponentGlobal_InputCountDown,
+} from "@/app_modules/_global/component";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import {
+  ComponentGlobal_NotifikasiBerhasil,
+  ComponentGlobal_NotifikasiGagal,
+  ComponentGlobal_NotifikasiPeringatan,
+} from "@/app_modules/_global/notif_global";
+import { clientLogger } from "@/util/clientLogger";
+import {
+  AspectRatio,
+  Button,
+  Center,
+  Image,
+  Stack,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import { Prisma } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { IconPhoto } from "@tabler/icons-react";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { investasi_funCreateBerita } from "../../_fun";
 
-export function Investasi_ViewCreateBerita({
-  investasiId,
-}: {
-  investasiId: string;
-}) {
+export function Investasi_ViewCreateBerita() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
+
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
@@ -48,9 +46,6 @@ export function Investasi_ViewCreateBerita({
   });
 
   async function onCreate() {
-    if (data.data.title == "" || data.data.deskripsi == "")
-      return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
-
     try {
       setIsLoading(true);
       if (file != null) {
@@ -59,32 +54,39 @@ export function Investasi_ViewCreateBerita({
           dirId: DIRECTORY_ID.investasi_berita,
         });
 
-        if (!uploadFile.success)
-          return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+        if (!uploadFile.success) {
+          ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+          return;
+        }
 
         const createWithFile = await investasi_funCreateBerita({
           data: data.data as any,
           fileId: uploadFile.data.id,
         });
 
-        createWithFile.status === 201
-          ? (ComponentGlobal_NotifikasiBerhasil(createWithFile.message),
-            router.back())
-          : ComponentGlobal_NotifikasiGagal(createWithFile.message);
+        if (createWithFile.status === 201) {
+          ComponentGlobal_NotifikasiBerhasil(createWithFile.message);
+          router.back();
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(createWithFile.message);
+        }
       } else {
         const createNoFile = await investasi_funCreateBerita({
           data: data.data as any,
         });
 
-        createNoFile.status === 201
-          ? (ComponentGlobal_NotifikasiBerhasil(createNoFile.message),
-            router.back())
-          : ComponentGlobal_NotifikasiGagal(createNoFile.message);
+        if (createNoFile.status === 201) {
+          ComponentGlobal_NotifikasiBerhasil(createNoFile.message);
+          router.back();
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(createNoFile.message);
+        }
       }
     } catch (error) {
-      console.log(error);
-    } finally {
       setIsLoading(false);
+      clientLogger.error("Error create news", error);
     }
   }
 
@@ -106,43 +108,16 @@ export function Investasi_ViewCreateBerita({
               </AspectRatio>
             ) : (
               <Stack justify="center" align="center" h={"100%"}>
-                <IconUpload color="white" />
-                <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                  Upload Gambar
-                </Text>
+                <IconPhoto size={100} />
               </Stack>
             )}
           </ComponentGlobal_BoxUploadImage>
 
           <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-                  setImg(buffer);
-                  setFile(files);
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  radius={"xl"}
-                  w={100}
-                  style={{
-                    backgroundColor: MainColor.yellow,
-                    border: `1px solid ${AccentColor.yellow}`,
-                  }}
-                >
-                  <IconCamera color="black" />
-                </Button>
-              )}
-            </FileButton>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFile}
+              onSetImage={setImg}
+            />
           </Center>
         </Stack>
 
@@ -187,6 +162,10 @@ export function Investasi_ViewCreateBerita({
         </Stack>
 
         <Button
+          disabled={data.data.title === "" || data.data.deskripsi === ""}
+          style={{
+            transition: "all 0.5s",
+          }}
           loaderPosition="center"
           loading={isLoading}
           my={"md"}
