@@ -8,7 +8,6 @@ export default async function notifikasiToAdmin_funCreate({
 }: {
   data: MODEL_NOTIFIKASI;
 }) {
-
   const getAdmin = await prisma.user.findMany({
     where: {
       active: true,

@@ -12,10 +12,10 @@ export default function SkeletonEditDonasi() {
             </Stack>
 
             <Stack align="center">
-               {[...Array(5)].map((_, index) => (
+               {[...Array(3)].map((_, index) => (
                   <CustomSkeleton key={index} height={40} width={"100%"} my={"xs"} />
                ))}
-               <CustomSkeleton height={40} width={"100%"} radius={"lg"} mt={30} />
+               <CustomSkeleton height={40} width={"100%"} radius={"xl"} mt={30} />
             </Stack>
          </Box>
 
