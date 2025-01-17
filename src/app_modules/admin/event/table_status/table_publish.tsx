@@ -206,7 +206,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
             onClick={async () => {
               setEventId(e.id);
               setLoading(true);
-              router.push(RouterAdminEvent.detail_peserta + e.id);
+              router.push(RouterAdminEvent.detail_publish + e.id);
             }}
           >
             Detail
