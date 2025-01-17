@@ -1,10 +1,11 @@
+import Event_CreateSponsor from '@/app_modules/event/component/detail/create_sponsor';
 import React from 'react';
-import CreateSponsor from '../../component/detail/create_sponsor';
+
 
 function Event_TambahSponsor() {
   return (
     <>
-      <CreateSponsor/>
+      <Event_CreateSponsor/>
     </>
   );
 }

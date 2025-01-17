@@ -1,16 +1,15 @@
-'use client';
+'use client'
 import { MainColor } from '@/app_modules/_global/color';
 import { ComponentGlobal_BoxInformation, ComponentGlobal_BoxUploadImage } from '@/app_modules/_global/component';
-import { Investasi_ComponentButtonCreateNewInvestasi } from '@/app_modules/investasi/_component';
-import { Box, Stack, Loader, AspectRatio, Image, Button, TextInput, Group, Title } from '@mantine/core';
+import { Box, Stack, Loader, AspectRatio, Image, Group, Button, TextInput, Title } from '@mantine/core';
 import { IconCamera, IconPhoto } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-function Event_CreateSponsor() {
+function Event_EditSponsor() {
   const router = useRouter();
-  const [img, setImg] = useState<any | null>(null);
-  const [isLoadingImg, setIsLoadingImg] = useState(false);
+    const [img, setImg] = useState<any | null>(null);
+    const [isLoadingImg, setIsLoadingImg] = useState(false);
   return (
     <>
       <Stack px={"xs"} spacing={0}>
@@ -18,7 +17,7 @@ function Event_CreateSponsor() {
           <Box mb={"sm"}>
             <ComponentGlobal_BoxInformation
               informasi='Gambar sponsor bisa berupa ilustrasti, 
-              logo atau foto terkait sponsor'/>
+                    logo atau foto terkait sponsor'/>
           </Box>
           <ComponentGlobal_BoxUploadImage>
             {isLoadingImg ? (
@@ -96,10 +95,10 @@ function Event_CreateSponsor() {
               label="WhatsApp"
               placeholder="Masukan whatsapp"
 
-            />         
-              <Button mt={90} mb={20}  radius={"xl"} color='yellow' c={"black"} bg={MainColor.yellow} onClick={() => router.push("/dev/event/detail/sponsor/nominal_sponsor")}>
-                Simpan
-              </Button>
+            />
+            <Button mt={90} mb={20} radius={"xl"} color='yellow' c={"black"} bg={MainColor.yellow} onClick={() => router.push("/dev/event/detail/sponsor/nominal_sponsor")}>
+              Simpan
+            </Button>
           </Stack>
         </Stack>
       </Stack>
@@ -107,4 +106,4 @@ function Event_CreateSponsor() {
   );
 }
 
-export default Event_CreateSponsor;
+export default Event_EditSponsor;

@@ -202,7 +202,6 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               e.id === eventId ? (loading === true ? true : false) : false
             }
             color={"green"}
-            leftIcon={<IconCircleCheck />}
             radius={"xl"}
             onClick={async () => {
               setEventId(e.id);
@@ -210,7 +209,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               router.push(RouterAdminEvent.detail_peserta + e.id);
             }}
           >
-            Lihat Peserta
+            Detail
           </Button>
         </td>
       </tr>

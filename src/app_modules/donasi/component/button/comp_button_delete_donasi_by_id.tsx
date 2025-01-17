@@ -85,12 +85,12 @@ export function Donasi_ComponentButtonDeleteDonasiById({
         close={() => setOpenModal(false)}
         buttonKiri={
           <Button style={{ backgroundColor: AccentColor.blue }}
-          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
+            c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
-          <Button c={AccentColor.white} loading={isLoading} loaderPosition="center" radius={"xl"} style={{ backgroundColor: MainColor.red}} onClick={() => onDelete()}>
+          <Button c={AccentColor.white} loading={isLoading} loaderPosition="center" radius={"xl"} style={{ backgroundColor: MainColor.red }} onClick={() => onDelete()}>
             Hapus
           </Button>
         }
