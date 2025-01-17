@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Donasi_funCreateInvoice } from "../../fun/create/fun_create_invoice";
 import { gs_donasi_hot_menu, gs_proses_donasi } from "../../global_state";
 import { WibuRealtime } from "wibu-pkg";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Donasi_MetodePembayaran({
   listBank,
@@ -35,47 +36,51 @@ export default function Donasi_MetodePembayaran({
   const [activeHotMenu, setActiveHotMenu] = useAtom(gs_donasi_hot_menu);
 
   async function onProses() {
-    const body = {
-      donasiId: donasiId,
-      donasiMaster_BankId: pilihBank,
-      nominal: prosesDonasi.nominal,
-      authorId: authorId,
-    };
-
-
-    const res = await Donasi_funCreateInvoice(body);
-    if (res.status === 200) {
-
-      const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.Donasi?.id as any,
-        status: res.data?.DonasiMaster_StatusInvoice?.name as any,
-        userId: res.data?.Donasi?.authorId as any,
-        pesan: res.data?.Donasi?.title as any,
-        kategoriApp: "DONASI",
-        title: "Donatur membuat invoice donasi",
+    try {
+      setLoading(true);
+      const body = {
+        donasiId: donasiId,
+        donasiMaster_BankId: pilihBank,
+        nominal: prosesDonasi.nominal,
+        authorId: authorId,
       };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
+      const res = await Donasi_funCreateInvoice(body);
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.Donasi?.id as any,
+          status: res.data?.DonasiMaster_StatusInvoice?.name as any,
+          userId: res.data?.Donasi?.authorId as any,
+          pesan: res.data?.Donasi?.title as any,
+          kategoriApp: "DONASI",
+          title: "Donatur membuat invoice donasi",
+        };
 
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
         });
 
-        setLoading(true);
-        setActiveHotMenu(2);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setProsesDonasi({
-          ...prosesDonasi,
-          nominal: "",
-        });
-        router.push(RouterDonasi.invoice + `${res.data?.id}`);
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
+
+          setActiveHotMenu(2);
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          setProsesDonasi({
+            ...prosesDonasi,
+            nominal: "",
+          });
+          router.push(RouterDonasi.invoice + `${res.data?.id}`);
+        }
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error proses donasi:", error);
     }
   }
 
