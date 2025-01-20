@@ -17,7 +17,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconCircleCheck, IconSearch } from "@tabler/icons-react";
+import { IconCircleCheck, IconDetails, IconEyeCheck, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,6 +25,8 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import { adminEvent_funGetListPublish } from "../fun";
 import QRCode from "react-qr-code";
 import { useShallowEffect } from "@mantine/hooks";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function AdminEvent_TablePublish({
   listPublish,
@@ -202,6 +204,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               e.id === eventId ? (loading === true ? true : false) : false
             }
             color={"green"}
+            leftIcon={<IconEyeCheck size={20}/>}
             radius={"xl"}
             onClick={async () => {
               setEventId(e.id);
@@ -219,7 +222,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Publish"
+          color={MainColor.green}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"green.4"}
           p={"xs"}
@@ -234,7 +251,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

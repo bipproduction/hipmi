@@ -26,6 +26,8 @@ import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { adminEvent_funGetListReject } from "../fun";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function AdminEvent_TableReject({
   listReject,
@@ -177,7 +179,21 @@ function TableStatus({ listReject }: { listReject: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Reject"
+          color={MainColor.red}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"red.4"}
           p={"xs"}
@@ -192,7 +208,7 @@ function TableStatus({ listReject }: { listReject: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

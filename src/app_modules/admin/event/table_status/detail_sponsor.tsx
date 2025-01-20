@@ -46,7 +46,7 @@ function AdminEvent_DetailSponsor() {
       </td>
       <td>
         <Center>
-          <Button radius={"xl"} style={{ color: "green" }} bg={"white"}>Terima</Button>
+          <Button radius={"xl"} style={{ color: "white" }} bg={"green"}>Terima</Button>
         </Center>
       </td>
     </tr>

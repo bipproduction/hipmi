@@ -58,7 +58,7 @@ export default function AdminEvent_ComponentTableReview({
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isModal, setModal] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const [catatan, setCatatan] = useState("");
   const [eventId, setEventId] = useState("");
@@ -123,6 +123,7 @@ export default function AdminEvent_ComponentTableReview({
 
       const res = await AdminEvent_funEditStatusPublishById(eventId, "1");
       if (res.status === 200) {
+        setIsLoading(true)
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.id as any,
           status: res.data?.EventMaster_Status?.name as any,
@@ -159,9 +160,12 @@ export default function AdminEvent_ComponentTableReview({
 
         ComponentAdminGlobal_NotifikasiBerhasil("Berhasil update status");
       } else {
+        setModal(false)
+        setIsLoading(false)
         ComponentAdminGlobal_NotifikasiGagal(res.message);
       }
     } else {
+      setModal(false)
       ComponentAdminGlobal_NotifikasiPeringatan(
         "Review di batalkan oleh user, reload halaman review !"
       );
@@ -448,6 +452,43 @@ export default function AdminEvent_ComponentTableReview({
           </Group>
         </Stack>
       </Modal>
+      <Modal
+        opened={isModal}
+        title="Anda Yakin Ingin Mempublish Event Ini?"
+        onClose={() => setModal(false)}
+        centered
+        withCloseButton={false}
+        size={"md"}
+      >
+        <Stack>
+          <Group position="right">
+            <Button radius={"xl"} onClick={close}>
+              Batal
+            </Button>
+            <Button
+              radius={"xl"}
+              // onClick={() => {
+              //   onPublish(eventId, tanggal);
+              // }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </>
   );
+  function ModalPublish({
+    eventId,
+    tanggal,
+  }: {
+    eventId: string;
+    tanggal: Date;
+  }) {
+    return (
+      <Stack>
+
+      </Stack>
+    )
+  }
 }

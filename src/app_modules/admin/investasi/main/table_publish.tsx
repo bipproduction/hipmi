@@ -15,13 +15,15 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconDetails, IconEye, IconEyeCheck, IconInfoCircle, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { adminInvestasi_funGetAllPublish } from "../fun/get/get_all_publish";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function Admin_TablePublishInvestasi({
   dataInvestsi,
@@ -111,6 +113,7 @@ function TableView({ listData }: { listData: any }) {
             bg={"green"}
             color="green"
             radius={"xl"}
+            leftIcon={<IconEyeCheck size={20} />}
             onClick={() => {
               setIdData(e.id);
               setLoading(true);
@@ -127,7 +130,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Publish"
+          color={MainColor.green}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari nama proyek"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"green.4"}
           p={"xs"}
@@ -144,7 +161,7 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
