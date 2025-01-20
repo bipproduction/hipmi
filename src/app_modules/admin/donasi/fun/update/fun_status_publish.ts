@@ -32,8 +32,14 @@ export async function AdminDonasi_funUpdateStatusPublish(
     },
   });
 
-  if (!data) return { status: 400, message: "Data tidak ditemukan" };
+  if (!data) {
+    await prisma.$disconnect();
+    return { status: 400, message: "Data tidak ditemukan" };
+  }
+
   revalidatePath(RouterAdminDonasi.table_review);
+  await prisma.$disconnect();
+
   return {
     data: data,
     status: 200,

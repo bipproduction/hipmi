@@ -33,8 +33,8 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/origin-url",
     "/api/event/*",
     // "/api/image/*",
-    // "/api/user",
-    "/api/new/*",
+    // "/api/user/*",
+    // "/api/new/*",
     // Akses awal
     "/api/get-cookie",
     "/api/user/activation",

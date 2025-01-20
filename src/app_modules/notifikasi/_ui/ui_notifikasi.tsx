@@ -18,7 +18,11 @@ import { gs_notifikasi_kategori_app } from "../lib";
 import { apiGetAllNotifikasiByCategory } from "../lib/api_notifikasi";
 import { MODEL_NOTIFIKASI } from "../model/interface";
 
-export default function Notifikasi_UiMain() {
+export default function Notifikasi_UiMain({
+  userLoginId,
+}: {
+  userLoginId?: string;
+}) {
   const [data, setData] = useState<MODEL_NOTIFIKASI[] | null>(null);
   const [activePage, setActivePage] = useState(1);
   const [categoryPage, setCategoryPage] = useAtom(gs_notifikasi_kategori_app);
@@ -80,6 +84,7 @@ export default function Notifikasi_UiMain() {
                 data={item}
                 onLoadData={setData}
                 categoryPage={categoryPage as any}
+                userLoginId={userLoginId}
               />
             )}
           </ScrollOnly>

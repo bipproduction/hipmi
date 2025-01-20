@@ -9,6 +9,8 @@ export async function donasi_checkStatus({ id }: { id: string }) {
     },
   });
 
+  await prisma.$disconnect();
+
 
   if (checkStatus?.donasiMaster_StatusDonasiId == "2") return true;
   return false;

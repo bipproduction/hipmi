@@ -113,7 +113,7 @@ export function Admin_NewLayout({
                     <Grid>
                       <Grid.Col span={7}>
                         <Title order={3} lineClamp={1}>
-                          {userRoleId == "2" ? "Admin" : "Developer"}
+                          {userRoleId == "2" ? "Admin" : "SuperAdmin"}
                         </Title>
                       </Grid.Col>
 
@@ -130,7 +130,8 @@ export function Admin_NewLayout({
                                 onLoadListNotifikasi();
                               }}
                             >
-                              {countNtf == 0 ? (
+                              {countNtf == 0 ||
+                              dataUser.masterUserRoleId == "3" ? (
                                 <IconBell color="white" />
                               ) : (
                                 <Indicator
