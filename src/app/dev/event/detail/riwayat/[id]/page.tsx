@@ -9,7 +9,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
       <Event_DetailRiwayat
         totalPeserta={totalPeserta as any}
-        eventId={eventId}
       />
     </>
   );

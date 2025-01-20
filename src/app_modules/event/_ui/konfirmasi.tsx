@@ -13,7 +13,7 @@ import { Button, Center, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { event_funUpdateKehadiran } from "../fun";
 import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm";
@@ -21,31 +21,41 @@ import { gs_event_hotMenu } from "../global_state";
 import { MODEL_EVENT } from "../model/interface";
 import { Event_funJoinEvent } from "../fun/create/fun_join_event";
 import "moment/locale/id";
+import { apiGetEventDetailById } from "../_lib/api_event";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Ui_Konfirmasi({
   userLoginId,
-  eventId,
 }: {
   userLoginId: string;
-  eventId: string;
 }) {
   //   console.log(dataEvent);
+
+  const params = useParams<{ id: string }>();
+  const eventId = params.id;
 
   const router = useRouter();
   const [data, setData] = useState<MODEL_EVENT | null>(null);
   const [isJoin, setIsJoin] = useState<boolean | null>(null);
   const [isPresent, setIsPresent] = useState<boolean | null>(null);
 
+  // Load Data
   useShallowEffect(() => {
     onLoadData();
   }, []);
 
   async function onLoadData() {
-    const data = await fetch(
-      API_RouteEvent.get_one_by_id({ eventId: eventId })
-    );
-    const res = await data.json();
-    setData(res.data);
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
   }
 
   //  CEK PESERTA
