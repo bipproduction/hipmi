@@ -37,5 +37,26 @@ export const apiGetEventCekPeserta = async ({
   );
 
   return await response.json().catch(() => null);
+};
 
+export const apiGetEventPesertaById = async ({
+  id,
+  page,
+}: {
+  id: string;
+  page: string;
+}) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/event/peserta/${id}?page=${page}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
 };
