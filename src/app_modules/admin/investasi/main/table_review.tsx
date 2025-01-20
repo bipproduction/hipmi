@@ -1,7 +1,7 @@
 "use client";
 import { gs_adminInvestasi_triggerReview } from "@/app/lib/global_state";
 import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   Affix,
@@ -19,7 +19,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconRefresh, IconSearch } from "@tabler/icons-react";
+import { IconDetails, IconEyeCheck, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -28,6 +28,7 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 
 export default function Admin_TableReviewInvestasi({
   dataInvestsi,
@@ -132,7 +133,8 @@ function TableView({ listData }: { listData: any }) {
           <Button
             loading={isLoading && idData === e.id}
             loaderPosition="center"
-            color="orange"
+            color="green"
+            leftIcon={<IconEyeCheck size={20}/>}
             radius={"xl"}
             onClick={() => {
               setIdData(e.id);
@@ -150,7 +152,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={MainColor.orange}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari nama proyek"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -167,7 +183,7 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />

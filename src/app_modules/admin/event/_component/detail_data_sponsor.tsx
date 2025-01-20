@@ -1,6 +1,6 @@
 import { RouterAdminEvent } from '@/app/lib/router_admin/router_admin_event';
 import { Button, Center, Pagination, Paper, ScrollArea, Stack, Table, Title } from '@mantine/core';
-import { IconImageInPicture } from '@tabler/icons-react';
+import { IconDeviceDesktop, IconDownload, IconImageInPicture } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -24,7 +24,7 @@ function AdminEvent_DetailDataSponsor() {
       </td>
       <td>
         <Center>
-          <Button size='xs' style={{ borderColor: "black", color: "black" }} bg={"#e6e6e6"}>Download</Button>
+          <Button leftIcon={<IconDownload size={20} />} size='xs' style={{ borderColor: "black", color: "black" }} bg={"#e6e6e6"}>Download</Button>
         </Center>
       </td>
       <td>
@@ -41,7 +41,7 @@ function AdminEvent_DetailDataSponsor() {
       </td>
       <td>
         <Center>
-          <Button onClick={() => router.push(RouterAdminEvent.detail_sponsor)} radius={"xl"} bg={"green"}>Tampilkan</Button>
+          <Button leftIcon={<IconDeviceDesktop size={20} />} onClick={() => router.push(RouterAdminEvent.detail_sponsor)} radius={"xl"} bg={"green"}>Tampilkan</Button>
         </Center>
       </td>
     </tr>
