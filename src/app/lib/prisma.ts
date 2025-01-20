@@ -27,6 +27,4 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-// console.log("==> Test prisma");
-
 export default prisma;

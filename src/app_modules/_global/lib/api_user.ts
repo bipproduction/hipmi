@@ -11,7 +11,7 @@ export const apiGetUserId = async () => {
     },
   });
 
-  console.log("Ini di pemanggilan API",await response.json());
+  console.log("Ini di pemanggilan API", await response.json());
 
   if (!response.ok) return null;
   const data: Record<string, any> = await response.json();
@@ -28,6 +28,27 @@ export const apiGetACtivationUser = async () => {
   if (!token) return await token.json().catch(() => null);
 
   const response = await fetch(`/api/user/activation`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await response.json().catch(() => null);
+};
+
+export const apiGetAllUserWithExceptId = async ({
+  exceptId,
+}: {
+  exceptId?: string;
+}) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const isExceptId = exceptId ? `?except-id=${exceptId}` : "";
+
+  const response = await fetch(`/api/user/all${isExceptId}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

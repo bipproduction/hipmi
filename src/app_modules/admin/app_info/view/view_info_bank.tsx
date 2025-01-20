@@ -18,17 +18,16 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconCirclePlus, IconEdit } from "@tabler/icons-react";
+import { IconEdit } from "@tabler/icons-react";
 import _ from "lodash";
 import { useState } from "react";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
+import { AdminAppInformation_ComponentTitlePageBank } from "../component";
 import adminAppInformation_createBank from "../fun/create/fun_create_new_bank";
 import adminAppInformation_getMasterBank from "../fun/master/get_list_bank";
 import adminAppInformation_updateStatusBankById from "../fun/update/fun_udpate_status_bank";
 import adminAppInformation_updateDataBankById from "../fun/update/fun_update_data_bank";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminAppInformation_ComponentTitlePageBank } from "../component";
 
 export default function AdminAppInformation_ViewInfoBank({
   listBank,

@@ -21,6 +21,9 @@ import { AdminDonasi_funUpdateStatusPublish } from "../fun/update/fun_status_pub
 import { AdminDonasi_funUpdateStatusReject } from "../fun/update/fun_status_reject";
 import { donasi_checkStatus } from "@/app_modules/donasi/fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import adminNotifikasi_funCreateToAllUser from "../../notifikasi/fun/create/fun_create_notif_to_all_user";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetAllUserWithExceptId } from "@/app_modules/_global/lib/api_user";
 
 export default function AdminDonasi_DetailReview({
   dataReview,
@@ -66,51 +69,88 @@ function ButtonOnHeader({
   const [catatan, setCatatan] = useState("");
 
   async function onPulish() {
-    const checkStatus = await donasi_checkStatus({ id: donasi.id });
+    try {
+      setLoadingPublish(true);
+      const checkStatus = await donasi_checkStatus({ id: donasi.id });
 
-    if (checkStatus) {
-      const res = await AdminDonasi_funUpdateStatusPublish(donasi.id, "1");
-      if (res.status === 200) {
-        const dataNotifikasi: IRealtimeData = {
-          appId: res.data?.id as string,
-          status: res.data?.DonasiMaster_Status?.name as any,
-          userId: res.data?.authorId as any,
-          pesan: res.data?.title as any,
-          kategoriApp: "DONASI",
-          title: "Donasi publish",
-        };
+      if (checkStatus) {
+        const res = await AdminDonasi_funUpdateStatusPublish(donasi.id, "1");
+        if (res.status === 200) {
+          // ===== TO CREATEOR ====== //
+          const notifikasiToCreator: IRealtimeData = {
+            appId: res.data?.id as string,
+            status: res.data?.DonasiMaster_Status?.name as any,
+            userId: res.data?.authorId as any,
+            pesan: res.data?.title as any,
+            kategoriApp: "DONASI",
+            title: "Donasi publish",
+          };
 
-        const notif = await adminNotifikasi_funCreateToUser({
-          data: dataNotifikasi as any,
-        });
-
-        if (notif.status === 201) {
-          WibuRealtime.setData({
-            type: "notification",
-            pushNotificationTo: "USER",
-            dataMessage: dataNotifikasi,
+          const notif = await adminNotifikasi_funCreateToUser({
+            data: notifikasiToCreator as any,
           });
 
-          WibuRealtime.setData({
-            type: "trigger",
-            pushNotificationTo: "USER",
-            dataMessage: dataNotifikasi,
+          if (notif.status === 201) {
+            WibuRealtime.setData({
+              type: "notification",
+              pushNotificationTo: "USER",
+              dataMessage: notifikasiToCreator,
+            });
+
+            WibuRealtime.setData({
+              type: "trigger",
+              pushNotificationTo: "USER",
+              dataMessage: notifikasiToCreator,
+            });
+          }
+
+          // ===== TO CREATEOR ====== //
+
+          // TO ALL USER
+          const notificationToAll = await adminNotifikasi_funCreateToAllUser({
+            data: res.data as any,
+            authorId: donasi.authorId,
           });
+
+          if (notificationToAll.status === 201) {
+            const dataUser = notificationToAll.data;
+            for (let i of dataUser as any) {
+              const dataNotifikasiToAll: IRealtimeData = {
+                appId: res.data?.id as string,
+                status: res.data?.DonasiMaster_Status?.name as any,
+                userId: i.id as any,
+                pesan: res.data?.title as any,
+                kategoriApp: "DONASI",
+                title: "Donasi baru terpublish",
+              };
+
+
+              WibuRealtime.setData({
+                type: "notification",
+                pushNotificationTo: "USER",
+                dataMessage: dataNotifikasiToAll,
+              });
+            }
+          }
 
           const newData = await AdminDonasi_getOneById(donasi?.id);
           setData(newData);
           ComponentAdminGlobal_NotifikasiBerhasil(
             "Berhasil Mengubah Status Donasi"
           );
-          setLoadingPublish(true);
+        } else {
+          setLoadingPublish(false);
+          ComponentAdminGlobal_NotifikasiPeringatan(
+            "Gagal Mengubah Status Donasi"
+          );
         }
       } else {
-        ComponentAdminGlobal_NotifikasiPeringatan(
-          "Gagal Mengubah Status Donasi"
-        );
+        setLoadingPublish(false);
+        ComponentGlobal_NotifikasiPeringatan("Status donasi telah diubah user");
       }
-    } else {
-      ComponentGlobal_NotifikasiPeringatan("Status donasi telah diubah user");
+    } catch (error) {
+      setLoadingPublish(false);
+      clientLogger.error("Error to published donasi", error);
     }
   }
 
@@ -170,6 +210,8 @@ function ButtonOnHeader({
         {donasi.donasiMaster_StatusDonasiId === "2" ? (
           <Group>
             <Button
+              loading={isLoadingPublish}
+              loaderPosition="center"
               radius={"xl"}
               bg={"green"}
               color="green"

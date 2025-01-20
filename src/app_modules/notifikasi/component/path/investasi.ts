@@ -37,9 +37,6 @@ export async function redirectInvestasiPage({
     id: appId,
   });
 
-  console.log("check", check);
-  console.log("check investor:", checkInvestor);
-
   if (check.status == 200) {
     const updateReadNotifikasi = await notifikasi_funUpdateIsReadById({
       notifId: dataId,

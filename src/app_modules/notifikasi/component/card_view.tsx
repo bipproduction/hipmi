@@ -24,15 +24,18 @@ import { notifikasi_eventCheckStatus } from "./path/event";
 import { redirectInvestasiPage } from "./path/investasi";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { notifikasi_votingCheckStatus } from "./path/voting";
+import { clientLogger } from "@/util/clientLogger";
 
 export function ComponentNotifiaksi_CardView({
   data,
   onLoadData,
   categoryPage,
+  userLoginId,
 }: {
   data: MODEL_NOTIFIKASI;
   onLoadData: (val: any) => void;
   categoryPage: string;
+  userLoginId?: string
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
@@ -59,134 +62,146 @@ export function ComponentNotifiaksi_CardView({
         }}
         my={"xs"}
         onClick={async () => {
-          // JOB
-          if (data?.kategoriApp === "JOB") {
-            await notifikasi_jobCheckStatus({
-              appId: data.appId,
-              dataId: data.id,
-              categoryPage: categoryPage,
-              router: router,
-              onLoadDataJob(val) {
-                onLoadData(val);
-              },
-              onSetJobMenuId(val) {
-                setJobMenuId(val);
-              },
-              onSetVisible(val) {
-                setVisible(val);
-              },
-              onLoadCountNtf(val) {
-                setLoadCountNtf(val);
-              },
-            });
+          try {
+            setVisible(true);
 
-            return;
+            // JOB
+            if (data?.kategoriApp === "JOB") {
+              await notifikasi_jobCheckStatus({
+                appId: data.appId,
+                dataId: data.id,
+                categoryPage: categoryPage,
+                router: router,
+                onLoadDataJob(val) {
+                  onLoadData(val);
+                },
+                onSetJobMenuId(val) {
+                  setJobMenuId(val);
+                },
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+                onLoadCountNtf(val) {
+                  setLoadCountNtf(val);
+                },
+              });
+
+              return;
+            }
+
+            // EVENT
+            if (data?.kategoriApp === "EVENT") {
+              await notifikasi_eventCheckStatus({
+                appId: data.appId,
+                dataId: data.id,
+                categoryPage: categoryPage,
+                router: router,
+                onLoadDataEvent(val) {
+                  onLoadData(val);
+                },
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+                onSetEventMenuId(val) {
+                  setEventMenuId(val);
+                },
+                onLoadCountNtf(val) {
+                  setLoadCountNtf(val);
+                },
+              });
+
+              return;
+            }
+
+            // VOTING
+            if (data?.kategoriApp === "VOTING") {
+              await notifikasi_votingCheckStatus({
+                appId: data.appId,
+                dataId: data.id,
+                categoryPage: categoryPage,
+                router: router,
+                onLoadDataEvent(val) {
+                  onLoadData(val);
+                },
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+                onSetMenuId(val) {
+                  setVotingMenu(val);
+                },
+                onLoadCountNtf(val) {
+                  setLoadCountNtf(val);
+                },
+              });
+
+              return;
+            }
+
+            // DONASI
+            if (data?.kategoriApp === "DONASI") {
+              redirectDonasiPage({
+                appId: data.appId,
+                dataId: data.id,
+                userId: data.userId,
+                userLoginId: userLoginId as any,
+                categoryPage: categoryPage,
+                router: router,
+                onLoadDataEvent(val) {
+                  onLoadData(val);
+                },
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+                onSetMenuId(val) {
+                  setDonasiMenu(val);
+                },
+                onLoadCountNtf(val) {
+                  setLoadCountNtf(val);
+                },
+              });
+
+              return;
+            }
+
+            // INVESTASI
+            if (data?.kategoriApp === "INVESTASI") {
+              redirectInvestasiPage({
+                appId: data.appId,
+                dataId: data.id,
+                categoryPage: categoryPage,
+                router: router,
+                onLoadDataEvent(val) {
+                  onLoadData(val);
+                },
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+                onSetMenuId(val) {
+                  setInvestasiMenu(val);
+                },
+                onLoadCountNtf(val) {
+                  setLoadCountNtf(val);
+                },
+              });
+
+              return;
+            }
+
+            // data?.kategoriApp === "FORUM" &&
+            //   redirectDetailForumPage({
+            //     data: data,
+            //     router: router,
+            //   });
+
+            // data?.kategoriApp === "COLLABORATION" &&
+            //   redirectDetailCollaborationPage({
+            //     data: data,
+            //     router: router,
+            //   });
+          } catch (error) {
+            setVisible(false);
+            clientLogger.error("Error redirect notification page", error);
           }
-
-          // EVENT
-          if (data?.kategoriApp === "EVENT") {
-            await notifikasi_eventCheckStatus({
-              appId: data.appId,
-              dataId: data.id,
-              categoryPage: categoryPage,
-              router: router,
-              onLoadDataEvent(val) {
-                onLoadData(val);
-              },
-              onSetVisible(val) {
-                setVisible(val);
-              },
-              onSetEventMenuId(val) {
-                setEventMenuId(val);
-              },
-              onLoadCountNtf(val) {
-                setLoadCountNtf(val);
-              },
-            });
-
-            return;
-          }
-
-          if (data?.kategoriApp === "VOTING") {
-            await notifikasi_votingCheckStatus({
-              appId: data.appId,
-              dataId: data.id,
-              categoryPage: categoryPage,
-              router: router,
-              onLoadDataEvent(val) {
-                onLoadData(val);
-              },
-              onSetVisible(val) {
-                setVisible(val);
-              },
-              onSetMenuId(val) {
-                setVotingMenu(val);
-              },
-              onLoadCountNtf(val) {
-                setLoadCountNtf(val);
-              },
-            });
-
-            return;
-          }
-
-          if (data?.kategoriApp === "DONASI") {
-            redirectDonasiPage({
-              appId: data.appId,
-              dataId: data.id,
-              categoryPage: categoryPage,
-              router: router,
-              onLoadDataEvent(val) {
-                onLoadData(val);
-              },
-              onSetVisible(val) {
-                setVisible(val);
-              },
-              onSetMenuId(val) {
-                setDonasiMenu(val);
-              },
-              onLoadCountNtf(val) {
-                setLoadCountNtf(val);
-              },
-            });
-
-            return;
-          }
-
-          if (data?.kategoriApp === "INVESTASI") {
-            redirectInvestasiPage({
-              appId: data.appId,
-              dataId: data.id,
-              categoryPage: categoryPage,
-              router: router,
-              onLoadDataEvent(val) {
-                onLoadData(val);
-              },
-              onSetVisible(val) {
-                setVisible(val);
-              },
-              onSetMenuId(val) {
-                setInvestasiMenu(val);
-              },
-              onLoadCountNtf(val) {
-                setLoadCountNtf(val);
-              },
-            });
-
-            return;
-          }
-
-          // data?.kategoriApp === "FORUM" &&
-          //   redirectDetailForumPage({
-          //     data: data,
-          //     router: router,
-          //   });
-
-          // data?.kategoriApp === "COLLABORATION" &&
-          //   redirectDetailCollaborationPage({
-          //     data: data,
-          //     router: router,
-          //   });
         }}
       >
         {/* <pre>{JSON.stringify(e, null, 2)}</pre> */}
