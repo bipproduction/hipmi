@@ -1,9 +1,9 @@
 import { RouterEvent } from '@/app/lib/router_hipmi/router_event';
 import { AccentColor, MainColor } from '@/app_modules/_global/color';
 import { ActionIcon, Flex, Loader, Paper, Text } from '@mantine/core';
+import { IconStar } from '@tabler/icons-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { TfiCup } from "react-icons/tfi";
 
 function Event_ComponentBoxDaftarSponsor() {
   const router = useRouter();
@@ -28,12 +28,14 @@ function Event_ComponentBoxDaftarSponsor() {
         }}
       >
         <Flex direction={"column"} align={"center"} justify={"center"}>
-          <Text c={MainColor.white} fz={12}>Daftar Sponsor</Text>
+          <Text c={MainColor.white} fz={12}>
+            Daftar Sponsor
+          </Text>
           <ActionIcon radius={"xl"} variant="transparent" size={60}>
             {isLoading ? (
               <Loader color="yellow" />
             ) : (
-              <TfiCup size={70} color={MainColor.white} />
+              <IconStar size={40} color={MainColor.white} />
             )}
           </ActionIcon>
         </Flex>
