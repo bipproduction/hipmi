@@ -150,7 +150,7 @@ function Event_TambahSponsor() {
           </Center>
         </Stack>
 
-        Box
+        <Box
           style={{
             display: "flex",
             justifyContent: "center",
