@@ -47,6 +47,9 @@ model User {
   User_Notifikasi                      Notifikasi[]                           @relation("UserNotifikasi")
   BusinessMaps                         BusinessMaps[]
   Investasi_Invoice                    Investasi_Invoice[]
+
+  EventSponsor   EventSponsor[]
+  EventTransaksi EventTransaksi[]
 }
 
 model MasterUserRole {
@@ -166,6 +169,7 @@ model MasterBank {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   Investasi_Invoice Investasi_Invoice[]
+  EventTransaksi    EventTransaksi[]
 }
 
 model MasterStatus {
@@ -593,6 +597,8 @@ model Event {
   Event_Peserta           Event_Peserta[]
   EventMaster_TipeAcara   EventMaster_TipeAcara? @relation(fields: [eventMaster_TipeAcaraId], references: [id])
   eventMaster_TipeAcaraId Int?
+  EventSponsor            EventSponsor[]
+  EventTransaksi          EventTransaksi[]
 }
 
 model EventMaster_TipeAcara {
@@ -951,4 +957,46 @@ model MasterKategoriApp {
   updatedAt DateTime @updatedAt
   name      String
   value     String?
+}
+
+// ======================= EVENT ======================= //
+
+model EventSponsor {
+  id        String   @id @default(cuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  fileName  String
+  fileExt   String?
+  fileId    String
+
+  Author   User?   @relation(fields: [auhtorId], references: [id])
+  auhtorId String?
+
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
+
+  EventTransaksi EventTransaksi?
+}
+
+model EventTransaksi {
+  id              String      @id @default(cuid())
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  nominal         Int
+  MasterBank      MasterBank? @relation(fields: [masterBankId], references: [id])
+  masterBankId    String?
+  status          String
+  transferImageId String?
+
+  AuthorId User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
+
+  EventSponsor   EventSponsor? @relation(fields: [eventSponsorId], references: [id])
+  eventSponsorId String?       @unique
 }

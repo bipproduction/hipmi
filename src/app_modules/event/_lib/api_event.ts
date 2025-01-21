@@ -60,3 +60,29 @@ export const apiGetEventPesertaById = async ({
 
   return await response.json().catch(() => null);
 };
+
+// =============== SPONSOR =============== //
+
+export const apiGetEventCreateSponsor = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: any;
+}) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/event/sponsor/${id}`, {
+    method: "POST",
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
+};

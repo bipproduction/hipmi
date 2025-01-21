@@ -1,4 +1,5 @@
 'use client';
+
 import { AccentColor, MainColor } from '@/app_modules/_global/color';
 import { MODEL_MASTER_BANK } from '@/app_modules/investasi/_lib/interface';
 import { Button, Paper, Radio, Stack, Title } from '@mantine/core';
@@ -19,7 +20,7 @@ const bank = [
     namaBank: "BNI",
   },
   {
-    id: 1,
+    id: 4,
     namaBank: "BSI",
   }
 ]
