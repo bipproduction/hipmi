@@ -47,6 +47,7 @@ import { useState } from "react";
 import { adminDonasi_getListDonatur } from "../../fun/get/get_list_donatur_by_id";
 import { AdminDonasi_getOneById } from "../../fun/get/get_one_by_id";
 import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 
 export default function AdminDonasi_DetailPublish({
   dataPublish,
@@ -405,7 +406,7 @@ function TampilanListDonatur({
       <td>
         <Center>
           {e?.donasiMaster_StatusInvoiceId === "1" ||
-          e?.donasiMaster_StatusInvoiceId === "2" ? (
+            e?.donasiMaster_StatusInvoiceId === "2" ? (
             <Button
               loaderPosition="center"
               loading={isLoadingCek && idData === e?.id}
@@ -455,37 +456,35 @@ function TampilanListDonatur({
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(dataDonasi, null, 2)}</pre> */}
-        <Group
-          position="apart"
-          bg={"gray.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Daftar Donatur</Title>
-          <Group>
-            <ActionIcon
-              size={"lg"}
-              radius={"xl"}
-              variant="light"
-              onClick={() => {
-                onRelaod();
-              }}
-            >
-              <IconReload />
-            </ActionIcon>
-            <Select
-              placeholder="Pilih status"
-              value={isSelect}
-              data={listMasterStatus.map((e) => ({
-                value: e.id,
-                label: e.name,
-              }))}
-              onChange={(val) => {
-                onSelect(val);
-              }}
-            />
-          </Group>
-        </Group>
+        <ComponentAdminGlobal_TitlePage
+          name="Daftar Donatur"
+          color="gray.4"
+          component={
+            <Group>
+              <ActionIcon
+                size={"lg"}
+                radius={"xl"}
+                variant="light"
+                onClick={() => {
+                  onRelaod();
+                }}
+              >
+                <IconReload />
+              </ActionIcon>
+              <Select
+                placeholder="Pilih status"
+                value={isSelect}
+                data={listMasterStatus.map((e) => ({
+                  value: e.id,
+                  label: e.name,
+                }))}
+                onChange={(val) => {
+                  onSelect(val);
+                }}
+              />
+            </Group>
+          }
+        />
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
@@ -754,14 +753,11 @@ function TampilanListPencairan({
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
 
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
-          position="apart"
-          bg={"gray.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Rincian Pencairan Dana</Title>
-          <Group>
+        <ComponentAdminGlobal_TitlePage
+          name="Rincian Pencairan Dana"
+          color="gray.4"
+          component={
+            <Group>
             <ActionIcon
               size={"lg"}
               radius={"xl"}
@@ -784,8 +780,9 @@ function TampilanListPencairan({
               }}
             /> */}
           </Group>
-        </Group>
-
+          }
+        />
+      
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table

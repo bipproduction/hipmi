@@ -20,6 +20,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminDonasi_getListPublish from "../fun/get/get_list_publish";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_TablePublish({
   listPublish,
@@ -92,10 +95,10 @@ function TableStatus({ listPublish }: { listPublish: any }) {
           <Button
             loaderPosition="center"
             loading={isLoading && e?.id === idData ? true : false}
-            color={"green"}
+            style={{ backgroundColor: MainColor.green,  }}
+            c={AccentColor.white}
             leftIcon={<IconEyeCheck />}
             radius={"xl"}
-            variant="outline"
             onClick={() => {
               setLoading(true);
               setIdData(e?.id);
@@ -113,7 +116,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Publish"
+          color={AdminColor.green}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"green.4"}
           p={"xs"}
@@ -128,7 +145,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

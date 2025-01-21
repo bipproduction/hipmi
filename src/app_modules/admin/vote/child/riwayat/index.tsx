@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Group,
   Modal,
   Pagination,
   Paper,
@@ -15,20 +14,18 @@ import {
   Stack,
   Table,
   Text,
-  TextInput,
-  Title,
+  TextInput
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
-import _ from "lodash";
+import { IconReportAnalytics, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import { useState } from "react";
 import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
+import { adminVote_funGetListRiwayat } from "../../fun";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
-import { adminVote_funGetListRiwayat } from "../../fun";
-import { IconCircleCheckFilled } from "@tabler/icons-react";
 
 export default function AdminVote_Riwayat({
   dataVote,
@@ -88,7 +85,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
             }
             radius={"xl"}
             color="green"
-            leftIcon={<IconCircleCheckFilled />}
+            leftIcon={<IconReportAnalytics />}
             onClick={async () => {
               setVoteId(e?.id);
               setLoading(true);
@@ -144,7 +141,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Riwayat"
+          color="gray.4"
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -159,7 +170,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

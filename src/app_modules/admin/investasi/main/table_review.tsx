@@ -29,6 +29,7 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TableReviewInvestasi({
   dataInvestsi,
@@ -154,7 +155,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color={MainColor.orange}
+          color={AdminColor.orange}
           component={
             <TextInput
             icon={<IconSearch size={20} />}

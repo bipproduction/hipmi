@@ -29,6 +29,8 @@ import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_glo
 import ComponentAdminColab_DetailData from "../component/detail_data";
 import adminColab_getOneRoomChatById from "../fun/get/get_one_room_chat_by_id";
 import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AccentColor } from "@/app_modules/_global/color";
 
 export default function AdminColab_TableGroup({
   listGroup,
@@ -148,14 +150,13 @@ function TableMenu({ listGroup }: { listGroup: any }) {
   return (
     <>
       <Stack spacing={"xs"}>
-        <Group
-          position="apart"
-          bg={"blue.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Group Chat</Title>
-        </Group>
+        <ComponentAdminGlobal_TitlePage
+          name="Group Chat"
+          color={AccentColor.softblue}
+          component={
+            <></>
+          }
+        />
         <Paper p={"md"} withBorder shadow="lg">
           <Stack>
             <ScrollArea h={"65vh"}>

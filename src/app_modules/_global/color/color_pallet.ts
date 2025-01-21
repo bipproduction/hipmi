@@ -19,6 +19,13 @@ export const AccentColor = {
   white: "#FEFFFE"
 
 };
+
+export const AdminColor = {
+  yellow: "#FFEB99",
+  green: "#A7DCA5",
+  orange: "#F7C69B",
+  red: "#F4A8A8"
+}
 //yellow: "#FFC300"
 //yellow: "#FFD60A"
 // white: "#FEFFFE"

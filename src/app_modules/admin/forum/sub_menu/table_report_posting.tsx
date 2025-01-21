@@ -28,6 +28,8 @@ import { useState } from "react";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import adminForum_funGetAllReportPosting from "../fun/get/get_all_report_posting";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_TableReportPosting({
   listData,
@@ -165,7 +167,22 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Report Posting"
+          color={AdminColor.orange}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari postingan"
+            onChange={(val) => {
+
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -183,7 +200,7 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
