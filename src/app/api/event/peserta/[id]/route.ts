@@ -48,16 +48,12 @@ export async function GET(
       },
     });
 
-    
-
-    console.log("server", fixData)
     return NextResponse.json({
       success: true,
       message: "Success get data",
       data: fixData,
     });
   } catch (error) {
-
     backendLogger.error("Error get list data:", error);
     return NextResponse.json(
       {

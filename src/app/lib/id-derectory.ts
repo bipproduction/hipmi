@@ -21,6 +21,10 @@ const DIRECTORY_ID = {
 
   // Job
   job_image: "cm0ypp6zl0003kp7jf59zuvjy",
+
+  // Event
+  event_sponsor: "cm65zlbyf001udvmggnd6i0oh",
+  event_bukti_transfer: "cm65zlehy001wdvmgnobur2zh",
 };
 
 export default DIRECTORY_ID;

@@ -7,7 +7,7 @@ export const RouterEvent = {
   riwayat: ({ id }: { id: string }) => `/dev/event/main/riwayat/${id}`,
 
   /**
-   * 
+   *
    * @param statusId | 1 - 4 | 1: Publish, 2: Review, 3: Draft, 4: Reject
    * @type string
    */
@@ -34,18 +34,13 @@ export const RouterEvent = {
   detail_riwayat: "/dev/event/detail/riwayat/",
 
   //peserta
-  daftar_peserta: ({ id }: { id: string }) =>
-    `/dev/event/detail/peserta/${id}`,
+  daftar_peserta: ({ id }: { id: string }) => `/dev/event/detail/peserta/${id}`,
 
   //sponsor
-  daftar_sponsor: ({ id }: { id: string }) =>
-    `/dev/event/detail/sponsor/${id}`,
+  daftar_sponsor: ({ id }: { id: string }) => `/dev/event/detail/sponsor/${id}`,
   edit_sponsor: "/dev/event/detail/sponsor/edit_sponsor/",
-  tambah_sponsor: "/dev/event/detail/sponsor/tambah_sponsor/",
+  tambah_sponsor: ({ id }: { id: string }) =>
+    `/dev/event/detail/sponsor/tambah_sponsor/${id}`,
   detail_sponsor: ({ id }: { id: string }) =>
     `/dev/event/detail/detail_sponsor/${id}`,
-
-
-
 };
-

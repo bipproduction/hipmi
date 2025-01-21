@@ -39,7 +39,6 @@ export default function Event_DetailMain({
       });
 
       if (respone) {
-        console.log(respone.data)
         setIsJoinSuccess(respone.data);
       }
     } catch (error) {
