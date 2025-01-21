@@ -44,6 +44,7 @@ import { AdminJob_funEditStatusPublishById } from "../fun/edit/fun_edit_status_p
 import adminJob_getListReview from "../fun/get/get_list_review";
 import { useAtom } from "jotai";
 import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_ViewTavleReview({
   listReview,
@@ -275,7 +276,7 @@ export default function AdminJob_ViewTavleReview({
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color="orange.4"
+          color={AdminColor.orange}
           component={
             <TextInput
               icon={<IconSearch size={20} />}

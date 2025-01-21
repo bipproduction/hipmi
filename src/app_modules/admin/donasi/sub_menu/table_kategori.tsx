@@ -29,6 +29,7 @@ import adminDonasi_getMasterKategori from "../fun/master/get_list_kategori";
 import adminDonasi_funDeleteKategori from "../fun/delete/fun_delete_by_id";
 import adminDonasi_funUpdatekategoriById from "../fun/update/fun_update_kategori_by_id";
 import _ from "lodash";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 
 export default function AdminDonasi_TableKategori({
   listKategori,
@@ -159,7 +160,24 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Kategori"
+          color="gray.4"
+          component={
+            <Button
+            w={120}
+            leftIcon={<IconCirclePlus />}
+            radius={"xl"}
+            onClick={() => {
+              setIsCreate(true);
+              setIsUpdate(false);
+            }}
+          >
+            Tambah
+          </Button>
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -177,7 +195,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
           >
             Tambah
           </Button>
-        </Group>
+        </Group> */}
 
         <Grid>
           <Grid.Col span={"auto"}>

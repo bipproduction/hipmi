@@ -1,12 +1,13 @@
 "use client";
 
 import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import TampilanRupiahDonasi from "@/app_modules/donasi/component/tampilan_rupiah";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import {
   Button,
   Center,
-  Group,
   Modal,
   Pagination,
   Paper,
@@ -15,15 +16,15 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEyeEdit, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminDonasi_getListReject from "../fun/get/get_list_reject";
-import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 
 export default function AdminDonasi_TableReject({
   dataReject,
@@ -92,10 +93,10 @@ function TableStatus({ dataReject }: { dataReject: any }) {
       <td>
         <Center>
           <Button
-            color={"red"}
+            style={{ backgroundColor: MainColor.green }}
+            color={AccentColor.white}
             leftIcon={<IconEyeEdit />}
             radius={"xl"}
-            variant="outline"
             onClick={() =>
               router.push(RouterAdminDonasi_OLD.detail_reject + `${e.id}`)
             }
@@ -113,7 +114,21 @@ function TableStatus({ dataReject }: { dataReject: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Reject"
+          color={AdminColor.red}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"red.4"}
           p={"xs"}
@@ -128,7 +143,7 @@ function TableStatus({ dataReject }: { dataReject: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

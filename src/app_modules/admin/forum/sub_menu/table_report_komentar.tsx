@@ -27,6 +27,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import adminForum_funGetAllReportKomentar from "../fun/get/get_all_report_komentar";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_TableReportKomentar({
   listData,
@@ -156,7 +158,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Report Komentar"
+          color={AdminColor.yellow}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari postingan"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"yellow.4"}
           p={"xs"}
@@ -173,7 +189,7 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />

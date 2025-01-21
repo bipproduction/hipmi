@@ -30,6 +30,7 @@ import { adminInvestasi_funGetAllReject } from "../fun/get/get_all_reject";
 import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TableRejectInvestasi({
   dataInvestsi,
@@ -192,7 +193,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color={MainColor.red}
+          color={AdminColor.red}
           component={
             <TextInput
             icon={<IconSearch size={20} />}

@@ -33,7 +33,7 @@ import {
   gs_adminVoting_triggerReview,
   IRealtimeData,
 } from "@/app/lib/global_state";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
@@ -46,6 +46,8 @@ import { WibuRealtime } from "wibu-pkg";
 import { adminVote_funGetListReview } from "../../fun";
 import { AdminVote_funEditStatusPublishById } from "../../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../../fun/edit/fun_edit_status_reject_by_id";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminVote_TableReview({
   listVote,
@@ -63,7 +65,8 @@ export default function AdminVote_TableReview({
 }
 
 function TableStatus({ listData }: { listData: any }) {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [openedReject, { open: openReject, close: closeReject }] = useDisclosure(false);
+  const [openedPublish, { open: openPublish, close: closePublish }] = useDisclosure(false);
   const [data, setData] = useState<MODEL_VOTING[]>(listData.data);
   const [isNPage, setNPage] = useState(listData.nPage);
   const [votingId, setVotingId] = useState("");
@@ -160,25 +163,28 @@ function TableStatus({ listData }: { listData: any }) {
       <td>
         <Stack align="center">
           <Button
-            loaderPosition="center"
-            loading={
-              e?.id === votingId ? (isLoadingPublish ? true : false) : false
-            }
+            // loaderPosition="center"
+            // loading={
+            //   e?.id === votingId ? (isLoadingPublish ? true : false) : false
+            // }
             w={120}
             color={"green"}
             leftIcon={<IconCircleCheck />}
             radius={"xl"}
-            onClick={() =>
-              onPublish({
-                voteId: e.id,
-                awalVote: e.awalVote,
-                setLoadingPublish: setLoadingPublish,
-                setVotingId: setVotingId,
-                setData(val) {
-                  setData(val.data);
-                  setNPage(val.nPage);
-                },
-              })
+            onClick={() => {
+              openPublish();
+              setVotingId(e.id);
+            }
+              // onPublish({
+              //   // voteId: e.id,
+              //   // awalVote: e.awalVote,
+              //   // setLoadingPublish: setLoadingPublish,
+              //   // setVotingId: setVotingId,
+              // //   setData(val) {
+              // //     setData(val.data);
+              // //     setNPage(val.nPage);
+              // //   },
+              // })
             }
           >
             Publish
@@ -189,7 +195,7 @@ function TableStatus({ listData }: { listData: any }) {
             leftIcon={<IconBan />}
             radius={"xl"}
             onClick={() => {
-              open();
+              openReject();
               setVotingId(e.id);
             }}
           >
@@ -204,7 +210,21 @@ function TableStatus({ listData }: { listData: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.orange}
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -219,7 +239,7 @@ function TableStatus({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           {isShowReload && (
@@ -296,8 +316,8 @@ function TableStatus({ listData }: { listData: any }) {
       </Stack>
 
       <Modal
-        opened={opened}
-        onClose={close}
+        opened={openedReject}
+        onClose={closeReject}
         centered
         withCloseButton={false}
         size={"md"}
@@ -315,7 +335,7 @@ function TableStatus({ listData }: { listData: any }) {
             }}
           />
           <Group position="right">
-            <Button radius={"xl"} onClick={() => close()}>
+            <Button radius={"xl"} onClick={() => closeReject()}>
               Batal
             </Button>
             <Button
@@ -331,12 +351,60 @@ function TableStatus({ listData }: { listData: any }) {
                     setNPage(val.nPage);
                   },
                   close: () => {
-                    close();
+                    closeReject();
                   },
                   setSaveLoading(val) {
                     setSaveLoading(val);
                   },
                 });
+              }}
+              style={{ 
+                backgroundColor: MainColor.green
+              }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={openedPublish}
+        onClose={closePublish}
+        centered
+        withCloseButton={false}
+        size={"md"}
+      >
+        <Stack align="center">
+          <Title order={5}>Apakah anda yakin ingin mempublish vote ini?</Title>
+          <Group position="center">
+            <Button radius={"xl"} onClick={() => closePublish()}>
+              Batal
+            </Button>
+            <Button
+              loaderPosition="center"
+              loading={isLoadingPublish ? true : false}
+              radius={"xl"}
+              onClick={() => {
+                onPublish({
+                  awalVote: data[0].awalVote,
+                  voteId: votingId,
+                  setData(val) {
+                    setData(val.data);
+                    setNPage(val.nPage);
+                  },
+                  close: () => {
+                    closePublish();
+                  },
+                  setLoadingPublish: (val) => {
+                    setLoadingPublish(val);
+                  },
+                  setVotingId: (val) => {
+                    setVotingId(val);
+                  },
+                });
+              }}
+              style={{
+                backgroundColor: MainColor.green,
               }}
             >
               Simpan
@@ -349,12 +417,14 @@ function TableStatus({ listData }: { listData: any }) {
 }
 
 async function onPublish({
+  close,
   voteId,
   setData,
   awalVote,
   setLoadingPublish,
   setVotingId,
 }: {
+  close: any,
   voteId: string;
   setData: (val: { data: any[]; nPage: number }) => void;
   awalVote: Date;

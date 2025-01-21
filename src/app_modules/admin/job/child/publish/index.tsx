@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import adminJob_getListPublish from "../../fun/get/get_list_publish";
 import { RouterAdminGlobal } from "@/app/lib";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_TablePublish({
   dataPublish,
@@ -152,7 +153,7 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Publish"
-          color="green.4"
+          color={AdminColor.green}
           component={
             <TextInput
               icon={<IconSearch size={20} />}

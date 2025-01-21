@@ -24,6 +24,7 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { adminInvestasi_funGetAllPublish } from "../fun/get/get_all_publish";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TablePublishInvestasi({
   dataInvestsi,
@@ -132,7 +133,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Publish"
-          color={MainColor.green}
+          color={AdminColor.green}
           component={
             <TextInput
             icon={<IconSearch size={20} />}

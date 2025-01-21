@@ -27,6 +27,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { adminVote_funGetListReject } from "../../fun";
 import { AdminVote_funEditCatatanRejectById } from "../../fun/edit/fun_edit_catatan_reject_by_id";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminVote_TableReject({ dataVote }: { dataVote: any }) {
   return (
@@ -169,7 +172,21 @@ function TableStatus({ listData }: { listData: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Reject"
+          color={AdminColor.red}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"red.4"}
           p={"xs"}
@@ -184,7 +201,7 @@ function TableStatus({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
