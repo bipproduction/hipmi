@@ -1,4 +1,4 @@
-import { ComponentAdminGlobal_TampilanRupiah } from "@/app_modules/admin/_admin_global/_component";
+import { ComponentAdminGlobal_TampilanRupiah, ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import {
   MODEL_INVOICE_INVESTASI,
   MODEL_STATUS_INVOICE_INVESTASI,
@@ -165,7 +165,38 @@ export function AdminInvestasi_ViewDaftarTransaksi({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Transkasi"
+          color="gray.4"
+          component={<Group>
+            <ActionIcon
+              size={"lg"}
+              radius={"xl"}
+              variant="light"
+              onClick={() => {
+                onReload();
+              }}
+            >
+              <IconReload />
+            </ActionIcon>
+            <Select
+              placeholder="Pilih status"
+              value={selectedStatus}
+              data={
+                isEmpty(listStatsus)
+                  ? []
+                  : listStatsus.map((e) => ({
+                      value: e.id,
+                      label: e.name,
+                    }))
+              }
+              onChange={(val: any) => {
+                onSelected(val);
+              }}
+            />
+          </Group>}
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -199,7 +230,7 @@ export function AdminInvestasi_ViewDaftarTransaksi({
               }}
             />
           </Group>
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>

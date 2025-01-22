@@ -47,6 +47,8 @@ import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_by_id";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_ComponentTableReview({
   listData,
@@ -324,7 +326,21 @@ export default function AdminEvent_ComponentTableReview({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.orange}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -339,7 +355,7 @@ export default function AdminEvent_ComponentTableReview({
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           {isShowReload && (

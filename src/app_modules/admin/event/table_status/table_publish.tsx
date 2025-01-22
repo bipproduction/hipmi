@@ -27,6 +27,7 @@ import QRCode from "react-qr-code";
 import { useShallowEffect } from "@mantine/hooks";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_TablePublish({
   listPublish,
@@ -224,7 +225,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Publish"
-          color={MainColor.green}
+          color={AdminColor.green}
           component={
             <TextInput
             icon={<IconSearch size={20} />}

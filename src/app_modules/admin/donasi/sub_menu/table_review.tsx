@@ -120,10 +120,9 @@ function TableStatus({ listReview }: { listReview: any }) {
           <Button
             loaderPosition="center"
             loading={isLoading && e?.id == idData ? true : false}
-            color={"orange"}
+            style={{ backgroundColor: MainColor.green, color: AccentColor.white }}
             leftIcon={<IconEyeCheck />}
             radius={"xl"}
-            variant="outline"
             onClick={() => {
               setLoading(true);
               setIdData(e?.id);
@@ -146,13 +145,13 @@ function TableStatus({ listReview }: { listReview: any }) {
           color={AdminColor.orange}
           component={
             <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
           }
         />
         {/* <Group

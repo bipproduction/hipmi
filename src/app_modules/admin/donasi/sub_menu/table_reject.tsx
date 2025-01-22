@@ -25,6 +25,7 @@ import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminDonasi_getListReject from "../fun/get/get_list_reject";
+import { IconEyeCheck } from "@tabler/icons-react";
 
 export default function AdminDonasi_TableReject({
   dataReject,
@@ -95,7 +96,7 @@ function TableStatus({ dataReject }: { dataReject: any }) {
           <Button
             style={{ backgroundColor: MainColor.green }}
             color={AccentColor.white}
-            leftIcon={<IconEyeEdit />}
+            leftIcon={<IconEyeCheck />}
             radius={"xl"}
             onClick={() =>
               router.push(RouterAdminDonasi_OLD.detail_reject + `${e.id}`)
