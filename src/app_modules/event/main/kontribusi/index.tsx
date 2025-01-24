@@ -11,7 +11,7 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import { ComponentEvent_CardKontributor } from "../../component/card_view/card_kontributor";
 import { event_getListKontibusiByUserId } from "../../fun/get/get_list_kontribusi_by_user_id";
-import { MODEL_EVENT_PESERTA } from "../../model/interface";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 
 export default function Event_Kontribusi({
   listKontribusi,

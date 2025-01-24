@@ -1,7 +1,7 @@
 "use client";
 
 import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import {
   Button,
   Center,

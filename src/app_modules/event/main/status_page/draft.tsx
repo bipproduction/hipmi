@@ -8,7 +8,7 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import ComponentEvent_BoxListStatus from "../../component/box_list_status";
 import { event_getAllDraft } from "../../fun/get/status/get_all_draft";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 
 export default function Event_StatusDraft({
   listDraft,

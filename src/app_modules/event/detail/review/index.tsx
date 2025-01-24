@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { IRealtimeData } from "@/app/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";

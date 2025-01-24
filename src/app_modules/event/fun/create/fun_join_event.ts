@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { MODEL_EVENT_PESERTA } from "../../model/interface";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 import { revalidatePath } from "next/cache";
 
 export async function Event_funJoinEvent(data: MODEL_EVENT_PESERTA) {

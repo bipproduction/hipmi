@@ -22,7 +22,7 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import { ComponentEvent_CardBeranda } from "../component/card_view/card_beranda";
 import { event_getListAllPublish } from "../fun/get/get_list_all_publish";
-import { MODEL_EVENT } from "../model/interface";
+import { MODEL_EVENT } from "../_lib/interface";
 import { Event_ComponentSkeletonBeranda } from "../component";
 import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
 

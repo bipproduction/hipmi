@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { revalidatePath } from "next/cache";
 import _ from "lodash";
 

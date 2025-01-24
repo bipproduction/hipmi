@@ -8,7 +8,7 @@ import {
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import {
   Affix,
   Box,

@@ -1,3 +1,5 @@
+import { IEventSponsor } from "./interface";
+
 export const apiGetEventDetailById = async ({ id }: { id: string }) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
@@ -68,14 +70,14 @@ export const apiGetEventCreateSponsor = async ({
   data,
 }: {
   id: string;
-  data: any;
+  data: IEventSponsor;
 }) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
 
   const response = await fetch(`/api/event/sponsor/${id}`, {
     method: "POST",
-    body: data,
+    body: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

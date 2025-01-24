@@ -2,7 +2,7 @@
 
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 
 export default function Event_DetailPublish({
   dataEvent,

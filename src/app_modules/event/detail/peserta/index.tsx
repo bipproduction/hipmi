@@ -2,7 +2,7 @@
 
 import { Stack, Loader, Center } from "@mantine/core";
 import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
-import { MODEL_EVENT_PESERTA } from "../../model/interface";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 import { useParams } from "next/navigation";
 import ComponentEvent_ListPesertaNew from "../../component/detail/list_peserta_new";
 import { useShallowEffect } from "@mantine/hooks";

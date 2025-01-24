@@ -962,14 +962,15 @@ model MasterKategoriApp {
 // ======================= EVENT ======================= //
 
 model EventSponsor {
-  id        String   @id @default(cuid())
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  fileName  String
-  fileExt   String?
-  fileId    String
+  id         String   @id @default(cuid())
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  isTransfer Boolean? @default(false)
+  fileName   String
+  fileExt    String?
+  fileId     String
 
   Author   User?   @relation(fields: [auhtorId], references: [id])
   auhtorId String?

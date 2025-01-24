@@ -2,7 +2,7 @@
 
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { Grid, Stack, Text, Title } from "@mantine/core";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { MainColor } from "@/app_modules/_global/color";
 import { Event_ComponentSkeletonDetailData } from "../skeleton/comp_skeleton_detail_data";
 
