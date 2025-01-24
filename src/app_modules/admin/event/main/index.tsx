@@ -2,14 +2,17 @@
 
 import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
 
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import {
-  Group,
+  Flex,
   Paper,
   SimpleGrid,
   Stack,
   Text,
+  ThemeIcon,
   Title
 } from "@mantine/core";
+import { IconAlertTriangle, IconBookmark, IconBriefcase, IconHistory, IconUpload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 
@@ -36,14 +39,16 @@ export default function AdminEvent_Main({
       name: "Publish",
       jumlah: countPublish,
       path: RouterAdminEvent.table_publish,
-      color: "green",
+      color: MainColor.green,
+      icon: <IconUpload size={18} color="#4CAF4F"/>,
     },
     {
       id: 2,
       name: "Review",
       jumlah: countReview,
       path: RouterAdminEvent.table_review,
-      color: "orange",
+      color: MainColor.orange,
+      icon: <IconBookmark size={18}  color="#FF7043"/>
     },
     // {
     //   id: 3,
@@ -53,28 +58,32 @@ export default function AdminEvent_Main({
     //   color: "yellow",
     // },
     {
-      id: 4,
+      id: 3,
       name: "Reject",
       jumlah: countReject,
       path: RouterAdminEvent.table_reject,
-      color: "red",
+      color: MainColor.red,
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
+    },
+    {
+      id: 4,
+      name: "Riwayat Event",
+      jumlah: countRiwayat,
+      path: RouterAdminEvent.table_publish,
+      color: AccentColor.softblue,
+      icon: <IconHistory size={18} color="#007CBA"/>
     },
   ];
 
   const listBox2 = [
+
     {
       id: 1,
-      name: "Riwayat Event",
-      jumlah: countRiwayat,
-      path: RouterAdminEvent.table_publish,
-      color: "gray",
-    },
-    {
-      id: 2,
       name: "Tipe Acara",
       jumlah: countTipeAcara,
       path: RouterAdminEvent.table_publish,
-      color: "gray",
+      color: "#A888E2",
+      icon: <IconBriefcase size={18} color="#A888E2" />
     },
   ];
 
@@ -95,18 +104,23 @@ export default function AdminEvent_Main({
           {listStatus.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={e.color}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah}</Title>
-                </Stack>
-              </Group>
+
+              <Stack spacing={0}>
+                <Text fw={"bold"} color={AccentColor.white}>{e.name}</Text>
+                <Flex align={"center"} justify={"space-between"}>
+                  <Title c={AccentColor.white}>{e.jumlah}</Title>
+                  <ThemeIcon radius={"xl"} size={"md"} color={AccentColor.white}>
+                    {e.icon}
+                  </ThemeIcon>
+                </Flex>
+              </Stack>
+
             </Paper>
           ))}
         </SimpleGrid>
@@ -122,18 +136,21 @@ export default function AdminEvent_Main({
           {listBox2.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={e.color}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah}</Title>
+                <Stack spacing={0}>
+                  <Text fw={"bold"} color={AccentColor.white}>{e.name}</Text>
+                  <Flex align={"center"} justify={"space-between"}>
+                    <Title c={AccentColor.white}>{e.jumlah}</Title>
+                    <ThemeIcon radius={"xl"} size={"md"} bg={AccentColor.white}>
+                      {e.icon}
+                    </ThemeIcon>
+                  </Flex>
                 </Stack>
-              </Group>
             </Paper>
           ))}
         </SimpleGrid>
