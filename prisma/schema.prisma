@@ -972,8 +972,8 @@ model EventSponsor {
   fileExt    String?
   fileId     String
 
-  Author   User?   @relation(fields: [auhtorId], references: [id])
-  auhtorId String?
+  Author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
 
   Event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?

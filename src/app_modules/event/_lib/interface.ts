@@ -40,6 +40,7 @@ export interface IEventSponsor {
   createdAt?: Date;
   updatedAt?: Date;
   name?: string;
+  isTransfer?: boolean;
   fileName?: string;
   fileExt?: string;
   fileId?: string;
