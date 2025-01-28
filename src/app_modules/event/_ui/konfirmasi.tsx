@@ -18,7 +18,7 @@ import { useState } from "react";
 import { event_funUpdateKehadiran } from "../fun";
 import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm";
 import { gs_event_hotMenu } from "../global_state";
-import { MODEL_EVENT } from "../model/interface";
+import { MODEL_EVENT } from "../_lib/interface";
 import { Event_funJoinEvent } from "../fun/create/fun_join_event";
 import "moment/locale/id";
 import { apiGetEventDetailById } from "../_lib/api_event";

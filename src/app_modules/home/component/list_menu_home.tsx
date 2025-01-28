@@ -11,7 +11,7 @@ import { IconAffiliate, IconBriefcase, IconHeartHandshake, IconMap2, IconMessage
 export const listMenuHomeFooter = [
   {
     id: 1,
-    name: "Forums",
+    name: "Forum",
     icon: <IconMessages />,
     link: RouterForum.splash,
   },

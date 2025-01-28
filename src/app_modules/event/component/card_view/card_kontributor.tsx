@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_EVENT_PESERTA } from "../../model/interface";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 
 export function ComponentEvent_CardKontributor({
   data,

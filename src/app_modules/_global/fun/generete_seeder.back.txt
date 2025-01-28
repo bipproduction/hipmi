@@ -27,6 +27,8 @@ import { new_status_transaksi_investasi } from "@/bin/seeder/investasi";
 import { master_nama_bank } from "@/bin/seeder/master";
 import pLimit from "p-limit";
 
+// PAKEK p-limit
+
 async function masterUserRole() {
   for (let i of userRole) {
     await prisma.masterUserRole.upsert({
@@ -43,10 +45,11 @@ async function masterUserRole() {
       },
     });
   }
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   console.log("masterUserRole success");
 }
 
-async function seederUser() {
+async function user() {
   for (let i of userSeeder) {
     await prisma.user.upsert({
       where: {
@@ -66,10 +69,19 @@ async function seederUser() {
       },
     });
   }
-  console.log("user seeder success");
+  console.log("user success");
 }
 
-async function masterBisnis() {
+const listAntrean = [masterUserRole, user];
+const limit = pLimit(1);
+
+(async () => {
+  console.log("start generate seeder");
+  await Promise.all(listAntrean.map((fn) => limit(fn)));
+  console.log("success generate seeder");
+})();
+
+export async function generate_seeder() {
   for (let i of bidangBisnis) {
     await prisma.masterBidangBisnis.upsert({
       where: {
@@ -85,10 +97,7 @@ async function masterBisnis() {
       },
     });
   }
-  console.log("masterBisnis success");
-}
 
-async function masterPencarianInvestor() {
   for (let i of pencarianInvestor) {
     await prisma.masterPencarianInvestor.upsert({
       where: {
@@ -105,10 +114,6 @@ async function masterPencarianInvestor() {
     });
   }
 
-  console.log("masterPencarianInvestor success");
-}
-
-async function masterPembagianDeviden() {
   for (let i of pembagianDeviden) {
     await prisma.masterPembagianDeviden.upsert({
       where: {
@@ -125,10 +130,6 @@ async function masterPembagianDeviden() {
     });
   }
 
-  console.log("masterPembagianDeviden success");
-}
-
-async function masterPeriodeDeviden() {
   for (let i of periodeDeviden) {
     await prisma.masterPeriodeDeviden.upsert({
       where: {
@@ -145,10 +146,6 @@ async function masterPeriodeDeviden() {
     });
   }
 
-  console.log("masterPeriodeDeviden success");
-}
-
-async function masterStatusInvestasi() {
   for (let i of statusInvestasi) {
     await prisma.masterStatusInvestasi.upsert({
       where: {
@@ -167,10 +164,6 @@ async function masterStatusInvestasi() {
     });
   }
 
-  console.log("masterStatusInvestasi success");
-}
-
-async function masterNamaBank() {
   for (let i of master_nama_bank) {
     await prisma.masterBank.upsert({
       where: {
@@ -191,10 +184,6 @@ async function masterNamaBank() {
     });
   }
 
-  console.log("masterNamaBank success");
-}
-
-async function masterStatusTransaksiInvestasi() {
   for (let i of statusTransaksiInvestasi) {
     await prisma.masterStatusTransaksiInvestasi.upsert({
       where: {
@@ -213,10 +202,6 @@ async function masterStatusTransaksiInvestasi() {
     });
   }
 
-  console.log("masterStatusTransaksiInvestasi success");
-}
-
-async function masterProgressInvestasi() {
   for (let i of jenisProgres) {
     await prisma.masterProgresInvestasi.upsert({
       where: {
@@ -232,10 +217,6 @@ async function masterProgressInvestasi() {
     });
   }
 
-  console.log("masterProgressInvestasi success");
-}
-
-async function masterStatusDonasi() {
   for (let d of donasi_status) {
     await prisma.donasiMaster_StatusDonasi.upsert({
       where: {
@@ -251,10 +232,6 @@ async function masterStatusDonasi() {
     });
   }
 
-  console.log("masterStatusDonasi success");
-}
-
-async function masterKategoriDonasi() {
   for (let d of donasi_kategori) {
     await prisma.donasiMaster_Kategori.upsert({
       where: {
@@ -270,10 +247,6 @@ async function masterKategoriDonasi() {
     });
   }
 
-  console.log("masterKategoriDonasi success");
-}
-
-async function masterDurasiDonasi() {
   for (let d of donasi_durasi) {
     await prisma.donasiMaster_Durasi.upsert({
       where: {
@@ -289,10 +262,6 @@ async function masterDurasiDonasi() {
     });
   }
 
-  console.log("masterDurasiDonasi success");
-}
-
-async function masterDonasiNamaBank() {
   for (let i of donasi_namaBank) {
     await prisma.donasiMaster_Bank.upsert({
       where: {
@@ -311,10 +280,6 @@ async function masterDonasiNamaBank() {
     });
   }
 
-  console.log("masterDonasiBank success");
-}
-
-async function masterDonasiStatusInvoice() {
   for (let d of donasi_status_invoice) {
     await prisma.donasiMaster_StatusInvoice.upsert({
       where: {
@@ -330,10 +295,6 @@ async function masterDonasiStatusInvoice() {
     });
   }
 
-  console.log("masterDonasiStatusInvoice success");
-}
-
-async function masterEventStatus() {
   for (let e of event_status) {
     await prisma.eventMaster_Status.upsert({
       where: {
@@ -349,10 +310,6 @@ async function masterEventStatus() {
     });
   }
 
-  console.log("masterEventStatus success");
-}
-
-async function masterEventTipeAcara() {
   for (let e of event_tipe_acara) {
     await prisma.eventMaster_TipeAcara.upsert({
       where: {
@@ -368,10 +325,6 @@ async function masterEventTipeAcara() {
     });
   }
 
-  console.log("masterEventTipeAcara success");
-}
-
-async function masterVotingStatus() {
   for (let v of voting_status) {
     await prisma.voting_Status.upsert({
       where: {
@@ -387,10 +340,6 @@ async function masterVotingStatus() {
     });
   }
 
-  console.log("masterVotingStatus success");
-}
-
-async function masterStatusProses() {
   for (let m of master_status) {
     await prisma.masterStatus.upsert({
       where: {
@@ -406,10 +355,6 @@ async function masterStatusProses() {
     });
   }
 
-  console.log("masterStatusProses success");
-}
-
-async function masterForumKategoriReport() {
   for (let m of forum_kategori_report) {
     await prisma.forumMaster_KategoriReport.upsert({
       where: {
@@ -426,10 +371,6 @@ async function masterForumKategoriReport() {
     });
   }
 
-  console.log("masterForumKategoriReport success");
-}
-
-async function masterForumStatusPosting() {
   for (let s of forum_status_posting) {
     await prisma.forumMaster_StatusPosting.upsert({
       where: {
@@ -444,10 +385,6 @@ async function masterForumStatusPosting() {
     });
   }
 
-  console.log("masterForumStatusPosting success");
-}
-
-async function masterCollaborationIndustri() {
   for (let p of collaboration_industri) {
     await prisma.projectCollaborationMaster_Industri.upsert({
       where: {
@@ -462,10 +399,6 @@ async function masterCollaborationIndustri() {
     });
   }
 
-  console.log("masterCollaborationIndustri success");
-}
-
-async function masterCollaborationStatus() {
   for (let p of collaboration_status) {
     await prisma.projectCollaborationMaster_Status.upsert({
       where: {
@@ -480,10 +413,6 @@ async function masterCollaborationStatus() {
     });
   }
 
-  console.log("masterCollaborationStatus success");
-}
-
-async function seederNomorAdmin() {
   for (let a of nomor_admin) {
     await prisma.nomorAdmin.upsert({
       where: {
@@ -500,10 +429,6 @@ async function seederNomorAdmin() {
     });
   }
 
-  console.log("seederNomorAdmin success");
-}
-
-async function masterKategoriApp() {
   for (let a of master_kategori_app) {
     await prisma.masterKategoriApp.upsert({
       where: {
@@ -520,10 +445,6 @@ async function masterKategoriApp() {
     });
   }
 
-  console.log("masterKategoriApp success");
-}
-
-async function masterInvestasiNewTransaksiStatus() {
   for (let a of new_status_transaksi_investasi) {
     await prisma.investasiMaster_StatusInvoice.upsert({
       where: {
@@ -538,46 +459,6 @@ async function masterInvestasiNewTransaksiStatus() {
         name: a.name,
       },
     });
-  }
-
-  console.log("masterInvestasiNewTransaksiStatus success");
-}
-
-const listSeederQueue = [
-  masterUserRole,
-  seederUser,
-  masterBisnis,
-  masterPencarianInvestor,
-  masterPembagianDeviden,
-  masterPeriodeDeviden,
-  masterStatusInvestasi,
-  masterNamaBank,
-  masterStatusTransaksiInvestasi,
-  masterProgressInvestasi,
-  masterStatusDonasi,
-  masterKategoriDonasi,
-  masterDurasiDonasi,
-  masterDonasiNamaBank,
-  masterDonasiStatusInvoice,
-  masterEventStatus,
-  masterEventTipeAcara,
-  masterVotingStatus,
-  masterStatusProses,
-  masterForumKategoriReport,
-  masterForumStatusPosting,
-  masterCollaborationIndustri,
-  masterCollaborationStatus,
-  seederNomorAdmin,
-  masterKategoriApp,
-  masterInvestasiNewTransaksiStatus,
-];
-const limit = pLimit(1);
-
-export async function generate_seeder() {
-  try {
-    await Promise.all(listSeederQueue.map((fn) => limit(fn)));
-  } catch (error) {
-    console.error("error generate seeder", error);
   }
 
   return { status: 200, success: true };

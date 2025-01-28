@@ -17,7 +17,7 @@ import { Event_ComponentSkeletonDetailData } from "../../component";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { clientLogger } from "@/util/clientLogger";
 

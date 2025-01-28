@@ -32,6 +32,8 @@ import {
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { DIRECTORY_ID } from "@/app/lib";
+import { IEventSponsor } from "../../_lib/interface";
+import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
 
 function Event_TambahSponsor() {
   const params = useParams<{ id: string }>();
@@ -62,9 +64,11 @@ function Event_TambahSponsor() {
         return;
       }
 
-      const data = {
+      const fileType = file.type.split("/").pop();
+      const data: IEventSponsor = {
         name: name,
         fileName: file.name,
+        fileExt: fileType,
         fileId: uploadFile.data.id,
       };
 
@@ -73,9 +77,14 @@ function Event_TambahSponsor() {
         data: data,
       });
 
+      console.log("res >>", created);
+
       if (created) {
-        setIsLoading(false);
+        router.replace(RouterEvent.nominal_sponsor({ id: params.id }));
         ComponentGlobal_NotifikasiBerhasil(created.message);
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(created.message);
       }
     } catch (error) {
       setIsLoading(false);
@@ -168,7 +177,7 @@ function Event_TambahSponsor() {
             loaderPosition="center"
             radius={"xl"}
             onClick={() => {
-              // onCreated();
+              onCreated();
             }}
             bg={MainColor.yellow}
             color="yellow"

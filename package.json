@@ -69,6 +69,7 @@
     "next": "^13.5.4-canary.8",
     "next-dev": "^1.1.9",
     "next-scroll-loader": "^1.0.9",
+    "p-limit": "^6.2.0",
     "pdfjs-dist": "^4.6.82",
     "postcss": "8.4.27",
     "prisma": "^5.19.1",

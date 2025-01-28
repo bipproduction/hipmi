@@ -8,7 +8,7 @@ import {
 import { Card, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_EVENT } from "../model/interface";
+import { MODEL_EVENT } from "../_lib/interface";
 
 export default function ComponentEvent_BoxListStatus({
   data,

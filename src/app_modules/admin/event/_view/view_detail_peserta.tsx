@@ -1,6 +1,6 @@
 "use client";
 
-import { MODEL_EVENT_PESERTA } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT_PESERTA } from "@/app_modules/event/_lib/interface";
 import {
   Badge,
   Button,

@@ -19,7 +19,7 @@ import "moment/locale/id";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { apiGetEventDetailById } from "../../_lib/api_event";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 import Event_ComponentBoxDaftarPeserta from "./comp_box_daftar_peserta";
 import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";

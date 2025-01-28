@@ -3,7 +3,7 @@
 import prisma from "@/app/lib/prisma";
 import _ from "lodash";
 import { revalidatePath } from "next/cache";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 
 export async function Event_funEditById(data: MODEL_EVENT) {
   const updt = await prisma.event.update({
