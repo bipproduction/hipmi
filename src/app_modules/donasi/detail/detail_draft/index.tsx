@@ -16,11 +16,16 @@ import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
 import { IRealtimeData } from "@/app/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import funDeleteDonasi from "@/app_modules/investasi/fun/fun_delete_donasi";
+import { clientLogger } from "@/util/clientLogger";
+import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
 
 export default function DetailDraftDonasi({
   dataDonasi,
 }: {
-  dataDonasi: MODEL_DONASI;
+    dataDonasi: MODEL_DONASI;
 }) {
   const [data, setData] = useState(dataDonasi);
 
@@ -44,15 +49,19 @@ export default function DetailDraftDonasi({
 
 function ButtonAjukanPenggalangan({
   dataDonasi,
+
 }: {
   dataDonasi: MODEL_DONASI;
+
 }) {
   const router = useRouter();
-  const [isLoading, setLoading] = useState(false);
+  const [isLoadingAjukan, setLoadingAjukan] = useState(false);
+  const [isLoadingDelete, setLoadingDelete] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   async function onChangeStatus() {
     const res = await Donasi_funGantiStatus(dataDonasi.id, "2");
+   try {
     if (res.status === 200) {
 
       const dataNotifikasi: IRealtimeData = {
@@ -80,20 +89,27 @@ function ButtonAjukanPenggalangan({
           dataMessage: dataNotifikasi,
         });
 
-        setLoading(true);
+        setLoadingAjukan(true);
         ComponentGlobal_NotifikasiBerhasil("Berhasil Diajukan");
         router.push(RouterDonasi.status_galang_dana({ id: "2" }));
       }
     } else {
+      setLoadingAjukan(false);
       ComponentGlobal_NotifikasiPeringatan(res.message);
     }
+   } catch (error) {
+     setLoadingAjukan(false);
+    clientLogger.error("Error ajukan donasi", error);
+   }
   }
   return (
     <>
       <Button
         radius={"xl"}
-        bg={"orange"}
-        color="orange"
+        style={{
+          backgroundColor: AccentColor.yellow
+        }}
+        c={MainColor.darkblue}
         onClick={() => setOpenModal(true)}
       >
         Ajukan Kembali
@@ -104,17 +120,20 @@ function ButtonAjukanPenggalangan({
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+            style={{
+              backgroundColor: AccentColor.yellow
+            }}
             loaderPosition="center"
-            loading={isLoading}
+            loading={isLoadingAjukan}
             radius={"xl"}
-            bg={"orange"}
-            color="orange"
+            c={MainColor.darkblue}
             onClick={() => onChangeStatus()}
           >
             Ajukan

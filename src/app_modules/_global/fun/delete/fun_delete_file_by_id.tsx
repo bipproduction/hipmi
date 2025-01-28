@@ -1,6 +1,6 @@
 import { clientLogger } from "@/util/clientLogger";
 
-export async function funGlobal_DeleteFileById({
+export async function funDeteleteFileById({
   fileId,
   dirId,
 }: {
@@ -8,9 +8,23 @@ export async function funGlobal_DeleteFileById({
   dirId?: string;
 }) {
   try {
+    const tokenResponse = await fetch("/api/get-cookie");
+    if (!tokenResponse.ok) {
+      return { success: false, message: "Token not found" };
+    }
+    const { token } = await tokenResponse.json();
+
+    if (!token) {
+      return { success: false, message: "Token not found" };
+    }
+
     const res = await fetch("/api/image/delete", {
       method: "DELETE",
       body: JSON.stringify({ fileId, dirId }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();
@@ -22,29 +36,7 @@ export async function funGlobal_DeleteFileById({
       return { success: false, message: data.message };
     }
   } catch (error) {
-    console.error("Upload error:", error);
+    clientLogger.error("Upload error:", error);
     return { success: false, message: "An unexpected error occurred" };
   }
-  // try {
-  //   const res = await fetch(
-  //     `https://wibu-storage.wibudev.com/api/files/${fileId}/delete`,
-  //     {
-  //       method: "DELETE",
-  //       headers: {
-  //         Authorization: `Bearer ${process.env.WS_APIKEY}`,
-  //       },
-  //     }
-  //   );
-
-  //   if (res.ok) {
-  //     const hasil = await res.json();
-  //     return { success: true, message: "File berhasil dihapus" };
-  //   } else {
-  //     const errorText = await res.json();
-  //     return { success: false, message: errorText.message };
-  //   }
-  // } catch (error) {
-  //   console.error("Upload error:", error);
-  //   return { success: false, message: "An unexpected error occurred" };
-  // }
 }

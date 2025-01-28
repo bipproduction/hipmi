@@ -3,6 +3,7 @@ import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
@@ -131,7 +132,7 @@ export default function InvestasiCreateNew() {
         {/* Upload Image */}
         <Stack spacing={0}>
           <Box mb={"sm"}>
-            <ComponentGlobal_BoxInformation informasi="Gambar investasi bisa berupa ilustrasi, poster atau foto terkait investasi" />
+            <ComponentGlobal_BoxInformation informasi="Gambar investasi bisa berupa ilustrasi, poster atau foto terkait investasi." />
           </Box>
           <ComponentGlobal_BoxUploadImage>
             {isLoadingImg ? (
@@ -155,7 +156,13 @@ export default function InvestasiCreateNew() {
           </ComponentGlobal_BoxUploadImage>
 
           {/* Upload Foto */}
-          <Group position="center">
+          <Center>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFileImage}
+              onSetImage={setImg}
+            />
+          </Center>
+          {/* <Group position="center">
             <FileButton
               onChange={async (files: any) => {
                 try {
@@ -196,12 +203,12 @@ export default function InvestasiCreateNew() {
                 </Button>
               )}
             </FileButton>
-          </Group>
+          </Group> */}
         </Stack>
 
         {/* Upload File */}
         <Stack spacing={"sm"}>
-          <ComponentGlobal_BoxInformation informasi="File prospektus wajib untuk diupload, agar calon investor paham dengan prospek investasi yang akan anda jalankan kedepan !" />
+          <ComponentGlobal_BoxInformation informasi="File prospektus wajib untuk diupload, agar calon investor paham dengan prospek investasi yang akan anda jalankan kedepannya." />
           <ComponentGlobal_CardStyles marginBottom={"0px"}>
             {isLoadingPdf ? (
               <Stack justify="center" align="center" h={"100%"}>
@@ -228,7 +235,16 @@ export default function InvestasiCreateNew() {
             )}
           </ComponentGlobal_CardStyles>
 
-          <Group position="center">
+          <Center>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFilePdf}
+              onSetImage={setFPdf}
+              accept={"application/pdf"}
+              text="Upload File"
+              icon={<IconFileTypePdf size={20} />}
+            />
+          </Center>
+          {/* <Group position="center">
             <FileButton
               accept={"application/pdf"}
               onChange={async (files: any) => {
@@ -269,14 +285,20 @@ export default function InvestasiCreateNew() {
                 </Button>
               )}
             </FileButton>
-          </Group>
+          </Group> */}
         </Stack>
 
         <Stack>
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             withAsterisk
@@ -294,7 +316,13 @@ export default function InvestasiCreateNew() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             icon={<Text fw={"bold"}>Rp.</Text>}
@@ -331,7 +359,13 @@ export default function InvestasiCreateNew() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             icon={<Text fw={"bold"}>Rp.</Text>}
@@ -378,7 +412,13 @@ export default function InvestasiCreateNew() {
             readOnly
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
           />
@@ -386,7 +426,13 @@ export default function InvestasiCreateNew() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             rightSection={
@@ -409,7 +455,16 @@ export default function InvestasiCreateNew() {
           <Select
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
               },
             }}
             withAsterisk
@@ -432,7 +487,16 @@ export default function InvestasiCreateNew() {
           <Select
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
               },
             }}
             withAsterisk
@@ -452,7 +516,16 @@ export default function InvestasiCreateNew() {
           <Select
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
               },
             }}
             withAsterisk

@@ -18,6 +18,7 @@ import { ComponentInvestasi_DetailDataNonPublish } from "../../component/detail/
 import { investasi_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { gs_investasi_status } from "../../g_state";
 import { MODEL_INVESTASI } from "../../_lib/interface";
+import { clientLogger } from "@/util/clientLogger";
 export default function DetailDraftInvestasi({
   dataInvestasi,
 }: {
@@ -33,37 +34,43 @@ export default function DetailDraftInvestasi({
       statusId: "2",
     });
 
-    if (res.status === 200) {
-      const dataNotif = {
-        appId: res.data?.id,
-        userId: res.data?.authorId,
-        pesan: res.data?.title,
-        status: res.data?.MasterStatusInvestasi?.name,
-        kategoriApp: "INVESTASI",
-        title: "Mengajukan review",
-      };
+    try {
+      setIsLoading(true);
+      if (res.status === 200) {
+        const dataNotif = {
+          appId: res.data?.id,
+          userId: res.data?.authorId,
+          pesan: res.data?.title,
+          status: res.data?.MasterStatusInvestasi?.name,
+          kategoriApp: "INVESTASI",
+          title: "Mengajukan review",
+        };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotif as any,
-      });
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotif as any,
+        });
 
-      if (notif.status === 201) {
-        mqtt_client.publish("ADMIN", JSON.stringify({ count: 1 }));
+        if (notif.status === 201) {
+          mqtt_client.publish("ADMIN", JSON.stringify({ count: 1 }));
 
-        setIsLoading(true);
-        ComponentGlobal_NotifikasiBerhasil("Review Berhasil Diajukan");
-        router.push(RouterInvestasi_OLD.portofolio);
-        setActiveTab("Review");
+          ComponentGlobal_NotifikasiBerhasil("Review Berhasil Diajukan");
+          router.push(RouterInvestasi_OLD.portofolio);
+          setActiveTab("Review");
+        }
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error ajukan review", error);
     }
   }
 
   return (
     <>
       <Stack mb={"lg"}>
-        {dataInvestasi.catatan && <ComponentGlobal_BoxInformation informasi={dataInvestasi.catatan} isReport/>}
+        {dataInvestasi.catatan && <ComponentGlobal_BoxInformation informasi={dataInvestasi.catatan} isReport />}
         <ComponentInvestasi_DetailDataNonPublish data={dataInvestasi} />
         <Stack>
           <Button

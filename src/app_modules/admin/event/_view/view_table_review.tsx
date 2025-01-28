@@ -8,7 +8,7 @@ import {
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import {
   Affix,
   Box,
@@ -47,6 +47,8 @@ import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_by_id";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_ComponentTableReview({
   listData,
@@ -58,7 +60,7 @@ export default function AdminEvent_ComponentTableReview({
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isModal, setModal] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const [catatan, setCatatan] = useState("");
   const [eventId, setEventId] = useState("");
@@ -123,6 +125,7 @@ export default function AdminEvent_ComponentTableReview({
 
       const res = await AdminEvent_funEditStatusPublishById(eventId, "1");
       if (res.status === 200) {
+        setIsLoading(true)
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.id as any,
           status: res.data?.EventMaster_Status?.name as any,
@@ -159,9 +162,12 @@ export default function AdminEvent_ComponentTableReview({
 
         ComponentAdminGlobal_NotifikasiBerhasil("Berhasil update status");
       } else {
+        setModal(false)
+        setIsLoading(false)
         ComponentAdminGlobal_NotifikasiGagal(res.message);
       }
     } else {
+      setModal(false)
       ComponentAdminGlobal_NotifikasiPeringatan(
         "Review di batalkan oleh user, reload halaman review !"
       );
@@ -320,7 +326,21 @@ export default function AdminEvent_ComponentTableReview({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.orange}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -335,7 +355,7 @@ export default function AdminEvent_ComponentTableReview({
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           {isShowReload && (
@@ -448,6 +468,43 @@ export default function AdminEvent_ComponentTableReview({
           </Group>
         </Stack>
       </Modal>
+      <Modal
+        opened={isModal}
+        title="Anda Yakin Ingin Mempublish Event Ini?"
+        onClose={() => setModal(false)}
+        centered
+        withCloseButton={false}
+        size={"md"}
+      >
+        <Stack>
+          <Group position="right">
+            <Button radius={"xl"} onClick={close}>
+              Batal
+            </Button>
+            <Button
+              radius={"xl"}
+              // onClick={() => {
+              //   onPublish(eventId, tanggal);
+              // }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </>
   );
+  function ModalPublish({
+    eventId,
+    tanggal,
+  }: {
+    eventId: string;
+    tanggal: Date;
+  }) {
+    return (
+      <Stack>
+
+      </Stack>
+    )
+  }
 }

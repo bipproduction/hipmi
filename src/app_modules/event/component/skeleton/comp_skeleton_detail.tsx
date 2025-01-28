@@ -1,5 +1,6 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
-import { Stack, Center, Skeleton, Grid } from "@mantine/core";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Center, Grid, SimpleGrid, Stack } from "@mantine/core";
 
 export function Event_ComponentSkeletonDetail() {
   return (
@@ -8,27 +9,37 @@ export function Event_ComponentSkeletonDetail() {
         <Stack>
           <Grid align="center">
             <Grid.Col span={"content"}>
-              <Skeleton radius={"100%"} h={50} w={50} />
+              <CustomSkeleton radius={"100%"} h={50} w={50} />
             </Grid.Col>
             <Grid.Col span={"auto"}>
-              <Skeleton h={20} w={"50%"} />
+              <CustomSkeleton h={20} w={"50%"} />
             </Grid.Col>
           </Grid>
         </Stack>
         <Stack spacing={"xl"}>
           <Center>
-            <Skeleton h={20} w={"50%"} />
+            <CustomSkeleton h={20} w={"50%"} />
           </Center>
-          <Skeleton h={20} w={"100%"} />
-          <Skeleton h={20} w={"100%"} />
-          <Skeleton h={20} w={"50%"} />
-          <Skeleton h={20} w={"100%"} />
-          <Skeleton h={20} w={"100%"} />
+          <CustomSkeleton h={20} w={"100%"} />
+          <CustomSkeleton h={20} w={"100%"} />
+          <CustomSkeleton h={20} w={"50%"} />
+          <CustomSkeleton h={20} w={"100%"} />
+          <CustomSkeleton h={20} w={"100%"} />
           <Stack>
-            <Skeleton h={20} w={"50%"} />
-            <Skeleton h={20} w={"100%"} />
-            <Skeleton h={20} w={"100%"} />
+            <CustomSkeleton h={20} w={"50%"} />
+            <CustomSkeleton h={20} w={"100%"} />
+            <CustomSkeleton h={20} w={"100%"} />
           </Stack>
+          <SimpleGrid
+            cols={2}
+            breakpoints={[
+              { maxWidth: "48rem", cols: 2, spacing: "sm" },
+              { maxWidth: "36rem", cols: 1, spacing: "sm" },
+            ]}
+          >
+            <CustomSkeleton h={100} w={"100%"} />
+            <CustomSkeleton h={100} w={"100%"} />
+          </SimpleGrid>
         </Stack>
       </ComponentGlobal_CardStyles>
     </>

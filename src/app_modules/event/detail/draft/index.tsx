@@ -17,7 +17,9 @@ import { Event_ComponentSkeletonDetailData } from "../../component";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Event_DetailDraft({
   dataEvent,
@@ -67,12 +69,18 @@ function ButtonAction({
 
   async function onDelete() {
     const res = await Event_funDeleteById(eventId);
-    if (res.status === 200) {
-      router.back();
-      ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+    try {
       setLoadingDelete(true);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+      if (res.status === 200) {
+        router.back();
+        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+      } else {
+        setLoadingDelete(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoadingDelete(false);
+      clientLogger.error("Error delete event", error);
     }
   }
 
@@ -125,7 +133,8 @@ function ButtonAction({
       <Group grow>
         <Button
           radius={"xl"}
-          color="yellow"
+          c={MainColor.darkblue}
+          style={{ backgroundColor: AccentColor.yellow }}
           onClick={() => {
             setOpenModal1(true);
           }}
@@ -134,7 +143,8 @@ function ButtonAction({
         </Button>
         <Button
           radius={"xl"}
-          color="red"
+          c={AccentColor.white}
+          style={{ backgroundColor: MainColor.red }}
           onClick={() => {
             setOpenModal2(true);
           }}
@@ -149,19 +159,20 @@ function ButtonAction({
         opened={openModal1}
         close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal1(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal1(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
+            style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoadingAjukan ? true : false}
             radius={"xl"}
             onClick={() => {
               onAjukan();
             }}
-            color="yellow"
+            c={MainColor.darkblue}
           >
             Ajukan
           </Button>
@@ -174,7 +185,7 @@ function ButtonAction({
         opened={openModal2}
         close={() => setOpenModal2(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal2(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal2(false)}>
             Batal
           </Button>
         }
@@ -186,7 +197,8 @@ function ButtonAction({
             onClick={() => {
               onDelete();
             }}
-            color="red"
+            style={{ backgroundColor: MainColor.red }}
+            c={AccentColor.white}
           >
             Hapus
           </Button>

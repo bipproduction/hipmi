@@ -8,7 +8,7 @@ import {
 } from "@/app_modules/_global/color/color_pallet";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import Event_RiwayatSaya from "./saya";
 import Event_SemuaRiwayat from "./semua";
 

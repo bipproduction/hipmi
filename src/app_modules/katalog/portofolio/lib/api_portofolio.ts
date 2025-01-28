@@ -1,19 +1,50 @@
 export const apiGetPortofolioByProfile = async (path?: string) => {
-   const response = await fetch(`/api/new/portofolio${(path) ? path : ''}`)
-   return await response.json().catch(() => null)
-}
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
 
-export const apiGetOnePortofolioById = async (path: string, cat:string) => {
-   const response = await fetch(`/api/new/portofolio/${path}?cat=${cat}`);
-   return await response.json().catch(() => null);
-}
+  const response = await fetch(`/api/new/portofolio${path ? path : ""}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) return null;
+  const data: Record<string, any> = await response.json();
+  return data;
+};
+
+export const apiGetOnePortofolioById = async (path: string, cat: string) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/new/portofolio/${path}?cat=${cat}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) return null;
+  const data: Record<string, any> = await response.json();
+  return data;
+};
 
 export const apiDeletePortofolio = async (path: string) => {
-   const response = await fetch(`/api/new/portofolio/${path}`, {
-      method: "DELETE",
-      headers: {
-         "Content-Type": "application/json",
-      },
-   });
-   return await response.json().catch(() => null);
-}
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/new/portofolio/${path}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
+};

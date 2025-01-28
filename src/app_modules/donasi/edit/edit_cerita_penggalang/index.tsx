@@ -4,6 +4,7 @@ import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_LoadImageCustom,
 } from "@/app_modules/_global/component";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
@@ -15,16 +16,15 @@ import {
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { clientLogger } from "@/util/clientLogger";
 import {
   AspectRatio,
   Button,
   Center,
-  FileButton,
   Image,
   Stack,
   Textarea,
 } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -60,9 +60,11 @@ export default function EditCeritaPenggalangDonasi({
           file: file as File,
           dirId: DIRECTORY_ID.donasi_cerita_image,
         });
+
         if (!uploadImage.success) {
           setLoading(false);
           ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+          return;
         }
 
         const deleteImage = await funGlobal_DeleteFileById({
@@ -70,7 +72,7 @@ export default function EditCeritaPenggalangDonasi({
         });
         if (!deleteImage.success) {
           setLoading(false);
-          ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar lama");
+          clientLogger.error("Gagal hapus gambar lama");
         }
 
         const res = await Donasi_funUpdateCerita({
@@ -80,7 +82,6 @@ export default function EditCeritaPenggalangDonasi({
         if (res.status === 200) {
           ComponentGlobal_NotifikasiBerhasil(res.message);
           router.back();
-          setLoading(false);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
           setLoading(false);
@@ -93,14 +94,14 @@ export default function EditCeritaPenggalangDonasi({
         if (res.status === 200) {
           ComponentGlobal_NotifikasiBerhasil(res.message);
           router.back();
-          setLoading(false);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
           setLoading(false);
         }
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      clientLogger.error("Error update cerita penggalangan", error);
     }
   }
 
@@ -114,6 +115,7 @@ export default function EditCeritaPenggalangDonasi({
                 color: "white",
               },
             }}
+            maxLength={500}
             autosize
             minRows={2}
             maxRows={7}
@@ -137,11 +139,11 @@ export default function EditCeritaPenggalangDonasi({
           />
           <ComponentGlobal_InputCountDown
             lengthInput={data.pembukaan.length}
-            maxInput={300}
+            maxInput={500}
           />
         </Stack>
 
-        <Stack>
+        <Stack spacing={0}>
           <ComponentGlobal_BoxUploadImage>
             {updateImage ? (
               <AspectRatio ratio={1 / 1} mt={5} maw={300} mx={"auto"}>
@@ -163,34 +165,10 @@ export default function EditCeritaPenggalangDonasi({
           </ComponentGlobal_BoxUploadImage>
 
           <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-
-                  setUpdateImage(buffer);
-                  setFile(files);
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  radius={"xl"}
-                  leftIcon={<IconCamera />}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload
-                </Button>
-              )}
-            </FileButton>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFile}
+              onSetImage={setUpdateImage}
+            />
           </Center>
         </Stack>
 
@@ -201,6 +179,7 @@ export default function EditCeritaPenggalangDonasi({
                 color: "white",
               },
             }}
+            maxLength={1000}
             autosize
             minRows={2}
             maxRows={7}
@@ -224,11 +203,12 @@ export default function EditCeritaPenggalangDonasi({
           />
           <ComponentGlobal_InputCountDown
             lengthInput={data.cerita.length}
-            maxInput={300}
+            maxInput={1000}
           />
         </Stack>
 
         <Button
+          my={"lg"}
           style={{
             transition: "0.5s",
           }}
@@ -247,7 +227,6 @@ export default function EditCeritaPenggalangDonasi({
           Update
         </Button>
       </Stack>
-      {/* <pre> {JSON.stringify(value.pembukaan, null, 2)}</pre> */}
     </>
   );
 }

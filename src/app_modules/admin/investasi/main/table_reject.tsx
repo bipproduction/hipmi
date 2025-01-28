@@ -19,7 +19,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconChevronLeft, IconEdit, IconSearch } from "@tabler/icons-react";
+import { IconChevronLeft, IconDetails, IconEdit, IconEyeCheck, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,6 +28,9 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 import { adminInvestasi_funGetAllReject } from "../fun/get/get_all_reject";
 import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TableRejectInvestasi({
   dataInvestsi,
@@ -169,7 +172,8 @@ function TableView({ listData }: { listData: any }) {
           <Button
             loading={isLoading && idData === e.id}
             loaderPosition="center"
-            color="orange"
+            color="green"
+            leftIcon={<IconEyeCheck size={20}/>}
             radius={"xl"}
             onClick={() => {
               setIdData(e.id);
@@ -187,7 +191,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Reject"
+          color={AdminColor.red}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari nama proyek"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"red.4"}
           p={"xs"}
@@ -204,7 +222,7 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />

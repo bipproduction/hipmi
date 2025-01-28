@@ -3,7 +3,7 @@ import { Paper, Grid, Stack, AspectRatio, Text, Image } from "@mantine/core";
 import _ from "lodash";
 
 import { MODEL_INVESTASI } from "../../_lib/interface";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import { useRouter } from "next/navigation";
 
 export function ComponentInvestasi_CardStatus({
@@ -23,7 +23,7 @@ export function ComponentInvestasi_CardStatus({
           backgroundColor: AccentColor.darkblue,
           borderRadius: "10px",
           border: `2px solid ${AccentColor.blue}`,
-          color: "white",
+          color: MainColor.white,
           marginBottom: "15px",
         }}
       >

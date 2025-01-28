@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Validasi_SkeletonView from "./skeleton";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Validasi() {
   const router = useRouter();
@@ -86,9 +87,6 @@ export default function Validasi() {
         body: JSON.stringify({
           nomor: data.nomor,
         }),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       const result = await res.json();
@@ -99,6 +97,7 @@ export default function Validasi() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+
         router.push(RouterHome.main_home, { scroll: false });
         return;
       }
@@ -109,25 +108,33 @@ export default function Validasi() {
         await auth_funDeleteAktivasiKodeOtpByNomor({
           nomor: data.nomor,
         });
+
         router.push(RouterAdminDashboard.splash_admin, { scroll: false });
         return;
       }
 
       if (res.status === 404) {
+        setLoading(false);
         router.push("/register", { scroll: false });
         ComponentGlobal_NotifikasiBerhasil(result.message);
         return;
       }
 
       if (res.status === 400) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(result.message);
         return;
       }
+
+      if (res.status == 500) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(result.message);
+        return;
+      }
     } catch (error) {
-      console.error(error);
-    } finally {
       setLoading(false);
-    }
+      clientLogger.error("Error validasi:", error);
+    } 
   }
 
   async function onBack() {
@@ -207,14 +214,13 @@ export default function Validasi() {
                   </Text>
                 </Stack>
                 <Center>
-                    <PinInput
-                      
+                  <PinInput
                     size="xl"
                     type={"number"}
                     ref={focusTrapRef}
                     spacing={"md"}
-                      mt={"md"}
-                      styles={{ input: { backgroundColor: MainColor.white } }}
+                    mt={"md"}
+                    styles={{ input: { backgroundColor: MainColor.white } }}
                     onChange={(val) => {
                       setInputOtp(val);
                     }}

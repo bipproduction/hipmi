@@ -35,6 +35,8 @@ import { adminForum_getListPosting } from "../fun/get/get_list_publish";
 import adminJob_getListPublish from "@/app_modules/admin/job/fun/get/get_list_publish";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_TablePosting({
   listPublish,
@@ -168,7 +170,21 @@ function TablePublish({ listPublish }: { listPublish: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Posting"
+          color={AdminColor.green}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari postingan"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"green.4"}
           p={"xs"}
@@ -185,7 +201,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
         
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />

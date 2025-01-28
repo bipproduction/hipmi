@@ -1,5 +1,5 @@
 import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_LoadImageCustom } from "@/app_modules/_global/component";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { Badge, Card, Grid, Group, Progress, Stack, Text } from "@mantine/core";
@@ -36,7 +36,7 @@ export function ComponentDonasi_CardInvoiceNew({ data, }: { data: IDataAllDonasi
                padding: "15px",
                cursor: "pointer",
                borderRadius: "10px",
-               color: "white",
+               color: MainColor.white,
                marginBottom: "15px",
             }}
             onClick={() => onCekInvoice()}

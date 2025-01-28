@@ -3,10 +3,12 @@
 import { APIs } from "@/app/lib";
 import { pathAssetImage } from "@/app/lib/path_asset_image";
 import { RouterImagePreview } from "@/app/lib";
-import { Center, Image, Skeleton } from "@mantine/core";
+import { Center, Image } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MainColor } from "../color";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export function ComponentGlobal_LoadImageLandscape({
   fileId,
@@ -34,12 +36,12 @@ export function ComponentGlobal_LoadImageLandscape({
     }
   }
 
-  if (isImage === null) return <Skeleton h={200} w={"100%"} />;
+  if (isImage === null) return <CustomSkeleton h={200} w={"100%"} />;
 
   if (!isImage)
     return (
       <>
-        <Center h={200} bg={"white"} style={{ borderRadius: "5px" }}>
+        <Center h={200} bg={MainColor.white} style={{ borderRadius: "5px", borderColor: MainColor.white }}>
           <Image
             alt="No Image"
             maw={150}

@@ -19,26 +19,29 @@ export type ITypeStatusNotifikasi =
   | "Menunggu"
   | "Gagal";
 
-
 /**
  * @param kategoriApp | "JOB", "VOTING", "EVENT", "DONASI", "INVESTASI", "COLLABORATION", "FORUM"
  * @type string
  */
 export type IRealtimeData = {
   status?: ITypeStatusNotifikasi;
-  appId: string;
+  appId?: string;
   userId: string;
-  pesan: string;
-  title: string;
-  kategoriApp:
+  pesan?: string;
+  title?: string;
+  kategoriApp?:
     | "JOB"
     | "VOTING"
     | "EVENT"
     | "DONASI"
     | "INVESTASI"
     | "COLLABORATION"
-    | "FORUM";
+    | "FORUM"
+    | "ACCESS"; // Untuk trigger akses user
 };
+
+// Access User
+export const gs_access_user = atom<boolean>(false);
 
 export const gs_realtimeData = atom<IRealtimeData | null>(null);
 export const gs_admin_ntf = atom<number>(0);

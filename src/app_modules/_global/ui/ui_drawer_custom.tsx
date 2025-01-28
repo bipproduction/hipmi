@@ -25,7 +25,7 @@ export default function UIGlobal_DrawerCustom({
 }: {
   opened: boolean;
   close: () => void;
-  component: React.ReactNode;
+   component: React.ReactNode;
 }) {
   return (
     <>

@@ -13,6 +13,7 @@ import {
   MODEL_COLLABORATION,
   MODEL_COLLABORATION_MASTER,
 } from "../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Colab_Edit({
   selectedData,
@@ -30,8 +31,14 @@ export default function Colab_Edit({
           maxLength={100}
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            }
           }}
           label="Judul"
           withAsterisk
@@ -49,8 +56,14 @@ export default function Colab_Edit({
           maxLength={100}
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            }
           }}
           label="Lokasi"
           withAsterisk
@@ -67,8 +80,17 @@ export default function Colab_Edit({
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            },
+            dropdown: {
+              backgroundColor: MainColor.white,
+            }
           }}
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
@@ -113,8 +135,14 @@ export default function Colab_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Tujuan Proyek"
             placeholder="Masukan tujuan proyek"
@@ -138,7 +166,10 @@ export default function Colab_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
               },
             }}
             label="Keuntungan "
@@ -181,12 +212,18 @@ function ButtonAction({ value }: { value: any }) {
     //   return ComponentGlobal_NotifikasiPeringatan("Minimal Ada 2 Partisipan");
 
     await colab_funEditById(value as any).then((res) => {
-      if (res.status === 200) {
+      try {
         setLoading(true);
-        router.back();
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+        if (res.status === 200) {
+          router.back();
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+        } else {
+        setLoading(false)
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
+        setLoading(false)
+        clientLogger.error("Error update proyek", error);
       }
     });
   }

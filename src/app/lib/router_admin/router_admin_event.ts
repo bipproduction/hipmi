@@ -3,6 +3,8 @@ export const RouterAdminEvent = {
 
   // detail
   detail_peserta: "/dev/admin/event/detail/peserta/",
+  detail_publish: "/dev/admin/event/detail/publish/",
+  detail_sponsor: "/dev/admin/event/detail/detail_sponsor/",
 
   // child
   detail_tipe_acara: "/dev/admin/event/child/tipe_acara",
@@ -12,4 +14,7 @@ export const RouterAdminEvent = {
   table_review: "/dev/admin/event/table/review",
   table_publish: "/dev/admin/event/table/publish",
   table_reject: "/dev/admin/event/table/reject",
+
+  
+  
 };

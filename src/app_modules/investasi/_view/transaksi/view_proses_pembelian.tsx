@@ -52,8 +52,8 @@ export function Investasi_ViewProsesPembelian({
       >
         {/* Sisa Lembar Saham */}
         <Group position="apart" mb={"md"}>
-          <Text>Sisa Lembar Saham</Text>
-          <Text fz={23}>
+          <Text c={MainColor.white}>Sisa Lembar Saham</Text>
+          <Text c={MainColor.white} fz={23}>
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+data.sisaLembar)}{" "}
@@ -62,8 +62,8 @@ export function Investasi_ViewProsesPembelian({
 
         {/* Harga perlembar saham */}
         <Group position="apart" mb={"md"}>
-          <Text>Harga Perlembar</Text>
-          <Text fz={23}>
+          <Text c={MainColor.white}>Harga Perlembar</Text>
+          <Text c={MainColor.white} fz={23}>
             Rp.{" "}
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
@@ -74,12 +74,13 @@ export function Investasi_ViewProsesPembelian({
         {/* Lembar saham */}
         <Group position="apart" mb={"md"}>
           <Box>
-            <Text>Jumlah Pembelian</Text>
+            <Text c={MainColor.white}>Jumlah Pembelian</Text>
             <Text c={"blue"} fs={"italic"} fz={10}>
               minimal pembelian 10 lembar
             </Text>
           </Box>
           <NumberInput
+            styles={{ input: { backgroundColor: MainColor.white } }}
             type="number"
             ref={focusTrapRef}
             w={100}
@@ -94,13 +95,13 @@ export function Investasi_ViewProsesPembelian({
           />
         </Group>
 
-        <Divider my={"lg"} />
+        <Divider color={MainColor.white} my={"lg"} />
 
         <Group position="apart" mb={"md"}>
           <Box>
-            <Text>Total Harga</Text>
+            <Text c={MainColor.white}>Total Harga</Text>
           </Box>
-          <Text fz={25}>
+          <Text c={MainColor.white} fz={25}>
             Rp.{" "}
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,

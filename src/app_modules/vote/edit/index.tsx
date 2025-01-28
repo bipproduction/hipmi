@@ -31,6 +31,7 @@ import {
   MODEL_VOTING,
   MODEL_VOTING_DAFTAR_NAMA_VOTE,
 } from "../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Vote_Edit({
   dataVote,
@@ -57,7 +58,13 @@ export default function Vote_Edit({
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
             },
           }}
           label="Judul"
@@ -84,7 +91,13 @@ export default function Vote_Edit({
           <Textarea
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             label="Deskripsi"
@@ -117,9 +130,15 @@ export default function Vote_Edit({
 
         <DatePickerInput
           styles={{
-            label: {
-              color: "white",
-            },
+              label: {
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              },
           }}
           label="Jangka Waktu"
           placeholder="Masukan jangka waktu voting"
@@ -161,7 +180,13 @@ export default function Vote_Edit({
                     <TextInput
                       styles={{
                         label: {
-                          color: "white",
+                          color: MainColor.white,
+                        },
+                        input: {
+                          backgroundColor: MainColor.white,
+                        },
+                        required: {
+                          color: MainColor.red,
                         },
                       }}
                       label={"Nama Pilihan"}
@@ -246,17 +271,24 @@ function ButtonAction({
   async function onUpdate() {
     // console.log(listVoting);
 
-    await Vote_funEditById(data, listVoting).then((res) => {
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Update");
-        // setHotMenu(1);
-        // setTabsStatus("Draft");
-        router.back();
-        setIsLoading(true);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
-      }
-    });
+    try {
+      setIsLoading(true);
+      await Vote_funEditById(data, listVoting).then((res) => {
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Update");
+          // setHotMenu(1);
+          // setTabsStatus("Draft");
+          router.back();
+        } else {
+          setIsLoading(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      });
+    
+    } catch (error) {
+      setIsLoading(false);
+    clientLogger.error("Error update voting", error);
+    } 
   }
 
   return (

@@ -2,7 +2,8 @@
 import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
 import { AccentColor, MainColor, } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
-import { ActionIcon, Avatar, Group, Paper, Skeleton, Stack, Text, Title, } from "@mantine/core";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { ActionIcon, Avatar, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconCircleChevronRight } from "@tabler/icons-react";
 import _ from "lodash";
@@ -40,7 +41,7 @@ export default function ComponentDonasi_InformasiPenggalangMainNew() {
          <Stack
             spacing={"xs"}
             style={{
-               color: "white",
+               color: MainColor.white,
             }}
          >
             <Title order={4}>Informasi Penggalang Dana</Title>
@@ -50,11 +51,11 @@ export default function ComponentDonasi_InformasiPenggalangMainNew() {
                   backgroundColor: AccentColor.darkblue,
                   border: `2px solid ${AccentColor.blue}`,
                   borderRadius: "10px",
-                  color: "white",
+                  color: MainColor.white,
                }}
             >
                {
-                  loading ? <Skeleton height={100} radius="md" width={"100%"} />
+                  loading ? <CustomSkeleton height={100} radius="md" width={"100%"} />
                      :
                      <Stack>
                         <Group position="apart">

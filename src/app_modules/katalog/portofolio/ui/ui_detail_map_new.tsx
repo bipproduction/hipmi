@@ -23,7 +23,7 @@ export default function Portofolio_UiMapNew({ mapboxToken }: { mapboxToken: stri
       try {
          setLoading(true)
          const response = await apiGetOnePortofolioById(param.id, "lokasi");
-         if (response.success) {
+         if (response) {
             setDataPorto(response.data);
          }
       } catch (error) {

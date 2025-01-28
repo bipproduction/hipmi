@@ -3,8 +3,10 @@ export const MainColor = {
   darkblue: "#001D3D",
   yellow: "#E1B525",
   white: "#D4D0D0",
-  red: "#C74E4E",
-  orange: "#E58958"
+  red: "#FF4B4C",
+  orange: "#FF7043",
+  green: "#4CAF4F",
+  login: "#EDEBEBFF"
 };
 
 export const AccentColor = {
@@ -13,7 +15,18 @@ export const AccentColor = {
   blue: "#00447D",
   softblue: "#007CBA",
   skyblue: "#00BFFF",
-  yellow: "#E1B525",
+  yellow: "#F8A824",
+  white: "#FEFFFE"
+
 };
+
+export const AdminColor = {
+  yellow: "#FFEB99",
+  green: "#A7DCA5",
+  orange: "#F7C69B",
+  red: "#F4A8A8"
+}
 //yellow: "#FFC300"
 //yellow: "#FFD60A"
+// white: "#FEFFFE"
+

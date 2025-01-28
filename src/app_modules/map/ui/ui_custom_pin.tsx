@@ -1,18 +1,22 @@
 "use client";
 
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { APIs, DIRECTORY_ID } from "@/app/lib";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_ButtonUploadFileImage } from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { Avatar, Button, Center, FileButton, Stack } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
+import { clientLogger } from "@/util/clientLogger";
+import { Avatar, Button, Center, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -25,10 +29,6 @@ import {
 import { map_funCustomPinMap } from "../fun";
 import { defaultMapZoom } from "../lib/default_lat_long";
 import { MODEL_MAP } from "../lib/interface";
-import { APIs, DIRECTORY_ID } from "@/app/lib";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
 
 export function UiMap_CustomPin({
   dataMap,
@@ -51,7 +51,7 @@ export function UiMap_CustomPin({
         <Stack>
           <ComponentGlobal_BoxInformation
             informasi={
-              "Pin map akan secara otomatis menampilkan logo pada porotofolio ini, jika anda ingin melakukan custom silahkan upload logo pin baru anda !"
+              "Pin map akan secara otomatis menampilkan logo pada porotofolio ini, jika anda ingin melakukan custom silahkan upload logo pin baru anda."
             }
           />
 
@@ -86,40 +86,10 @@ export function UiMap_CustomPin({
           )}
 
           <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-                  if (files.size > MAX_SIZE) {
-                    ComponentGlobal_NotifikasiPeringatan(
-                      PemberitahuanMaksimalFile,
-                      3000
-                    );
-                  } else {
-                    setImgPin(buffer);
-                    setFilePin(files);
-                  }
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  radius={"xl"}
-                  leftIcon={<IconCamera />}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload
-                </Button>
-              )}
-            </FileButton>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFilePin}
+              onSetImage={setImgPin}
+            />
           </Center>
         </Stack>
 
@@ -172,34 +142,68 @@ export function UiMap_CustomPin({
           <AttributionControl customAttribution="Map design by PT. Bali Interaktif Perkasa" />
         </Map>
 
-        <ButtonSimpan mapId={data.id} filePin={filePin} />
+        <ButtonSimpan
+          mapId={data.id}
+          filePin={filePin}
+          fileRemoveId={data.pinId}
+        />
       </Stack>
     </>
   );
 }
 
-function ButtonSimpan({ mapId, filePin }: { mapId: string; filePin: File }) {
+function ButtonSimpan({
+  mapId,
+  filePin,
+  fileRemoveId,
+}: {
+  mapId: string;
+  filePin: File;
+  fileRemoveId: string;
+}) {
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
 
   async function onCustom() {
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
-      file: filePin,
-      dirId: DIRECTORY_ID.map_pin,
-    });
+    try {
+      setLoading(true);
 
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+      const uploadFileToStorage = await funGlobal_UploadToStorage({
+        file: filePin,
+        dirId: DIRECTORY_ID.map_pin,
+      });
 
-    const res = await map_funCustomPinMap({
-      mapId: mapId,
-      fileId: uploadFileToStorage.data.id,
-    });
-    res.status === 200
-      ? (ComponentGlobal_NotifikasiBerhasil(res.message),
-        setLoading(true),
-        router.back())
-      : ComponentGlobal_NotifikasiGagal(res.message);
+      if (!uploadFileToStorage.success) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+        return;
+      }
+
+      const deletePin = await funGlobal_DeleteFileById({
+        fileId: fileRemoveId,
+        dirId: DIRECTORY_ID.map_pin,
+      });
+      if (!deletePin.success) {
+        setLoading(false);
+        clientLogger.error("Error delete logo", deletePin.message);
+      }
+
+      const res = await map_funCustomPinMap({
+        mapId: mapId,
+        fileId: uploadFileToStorage.data.id,
+      });
+
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+        router.back();
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error custom pin", error);
+    }
   }
 
   return (

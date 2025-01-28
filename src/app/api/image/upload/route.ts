@@ -1,19 +1,48 @@
 import { funGetDirectoryNameByValue } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 export async function POST(request: Request) {
   const formData = await request.formData();
-
   const valueOfDir = formData.get("dirId");
   const keyOfDirectory = await funGetDirectoryNameByValue({
     value: valueOfDir as string,
   });
 
   if (request.method === "POST") {
+    let fixFormData;
+    const file: any = formData.get("file");
+    const mimeType = file.type;
+    // console.log("MIME Type:", mimeType);
+
     try {
+      if (mimeType != "application/pdf") {
+        // Resize ukuran
+        const imageBuffer = await file.arrayBuffer();
+        const resize = await sharp(imageBuffer).resize(2000).toBuffer();
+
+        // Convert buffer ke Blob
+        const blob = new Blob([resize], { type: file.type });
+
+        // Convert Blob ke File
+        const resizedFile = new File([blob], file.name, {
+          type: file.type,
+          lastModified: new Date().getTime(),
+        });
+
+        // Buat FormData baru
+        const newFormData = new FormData();
+        newFormData.append("file", resizedFile);
+        newFormData.append("dirId", formData.get("dirId") as string);
+
+        fixFormData = newFormData;
+      } else {
+        fixFormData = formData;
+      }
+
       const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
         method: "POST",
-        body: formData,
+        body: fixFormData,
         headers: {
           Authorization: `Bearer ${process.env.WS_APIKEY}`,
         },

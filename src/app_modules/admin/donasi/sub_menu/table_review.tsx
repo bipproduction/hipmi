@@ -2,7 +2,7 @@
 
 import { gs_adminDonasi_triggerReview } from "@/app/lib/global_state";
 import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import {
@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminDonasi_getListReview from "../fun/get/get_list_review";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_TableReview({
   listReview,
@@ -118,10 +120,9 @@ function TableStatus({ listReview }: { listReview: any }) {
           <Button
             loaderPosition="center"
             loading={isLoading && e?.id == idData ? true : false}
-            color={"orange"}
+            style={{ backgroundColor: MainColor.green, color: AccentColor.white }}
             leftIcon={<IconEyeCheck />}
             radius={"xl"}
-            variant="outline"
             onClick={() => {
               setLoading(true);
               setIdData(e?.id);
@@ -139,7 +140,21 @@ function TableStatus({ listReview }: { listReview: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.orange}
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -154,7 +169,7 @@ function TableStatus({ listReview }: { listReview: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
           {isShowReload && (

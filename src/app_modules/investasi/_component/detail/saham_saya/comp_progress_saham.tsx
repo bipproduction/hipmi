@@ -11,7 +11,7 @@ export function Investasi_ComponentBoxProgress({
     <>
       <Investasi_ComponentStylesCard>
         <Stack>
-          <Text fw={"bold"}>Progres Saham</Text>
+          <Text c={MainColor.white} fw={"bold"}>Progres Saham</Text>
           <Progress
             styles={{ label: { color: "black" } }}
             color={MainColor.yellow}
@@ -19,6 +19,7 @@ export function Investasi_ComponentBoxProgress({
             value={+progress}
             label={progress + "%"}
             radius={"xl"}
+            bg={MainColor.white}
           />
         </Stack>
       </Investasi_ComponentStylesCard>

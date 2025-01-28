@@ -1,11 +1,10 @@
 import { Investasi_UiEditProspektus } from "@/app_modules/investasi/_ui";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const investasiId = params.id;
+export default async function Page() {
 
   return (
     <>
-      <Investasi_UiEditProspektus investasiId={investasiId} />
+      <Investasi_UiEditProspektus />
     </>
   );
 }

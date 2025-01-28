@@ -2,14 +2,16 @@ import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   ActionIcon,
   Box,
+  Flex,
+  Grid,
   Group,
   Image,
   Paper,
   SimpleGrid,
-  Skeleton,
   Stack,
   Text,
 } from "@mantine/core";
@@ -20,11 +22,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiGetDataHome } from "../fun/get/api_home";
 import { listMenuHomeBody, menuHomeJob } from "./list_menu_home";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function BodyHome() {
   const router = useRouter();
-  const [dataUser, setDataUser] = useState<any>({});
-  const [dataJob, setDataJob] = useState<any[]>([]);
+  const [dataUser, setDataUser] = useState<any | null>(null);
+  const [dataJob, setDataJob] = useState<any[] | null>(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -35,24 +38,33 @@ export default function BodyHome() {
 
   async function cekUserLogin() {
     try {
-      const response = await apiGetDataHome("?cat=cek_profile");
-      if (response.success) {
+      const response = await apiGetDataHome({
+        path: "?cat=cek_profile",
+      });
+
+      if (response) {
         setDataUser(response.data);
       }
     } catch (error) {
-      console.error(error);
-    }
+      clientLogger.error("Error get data profile", error);
+    } 
   }
+
+
 
   async function getHomeJob() {
     try {
       setLoadingJob(true);
-      const response = await apiGetDataHome("?cat=job");
-      if (response.success) {
+
+      const response = await apiGetDataHome({
+        path: "?cat=job",
+      });
+
+      if (response) {
         setDataJob(response.data);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error get data job", error);
     } finally {
       setLoadingJob(false);
     }
@@ -60,19 +72,6 @@ export default function BodyHome() {
 
   return (
     <Box>
-      {/* <Paper
-        radius={"xl"}
-        h={150}
-        mb={"xs"}
-        style={{
-          borderRadius: "10px 10px 10px 10px",
-          border: `2px solid ${AccentColor.blue}`,
-          position: "relative",
-        }}
-      >
-       
-      </Paper> */}
-
       <Image
         height={140}
         fit={"cover"}
@@ -102,16 +101,11 @@ export default function BodyHome() {
                 border: `2px solid ${AccentColor.blue}`,
               }}
               onClick={() => {
-                if (
-                  dataUser.profile == undefined ||
-                  dataUser?.profile == null ||
-                  dataJob.length == undefined ||
-                  dataJob.length == null
-                ) {
+                if (dataUser == null) {
                   return null;
                 } else if (
-                  dataUser.profile == undefined ||
-                  dataUser?.profile == null
+                  Object.keys(dataUser).length == 0 ||
+                  dataJob?.length == null
                 ) {
                   router.push(RouterProfile.create, { scroll: false });
                 } else {
@@ -129,11 +123,11 @@ export default function BodyHome() {
                 <ActionIcon
                   size={50}
                   variant="transparent"
-                  c={e.link == "" ? "gray.3" : "white"}
+                  c={e.link == "" ? "gray.3" : MainColor.white}
                 >
                   {e.icon}
                 </ActionIcon>
-                <Text c={e.link == "" ? "gray.3" : "white"} fz={"xs"}>
+                <Text c={e.link == "" ? "gray.3" : MainColor.white} fz={"xs"}>
                   {e.name}
                 </Text>
               </Stack>
@@ -153,16 +147,11 @@ export default function BodyHome() {
         >
           <Stack
             onClick={() => {
-              if (
-                dataUser.profile == undefined ||
-                dataUser?.profile == null ||
-                dataJob.length == undefined ||
-                dataJob.length == null
-              ) {
+              if (dataUser == null) {
                 return null;
               } else if (
-                dataUser.profile == undefined ||
-                dataUser?.profile == null
+                Object.keys(dataUser).length == 0 ||
+                dataJob?.length == null
               ) {
                 router.push(RouterProfile.create, { scroll: false });
               } else {
@@ -180,33 +169,50 @@ export default function BodyHome() {
               <ActionIcon
                 variant="transparent"
                 size={40}
-                c={menuHomeJob.link == "" ? "gray.3" : "white"}
+                c={menuHomeJob.link == "" ? "gray.3" : MainColor.white}
               >
                 {menuHomeJob.icon}
               </ActionIcon>
-              <Text c={menuHomeJob.link == "" ? "gray.3" : "white"}>
+              <Text c={menuHomeJob.link == "" ? "gray.3" : MainColor.white}>
                 {menuHomeJob.name}
               </Text>
             </Group>
             {loadingJob ? (
-              Array(2)
+              Array(1)
                 .fill(null)
                 .map((_, i) => (
                   <Box key={i} mb={"md"}>
-                    <Skeleton height={10} mt={0} radius="xl" width={"50%"} />
-                    <Skeleton height={10} mt={10} radius="xl" />
-                    <Skeleton height={10} mt={10} radius="xl" />
+                    <Grid>
+                      <Grid.Col span={6}>
+                        <CustomSkeleton
+                          height={10}
+                          mt={0}
+                          radius="xl"
+                          width={"75%"}
+                        />
+                        <CustomSkeleton height={10} mt={10} radius="xl" />
+                      </Grid.Col>
+                      <Grid.Col span={6}>
+                        <CustomSkeleton
+                          height={10}
+                          mt={0}
+                          radius="xl"
+                          width={"75%"}
+                        />
+                        <CustomSkeleton height={10} mt={10} radius="xl" />
+                      </Grid.Col>
+                    </Grid>
                   </Box>
                 ))
             ) : _.isEmpty(dataJob) ? (
               <ComponentGlobal_IsEmptyData text="Tidak ada data" height={10} />
             ) : (
               <SimpleGrid cols={2} spacing="md">
-                {dataJob.map((e, i) => (
+                {dataJob?.map((e, i) => (
                   <Stack key={e.id}>
                     <Group spacing={"xs"}>
                       <Stack h={"100%"} align="center" justify="flex-start">
-                        <IconUserSearch size={20} color="white" />
+                        <IconUserSearch size={20} color={MainColor.white} />
                       </Stack>
                       <Stack spacing={0} w={"60%"}>
                         <Text
@@ -217,7 +223,7 @@ export default function BodyHome() {
                         >
                           {e?.Author.username}
                         </Text>
-                        <Text fz={"sm"} c={"white"} lineClamp={2}>
+                        <Text fz={"sm"} c={MainColor.white} lineClamp={2}>
                           {e?.title}
                         </Text>
                       </Stack>

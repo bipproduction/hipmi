@@ -11,6 +11,7 @@ import {
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,6 @@ import { WibuRealtime } from "wibu-pkg";
 import { job_funCreateNoFile, job_funCreateWithFile } from "../../fun";
 import { gs_job_hot_menu } from "../../global_state";
 import { MODEL_JOB } from "../../model/interface";
-import { envs } from "@/lib/envs";
 
 function Job_ComponentButtonSaveCreate({
   value,
@@ -71,6 +71,8 @@ function Job_ComponentButtonSaveCreate({
             ComponentGlobal_NotifikasiBerhasil(createNoFile.message);
           }
         } else {
+          setIsLoading(false);
+
           ComponentGlobal_NotifikasiGagal(createNoFile.message);
         }
       } else {
@@ -80,6 +82,7 @@ function Job_ComponentButtonSaveCreate({
         });
 
         if (!uploadFile.success) {
+          setIsLoading(false);
           ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
           return;
         }
@@ -120,15 +123,13 @@ function Job_ComponentButtonSaveCreate({
             ComponentGlobal_NotifikasiBerhasil(createWithFile.message);
           }
         } else {
+          setIsLoading(false);
           ComponentGlobal_NotifikasiGagal(createWithFile.message);
         }
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      if (window.location.pathname !== RouterJob.status({ id: "2" })) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
+      clientLogger.error("Error create job", error);
     }
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { MODEL_EVENT_PESERTA } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT_PESERTA } from "@/app_modules/event/_lib/interface";
 import {
   Badge,
   Button,
@@ -10,6 +10,7 @@ import {
   ScrollArea,
   Stack,
   Table,
+  Title,
 } from "@mantine/core";
 import { useState } from "react";
 import { adminEvent_getListPesertaById } from "../fun";
@@ -41,85 +42,91 @@ export function AdminEvent_ViewDetailPeserta({
   const tableRow = _.isEmpty(data)
     ? []
     : data.map((e, i) => (
-        <tr key={i}>
-          <td>
-            <Center>{e?.User?.username}</Center>
-          </td>
-          <td>
-            <Center>{e?.User?.Profile?.name}</Center>
-          </td>
-          <td>
-            <Center>+{e?.User?.nomor}</Center>
-          </td>
-          <td>
-            <Center>{e?.User?.Profile?.email}</Center>
-          </td>
-          <td>
-            <Center>
-              {e.isPresent ? (
-                <Badge color="green">Hadir</Badge>
-              ) : (
-                <Badge color="red">Tidak Hadir</Badge>
-              )}
-            </Center>
-          </td>
-        </tr>
-      ));
+      <tr key={i}>
+        <td>
+          <Center>{e?.User?.username}</Center>
+        </td>
+        <td>
+          <Center>{e?.User?.Profile?.name}</Center>
+        </td>
+        <td>
+          <Center>+{e?.User?.nomor}</Center>
+        </td>
+        <td>
+          <Center>{e?.User?.Profile?.email}</Center>
+        </td>
+        <td>
+          <Center>
+            {e.isPresent ? (
+              <Badge color="green">Hadir</Badge>
+            ) : (
+              <Badge color="red">Tidak Hadir</Badge>
+            )}
+          </Center>
+        </td>
+      </tr>
+    ));
 
   return (
     <>
-      <Paper p={"md"} withBorder shadow="lg" h={"75vh"}>
-        <ScrollArea w={"100%"} h={"90%"}>
-          <Table
-            verticalSpacing={"md"}
-            horizontalSpacing={"md"}
-            p={"md"}
-            w={"100%"}
-            striped
-            highlightOnHover
-          >
-            <thead>
-              <tr>
-                <th>
-                  <Center>Username</Center>
-                </th>
-                <th>
-                  <Center>Name</Center>
-                </th>
-                <th>
-                  <Center>Nomor</Center>
-                </th>
-                <th>
-                  <Center>Email</Center>
-                </th>
-                <th>
-                  <Center>Konfirmasi Kehadiran</Center>
-                </th>
-              </tr>
-            </thead>
-            <tbody>{tableRow}</tbody>
-          </Table>
-          {_.isEmpty(data) ? (
-            <ComponentAdminGlobal_IsEmptyData
-              text="Tidak ada peserta"
-              marginTop={100}
+      <Stack spacing={"xs"} h={"100%"}>
+        <Paper bg={"gray.4"}
+          p={"xs"}
+          style={{ borderRadius: "6px" }}>
+          <Title order={4}>Daftar Peserta</Title>
+        </Paper>
+        <Paper p={"md"} withBorder shadow="lg" h={"75vh"}>
+          <ScrollArea w={"100%"} h={"90%"}>
+            <Table
+              verticalSpacing={"md"}
+              horizontalSpacing={"md"}
+              p={"md"}
+              w={"100%"}
+              striped
+              highlightOnHover
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <Center>Username</Center>
+                  </th>
+                  <th>
+                    <Center>Name</Center>
+                  </th>
+                  <th>
+                    <Center>Nomor</Center>
+                  </th>
+                  <th>
+                    <Center>Email</Center>
+                  </th>
+                  <th>
+                    <Center>Konfirmasi Kehadiran</Center>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{tableRow}</tbody>
+            </Table>
+            {_.isEmpty(data) ? (
+              <ComponentAdminGlobal_IsEmptyData
+                text="Tidak ada peserta"
+                marginTop={100}
+              />
+            ) : (
+              ""
+            )}
+          </ScrollArea>
+
+          <Center mt={"xl"}>
+            <Pagination
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
             />
-          ) : (
-            ""
-          )}
-        </ScrollArea>
-
-        <Center mt={"xl"}>
-          <Pagination
-            value={isActivePage}
-            total={isNPage}
-            onChange={(val) => {
-              onPageClick(val);
-            }}
-          />
-        </Center>
-      </Paper>
-
+          </Center>
+        </Paper>
+      </Stack>
       {/* <pre>{JSON.stringify(dataPeserta, null, 2)}</pre> */}
     </>
   );

@@ -2,8 +2,9 @@
 
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { Grid, Stack, Text, Title } from "@mantine/core";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { MainColor } from "@/app_modules/_global/color";
+import { Event_ComponentSkeletonDetailData } from "../skeleton/comp_skeleton_detail_data";
 
 export default function ComponentEvent_DetailData({
   data,
@@ -84,7 +85,7 @@ export default function ComponentEvent_DetailData({
             <Text c={MainColor.white}>{data ? data?.deskripsi : null}</Text>
           </Stack>
         </Stack>
-      </ComponentGlobal_CardStyles>
+      </ComponentGlobal_CardStyles >
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { gs_votingTiggerBeranda } from "@/app/lib/global_state";
 import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { clientLogger } from "@/util/clientLogger";
@@ -119,6 +119,7 @@ export default function Vote_Beranda() {
         radius={"xl"}
         placeholder="Masukan judul voting"
         onChange={(val) => onSearch(val.target.value)}
+        styles={{ input: { backgroundColor: MainColor.white } }}
       />
 
       <ComponentGlobal_CreateButton path={RouterVote.create} />

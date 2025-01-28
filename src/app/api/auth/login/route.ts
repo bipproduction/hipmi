@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -17,12 +18,13 @@ export async function POST(req: Request) {
       );
 
       const sendWa = await res.json();
+
       if (sendWa.status !== "success")
         return NextResponse.json(
           { success: false, message: "Nomor Whatsapp Tidak Aktif" },
           { status: 400 }
         );
-        
+
       const createOtpId = await prisma.kodeOtp.create({
         data: {
           nomor: nomor,
@@ -45,14 +47,14 @@ export async function POST(req: Request) {
         { status: 200 }
       );
     } catch (error) {
-      console.log(error);
-
+      backendLogger.log("Error Login", error);
       return NextResponse.json(
-        { success: false, message: "Server Whatsapp Error !! " },
+        { success: false, message: error as Error },
         { status: 500 }
       );
     }
   }
+
   return NextResponse.json(
     { success: false, message: "Method Not Allowed" },
     { status: 405 }

@@ -16,6 +16,7 @@ import {
   RouterInvestasi_OLD,
 } from "@/app/lib/router_hipmi/router_investasi";
 import { IconDeviceIpadPlus } from "@tabler/icons-react";
+import { MainColor } from "@/app_modules/_global/color";
 
 export function Investasi_UiDetailMain({
   dataInvestasi,
@@ -54,7 +55,7 @@ export function Investasi_UiDetailMain({
                   variant="transparent"
                   onClick={() => setOpenDrawer(true)}
                 >
-                  <IconDotsVertical color="white" />
+                  <IconDotsVertical color={MainColor.white} />
                 </ActionIcon>
               ) : (
                 <ActionIcon disabled variant="transparent" />

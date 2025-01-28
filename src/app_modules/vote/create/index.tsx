@@ -28,6 +28,7 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Vote_funCreate } from "../fun/create/create_vote";
 import { gs_vote_hotMenu } from "../global_state";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Vote_Create() {
   const router = useRouter();
@@ -69,40 +70,49 @@ export default function Vote_Create() {
 
     // console.log("berhasil");
 
-    const res = await Vote_funCreate(data as any, listVote);
-    if (res.status === 201) {
-       const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.Voting_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "VOTING",
-        title: "Voting baru",
-      };
+    try {
+      setIsLoading(true);
+      const res = await Vote_funCreate(data as any, listVote);
+      if (res.status === 201) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.Voting_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "VOTING",
+          title: "Voting baru",
+        };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
         });
 
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "ADMIN",
-          dataMessage: dataNotifikasi,
-        });
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
-        setHotMenu(2);
-        router.replace(RouterVote.status({ id: "2" }));
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setIsLoading(true);
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "ADMIN",
+            dataMessage: dataNotifikasi,
+          });
+
+          setHotMenu(2);
+          router.replace(RouterVote.status({ id: "2" }));
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+
+        }
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error create voting", error);
+
     }
   }
 
@@ -113,8 +123,14 @@ export default function Vote_Create() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Judul"
             withAsterisk
@@ -131,8 +147,14 @@ export default function Vote_Create() {
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
                 },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
+                }
               }}
               label="Deskripsi"
               autosize
@@ -157,8 +179,14 @@ export default function Vote_Create() {
           <DatePickerInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
               },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
+              }
             }}
             label="Jangka Waktu"
             placeholder="Masukan jangka waktu voting"
@@ -180,7 +208,7 @@ export default function Vote_Create() {
 
         <Stack spacing={0}>
           <Center>
-            <Text fw={"bold"} fz={"sm"} c={"white"}>
+            <Text fw={"bold"} fz={"sm"} c={MainColor.white}>
               Daftar Pilihan
             </Text>
           </Center>
@@ -192,8 +220,14 @@ export default function Vote_Create() {
                   <TextInput
                     styles={{
                       label: {
-                        color: "white",
+                        color: MainColor.white,
                       },
+                      input: {
+                        backgroundColor: MainColor.white,
+                      },
+                      required: {
+                        color: MainColor.red,
+                      }
                     }}
                     label={e.name}
                     withAsterisk
@@ -249,10 +283,10 @@ export default function Vote_Create() {
         <Button
           disabled={
             !data.title ||
-            !data.deskripsi ||
-            !data.awalVote ||
-            !data.akhirVote ||
-            listVote.map((e, i) => e.value).includes("")
+              !data.deskripsi ||
+              !data.awalVote ||
+              !data.akhirVote ||
+              listVote.map((e, i) => e.value).includes("")
               ? true
               : false
           }

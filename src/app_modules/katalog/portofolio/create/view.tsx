@@ -1,9 +1,20 @@
 "use client";
 
+import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_BoxUploadImage } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
+} from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
+import { MAX_SIZE } from "@/app_modules/_global/lib";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { BIDANG_BISNIS_OLD } from "@/app_modules/model_global/portofolio";
 import {
   AspectRatio,
@@ -18,18 +29,12 @@ import {
   Textarea,
   Title,
 } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
+import { IconCamera, IconPhoto } from "@tabler/icons-react";
 import _ from "lodash";
 import { useState } from "react";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import { Portofolio_ComponentButtonSelanjutnya } from "../component";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import {
-  funGlobal_DeleteFileById,
-  funGlobal_UploadToStorage,
-} from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
 
 export default function CreatePortofolio({
   bidangBisnis,
@@ -54,27 +59,26 @@ export default function CreatePortofolio({
     tiktok: "",
   });
 
+  const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>(null);
   const [imageId, setImageId] = useState("");
 
   return (
     <>
-      {/* {JSON.stringify(profileId)} */}
-
       <Stack px={"sm"} mb={"lg"} spacing={50}>
         <Stack spacing={"sm"}>
-          <ComponentGlobal_BoxInformation informasi="Lengkapi Data Bisnis" />
+          <ComponentGlobal_BoxInformation informasi="Lengkapi data bisnis" />
           <TextInput
             styles={{
               label: {
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             withAsterisk
             label="Nama Bisnis"
@@ -88,17 +92,19 @@ export default function CreatePortofolio({
             }}
           />
           <Select
-            
             styles={{
               label: {
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
-              }
+              },
+              dropdown: {
+                backgroundColor: MainColor.white,
+              },
             }}
             withAsterisk
             label="Bidang Bisnis"
@@ -114,17 +120,18 @@ export default function CreatePortofolio({
               });
             }}
           />
+
           <TextInput
             styles={{
               label: {
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             withAsterisk
             label="Alamat Bisnis"
@@ -137,29 +144,34 @@ export default function CreatePortofolio({
               });
             }}
           />
-          <TextInput
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white
-              },
-              required: {
-                color: MainColor.red,
-              }
-            }}
-            withAsterisk
-            label="Nomor Telepon "
-            placeholder="Nomor telepon "
-            type="number"
-            onChange={(val) => {
-              setDataPortofolio({
-                ...dataPortofolio,
-                tlpn: val.target.value,
-              });
-            }}
-          />
+
+          <Stack spacing={5}>
+            <Text c={MainColor.white} fz={"sm"}>
+              Nomor Telepon{" "}
+              <Text c={"red"} span inherit>
+                *
+              </Text>
+            </Text>
+
+            <PhoneInput
+              placeholder="Nomor telepon"
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  backgroundColor: MainColor.login,
+                },
+              }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
+              defaultCountry="id"
+              onChange={(val) => {
+                const valPhone = val.substring(1);
+                setDataPortofolio({
+                  ...dataPortofolio,
+                  tlpn: valPhone,
+                });
+              }}
+            />
+          </Stack>
+
           <Stack spacing={5}>
             <Textarea
               styles={{
@@ -167,11 +179,11 @@ export default function CreatePortofolio({
                   color: MainColor.white,
                 },
                 input: {
-                  backgroundColor: MainColor.white
+                  backgroundColor: MainColor.white,
                 },
                 required: {
                   color: MainColor.red,
-                }
+                },
               }}
               maxLength={300}
               autosize
@@ -195,7 +207,7 @@ export default function CreatePortofolio({
         </Stack>
 
         <Stack>
-          <ComponentGlobal_BoxInformation informasi="Upload Logo Bisnis Anda" />
+          <ComponentGlobal_BoxInformation informasi="Upload logo bisnis anda untuk ditampilkan dalam portofolio " />
           <ComponentGlobal_BoxUploadImage>
             {img ? (
               <AspectRatio ratio={1 / 1} mah={265} mx={"auto"}>
@@ -208,15 +220,19 @@ export default function CreatePortofolio({
               </AspectRatio>
             ) : (
               <Stack spacing={5} justify="center" align="center" h={"100%"}>
-                <Title c={MainColor.white} order={3}>Upload Logo Bisnis</Title>
-                <Text c={MainColor.white} fs={"italic"} fz={10} align="center">
-                  Masukan logo bisnis anda untuk ditampilkan dalam portofolio
-                </Text>
+                <IconPhoto size={100} />
               </Stack>
             )}
           </ComponentGlobal_BoxUploadImage>
 
           <Center>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFile}
+              onSetImage={setImg}
+            />
+          </Center>
+
+          {/* <Center>
             <FileButton
               onChange={async (files: any | null) => {
                 try {
@@ -298,7 +314,7 @@ export default function CreatePortofolio({
                 </Button>
               )}
             </FileButton>
-          </Center>
+          </Center> */}
         </Stack>
 
         <Stack>
@@ -309,8 +325,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Facebook"
             maxLength={100}
@@ -328,8 +344,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Instagram"
             maxLength={100}
@@ -347,8 +363,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Tiktok"
             maxLength={100}
@@ -366,8 +382,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Twitter"
             maxLength={100}
@@ -385,8 +401,8 @@ export default function CreatePortofolio({
                 color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             label="Youtube"
             maxLength={100}
@@ -404,7 +420,8 @@ export default function CreatePortofolio({
           dataPortofolio={dataPortofolio as any}
           dataMedsos={dataMedsos}
           profileId={profileId}
-          imageId={imageId}
+          // 
+          file={file as File}
         />
       </Stack>
     </>

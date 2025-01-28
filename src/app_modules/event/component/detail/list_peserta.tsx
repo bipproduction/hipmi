@@ -21,7 +21,7 @@ import {
   ComponentGlobal_LoaderAvatar,
 } from "@/app_modules/_global/component";
 import { useRouter } from "next/navigation";
-import { MODEL_EVENT_PESERTA } from "../../model/interface";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 import { Prisma } from "@prisma/client";
 import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";

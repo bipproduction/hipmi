@@ -1,9 +1,13 @@
 "use client";
 
 import { DIRECTORY_ID } from "@/app/lib";
+import { IRealtimeData } from "@/app/lib/global_state";
 import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_BoxUploadImage } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
+} from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
@@ -11,27 +15,25 @@ import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/noti
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { clientLogger } from "@/util/clientLogger";
 import {
   AspectRatio,
   Button,
-  FileButton,
-  Group,
+  Center,
   Image,
   Stack,
-  Text,
   TextInput,
-  Textarea,
+  Textarea
 } from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Donasi_funCreate } from "../fun/create/fun_create_donasi";
-import { gs_donasi_hot_menu, gs_donasi_tabs_posting } from "../global_state";
-import { MODEL_DONASI_TEMPORARY } from "../model/interface";
-import { IRealtimeData } from "@/app/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
+import { Donasi_funCreate } from "../fun/create/fun_create_donasi";
+import { gs_donasi_hot_menu } from "../global_state";
+import { MODEL_DONASI_TEMPORARY } from "../model/interface";
 
 export default function CreateCeritaPenggalangDonasi({
   dataTemporary,
@@ -80,9 +82,11 @@ export default function CreateCeritaPenggalangDonasi({
         file: file as File,
         dirId: DIRECTORY_ID.donasi_cerita_image,
       });
+
       if (!uploadImage.success) {
         setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        return;
       }
 
       const res = await Donasi_funCreate({
@@ -122,27 +126,33 @@ export default function CreateCeritaPenggalangDonasi({
             scroll: false,
           });
         }
-        setLoading(false);
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      clientLogger.error("Error create cerita donasi", error);
     }
   }
   return (
     <>
-      <Stack spacing={50} px={"xl"} py={"md"}>
+      <Stack spacing={50} px={"xl"} pb={"md"}>
         {/* <pre>{JSON.stringify(dataTempo, null, 2)}</pre> */}
         <Stack spacing={"sm"}>
-          <ComponentGlobal_BoxInformation informasi="Ceritakan dengan jujur & benar mengapa Penggalanagn Dana ini harus diadakan!" />
+          <ComponentGlobal_BoxInformation informasi="Cerita Anda adalah kunci untuk menginspirasi kebaikan. Jelaskan dengan jujur dan jelas tujuan penggalangan dana ini agar calon donatur memahami dampak positif yang dapat mereka wujudkan melalui kontribusi mereka." />
 
           <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
+                },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
                 },
               }}
               autosize
@@ -151,7 +161,7 @@ export default function CreateCeritaPenggalangDonasi({
               withAsterisk
               label="Pembukaan"
               placeholder="Pembuka cerita"
-              maxLength={300}
+              maxLength={500}
               onChange={(val) =>
                 setData({
                   ...data,
@@ -160,7 +170,7 @@ export default function CreateCeritaPenggalangDonasi({
               }
             />
             <ComponentGlobal_InputCountDown
-              maxInput={300}
+              maxInput={500}
               lengthInput={data.pembukaan.length}
             />
           </Stack>
@@ -169,7 +179,13 @@ export default function CreateCeritaPenggalangDonasi({
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
+                },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
                 },
               }}
               autosize
@@ -178,7 +194,7 @@ export default function CreateCeritaPenggalangDonasi({
               withAsterisk
               label="Cerita"
               placeholder="Ceritakan alasan mengapa harus membuat Penggalangan Dana"
-              maxLength={300}
+              maxLength={1000}
               onChange={(val) =>
                 setData({
                   ...data,
@@ -187,7 +203,7 @@ export default function CreateCeritaPenggalangDonasi({
               }
             />
             <ComponentGlobal_InputCountDown
-              maxInput={300}
+              maxInput={1000}
               lengthInput={data.cerita.length}
             />
           </Stack>
@@ -205,53 +221,33 @@ export default function CreateCeritaPenggalangDonasi({
                 </AspectRatio>
               ) : (
                 <Stack justify="center" align="center" h={"100%"}>
-                  <IconUpload color="white" />
-                  <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                    Upload Gambar
-                  </Text>
+                  <IconPhoto size={100} />
                 </Stack>
               )}
             </ComponentGlobal_BoxUploadImage>
 
             {/* Upload Foto */}
-            <Group position="center">
-              <FileButton
-                onChange={async (files: any) => {
-                  try {
-                    const buffer = URL.createObjectURL(
-                      new Blob([new Uint8Array(await files.arrayBuffer())])
-                    );
-                    setImg(buffer);
-                    setFile(files);
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }}
-                accept="image/png,image/jpeg"
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    leftIcon={<IconCamera color="black" />}
-                    radius={50}
-                    bg={MainColor.yellow}
-                    color="yellow"
-                    c={"black"}
-                  >
-                    Upload Gambar
-                  </Button>
-                )}
-              </FileButton>
-            </Group>
+            <Center>
+              <ComponentGlobal_ButtonUploadFileImage
+                onSetFile={setFile}
+                onSetImage={setImg}
+              />
+            </Center>
           </Stack>
         </Stack>
 
         <Stack spacing={"sm"}>
-          <ComponentGlobal_BoxInformation informasi="Lengkapi nama bank dan rekening di bawah untuk mempermudah admin jika penggalangan dana ini telah di publish!" />
+          <ComponentGlobal_BoxInformation informasi="Pastikan Anda mengisi nama bank dan nomor rekening dengan benar. Informasi ini akan membantu admin memverifikasi dan memproses penggalangan dana Anda dengan cepat dan tepat setelah penggalangan dana dipublikasikan." />
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             withAsterisk
@@ -268,7 +264,13 @@ export default function CreateCeritaPenggalangDonasi({
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             withAsterisk

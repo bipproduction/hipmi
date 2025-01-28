@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { IconCircle } from "@tabler/icons-react";
 import { MODEL_VOTING } from "../../model/interface";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function ComponentVote_DetailDataSebelumPublish
 ({
@@ -26,7 +26,7 @@ export default function ComponentVote_DetailDataSebelumPublish
           backgroundColor: AccentColor.darkblue,
           borderRadius: "10px",
           border: `2px solid ${AccentColor.blue}`,
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Card.Section px={"xs"}>
@@ -49,7 +49,7 @@ export default function ComponentVote_DetailDataSebelumPublish
                   root: {
                     backgroundColor: AccentColor.blue,
                     border: `1px solid ${AccentColor.skyblue}`,
-                    color: "white",
+                    color: MainColor.white,
                     width: "80%",
                   },
                 }}

@@ -18,6 +18,8 @@ import { map_funGetOneById } from "../fun/get/fun_get_one_by_id";
 import { MODEL_MAP } from "../lib/interface";
 import { ComponentMap_LoadImageMap } from "./comp_load_image_map";
 import { ComponentMap_SkeletonDrawerDetailData } from "./skeleton_detail_data";
+import { UIGlobal_Modal } from "@/app_modules/_global/ui";
+import Link from "next/link";
 
 export function ComponentMap_DetailData({
   mapId,
@@ -30,6 +32,7 @@ export function ComponentMap_DetailData({
   const [data, setData] = useState<MODEL_MAP>();
   const [dataUser, setDataUser] = useState<MODEL_USER>();
   const [isLoading, setIsLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   useShallowEffect(() => {
     onLoadData(setData, setDataUser);
@@ -46,9 +49,7 @@ export function ComponentMap_DetailData({
   return (
     <>
       <Stack mt={"lg"} spacing={"xl"} px={"md"}>
-        <ComponentGlobal_AvatarAndUsername
-          profile={dataUser?.Profile as any}
-        />
+        <ComponentGlobal_AvatarAndUsername profile={dataUser?.Profile as any} />
 
         <ComponentMap_LoadImageMap fileId={data.imageId} />
 
@@ -74,7 +75,13 @@ export function ComponentMap_DetailData({
               <IconPhoneCall />
             </Grid.Col>
             <Grid.Col span={"auto"}>
-              <Text>{data?.Portofolio.tlpn}</Text>
+              <Text
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                + {data?.Portofolio.tlpn}
+              </Text>
             </Grid.Col>
           </Grid>
           <Grid>
@@ -127,6 +134,36 @@ export function ComponentMap_DetailData({
           </Button>
         </Group>
       </Stack>
+
+      <UIGlobal_Modal
+        title={
+          "Anda akan dialihkan ke WhatsApp untuk melanjutkan percakapan. Tekan 'Lanjutkan' untuk melanjutkan."
+        }
+        opened={openModal}
+        close={() => {
+          setOpenModal(false);
+        }}
+        buttonKanan={
+          <Button radius={"xl"} color="yellow" c={MainColor.darkblue}>
+            <Link
+              color="white"
+              style={{
+                color: "white",
+                textDecoration: "none",
+              }}
+              target="_blank"
+              href={`https://wa.me/+${data?.Portofolio.tlpn}?text=Hallo  , saya tertarik dengan bisnis anda. Apa boleh saya minta informasi tentang bisnis ${data?.Portofolio.namaBisnis} ?`}
+            >
+              Lanjutkan
+            </Link>
+          </Button>
+        }
+        buttonKiri={
+          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+            Batal
+          </Button>
+        }
+      />
     </>
   );
 }

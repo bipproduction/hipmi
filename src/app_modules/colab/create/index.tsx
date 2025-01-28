@@ -5,26 +5,22 @@ import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/inpu
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { clientLogger } from "@/util/clientLogger";
+import mqtt_client from "@/util/mqtt_client";
 import {
   Button,
-  Center,
   Select,
   Stack,
   TextInput,
-  Textarea,
-  Loader,
+  Textarea
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Collaboration_SkeletonCreate } from "../component";
+import { apiGetMasterCollaboration } from "../component/lib/api_collaboration";
 import colab_funCreateProyek from "../fun/create/fun_create_proyek";
 import { MODEL_COLLABORATION_MASTER } from "../model/interface";
-import mqtt_client from "@/util/mqtt_client";
-import { useHookstate } from "@hookstate/core";
-import { useGsCollabCreate } from "../global_state/state";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetMasterCollaboration } from "../component/lib/api_collaboration";
-import { clientLogger } from "@/util/clientLogger";
-import { Collaboration_SkeletonCreate } from "../component";
 
 export default function Colab_Create() {
   const [value, setValue] = useState({
@@ -55,7 +51,7 @@ export default function Colab_Create() {
     }
   }
 
-  
+
   if (listIndustri == null) {
     return (
       <>
@@ -70,9 +66,9 @@ export default function Colab_Create() {
         <TextInput
           maxLength={100}
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
           }}
           label="Judul"
           withAsterisk
@@ -87,9 +83,9 @@ export default function Colab_Create() {
 
         <TextInput
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
           }}
           maxLength={100}
           label="Lokasi"
@@ -103,11 +99,12 @@ export default function Colab_Create() {
           }}
         />
 
-        {/* <Select
+        <Select
           styles={{
-            label: {
-              color: "white",
-            },
+            label: { color: MainColor.white },
+            input: { backgroundColor: MainColor.white },
+            required: { color: MainColor.red },
+            dropdown: { backgroundColor: MainColor.white },
           }}
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
@@ -122,32 +119,14 @@ export default function Colab_Create() {
               projectCollaborationMaster_IndustriId: val as any,
             });
           }}
-        /> */}
-
-        {/* <TextInput
-          description={
-            <Text fz={10}>
-              minimal partisipan yang akan di pilih untuk mendiskusikan proyek
-            </Text>
-          }
-          type="number"
-          withAsterisk
-          label="Jumlah Partisipan"
-          placeholder={"2"}
-          onChange={(val) => {
-            setValue({
-              ...value,
-              jumlah_partisipan: val.currentTarget.value as any,
-            });
-          }}
-        /> */}
+        />
 
         <Stack spacing={5}>
           <Textarea
             styles={{
-              label: {
-                color: "white",
-              },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             maxLength={500}
             label="Tujuan Proyek"
@@ -170,9 +149,8 @@ export default function Colab_Create() {
         <Stack spacing={5}>
           <Textarea
             styles={{
-              label: {
-                color: "white",
-              },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
             }}
             maxLength={500}
             label="Keuntungan "
@@ -207,7 +185,6 @@ function ButtonAction({ value }: { value: any }) {
       JSON.stringify({ isNewPost: true, count: 1 })
     );
 
-    console.log(value.jumlah_partisipan);
     if (value.title === "")
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
     if (value.lokasi === "")
@@ -218,26 +195,33 @@ function ButtonAction({ value }: { value: any }) {
       return ComponentGlobal_NotifikasiPeringatan("Pilih Industri");
 
     const res = await colab_funCreateProyek(value);
-    if (res.status === 201) {
-      setLoading(true);
-      router.back();
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    try {
+      setLoading(true)
+      if (res.status === 201) {
+        setLoading(true);
+        router.back();
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+      } else {
+        setLoading(false)
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading(false)
+      clientLogger.error("Error create proyek", error);
     }
+    
   }
 
-  // console.log(value);
 
   return (
     <>
       <Button
         disabled={
           !value.title ||
-          !value.lokasi ||
-          !value.purpose ||
-          !value.benefit ||
-          value.projectCollaborationMaster_IndustriId === 0
+            !value.lokasi ||
+            !value.purpose ||
+            !value.benefit ||
+            value.projectCollaborationMaster_IndustriId === 0
             ? true
             : false
         }

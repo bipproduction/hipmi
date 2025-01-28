@@ -5,6 +5,8 @@ import { apies, pages } from "./lib/routes";
 type MiddlewareConfig = {
   apiPath: string;
   loginPath: string;
+  // validasiPath: string;
+  // registarasiPath: string;
   userPath: string;
   publicRoutes: string[];
   encodedKey: string;
@@ -16,40 +18,57 @@ type MiddlewareConfig = {
 const middlewareConfig: MiddlewareConfig = {
   apiPath: "/api",
   loginPath: "/login",
+  // validasiPath: "/validasi",
+  // registarasiPath: "/register",
   userPath: "/dev/home",
   publicRoutes: [
+    // API
     "/",
     "/api/voting/*",
     "/api/collaboration/*",
     "/api/notifikasi/*",
     "/api/logs/*",
-    "/api/image/*",
     "/api/job/*",
-    "/api/validation",
     "/api/auth/*",
     "/api/origin-url",
-    "/api/user",
     "/api/event/*",
+    // "/api/image/*",
+    // "/api/user/*",
+    // "/api/new/*",
+    // Akses awal
+    "/api/get-cookie",
+    "/api/user/activation",
+    "/api/user-validate",
+
+    // PAGE
     "/login",
     "/register",
     "/validasi",
     "/splash",
+    "/job-vacancy",
+    "/preview-image",
     "/auth/login",
     "/auth/api/login",
+    "/waiting-room",
+    "/zCoba/*",
+
+    // ASSETS
     "/aset/global/main_background.png",
     "/aset/logo/logo-hipmi.png",
-    "/api/new/*",
   ],
   encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
   sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
   validationApiRoute: "/api/validation",
   log: false,
 };
+
 export const middleware = async (req: NextRequest) => {
   const {
     apiPath,
     encodedKey,
     loginPath,
+    // validasiPath,
+    // registarasiPath,
     publicRoutes,
     sessionKey,
     validationApiRoute,
@@ -64,14 +83,31 @@ export const middleware = async (req: NextRequest) => {
   }
 
   // Skip authentication for public routes
-  const isPublicRoute = [...publicRoutes, loginPath, validationApiRoute].some(
-    (route) => {
-      const pattern = route.replace(/\*/g, ".*");
-      return new RegExp(`^${pattern}$`).test(pathname);
-    }
-  );
+  const isPublicRoute = [
+    ...publicRoutes,
+    loginPath,
+    // validasiPath,
+    // registarasiPath,
+  ].some((route) => {
+    const pattern = route.replace(/\*/g, ".*");
+    return new RegExp(`^${pattern}$`).test(pathname);
+  });
 
-  if (isPublicRoute) {
+  // Always protect validation endpoint
+  if (pathname === validationApiRoute) {
+    const reqToken = req.headers.get("Authorization")?.split(" ")[1];
+    if (!reqToken) {
+      return setCorsHeaders(unauthorizedResponse());
+    }
+  }
+
+  if (
+    isPublicRoute &&
+    pathname !== loginPath
+    // &&
+    // pathname !== validasiPath &&
+    // pathname !== registarasiPath
+  ) {
     return setCorsHeaders(NextResponse.next());
   }
 
@@ -79,24 +115,64 @@ export const middleware = async (req: NextRequest) => {
     req.cookies.get(sessionKey)?.value ||
     req.headers.get("Authorization")?.split(" ")[1];
 
+  // ==================== Authentication: Login, Validasi, Registrasi ==================== //
   // Token verification
   const user = await verifyToken({ token, encodedKey });
 
+  // Handle login page access
+  if (pathname === loginPath) {
+    if (user) {
+      return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
+    }
+    return setCorsHeaders(NextResponse.next());
+  }
+
+  // // Handle validation page access
+  // if (pathname === validasiPath) {
+  //   if (user) {
+  //     return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
+  //   }
+  //   return setCorsHeaders(NextResponse.next());
+  // }
+
+  // // Handle register page access
+  // if (pathname === registarasiPath) {
+  //   if (user) {
+  //     return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
+  //   }
+  //   return setCorsHeaders(NextResponse.next());
+  // }
+
+  // Handle protected routes
   if (!user) {
-    if (pathname.startsWith(apiPath)) {
+    return setCorsHeaders(NextResponse.redirect(new URL(loginPath, req.url)));
+  }
+  // ==================== Authentication: Login, Validasi, Registrasi ==================== //
+
+  if (pathname.startsWith("/dev")) {
+    const userValidate = await fetch(new URL("/api/user-validate", req.url), {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const userValidateJson = await userValidate.json();
+
+    if (!userValidateJson.data.active) {
+      return setCorsHeaders(
+        NextResponse.redirect(new URL("/waiting-room", req.url))
+      );
+    }
+  }
+
+  // Handle authenticated API requests
+  if (pathname.startsWith(apiPath)) {
+    const reqToken = req.headers.get("Authorization")?.split(" ")[1];
+    if (!reqToken) {
       return setCorsHeaders(unauthorizedResponse());
     }
 
-    return setCorsHeaders(NextResponse.redirect(new URL(loginPath, req.url)));
-  }
-
-  // Redirect authenticated user away from login page
-  if (user && pathname === loginPath) {
-    return setCorsHeaders(NextResponse.redirect(new URL(userPath, req.url)));
-  }
-
-  if (req.nextUrl.pathname.startsWith(apiPath)) {
-    const reqToken = req.headers.get("Authorization")?.split(" ")[1];
     // Validate user access with external API
     const validationResponse = await fetch(
       new URL(validationApiRoute, req.url),
@@ -111,6 +187,8 @@ export const middleware = async (req: NextRequest) => {
     if (!validationResponse.ok) {
       return setCorsHeaders(unauthorizedResponse());
     }
+
+    const dataJson = await validationResponse.json();
   }
 
   // Proceed with the request

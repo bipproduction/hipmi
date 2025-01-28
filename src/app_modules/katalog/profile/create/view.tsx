@@ -1,19 +1,20 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_ErrorInput } from "@/app_modules/_global/component";
 import { Select, Stack, TextInput } from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
 import { useState } from "react";
-import { gmailRegex } from "../../component/regular_expressions";
+import { emailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
 
 export default function CreateProfile() {
+  const [filePP, setFilePP] = useState<File | null>(null);
   const [imgPP, setImgPP] = useState<any | null>();
+  const [fileBG, setFileBG] = useState<File | null>(null);
   const [imgBG, setImgBG] = useState<any | null>();
-  const [fotoProfileId, setFotoProfileId] = useState("");
-  const [backgroundProfileId, setBackgroundProfileId] = useState("");
 
   const [value, setValue] = useState({
     name: "",
@@ -28,21 +29,23 @@ export default function CreateProfile() {
         <Profile_ViewUploadFoto
           imgPP={imgPP}
           onSetImgPP={setImgPP}
-          fotoProfileId={fotoProfileId}
-          onSetFotoProfileId={setFotoProfileId}
+          filePP={filePP}
+          onSetFilePP={setFilePP}
         />
 
         <Profile_ViewUploadBackground
           imgBG={imgBG}
-          backgroundProfileId={backgroundProfileId}
           onSetImgBG={setImgBG}
-          onSetBackgroundProfileId={setBackgroundProfileId}
+          fileBG={fileBG}
+          onSetFileBG={setFileBG}
         />
 
         <Stack mb={"lg"}>
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             label={"Nama"}
@@ -57,7 +60,9 @@ export default function CreateProfile() {
           />
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             icon={<IconAt size={15} />}
@@ -65,7 +70,7 @@ export default function CreateProfile() {
             maxLength={100}
             placeholder="Contoh: User@gmail.com"
             error={
-              value.email.length > 0 && !value.email.match(gmailRegex) ? (
+              value.email.length > 0 && !value.email.match(emailRegex) ? (
                 <ComponentGlobal_ErrorInput text="Invalid Email" />
               ) : (
                 ""
@@ -80,7 +85,9 @@ export default function CreateProfile() {
           />
           <TextInput
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
             }}
             withAsterisk
             label="Alamat"
@@ -96,7 +103,10 @@ export default function CreateProfile() {
 
           <Select
             styles={{
-              label: { color: "white" },
+              label: { color: MainColor.white },
+              input: { backgroundColor: MainColor.white },
+              required: { color: MainColor.red },
+              dropdown: { backgroundColor: MainColor.white },
             }}
             withAsterisk
             label="Jenis Kelamin"
@@ -115,8 +125,8 @@ export default function CreateProfile() {
 
           <Profile_ComponentCreateNewProfile
             value={value as any}
-            fotoProfileId={fotoProfileId}
-            backgroundProfileId={backgroundProfileId}
+            filePP={filePP as File}
+            fileBG={fileBG as File}
           />
         </Stack>
       </Stack>

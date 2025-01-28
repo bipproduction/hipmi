@@ -30,6 +30,7 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_TableReject({
   dataReject,
@@ -231,7 +232,7 @@ function TableStatus({ listReject }: { listReject: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color="red.4"
+          color={AdminColor.red}
           component={
             <TextInput
               icon={<IconSearch size={20} />}

@@ -17,6 +17,7 @@ import ComponentDonasi_CeritaPenggalangMain from "../../component/detail_main/ce
 import { Donasi_funDeleteDonasiById } from "../../fun/delete/fin_delete_donasi_by_id";
 import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function DetailRejectDonasi({
   dataReject,
@@ -104,16 +105,16 @@ function ButtonAction({
       <Group grow>
         <Button
           radius={"xl"}
-          bg={"orange"}
-          color="orange"
+          style={{ backgroundColor: AccentColor.yellow}}
+          c={MainColor.darkblue}
           onClick={() => setOpenModalEdit(true)}
         >
           Edit Kembali
         </Button>
         <Button
           radius={"xl"}
-          bg={"red"}
-          color="red"
+          style={{ backgroundColor: MainColor.red }}
+          c={AccentColor.white}
           onClick={() => setOpenModalDelete(true)}
         >
           Hapus Donasi
@@ -126,7 +127,8 @@ function ButtonAction({
         opened={openModaEdit}
         close={() => setOpenModalEdit(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModalEdit(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalEdit(false)}>
             Batal
           </Button>
         }
@@ -134,8 +136,9 @@ function ButtonAction({
           <Button
             loaderPosition="center"
             loading={isLoadingEdit}
+            style={{ backgroundColor: AccentColor.yellow }}
             radius={"xl"}
-            color="orange"
+            c={MainColor.darkblue}
             onClick={() => onChangeStatus()}
           >
             Edit
@@ -149,7 +152,8 @@ function ButtonAction({
         opened={openModalDelete}
         close={() => setOpenModalDelete(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModalDelete(false)}>
+          <Button style={{ backgroundColor: AccentColor.blue }}
+          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalDelete(false)}>
             Batal
           </Button>
         }
@@ -158,7 +162,8 @@ function ButtonAction({
             loaderPosition="center"
             loading={isLoadingDelete}
             radius={"xl"}
-            color="red"
+            style={{ backgroundColor: MainColor.red }}
+            c={AccentColor.white}
             onClick={() => onDelete()}
           >
             Hapus

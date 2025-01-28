@@ -1,5 +1,5 @@
 import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Paper, Grid, Stack, Center, Loader, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
@@ -17,7 +17,7 @@ export function ComponentColab_CardGrup({ data }: { data: any }) {
         style={{
           border: `2px solid ${AccentColor.blue}`,
           backgroundColor: AccentColor.darkblue,
-          color: "white",
+          color: MainColor.white,
           borderRadius: "10px",
           marginBottom: "20px",
           padding: "15px",
@@ -37,7 +37,7 @@ export function ComponentColab_CardGrup({ data }: { data: any }) {
               <Text fw={"bold"} lineClamp={1}>
                 {data?.ProjectCollaboration_RoomChat?.name}
               </Text>
-              <Text fz={"xs"} c={"white"}>
+              <Text fz={"xs"} >
                 {
                   data?.ProjectCollaboration_RoomChat
                     ?.ProjectCollaboration_AnggotaRoomChat.length
@@ -51,7 +51,7 @@ export function ComponentColab_CardGrup({ data }: { data: any }) {
               {data?.ProjectCollaboration_RoomChat?.id === idRoom ? (
                 <ComponentGlobal_Loader />
               ) : (
-                <IconChevronRight color="white" />
+                <IconChevronRight color={MainColor.white} />
               )}
             </Center>
           </Grid.Col>

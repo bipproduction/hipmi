@@ -10,16 +10,13 @@ import { ActionIcon } from "@mantine/core";
 import { IconCirclePlus, IconDotsVertical } from "@tabler/icons-react";
 import { useState } from "react";
 import { Investasi_ViewRekapDokumen } from "../../_view";
+import { useParams } from "next/navigation";
 
-export function Investasi_UiRekapDokumen({
-  investasiId,
-  dataDokumen,
-}: {
-  investasiId: string;
-  dataDokumen: any[]
-}) {
+export function Investasi_UiRekapDokumen() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
+
   const [openDrawer, setOpenDrawer] = useState(false);
-
   const listPage = [
     {
       id: "1",
@@ -47,8 +44,6 @@ export function Investasi_UiRekapDokumen({
         }
       >
         <Investasi_ViewRekapDokumen
-          dataDokumen={dataDokumen}
-          investasiId={investasiId}
         />
       </UIGlobal_LayoutTamplate>
 

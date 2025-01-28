@@ -30,7 +30,7 @@ export function Investasi_ViewProsesTransaksi({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <Stack spacing={"md"}>
@@ -41,13 +41,13 @@ export function Investasi_ViewProsesTransaksi({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
               }}
             >
               <Stack align="center" justify="center">
                 <Title order={6}>Admin sedang memproses transaksimu</Title>
                 <Paper radius={1000} w={100} h={100}>
-                  <Center h={"100%"}>
+                  <Center style={{ backgroundColor: MainColor.white, borderRadius: "100%"}} h={"100%"}>
                     <Loader size={"lg"} color="yellow" variant="dots" />
                   </Center>
                 </Paper>
@@ -73,7 +73,7 @@ export function Investasi_ViewProsesTransaksi({
               padding: "15px",
               cursor: "pointer",
               borderRadius: "10px",
-              color: "white",
+              color: MainColor.white,
             }}
           >
             <Group position="center">
@@ -94,7 +94,7 @@ export function Investasi_ViewProsesTransaksi({
                 target="_blank"
                 href={`https://wa.me/+${nomorAdmin.nomor}?text=Hallo Admin , Saya ada kendala dalam proses transfer investasi !`}
               >
-                <IconBrandWhatsapp size={40} color={Warna.hijau_cerah} />
+                <IconBrandWhatsapp size={40} color={MainColor.green} />
               </Link>
             </Group>
           </Paper>
