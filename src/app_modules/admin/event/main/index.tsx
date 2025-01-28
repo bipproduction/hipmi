@@ -15,6 +15,7 @@ import {
 import { IconAlertTriangle, IconBookmark, IconBriefcase, IconHistory, IconUpload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_Main({
   countPublish,
@@ -104,7 +105,7 @@ export default function AdminEvent_Main({
           {listStatus.map((e, i) => (
             <Paper
               key={i}
-              bg={e.color}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"
@@ -136,7 +137,7 @@ export default function AdminEvent_Main({
           {listBox2.map((e, i) => (
             <Paper
               key={i}
-              bg={e.color}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"

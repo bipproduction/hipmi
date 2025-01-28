@@ -36,6 +36,7 @@ import {
 } from "./_admin_global/new_global_state";
 import adminNotifikasi_getByUserId from "./notifikasi/fun/get/get_notifikasi_by_user_id";
 import { ComponentAdmin_UIDrawerNotifikasi } from "./notifikasi/ui_drawer_notifikasi";
+import { AdminColor } from "../_global/color/color_pallet";
 
 export function Admin_NewLayout({
   children,
@@ -93,10 +94,12 @@ export function Admin_NewLayout({
   return (
     <>
       <AppShell
+        bg={"#001f3b"}
         padding="md"
         navbarOffsetBreakpoint={1024}
         navbar={
           <Navbar
+            style={{ borderColor: "transparent" }}
             height={"100%"}
             width={{ base: 250 }}
             hiddenBreakpoint={1024}
@@ -182,7 +185,7 @@ export function Admin_NewLayout({
         }
       >
         {!matches ? (
-          <Stack align="center" justify="center" h={"100%"}>
+          <Stack  align="center" justify="center" h={"100%"}>
             <Title>Sorry !</Title>
             <Title order={4} align="center">
               View Only Available For Desktop

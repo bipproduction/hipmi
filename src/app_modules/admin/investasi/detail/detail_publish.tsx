@@ -1,7 +1,7 @@
 "use client";
 
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, Group, Stack, Tabs } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { useState } from "react";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
@@ -50,7 +50,7 @@ export function AdminInvestasi_DetailPublish({
 
         <Group>
           {listPage.map((e) => (
-            <Button
+            <Button variant="outline"
               key={e.id}
               color={selectPage == e.id ? "green" : "gray"}
               radius={"xl"}

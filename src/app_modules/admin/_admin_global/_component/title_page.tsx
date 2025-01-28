@@ -21,7 +21,7 @@ export function ComponentAdminGlobal_TitlePage({
         p={"xs"}
         style={{ borderRadius: "6px" }}
       >
-        <Title order={4}>{name}</Title>
+        <Title c={"white"} order={4}>{name}</Title>
         {component ? component : ""}
       </Group>
     </>

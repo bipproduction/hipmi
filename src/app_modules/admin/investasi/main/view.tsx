@@ -1,7 +1,7 @@
 "use client";
 
 import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface"; 
+import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   ActionIcon,
   Avatar,
@@ -9,6 +9,7 @@ import {
   Box,
   Center,
   Divider,
+  Flex,
   Grid,
   Group,
   Paper,
@@ -17,16 +18,20 @@ import {
   Stack,
   Table,
   Text,
+  ThemeIcon,
   Title,
 } from "@mantine/core";
 import {
+  IconAlertTriangle,
   IconArrowBadgeRight,
   IconArrowBigRightLine,
   IconArrowsMaximize,
+  IconBookmark,
   IconCaretRight,
   IconChevronsDownRight,
   IconChevronsRight,
   IconEdit,
+  IconUpload,
   IconZoomCheck,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -39,6 +44,8 @@ import _ from "lodash";
 import TableTotalInvestasi from "./table_total_investasi";
 import TablePublikasiProgresInvestasi from "./table_publikasi_progres";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_Investasi({
   listInvestasi,
@@ -66,21 +73,25 @@ export default function Admin_Investasi({
       name: "Publish",
       jumlah: countPublish,
       link: RouterAdminInvestasi_OLD.table_status_publish,
-      color: "green",
+      color: MainColor.green,
+      icon: <IconUpload size={18} color="#4CAF4F" />,
     },
     {
       id: 2,
       name: "Review",
       jumlah: countReview,
       link: RouterAdminInvestasi_OLD.table_status_review,
-      color: "orange",
+      color: MainColor.orange,
+      icon: <IconBookmark size={18} color="#FF7043" />
     },
     {
       id: 3,
       name: "Reject",
       jumlah: countReject,
       link: RouterAdminInvestasi_OLD.table_status_reject,
-      color: "red",
+      color: MainColor.red,
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
+
     },
   ];
 
@@ -101,18 +112,23 @@ export default function Admin_Investasi({
           {listBox.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah}</Title>
-                </Stack>
-              </Group>
+
+              <Stack spacing={0}>
+                <Text fw={"bold"} color={AccentColor.white}>{e.name}</Text>
+                <Flex align={"center"} justify={"space-between"}>
+                  <Title c={AccentColor.white}>{e.jumlah}</Title>
+                  <ThemeIcon radius={"xl"} size={"md"} color={AccentColor.white}>
+                    {e.icon}
+                  </ThemeIcon>
+                </Flex>
+              </Stack>
+
             </Paper>
           ))}
         </SimpleGrid>

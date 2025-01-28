@@ -37,7 +37,7 @@ export async function POST(
         fileName: req.fileName as string,
         fileExt: req.fileExt as string,
         fileId: req.fileId as string,
-        authorId: userLoginId,
+        // authorId: userLoginId,
       },
     });
 
