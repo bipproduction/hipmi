@@ -24,6 +24,8 @@ import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/noti
 import adminNotifikasi_funCreateToAllUser from "../../notifikasi/fun/create/fun_create_notif_to_all_user";
 import { clientLogger } from "@/util/clientLogger";
 import { apiGetAllUserWithExceptId } from "@/app_modules/_global/lib/api_user";
+import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_admin_modal_publish";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function AdminDonasi_DetailReview({
   dataReview,
@@ -65,10 +67,11 @@ function ButtonOnHeader({
   const router = useRouter();
   const [isLoadingPublish, setLoadingPublish] = useState(false);
   const [isLoadingReject, setLoadingReject] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
+  const [openedPublish, { open: openPublish, close: closePublish }] = useDisclosure(false);
+  const [openedReject, { open: openReject, close: closeReject }] = useDisclosure(false);
   const [catatan, setCatatan] = useState("");
 
-  async function onPulish() {
+  async function onPublish() {
     try {
       setLoadingPublish(true);
       const checkStatus = await donasi_checkStatus({ id: donasi.id });
@@ -210,16 +213,15 @@ function ButtonOnHeader({
         {donasi.donasiMaster_StatusDonasiId === "2" ? (
           <Group>
             <Button
-              loading={isLoadingPublish}
               loaderPosition="center"
               radius={"xl"}
               bg={"green"}
               color="green"
-              onClick={() => onPulish()}
+              onClick={openPublish}
             >
               Publish
             </Button>
-            <Button radius={"xl"} bg={"red"} color="red" onClick={open}>
+            <Button radius={"xl"} bg={"red"} color="red" onClick={openReject}>
               Reject
             </Button>
           </Group>
@@ -230,8 +232,8 @@ function ButtonOnHeader({
       {/* <Divider /> */}
 
       <Admin_ComponentModalReport
-        opened={opened}
-        onClose={close}
+        opened={openedReject}
+        onClose={closeReject}
         title={"Alasan penolakan"}
         onHandlerChange={(val: any) => setCatatan(val.target.value)}
         buttonKiri={
@@ -239,7 +241,7 @@ function ButtonOnHeader({
             <Button
               radius={"xl"}
               onClick={() => {
-                close();
+                closeReject();
               }}
             >
               Batal
@@ -249,6 +251,7 @@ function ButtonOnHeader({
         buttonKanan={
           <>
             <Button
+              bg={MainColor.green}
               loaderPosition="center"
               loading={isLoadingReject ? true : false}
               radius={"xl"}
@@ -269,6 +272,42 @@ function ButtonOnHeader({
           </>
         }
       />
+      <Admin_ComponentModalPublish
+       opened={openedPublish}
+       onClose={closePublish}
+       title={"Anda yakin ingin publish donasi ini?"}
+       buttonKiri={
+         <>
+           <Button
+             radius={"xl"}
+             onClick={() => {
+               closePublish();
+             }}
+           >
+             Batal
+           </Button>
+         </>
+       }
+       buttonKanan={
+         <>
+           <Button
+             bg={MainColor.green}
+             loaderPosition="center"
+             loading={isLoadingPublish ? true : false}
+             radius={"xl"}
+             onClick={() => {
+               onPublish();
+             }}
+           >
+             Simpan
+           </Button>
+         </>
+       }
+      />
+
+
+
+
 
       {/* <Modal
         opened={opened}

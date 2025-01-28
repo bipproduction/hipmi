@@ -33,6 +33,7 @@ import {
   IconBan,
   IconSearch,
   IconRefresh,
+  IconCircleCheck,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,7 +45,7 @@ import { AdminJob_funEditStatusPublishById } from "../fun/edit/fun_edit_status_p
 import adminJob_getListReview from "../fun/get/get_list_review";
 import { useAtom } from "jotai";
 import { AccentColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_ViewTavleReview({
   listReview,
@@ -56,7 +57,7 @@ export default function AdminJob_ViewTavleReview({
   const [nPage, setNPage] = useState(listReview.nPage);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
-
+  const [publish, setPublish] = useState(false);
   const [reject, setReject] = useState(false);
   const [jobId, setJobId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -189,16 +190,13 @@ export default function AdminJob_ViewTavleReview({
           <Stack align="center">
             <Button
               color={"green"}
-              leftIcon={<IconEyeShare />}
+              leftIcon={<IconCircleCheck />}
               radius={"xl"}
-              onClick={() =>
-                onPublish({
-                  jobId: e?.id,
-                  onLoadData(val: any) {
-                    setData(val.data);
-                    setNPage(val.nPage);
-                  },
-                })
+              onClick={() => {
+                setJobId(e?.id);
+                setPublish(true);
+              }
+                
               }
             >
               Publish
@@ -222,6 +220,41 @@ export default function AdminJob_ViewTavleReview({
 
   return (
     <>
+      <Modal
+        title={"Apakah anda yakin ingin mempublish job ini?"}
+        withCloseButton={false}
+        opened={publish}
+        onClose={() => {
+          setPublish(false);
+        }}
+        size={"sm"}
+        centered
+      >
+        <Stack>
+          <Group position="center">
+            <Button radius={"xl"} onClick={() => setPublish(false)}>
+              Batal
+            </Button>
+            <Button
+              style={{ transition: "0.5s", backgroundColor: MainColor.green }}
+              radius={"xl"}
+              onClick={() => {
+                onPublish({
+                  jobId: jobId,
+                  onLoadData(val: any) {
+                    setData(val.data);
+                    setNPage(val.nPage);
+                  },
+                })
+                setPublish(false);
+              }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
       <Modal
         opened={reject}
         onClose={() => {
@@ -252,7 +285,8 @@ export default function AdminJob_ViewTavleReview({
               Batal
             </Button>
             <Button
-              style={{ transition: "0.5s" }}
+              style={{ transition: "0.5s", }}
+              bg={MainColor.green}
               disabled={catatan === "" ? true : false}
               radius={"xl"}
               onClick={() => {
@@ -272,6 +306,7 @@ export default function AdminJob_ViewTavleReview({
           </Group>
         </Stack>
       </Modal>
+      
 
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage

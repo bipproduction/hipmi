@@ -28,6 +28,7 @@ import { adminEvent_funGetListReject } from "../fun";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_TableReject({
   listReject,
@@ -181,7 +182,7 @@ function TableStatus({ listReject }: { listReject: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color={MainColor.red}
+          color={AdminColor.red}
           component={
             <TextInput
             icon={<IconSearch size={20} />}

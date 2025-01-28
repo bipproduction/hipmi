@@ -69,7 +69,7 @@ function ForumMain({
         {listBox.map((e, i) => (
           <Paper
             key={i}
-            bg={`${"gray"}.2`}
+            bg={`${e.color}.2`}
             shadow="md"
             radius="md"
             p="md"

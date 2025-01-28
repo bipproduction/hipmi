@@ -21,6 +21,7 @@ import {
   Button,
   Center,
   Image,
+  Skeleton,
   Stack,
   TextInput,
   Textarea,
@@ -32,6 +33,7 @@ import { useState } from "react";
 import { donasi_funUpdateKabar } from "../../fun";
 import { MODEL_DONASI_KABAR } from "../../model/interface";
 import { clientLogger } from "@/util/clientLogger";
+import SkeletonEditDonasi from "../../edit/edit_donasi/skeleton_edit_donasi";
 
 export function Donasi_ViewEditKabar({
   dataKabar,
@@ -104,108 +106,116 @@ export function Donasi_ViewEditKabar({
     } catch (error) {
       setLoading(false);
       clientLogger.error("Error update donasi", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <>
       <Stack px={"lg"} pb={"lg"}>
-        <ComponentGlobal_BoxInformation informasi="Gambar tidak wajib di isi ! Hanya upload jika di butuhkan." />
+        {isLoading ? (
+          <SkeletonEditDonasi />
+        ) : (
+          <>
+            <ComponentGlobal_BoxInformation informasi="Gambar tidak wajib di isi ! Hanya upload jika di butuhkan." />
 
-        <TextInput
-          maxLength={100}
-          styles={{
-            label: {
-              color: "white",
-            },
-          }}
-          label="Judul"
-          withAsterisk
-          placeholder="Masukan judul kabar"
-          value={data.title}
-          onChange={(val) => {
-            setData({
-              ...data,
-              title: _.startCase(val.target.value),
-            });
-          }}
-        />
-        <Textarea
-          maxLength={1000}
-          styles={{
-            label: {
-              color: "white",
-            },
-          }}
-          label="Deskripsi"
-          withAsterisk
-          placeholder="Masukan deskripsi kabar"
-          autosize
-          maxRows={10}
-          minRows={2}
-          value={data.deskripsi}
-          onChange={(val) => {
-            setData({
-              ...data,
-              deskripsi: val.target.value,
-            });
-          }}
-        />
-        <ComponentGlobal_InputCountDown
-          lengthInput={data.deskripsi.length}
-          maxInput={1000}
-        />
-
-        <Stack spacing={5}>
-          <ComponentGlobal_BoxUploadImage>
-            {img ? (
-              <AspectRatio ratio={1 / 1} mt={5} maw={300} mx={"auto"}>
-                <Image
-                  style={{ maxHeight: 250 }}
-                  alt="Foto"
-                  height={250}
-                  src={img}
-                />
-              </AspectRatio>
-            ) : data.imageId === null ? (
-              <Stack justify="center" align="center" h={"100%"}>
-                <IconPhoto size={100} />
-              </Stack>
-            ) : (
-              <Stack justify="center" align="center" h={"100%"} p={"sm"}>
-                <ComponentGlobal_LoadImageCustom
-                  fileId={data.imageId}
-                  height={200}
-                />
-              </Stack>
-            )}
-          </ComponentGlobal_BoxUploadImage>
-
-          {/* Upload Foto */}
-          <Center>
-            <ComponentGlobal_ButtonUploadFileImage
-              onSetFile={setFile}
-              onSetImage={setImg}
+            <TextInput
+              maxLength={100}
+              styles={{
+                label: {
+                  color: "white",
+                },
+              }}
+              label="Judul"
+              withAsterisk
+              placeholder="Masukan judul kabar"
+              value={data.title}
+              onChange={(val) => {
+                setData({
+                  ...data,
+                  title: _.startCase(val.target.value),
+                });
+              }}
             />
-          </Center>
-        </Stack>
+            <Textarea
+              maxLength={1000}
+              styles={{
+                label: {
+                  color: "white",
+                },
+              }}
+              label="Deskripsi"
+              withAsterisk
+              placeholder="Masukan deskripsi kabar"
+              autosize
+              maxRows={10}
+              minRows={2}
+              value={data.deskripsi}
+              onChange={(val) => {
+                setData({
+                  ...data,
+                  deskripsi: val.target.value,
+                });
+              }}
+            />
+            <ComponentGlobal_InputCountDown
+              lengthInput={data.deskripsi.length}
+              maxInput={1000}
+            />
 
-        <Button
-          style={{
-            transition: "0.5s",
-          }}
-          disabled={_.values(data).includes("") ? true : false}
-          radius={"xl"}
-          mt={"lg"}
-          bg={MainColor.yellow}
-          color="yellow"
-          c={"black"}
-          loading={isLoading}
-          loaderPosition="center"
-          onClick={() => onUpdate()}
-        >
-          Simpan
-        </Button>
+            <Stack spacing={5}>
+              <ComponentGlobal_BoxUploadImage>
+                {img ? (
+                  <AspectRatio ratio={1 / 1} mt={5} maw={300} mx={"auto"}>
+                    <Image
+                      style={{ maxHeight: 250 }}
+                      alt="Foto"
+                      height={250}
+                      src={img}
+                    />
+                  </AspectRatio>
+                ) : data.imageId === null ? (
+                  <Stack justify="center" align="center" h={"100%"}>
+                    <IconPhoto size={100} />
+                  </Stack>
+                ) : (
+                  <Stack justify="center" align="center" h={"100%"} p={"sm"}>
+                    <ComponentGlobal_LoadImageCustom
+                      fileId={data.imageId}
+                      height={200}
+                    />
+                  </Stack>
+                )}
+              </ComponentGlobal_BoxUploadImage>
+
+              {/* Upload Foto */}
+              <Center>
+                <ComponentGlobal_ButtonUploadFileImage
+                  onSetFile={setFile}
+                  onSetImage={setImg}
+                />
+              </Center>
+            </Stack>
+
+            <Button
+              style={{
+                transition: "0.5s",
+              }}
+              disabled={_.values(data).includes("") ? true : false}
+              radius={"xl"}
+              mt={"lg"}
+              bg={MainColor.yellow}
+              color="yellow"
+              c={"black"}
+              loading={isLoading}
+              loaderPosition="center"
+              onClick={() => onUpdate()}
+            >
+              Simpan
+            </Button>
+          </>
+        )}
       </Stack>
     </>
   );

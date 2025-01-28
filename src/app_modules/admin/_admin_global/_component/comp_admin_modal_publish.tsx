@@ -11,8 +11,6 @@ function Admin_ComponentModalPublish({ onClose, opened, title, buttonKiri, butto
   return (
     <>
       <Modal
-        style={{ fontWeight: "bold" }}
-        fw={"bold"}
         centered
         opened={opened}
         onClose={onClose}

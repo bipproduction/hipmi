@@ -51,7 +51,7 @@ export default function AdminColab_Dashboard({
           {listStatus.map((e, i) => (
             <Paper
               key={i}
-              bg={"gray.2"}
+              bg={`${e.color}.2`}
               shadow="md"
               radius="md"
               p="md"

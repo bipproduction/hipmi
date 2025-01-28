@@ -12,7 +12,6 @@ export default async function Page() {
       <AdminDonasi_Main
         countPublish={countPublish as number}
         countReview={countReview as number}
-        countDraft={countDraft as number}
         countReject={countReject as number}
       />
     </>

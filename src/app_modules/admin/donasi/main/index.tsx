@@ -12,20 +12,23 @@ import {
   Box,
   Group,
   ActionIcon,
+  Flex,
+  ThemeIcon,
 } from "@mantine/core";
-import { IconChevronsRight } from "@tabler/icons-react";
+import { IconAlertTriangle, IconBookmark, IconCategory, IconChevronsRight, IconUpload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 
 export default function AdminDonasi_Main({
   countPublish,
   countReview,
-  countDraft,
+  
   countReject,
 }: {
   countPublish: number;
   countReview: number;
-  countDraft: number;
+  
   countReject: number;
 }) {
   const router = useRouter();
@@ -35,29 +38,34 @@ export default function AdminDonasi_Main({
       name: "Publish",
       jumlah: countPublish,
       link: RouterAdminDonasi_OLD.table_publish,
-      color: "green",
+      color: MainColor.green,
+      icon: <IconUpload size={18} color="#4CAF4F"/>,
     },
     {
       id: 2,
       name: "Review",
       jumlah: countReview,
       link: RouterAdminDonasi_OLD.table_review,
-      color: "orange",
+      color: MainColor.orange,
+      icon: <IconBookmark size={18}  color="#FF7043"/>
     },
-    // {
-    //   id: 3,
-    //   name: "Draft",
-    //   jumlah: countDraft,
-    //   link: "",
-    //   color: "yellow",
-    // },
     {
-      id: 4,
+      id: 3,
       name: "Reject",
       jumlah: countReject,
       link: RouterAdminDonasi_OLD.table_reject,
-      color: "red",
+      color: MainColor.red,
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
     },
+    {
+      id: 4,
+      name: "Kategori",
+      jumlah: 5,
+      link: RouterAdminDonasi_OLD.table_kategori,
+      color: AccentColor.softblue,
+      icon: <IconCategory size={18} color="#007CBA"/>
+
+    }
   ];
   return (
     <>
@@ -76,18 +84,22 @@ export default function AdminDonasi_Main({
           {listBox.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={e.color}
               shadow="md"
               radius="md"
               p="md"
               // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah}</Title>
+                <Stack spacing={0}>
+                <Text c={AccentColor.white} fw={"bold"}>{e.name}</Text>
+                <Flex align={"center"} justify={"space-between"}>
+                  <Title c={AccentColor.white} fw={"bold"}>{e.jumlah ? e.jumlah : 0}</Title>
+                  <ThemeIcon color={AccentColor.white} radius={"xl"} size={"md"}>
+                    {e.icon}
+                  </ThemeIcon>
+                </Flex>
                 </Stack>
-              </Group>
+              
             </Paper>
           ))}
         </SimpleGrid>
