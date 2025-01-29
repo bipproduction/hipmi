@@ -32,9 +32,13 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
+    // "/api/master/*",
     // "/api/image/*",
     // "/api/user/*",
     // "/api/new/*",
+    // ADMIN API
+
+
     // Akses awal
     "/api/get-cookie",
     "/api/user/activation",
