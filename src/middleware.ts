@@ -37,7 +37,7 @@ const middlewareConfig: MiddlewareConfig = {
     // "/api/user/*",
     // "/api/new/*",
     // ADMIN API
-    // "/api/admin/event/*",
+    "/api/admin/event/*",
 
 
     // Akses awal

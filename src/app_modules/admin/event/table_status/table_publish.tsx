@@ -1,12 +1,12 @@
 "use client";
 
+import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
 import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Box,
   Button,
   Center,
-  Group,
   Pagination,
   Paper,
   ScrollArea,
@@ -15,87 +15,115 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
-import { IconCircleCheck, IconDetails, IconEyeCheck, IconSearch } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import QRCode from "react-qr-code";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { adminEvent_funGetListPublish } from "../fun";
-import QRCode from "react-qr-code";
-import { useShallowEffect } from "@mantine/hooks";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function AdminEvent_TablePublish({
-  listPublish,
-}: {
-  listPublish: any;
-}) {
+export default function AdminEvent_TablePublish() {
   return (
-    <>
-      <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name="Event" />
-        <TableStatus listPublish={listPublish} />
-      </Stack>
-    </>
+    <Stack>
+      <ComponentAdminGlobal_HeaderTamplate name="Event" />
+      <TableStatus />
+    </Stack>
   );
 }
 
-function TableStatus({ listPublish }: { listPublish: any }) {
+function TableStatus() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_EVENT[]>(listPublish.data);
-  const [isNPage, setNPage] = useState(listPublish.nPage);
-  const [isActivePage, setActivePage] = useState(1);
+  const [data, setData] = useState<MODEL_EVENT[] | null>(null);
+  const [isNPage, setNPage] = useState<number>(1);
+  const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [eventId, setEventId] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [origin, setOrigin] = useState("");
 
-  useShallowEffect(() => {
+  useEffect(() => {
     if (typeof window !== "undefined") {
-      // console.log(window.location.origin);
       setOrigin(window.location.origin);
     }
-  }, [setOrigin]);
+  }, []);
 
-  //  async function onLoadOrigin(setOrigin: any) {
-  //    const res = await fetch("/api/origin-url");
-  //    const result = await res.json();
-  //    setOrigin(result.origin);
-  //  }
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetDataEventByStatus({
+          status: "Publish",
+          page: `${activePage}`,
+          search: isSearch,
+        });
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminEvent_funGetListPublish({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+        console.log("Received data:", response.data.data);
+        console.log("Received nPage:", response.data.nPage);
+
+        if (response && Array.isArray(response.data)) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+    };
+
+    loadInitialData();
+  }, [activePage, isSearch]);
+
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
+  };
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
+
+  const handleDownloadQR = (id: string, title: string) => {
+    const svg: any = document.getElementById(id);
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx: any = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.download = `QRCode ${title}`;
+      downloadLink.href = `${pngFile}`;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  };
+
+  if (!data) {
+    return <CustomSkeleton height={100} width="100%" />;
   }
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminEvent_funGetListPublish({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>Belum Ada Data</Center>
+          </td>
+        </tr>
+      );
+    }
 
-  const TableRows = _.isEmpty(data) ? (
-    <tr>
-      <td colSpan={12}>
-        <Center>Belum Ada Data</Center>
-      </td>
-    </tr>
-  ) : (
-    data.map((e, i) => (
+    return data.map((e, i) => (
       <tr key={i}>
         <td>
           <Center w={200}>
@@ -108,28 +136,9 @@ function TableStatus({ listPublish }: { listPublish: any }) {
         </td>
         <td>
           <Center w={200}>
-            <input
-              type="button"
-              value="Download QR"
-              onClick={() => {
-                const svg: any = document.getElementById(e.id);
-                const svgData = new XMLSerializer().serializeToString(svg);
-                const canvas = document.createElement("canvas");
-                const ctx: any = canvas.getContext("2d");
-                const img = new Image();
-                img.onload = () => {
-                  canvas.width = img.width;
-                  canvas.height = img.height;
-                  ctx.drawImage(img, 0, 0);
-                  const pngFile = canvas.toDataURL("image/png");
-                  const downloadLink = document.createElement("a");
-                  downloadLink.download = `QRCode ${e.title}`;
-                  downloadLink.href = `${pngFile}`;
-                  downloadLink.click();
-                };
-                img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
-              }}
-            />
+            <Button onClick={() => handleDownloadQR(e.id, e.title)}>
+              Download QR
+            </Button>
           </Center>
         </td>
         <td>
@@ -152,19 +161,17 @@ function TableStatus({ listPublish }: { listPublish: any }) {
             <Text>{e.EventMaster_TipeAcara.name}</Text>
           </Center>
         </td>
-
         <td>
           <Center w={200}>
             <Text align="center">
-              {" "}
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
-              }).format(e?.tanggal)}
+              }).format(new Date(e?.tanggal))}
               ,{" "}
               <Text span inherit>
                 {new Intl.DateTimeFormat("id-ID", {
                   timeStyle: "short",
-                }).format(e?.tanggal)}
+                }).format(new Date(e?.tanggal))}
               </Text>
             </Text>
           </Center>
@@ -172,20 +179,18 @@ function TableStatus({ listPublish }: { listPublish: any }) {
         <td>
           <Center w={200}>
             <Text align="center">
-              {" "}
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
-              }).format(e?.tanggalSelesai)}
+              }).format(new Date(e?.tanggalSelesai))}
               ,{" "}
               <Text span inherit>
                 {new Intl.DateTimeFormat("id-ID", {
                   timeStyle: "short",
-                }).format(e?.tanggalSelesai)}
+                }).format(new Date(e?.tanggalSelesai))}
               </Text>
             </Text>
           </Center>
         </td>
-
         <td>
           <Center w={400}>
             <Spoiler
@@ -197,17 +202,14 @@ function TableStatus({ listPublish }: { listPublish: any }) {
             </Spoiler>
           </Center>
         </td>
-
         <td>
           <Button
             loaderPosition="center"
-            loading={
-              e.id === eventId ? (loading === true ? true : false) : false
-            }
-            color={"green"}
-            leftIcon={<IconEyeCheck size={20}/>}
-            radius={"xl"}
-            onClick={async () => {
+            loading={loading && e.id === eventId}
+            color="green"
+            leftIcon={<IconEyeCheck size={20} />}
+            radius="xl"
+            onClick={() => {
               setEventId(e.id);
               setLoading(true);
               router.push(RouterAdminEvent.detail_publish + e.id);
@@ -217,104 +219,81 @@ function TableStatus({ listPublish }: { listPublish: any }) {
           </Button>
         </td>
       </tr>
-    ))
-  );
+    ));
+  };
 
   return (
-    <>
-      <Stack spacing={"xs"} h={"100%"}>
-        <ComponentAdminGlobal_TitlePage
-          name="Publish"
-          color={AdminColor.green}
-          component={
-            <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-          }
-        />
-        {/* <Group
-          position="apart"
-          bg={"green.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Publish</Title>
+    <Stack spacing="xs" h="100%">
+      <ComponentAdminGlobal_TitlePage
+        name="Publish"
+        color="green"
+        component={
           <TextInput
             icon={<IconSearch size={20} />}
-            radius={"xl"}
+            radius="xl"
             placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
+            value={isSearch}
+            onChange={(e) => onSearch(e.currentTarget.value)}
           />
-        </Group> */}
+        }
+      />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={1500}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>QR Code</Center>
-                  </th>
-                  <th>
-                    <Center>Download QR</Center>
-                  </th>
+      <Paper p="md" withBorder shadow="lg" h="80vh">
+        <ScrollArea w="100%" h="90%">
+          <Table
+            verticalSpacing="md"
+            horizontalSpacing="md"
+            p="md"
+            w={1500}
+            striped
+            highlightOnHover
+          >
+            <thead>
+              <tr>
+                <th>
+                  <Center>QR Code</Center>
+                </th>
+                <th>
+                  <Center>Download QR</Center>
+                </th>
+                <th>
+                  <Center>Username</Center>
+                </th>
+                <th>
+                  <Center>Judul</Center>
+                </th>
+                <th>
+                  <Center>Lokasi</Center>
+                </th>
+                <th>
+                  <Center>Tipe Acara</Center>
+                </th>
+                <th>
+                  <Center>Tanggal & Waktu Mulai</Center>
+                </th>
+                <th>
+                  <Center>Tanggal & Waktu Selesai</Center>
+                </th>
+                <th>
+                  <Center>Deskripsi</Center>
+                </th>
+                <th>
+                  <Center>Aksi</Center>
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderTableBody()}</tbody>
+          </Table>
+        </ScrollArea>
 
-                  <th>
-                    <Center>Username</Center>
-                  </th>
-                  <th>
-                    <Center>Judul</Center>
-                  </th>
-                  <th>
-                    <Center>Lokasi</Center>
-                  </th>
-                  <th>
-                    <Center>Tipe Acara</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Mulai</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Selesai</Center>
-                  </th>
-
-                  <th>
-                    <Center>Deskripsi</Center>
-                  </th>
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{TableRows}</tbody>
-            </Table>
-          </ScrollArea>
-
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
-              onChange={(val) => {
-                onPageClick(val);
-              }}
-            />
-          </Center>
-        </Paper>
-      </Stack>
-    </>
+        <Center mt="xl">
+          <Pagination
+            value={activePage}
+            total={isNPage}
+            onChange={onPageClick}
+          />
+        </Center>
+      </Paper>
+    </Stack>
   );
 }
