@@ -43,7 +43,11 @@ export const RouterEvent = {
     `/dev/event/detail/sponsor/tambah_sponsor/${id}`,
   detail_sponsor: ({ id }: { id: string }) =>
     `/dev/event/detail/detail_sponsor/${id}`,
-
   nominal_sponsor: ({ id }: { id: string }) =>
     `/dev/event/detail/sponsor/nominal_sponsor/${id}`,
+
+  metode_pembayaran: ({ id }: { id: string }) =>
+    `/dev/event/detail/sponsor/metode_pembayaran/${id}`,
+  invoice: ({ id }: { id: string }) =>
+    `/dev/event/invoice/${id}`,
 };
