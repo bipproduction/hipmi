@@ -1,0 +1,60 @@
+export {
+  apiGetEventStatusCountDashboard,
+  apiGetEventTipeAcara,
+  apiGetEventRiwayatCount,
+};
+
+const apiGetEventStatusCountDashboard = async ({
+  name,
+}: {
+  name: "Publish" | "Review" | "Reject";
+}) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/admin/event/dashboard/${name}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
+};
+
+const apiGetEventRiwayatCount = async () => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/event/dashboard/riwayat`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return await response.json().catch(() => null);
+}
+
+const apiGetEventTipeAcara = async () => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);  
+
+  const response = await fetch(`/api/admin/event/dashboard/tipe-acara`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });   
+
+  return await response.json().catch(() => null);
+};

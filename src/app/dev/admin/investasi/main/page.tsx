@@ -6,10 +6,10 @@ import Admin_getTotalInvestasiByUser from "@/app_modules/admin/investasi/fun/get
 
 export default async function Page() {
   const listInvestasi = await Admin_funGetAllInvestasi();
-  const countDraft = await Admin_CountStatusInvestasi(1);
-  const countReview = await Admin_CountStatusInvestasi(2);
-  const countPublish = await Admin_CountStatusInvestasi(3);
-  const countReject = await Admin_CountStatusInvestasi(4);
+  // const countDraft = await Admin_CountStatusInvestasi(1);
+  // const countReview = await Admin_CountStatusInvestasi(2);
+  // const countPublish = await Admin_CountStatusInvestasi(3);
+  // const countReject = await Admin_CountStatusInvestasi(4);
   const totalInvestasiByUser = await Admin_getTotalInvestasiByUser()
   const publishProgres = await Admin_getPublishProgresInvestasi()
   // console.log(targetTerbesar)
@@ -18,10 +18,10 @@ export default async function Page() {
     <>
       <Admin_Investasi
         listInvestasi={listInvestasi as any}
-        countDraft={countDraft}
-        countReview={countReview}
-        countPublish={countPublish}
-        countReject={countReject}
+        // countDraft={countDraft}
+        // countReview={countReview}
+        // countPublish={countPublish}
+        // countReject={countReject}
         totalInvestasiByUser={totalInvestasiByUser}
         publishProgres={publishProgres}
 
