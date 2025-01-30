@@ -16,7 +16,7 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const CustomSkeleton: React.FC<CustomSkeletonProps> = ({
+const CustomSkeletonAdmin: React.FC<CustomSkeletonProps> = ({
     isLoading = true,
     className,
     ...props
@@ -31,4 +31,4 @@ const CustomSkeleton: React.FC<CustomSkeletonProps> = ({
     );
 };
 
-export default CustomSkeleton;
+export default CustomSkeletonAdmin;
