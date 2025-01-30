@@ -182,11 +182,12 @@ model MasterStatus {
 }
 
 model MasterStatusTransaksi {
-  id        String   @id @default(cuid())
-  name      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String           @id @default(cuid())
+  name           String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  EventTransaksi EventTransaksi[]
 }
 
 // -------------------- INVESTASI --------------------- //
@@ -1009,4 +1010,7 @@ model EventTransaksi {
 
   EventSponsor   EventSponsor? @relation(fields: [eventSponsorId], references: [id])
   eventSponsorId String?       @unique
+
+  MasterStatusTransaksi   MasterStatusTransaksi? @relation(fields: [masterStatusTransaksiId], references: [id])
+  masterStatusTransaksiId String?
 }

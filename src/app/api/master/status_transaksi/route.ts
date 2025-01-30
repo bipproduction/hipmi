@@ -12,18 +12,18 @@ export async function GET(request: Request) {
   }
 
   try {
-    // const res = await prisma.masterBank.findMany({
-    //   orderBy: {
-    //     updatedAt: "asc",
-    //   },
-    //   where: {
-    //     isActive: true,
-    //   },
-    // });
+    const res = await prisma.masterStatusTransaksi.findMany({
+      orderBy: {
+        updatedAt: "asc",
+      },
+      where: {
+        isActive: true,
+      },
+    });
 
     await prisma.$disconnect();
     return NextResponse.json(
-      { success: true, message: "Berhasil mendapatkan data", data: "" },
+      { success: true, message: "Berhasil mendapatkan data", data: res },
       { status: 200 }
     );
   } catch (error) {

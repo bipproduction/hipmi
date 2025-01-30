@@ -25,6 +25,7 @@ import voting_status from "../../../bin/seeder/voting/master_status.json";
 import { master_kategori_app } from "@/bin/seeder/master";
 import { new_status_transaksi_investasi } from "@/bin/seeder/investasi";
 import { master_nama_bank } from "@/bin/seeder/master";
+import { master_status_transaksi } from "@/bin/seeder/master";
 import pLimit from "p-limit";
 
 async function masterUserRole() {
@@ -543,6 +544,26 @@ async function masterInvestasiNewTransaksiStatus() {
   console.log("masterInvestasiNewTransaksiStatus success");
 }
 
+async function masterStatusTransaksi() {
+  for (let a of master_status_transaksi) {
+    await prisma.masterStatusTransaksi.upsert({
+      where: {
+        id: a.id,
+      },
+      create: {
+        id: a.id,
+        name: a.name,
+      },
+      update: {
+        id: a.id,
+        name: a.name,
+      },
+    });
+  }
+
+  console.log("masterStatusTransaksi success");
+}
+
 const listSeederQueue = [
   masterUserRole,
   seederUser,
@@ -570,6 +591,7 @@ const listSeederQueue = [
   seederNomorAdmin,
   masterKategoriApp,
   masterInvestasiNewTransaksiStatus,
+  masterStatusTransaksi,
 ];
 const limit = pLimit(1);
 
