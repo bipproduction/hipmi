@@ -46,49 +46,129 @@ import TablePublikasiProgresInvestasi from "./table_publikasi_progres";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import global_limit from "@/app/lib/limit";
+import { useShallowEffect } from "@mantine/hooks";
+import apiGetInvestasiCountDashboard from "../_lib/api_fetch_count_status";
 
 export default function Admin_Investasi({
   listInvestasi,
-  countDraft,
-  countReview,
-  countPublish,
-  countReject,
   totalInvestasiByUser,
   publishProgres,
 }: {
   listInvestasi: MODEL_INVESTASI[];
-  countDraft: number | any;
-  countReview: number | any;
-  countPublish: number | any;
-  countReject: number | any;
   totalInvestasiByUser: any[];
   publishProgres: any[];
 }) {
   const [investasi, setInvestasi] = useState(listInvestasi);
   const router = useRouter();
+  const [countPublish, setCountPublish] = useState<number | null>(null);
+  const [countReview, setCountReview] = useState<number | null>(null);
+  const [countReject, setCountReject] = useState<number | null>(null);
+
+  useShallowEffect(() => {
+    handlerLoadData();
+  }, [])
+  async function handlerLoadData() {
+    try {
+      const listLoadData = [
+        global_limit(() => onLoadCountPublish()),
+        global_limit(() => onLoadCountReview()),
+        global_limit(() => onLoadCountReject()),
+      ];
+
+      
+      const result = await Promise.all(listLoadData);
+    } catch (error) {
+      clientLogger.error("Error handler load data", error);
+    }
+  }
+
+  async function onLoadCountPublish() {
+    try {
+
+      const response = await apiGetInvestasiCountDashboard({
+        name: "Publish",
+      });
+
+      console.log("Response Publish", response);
+
+      if (response) {
+        setCountPublish(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count publish", error);
+    }
+  }
+  async function onLoadCountReview() {
+    try {
+      const response = await apiGetInvestasiCountDashboard({
+        name: "Review",
+      });
+
+      if (response) {
+        setCountReview(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count review", error);
+    }
+  }
+  async function onLoadCountReject() {
+    try {
+      const response = await apiGetInvestasiCountDashboard({
+        name: "Reject",
+      });
+
+      if (response) {
+        setCountReject(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count reject", error);
+    }
+  }
 
   const listBox = [
     {
       id: 1,
       name: "Publish",
-      jumlah: countPublish,
-      link: RouterAdminInvestasi_OLD.table_status_publish,
+      jumlah:
+        countPublish == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countPublish ? (
+          countPublish
+        ) : (
+          "-"
+        ),
+      path: RouterAdminInvestasi_OLD.table_status_publish,
       color: MainColor.green,
       icon: <IconUpload size={18} color="#4CAF4F" />,
     },
     {
       id: 2,
       name: "Review",
-      jumlah: countReview,
-      link: RouterAdminInvestasi_OLD.table_status_review,
+      jumlah: countReview == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countReview ? (
+        countReview
+      ) : (
+        "-"
+      ),
+      path: RouterAdminInvestasi_OLD.table_status_review,
       color: MainColor.orange,
       icon: <IconBookmark size={18} color="#FF7043" />
     },
     {
       id: 3,
       name: "Reject",
-      jumlah: countReject,
-      link: RouterAdminInvestasi_OLD.table_status_reject,
+      jumlah: countReject == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countReject ? (
+        countReject
+      ) : (
+        "-"
+      ),
+      path: RouterAdminInvestasi_OLD.table_status_reject,
       color: MainColor.red,
       icon: <IconAlertTriangle size={18} color="#FF4B4C" />
 
