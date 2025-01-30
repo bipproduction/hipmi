@@ -19,6 +19,7 @@ import { IconAlertTriangle, IconBookmark, IconCategory, IconChevronsRight, IconU
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_Main({
   countPublish,
@@ -84,7 +85,7 @@ export default function AdminDonasi_Main({
           {listBox.map((e, i) => (
             <Paper
               key={i}
-              bg={e.color}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"

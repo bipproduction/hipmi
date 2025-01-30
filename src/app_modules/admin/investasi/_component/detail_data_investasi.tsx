@@ -1,10 +1,11 @@
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { Paper, Stack, Title, Grid, Box, Text } from "@mantine/core";
 
 export function ComponentAdminInvestasi_DetailData({ data }: { data: any }) {
   return (
     <>
-      <Paper withBorder p={"lg"}>
-        <Stack>
+      <Paper bg={AdminColor.softBlue} p={"lg"}>
+        <Stack c={AdminColor.white}>
           <Title order={3}>Rincian Data Investasi</Title>
           <Grid justify="center">
             <Grid.Col span={6}>

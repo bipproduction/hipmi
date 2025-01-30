@@ -101,29 +101,29 @@ function TableView({ listData }: { listData: any }) {
   const tableBody = data.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <Text lineClamp={1}>{e.author.username}</Text>
         </Center>
       </td>
       <td>
-        <Center w={400}>
+        <Center c={AccentColor.white} w={400}>
           <Text lineClamp={1}>{e.title}</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <Text lineClamp={1}>{e.roi} %</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <ComponentAdminGlobal_TampilanRupiahDonasi
             nominal={_.toNumber(e.targetDana)}
           />
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <ComponentAdminGlobal_TampilanRupiahDonasi
             nominal={_.toNumber(e.hargaLembar)}
           />
@@ -155,7 +155,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color={AdminColor.orange}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -189,7 +189,7 @@ function TableView({ listData }: { listData: any }) {
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             {isShowReload && (
               <Paper bg={"red"} w={"50%"}>
                 <Affix position={{ top: rem(200) }} w={"100%"}>
@@ -221,29 +221,27 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Center c={AccentColor.white} w={200}>Username</Center>
                     </th>
                     <th>
-                      <Center w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center w={200}>ROI</Center>
+                      <Center c={AccentColor.white} w={200}>ROI</Center>
                     </th>
                     <th>
-                      <Center w={200}>Target Dana</Center>
+                      <Center c={AccentColor.white} w={200}>Target Dana</Center>
                     </th>
                     <th>
-                      <Center w={200}>Harga Perlembar</Center>
+                      <Center c={AccentColor.white} w={200}>Harga Perlembar</Center>
                     </th>
 
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} w={200}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
