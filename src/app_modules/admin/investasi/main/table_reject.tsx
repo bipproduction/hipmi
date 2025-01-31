@@ -30,7 +30,7 @@ import { adminInvestasi_funGetAllReject } from "../fun/get/get_all_reject";
 import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TableRejectInvestasi({
   dataInvestsi,
@@ -153,17 +153,17 @@ function TableView({ listData }: { listData: any }) {
     <tr key={e.id}>
       <td>
         <Center w={200}>
-          <Text lineClamp={1}>{e.author.username}</Text>
+          <Text c={AccentColor.white} lineClamp={1}>{e.author.username}</Text>
         </Center>
       </td>
       <td>
         <Center w={400}>
-          <Text lineClamp={1}>{e.title}</Text>
+          <Text c={AccentColor.white} lineClamp={1}>{e.title}</Text>
         </Center>
       </td>
       <td>
         <Center w={400}>
-          <Text lineClamp={1}>{e.catatan}</Text>
+          <Text c={AccentColor.white} lineClamp={1}>{e.catatan}</Text>
         </Center>
       </td>
 
@@ -193,7 +193,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color={AdminColor.red}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -227,7 +227,7 @@ function TableView({ listData }: { listData: any }) {
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -235,22 +235,21 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+               
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Center c={AccentColor.white} w={200}>Username</Center>
                     </th>
                     <th>
-                      <Center w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center w={400}>Catatan Penolakan</Center>
+                      <Center c={AccentColor.white} w={400}>Catatan Penolakan</Center>
                     </th>
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} w={200}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

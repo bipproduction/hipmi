@@ -25,6 +25,9 @@ export async function GET(request: Request, { params }: {
             where: {
                 DonasiMaster_Status: {
                     name: fixStatus
+                },
+                DonasiMaster_Ketegori: {
+                    name: fixStatus
                 }
             }
         });

@@ -48,6 +48,7 @@ import { adminDonasi_getListDonatur } from "../../fun/get/get_list_donatur_by_id
 import { AdminDonasi_getOneById } from "../../fun/get/get_one_by_id";
 import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_DetailPublish({
   dataPublish,
@@ -108,7 +109,7 @@ function TampilanDetailDonasi({
 
   return (
     <>
-      <Paper radius={"md"} p={"md"}>
+      <Paper bg={AdminColor.softBlue} radius={"md"} p={"md"}>
         <Stack>
           <SimpleGrid
             cols={3}
@@ -119,7 +120,7 @@ function TampilanDetailDonasi({
               { maxWidth: "36rem", cols: 1, spacing: "sm" },
             ]}
           >
-            <Paper withBorder p={"xs"}>
+            <Paper p={"xs"}>
               <Stack>
                 <Title align="center" order={4}>
                   Gambar Donasi
@@ -128,7 +129,7 @@ function TampilanDetailDonasi({
               </Stack>
             </Paper>
 
-            <Paper withBorder p={"sm"}>
+            <Paper p={"sm"}>
               <Stack spacing={5}>
                 <Title order={4}>Detail Donasi</Title>
                 <Grid>
@@ -379,25 +380,25 @@ function TampilanListDonatur({
   const tableRows = lisDonatur.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e?.Author.username}</Center>
+        <Center c={AccentColor.white}>{e?.Author.username}</Center>
       </td>
       <td>
-        <Center>{e?.DonasiMaster_Bank?.name}</Center>
+        <Center c={AccentColor.white}>{e?.DonasiMaster_Bank?.name}</Center>
       </td>
       <td>
-        <Center>
-          <ComponentGlobal_TampilanRupiah color="black" nominal={+e?.nominal} />
+        <Center c={AccentColor.white}>
+          <ComponentGlobal_TampilanRupiah  nominal={+e?.nominal} />
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
             e?.createdAt
           )}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           <Badge w={150} variant="dot">
             {e?.DonasiMaster_StatusInvoice?.name}
           </Badge>
@@ -458,7 +459,7 @@ function TampilanListDonatur({
         {/* <pre>{JSON.stringify(dataDonasi, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Daftar Donatur"
-          color="gray.4"
+          color={AdminColor.softBlue}
           component={
             <Group>
               <ActionIcon
@@ -486,38 +487,36 @@ function TampilanListDonatur({
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Nama Donatur</Center>
+                    <Center c={AccentColor.white}>Nama Donatur</Center>
                   </th>
                   <th>
-                    <Center>Nama Bank</Center>
+                    <Center c={AccentColor.white}>Nama Bank</Center>
                   </th>
                   <th>
-                    <Center>Jumlah Donasi</Center>
+                    <Center c={AccentColor.white}>Jumlah Donasi</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center c={AccentColor.white}>Tanggal</Center>
                   </th>
                   <th>
-                    <Center>Status</Center>
+                    <Center c={AccentColor.white}>Status</Center>
                   </th>
                   <th>
-                    <Center>Bukti Transfer</Center>
+                    <Center c={AccentColor.white}>Bukti Transfer</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>
@@ -697,15 +696,15 @@ function TampilanListPencairan({
   const rowTable = data.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <TampilanRupiahDonasi nominal={e.nominalCair} />
         </Center>
       </td>
       <td>
-        <Center>{moment(e.createdAt).format("ll")}</Center>
+        <Center c={AdminColor.white}>{moment(e.createdAt).format("ll")}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>{e.title}</Text>
         </Center>
       </td>
@@ -755,7 +754,7 @@ function TampilanListPencairan({
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Rincian Pencairan Dana"
-          color="gray.4"
+          color={AdminColor.softBlue}
           component={
             <Group>
             <ActionIcon
@@ -783,30 +782,29 @@ function TampilanListPencairan({
           }
         />
       
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Nominal</Center>
+                    <Center c={AccentColor.white}>Nominal</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center c={AccentColor.white}>Tanggal</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
-                  <th>Deskripsi</th>
+                  <th style={{ color: AccentColor.white}}>Deskripsi</th>
                   <th>
-                    <Center>Bukti Transfer</Center>
+                    <Center c={AccentColor.white}>Bukti Transfer</Center>
                   </th>
                 </tr>
               </thead>

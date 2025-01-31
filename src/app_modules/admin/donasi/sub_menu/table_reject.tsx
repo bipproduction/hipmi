@@ -75,21 +75,21 @@ function TableStatus({ dataReject }: { dataReject: any }) {
   const TableRows = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e?.Author?.username}</Center>
+        <Center c={AccentColor.white}>{e?.Author?.username}</Center>
       </td>
       <td>
-        <Center>{e?.title}</Center>
+        <Center c={AccentColor.white}>{e?.title}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           <ComponentGlobal_TampilanRupiah color="black" nominal={+e.target} />
         </Center>
       </td>
       <td>
-        <Center>{e?.DonasiMaster_Ketegori.name}</Center>
+        <Center c={AccentColor.white}>{e?.DonasiMaster_Ketegori.name}</Center>
       </td>
       <td>
-        <Center>{e?.DonasiMaster_Durasi.name} hari</Center>
+        <Center c={AccentColor.white}>{e?.DonasiMaster_Durasi.name} hari</Center>
       </td>
       <td>
         <Center>
@@ -117,7 +117,7 @@ function TableStatus({ dataReject }: { dataReject: any }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color={AdminColor.red}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -146,35 +146,34 @@ function TableStatus({ dataReject }: { dataReject: any }) {
           />
         </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+            
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AccentColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Target</Center>
+                    <Center c={AccentColor.white}>Target</Center>
                   </th>
                   <th>
-                    <Center>Ketegori</Center>
+                    <Center c={AccentColor.white}>Ketegori</Center>
                   </th>
                   <th>
-                    <Center>Durasi</Center>
+                    <Center c={AccentColor.white}>Durasi</Center>
                   </th>
                   <th>
-                    <Center>Alasan</Center>
+                    <Center c={AccentColor.white}>Alasan</Center>
                   </th>
                 </tr>
               </thead>
