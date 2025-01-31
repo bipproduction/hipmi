@@ -99,9 +99,7 @@ export default function AdminDonasi_Main({
   }
   async function onLoadCountKategori() {
     try {
-      const response = await apiGetDonasiKategoriCountDashboard({
-        name: "Kategori"
-      })
+      const response = await apiGetDonasiKategoriCountDashboard()
       if (response) {
         setCountKategori(response.data);
       }

@@ -3,19 +3,33 @@
 import { Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function AdminJob_Main({
-  countPublish,
-  countReview,
-  countReject,
-  countArsip,
+  // countPublish,
+  // countReview,
+  // countReject,
+  // countArsip,
 }: {
-  countPublish: number;
-  countReview: number;
-  countReject: number;
-  countArsip: number
-}) {
+  // countPublish: number;
+  // countReview: number;
+  // countReject: number;
+  // countArsip: number
+  }) {
+  const [countPublish, setCountPublish] = useState<number | null>(null);
+  const [countReview, setCountReview] = useState<number | null>(null);
+  const [countReject, setCountReject] = useState<number | null>(null);
+  const [countArsip, setCountArsip] = useState<number | null>(null);
   const router = useRouter();
+
+  async function onLoadCountPublish() {
+  try {
+    
+  } catch (error) {
+    clientLogger.error("Error get count publish", error)
+  }
+}
 
   const listStatus = [
     {
