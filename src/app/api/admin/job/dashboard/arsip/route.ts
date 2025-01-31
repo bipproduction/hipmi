@@ -1,12 +1,8 @@
 import { prisma } from "@/app/lib";
 import backendLogger from "@/util/backendLogger";
-import { data } from "autoprefixer";
-import _ from "lodash";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: {
-    params: { name: string }
-}) {
+export async function GET(request: Request) {
     const method = request.method;
     if (method !== "GET") {
         return NextResponse.json({
@@ -16,30 +12,28 @@ export async function GET(request: Request, { params }: {
             { status: 405 }
         );
     }
-
-    const { name } = params;
     try {
         let fixData;
-        const fixStatus = _.startCase(name);
-        fixData = await prisma.donasi.count({
+        fixData = await prisma.job.count({
             where: {
-                DonasiMaster_Status: {
-                    name: fixStatus
+                MasterStatus: {
+                    name: "Publish"
                 },
+                isArsip: true
             }
-        });
+        })
         return NextResponse.json({
             success: true,
-            message: "Success get data donasi dashboard",
+            message: "Success get data job-vacancy dashboard",
             data: fixData
         },
             { status: 200 }
         )
     } catch (error) {
-        backendLogger.error("Error get data donasi dashboard >>", error);
+        backendLogger.error("Error get data job-vacancy dashboard", error);
         return NextResponse.json({
             success: false,
-            message: "Failed to get data donasi dashboard",
+            message: "Error get data job-vacancy dashboard",
             reason: (error as Error).message
         },
             { status: 500 }

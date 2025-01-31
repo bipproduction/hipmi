@@ -29,7 +29,7 @@ import { adminVote_funGetListReject } from "../../fun";
 import { AdminVote_funEditCatatanRejectById } from "../../fun/edit/fun_edit_catatan_reject_by_id";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminVote_TableReject({ dataVote }: { dataVote: any }) {
   return (
@@ -109,7 +109,7 @@ function TableStatus({ listData }: { listData: any }) {
               setCatatan(e.catatan);
             }}
           >
-            <Stack spacing={0}>
+            <Stack c={AccentColor.white} spacing={0}>
               <Text fz={10}>Tambah</Text>
               <Text fz={10}>Catatan</Text>
             </Stack>
@@ -129,10 +129,10 @@ function TableStatus({ listData }: { listData: any }) {
         </Center>
       </td>
       <td>
-        <Center>{e?.Author?.Profile?.name}</Center>
+        <Center c={AccentColor.white}>{e?.Author?.Profile?.name}</Center>
       </td>
       <td>
-        <Center>{e.title}</Center>
+        <Center c={AccentColor.white}>{e.title}</Center>
       </td>
       <td>
         <Center>
@@ -150,18 +150,18 @@ function TableStatus({ listData }: { listData: any }) {
         <Stack>
           {e.Voting_DaftarNamaVote.map((v) => (
             <Box key={v.id}>
-              <Text>- {v.value}</Text>
+              <Text c={AccentColor.white}>- {v.value}</Text>
             </Box>
           ))}
         </Stack>
       </th>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e.awalVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e.akhirVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
@@ -174,7 +174,7 @@ function TableStatus({ listData }: { listData: any }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color={AdminColor.red}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -203,41 +203,40 @@ function TableStatus({ listData }: { listData: any }) {
           />
         </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                   <th>
-                    <Center>Catatan</Center>
+                    <Center c={AccentColor.white}>Catatan</Center>
                   </th>
                   <th>
-                    <Center>Author</Center>
+                    <Center c={AccentColor.white}>Author</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Deskripsi</Center>
+                    <Center c={AccentColor.white}>Deskripsi</Center>
                   </th>
                   <th>
-                    <Center>Pilihan</Center>
+                    <Center c={AccentColor.white}>Pilihan</Center>
                   </th>
                   <th>
-                    <Center>Mulai Vote</Center>
+                    <Center c={AccentColor.white}>Mulai Vote</Center>
                   </th>
                   <th>
-                    <Center>Selesai Vote</Center>
+                    <Center c={AccentColor.white}>Selesai Vote</Center>
                   </th>
                 </tr>
               </thead>

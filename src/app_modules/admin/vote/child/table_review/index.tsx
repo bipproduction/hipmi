@@ -123,10 +123,10 @@ function TableStatus({ listData }: { listData: any }) {
   const TableRows = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e?.Author?.username}</Center>
+        <Center c={AccentColor.white}>{e?.Author?.username}</Center>
       </td>
       <td>
-        <Center>{e.title}</Center>
+        <Center c={AccentColor.white}>{e.title}</Center>
       </td>
       <td>
         <Center>
@@ -144,18 +144,18 @@ function TableStatus({ listData }: { listData: any }) {
         <Stack>
           {e.Voting_DaftarNamaVote.map((v) => (
             <Box key={v.id}>
-              <Text>- {v.value}</Text>
+              <Text c={AccentColor.white}>- {v.value}</Text>
             </Box>
           ))}
         </Stack>
       </th>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e.awalVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e.akhirVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
@@ -212,7 +212,7 @@ function TableStatus({ listData }: { listData: any }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color={AdminColor.orange}
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -241,7 +241,7 @@ function TableStatus({ listData }: { listData: any }) {
           />
         </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           {isShowReload && (
             <Affix position={{ top: rem(200) }} w={"100%"}>
               <Center>
@@ -270,32 +270,31 @@ function TableStatus({ listData }: { listData: any }) {
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+             
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AccentColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Deskripsi</Center>
+                    <Center c={AccentColor.white}>Deskripsi</Center>
                   </th>
                   <th>
-                    <Center>Pilihan</Center>
+                    <Center c={AccentColor.white}>Pilihan</Center>
                   </th>
                   <th>
-                    <Center>Mulai Vote</Center>
+                    <Center c={AccentColor.white}>Mulai Vote</Center>
                   </th>
                   <th>
-                    <Center>Selesai Vote</Center>
+                    <Center c={AccentColor.white}>Selesai Vote</Center>
                   </th>
 
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

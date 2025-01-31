@@ -212,7 +212,7 @@ export default function AdminInvestasi_DetailReview({
         buttonKanan={
           <Button
             loaderPosition="center"
-            bg={MainColor.green}
+            style={{ backgroundColor: MainColor.green }}
             loading={isLoadingReject}
             radius={"xl"}
             onClick={() => {
@@ -235,7 +235,7 @@ export default function AdminInvestasi_DetailReview({
         buttonKanan={
           <Button
             loaderPosition="center"
-            bg={MainColor.green}
+            style={{ backgroundColor: MainColor.green }}
             loading={isLoadingPublish}
             radius={"xl"}
             onClick={() => {
