@@ -2,6 +2,7 @@
 
 import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
 import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import { clientLogger } from "@/util/clientLogger";
 import {
@@ -16,16 +17,13 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { useEffect } from "react";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
-import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import QRCode from "react-qr-code";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { adminEvent_funGetListPublish } from "../fun";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function AdminEvent_TablePublish() {
   return (
@@ -46,13 +44,13 @@ function TableStatus() {
   const [loading, setLoading] = useState(false);
   const [origin, setOrigin] = useState("");
 
-  useEffect(() => {
+  useShallowEffect(() => {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
   }, []);
 
-  useEffect(() => {
+  useShallowEffect(() => {
     const loadInitialData = async () => {
       try {
         const response = await apiGetDataEventByStatus({
@@ -61,10 +59,7 @@ function TableStatus() {
           search: isSearch,
         });
 
-        console.log("Received data:", response.data.data);
-        console.log("Received nPage:", response.data.nPage);
-
-        if (response && Array.isArray(response.data)) {
+        if (response?.success && response?.data?.data) {
           setData(response.data.data);
           setNPage(response.data.nPage || 1);
         } else {
@@ -108,16 +103,14 @@ function TableStatus() {
     img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
   };
 
-  if (!data) {
-    return <CustomSkeleton height={100} width="100%" />;
-  }
-
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
       return (
         <tr>
           <td colSpan={12}>
-            <Center>Belum Ada Data</Center>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
           </td>
         </tr>
       );
@@ -158,9 +151,10 @@ function TableStatus() {
         </td>
         <td>
           <Center w={200}>
-            <Text>{e.EventMaster_TipeAcara.name}</Text>
+            <Text>{e.EventMaster_TipeAcara?.name}</Text>
           </Center>
         </td>
+
         <td>
           <Center w={200}>
             <Text align="center">
@@ -191,6 +185,7 @@ function TableStatus() {
             </Text>
           </Center>
         </td>
+
         <td>
           <Center w={400}>
             <Spoiler
@@ -202,6 +197,7 @@ function TableStatus() {
             </Spoiler>
           </Center>
         </td>
+
         <td>
           <Button
             loaderPosition="center"
@@ -229,6 +225,7 @@ function TableStatus() {
         color="green"
         component={
           <TextInput
+            disabled={!data}
             icon={<IconSearch size={20} />}
             radius="xl"
             placeholder="Masukan judul"
@@ -238,62 +235,66 @@ function TableStatus() {
         }
       />
 
-      <Paper p="md" withBorder shadow="lg" h="80vh">
-        <ScrollArea w="100%" h="90%">
-          <Table
-            verticalSpacing="md"
-            horizontalSpacing="md"
-            p="md"
-            w={1500}
-            striped
-            highlightOnHover
-          >
-            <thead>
-              <tr>
-                <th>
-                  <Center>QR Code</Center>
-                </th>
-                <th>
-                  <Center>Download QR</Center>
-                </th>
-                <th>
-                  <Center>Username</Center>
-                </th>
-                <th>
-                  <Center>Judul</Center>
-                </th>
-                <th>
-                  <Center>Lokasi</Center>
-                </th>
-                <th>
-                  <Center>Tipe Acara</Center>
-                </th>
-                <th>
-                  <Center>Tanggal & Waktu Mulai</Center>
-                </th>
-                <th>
-                  <Center>Tanggal & Waktu Selesai</Center>
-                </th>
-                <th>
-                  <Center>Deskripsi</Center>
-                </th>
-                <th>
-                  <Center>Aksi</Center>
-                </th>
-              </tr>
-            </thead>
-            <tbody>{renderTableBody()}</tbody>
-          </Table>
-        </ScrollArea>
+      {!data ? (
+        <CustomSkeleton height={"80vh"} width="100%" />
+      ) : (
+        <Paper p="md" withBorder shadow="lg" h="80vh">
+          <ScrollArea w="100%" h="90%">
+            <Table
+              verticalSpacing="md"
+              horizontalSpacing="md"
+              p="md"
+              w={1500}
+              striped
+              highlightOnHover
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <Center>QR Code</Center>
+                  </th>
+                  <th>
+                    <Center>Download QR</Center>
+                  </th>
+                  <th>
+                    <Center>Username</Center>
+                  </th>
+                  <th>
+                    <Center>Judul</Center>
+                  </th>
+                  <th>
+                    <Center>Lokasi</Center>
+                  </th>
+                  <th>
+                    <Center>Tipe Acara</Center>
+                  </th>
+                  <th>
+                    <Center>Tanggal & Waktu Mulai</Center>
+                  </th>
+                  <th>
+                    <Center>Tanggal & Waktu Selesai</Center>
+                  </th>
+                  <th>
+                    <Center>Deskripsi</Center>
+                  </th>
+                  <th>
+                    <Center>Aksi</Center>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderTableBody()}</tbody>
+            </Table>
+          </ScrollArea>
 
-        <Center mt="xl">
-          <Pagination
-            value={activePage}
-            total={isNPage}
-            onChange={onPageClick}
-          />
-        </Center>
-      </Paper>
+          <Center mt="xl">
+            <Pagination
+              value={activePage}
+              total={isNPage}
+              onChange={onPageClick}
+            />
+          </Center>
+        </Paper>
+      )}
     </Stack>
   );
 }

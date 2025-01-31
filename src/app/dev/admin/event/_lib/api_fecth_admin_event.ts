@@ -1,11 +1,12 @@
 export {
-  apiGetEventStatusCountDashboard,
-  apiGetEventTipeAcara,
-  apiGetEventRiwayatCount,
-  apiGetDataEventByStatus,
+  apiGetAdminEventStatusCountDashboard as apiGetEventStatusCountDashboard,
+  apiGetAdminEventCountTipeAcara as apiGetEventTipeAcara,
+  apiGetAdminEventRiwayatCount as apiGetEventRiwayatCount,
+  apiGetAdminEventByStatus as apiGetDataEventByStatus,
+  apiGetAdminEventRiwayat,
 };
 
-const apiGetEventStatusCountDashboard = async ({
+const apiGetAdminEventStatusCountDashboard = async ({
   name,
 }: {
   name: "Publish" | "Review" | "Reject";
@@ -26,7 +27,7 @@ const apiGetEventStatusCountDashboard = async ({
   return await response.json().catch(() => null);
 };
 
-const apiGetEventRiwayatCount = async () => {
+const apiGetAdminEventRiwayatCount = async () => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
 
@@ -43,7 +44,7 @@ const apiGetEventRiwayatCount = async () => {
   return await response.json().catch(() => null);
 };
 
-const apiGetEventTipeAcara = async () => {
+const apiGetAdminEventCountTipeAcara = async () => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
 
@@ -60,7 +61,7 @@ const apiGetEventTipeAcara = async () => {
   return await response.json().catch(() => null);
 };
 
-const apiGetDataEventByStatus = async ({
+const apiGetAdminEventByStatus = async ({
   status,
   page,
   search,
@@ -74,7 +75,35 @@ const apiGetDataEventByStatus = async ({
 
   const isPage = page ? `?page=${page}` : "";
   const isSearch = search ? `&search=${search}` : "";
-  const respone = await fetch(`/api/admin/event/${status}${isPage}${isSearch}`, {
+  const respone = await fetch(
+    `/api/admin/event/${status}${isPage}${isSearch}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return await respone.json().catch(() => null);
+};
+
+const apiGetAdminEventRiwayat = async ({
+  page,
+  search,
+}: {
+  page: string;
+  search: string;
+}) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const isPage = page ? `?page=${page}` : "";
+  const isSearch = search ? `&search=${search}` : "";
+  const response = await fetch(`/api/admin/event/riwayat${isPage}${isSearch}`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -83,5 +112,5 @@ const apiGetDataEventByStatus = async ({
     },
   });
 
-  return await respone.json().catch(() => null);
+  return await response.json().catch(() => null);
 };
