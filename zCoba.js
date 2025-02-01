@@ -23,4 +23,4 @@ const data = [
 ];
 
 console.log(new Set(data.map((d) => d.authorId)));
-// v009
+// v010
