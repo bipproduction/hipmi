@@ -23,6 +23,7 @@ import adminUserAccess_getListUser from "../fun/get/get_list_all_user";
 import { WibuRealtime } from "wibu-pkg";
 import { gs_access_user, IRealtimeData } from "@/app/lib/global_state";
 import { useAtom } from "jotai";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
   const [data, setData] = useState<MODEL_USER[]>(listUser.data);
@@ -120,10 +121,10 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
   const tableBody = data.map((e, i) => (
     <tr key={e.id}>
       <td>
-        <Center>{e.username}</Center>
+        <Center c={AdminColor.white}>{e.username}</Center>
       </td>
       <td>
-        <Center>+{e.nomor}</Center>
+        <Center c={AdminColor.white}>+{e.nomor}</Center>
       </td>
       <td>
         {e.active === false ? (
@@ -163,8 +164,9 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
     <>
       <Stack spacing={"xs"} h={"90vh"}>
         <Group
+          c={AdminColor.white}
           position="apart"
-          bg={"blue.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
@@ -179,25 +181,24 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
           />
         </Group>
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xs"}
               horizontalSpacing={"md"}
               p={"md"}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AdminColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Nomor</Center>
+                    <Center c={AdminColor.white}>Nomor</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

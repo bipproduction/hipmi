@@ -1,8 +1,10 @@
 "use client";
 
-import { Stack, SimpleGrid, Paper, Group, Title, Text } from "@mantine/core";
+import { Stack, SimpleGrid, Paper, Group, Title, Text, Flex, ThemeIcon } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { IconAlertTriangle, IconMessage2, IconUpload } from "@tabler/icons-react";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminColab_Dashboard({
   countPublish,
@@ -21,18 +23,21 @@ export default function AdminColab_Dashboard({
       name: "Publish",
       jumlah: countPublish,
       color: "green",
+      icon: <IconUpload size={18} color="#4CAF4F" />
     },
     {
       id: 2,
       name: "Group Chat",
       jumlah: countRoom,
       color: "orange",
+      icon: <IconMessage2 size={18} color="#FF9800" />
     },
     {
       id: 3,
       name: "Reject",
       jumlah: countReject,
       color: "red",
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
     },
   ];
   return (
@@ -51,18 +56,27 @@ export default function AdminColab_Dashboard({
           {listStatus.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah ? e.jumlah : 0}</Title>
-                </Stack>
-              </Group>
+
+              <Stack spacing={0}>
+                <Text fw={"bold"} c={AccentColor.white}>{e.name}</Text>
+                <Flex align={"center"} justify={"space-between"}>
+                  <Title color={AccentColor.white}>{e.jumlah ? e.jumlah : 0}</Title>
+                  <ThemeIcon
+                    radius={"xl"}
+                    size={"md"}
+                    color={AccentColor.white}
+                  >
+                    {e.icon}
+                  </ThemeIcon>
+                </Flex>
+              </Stack>
+
             </Paper>
           ))}
         </SimpleGrid>

@@ -186,8 +186,8 @@ export function Admin_NewLayout({
       >
         {!matches ? (
           <Stack  align="center" justify="center" h={"100%"}>
-            <Title>Sorry !</Title>
-            <Title order={4} align="center">
+            <Title c={AdminColor.white}>Sorry !</Title>
+            <Title c={AdminColor.white} order={4} align="center">
               View Only Available For Desktop
             </Title>
             <Button onClick={() => onClickLogout()}>Logout</Button>

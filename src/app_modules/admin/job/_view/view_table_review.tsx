@@ -126,7 +126,7 @@ export default function AdminJob_ViewTavleReview({
     <tr key={i}>
       <td>
         <Center w={150}>
-          <Text>{e?.Author?.username}</Text>
+          <Text c={AdminColor.white}>{e?.Author?.username}</Text>
         </Center>
       </td>
       <td>
@@ -158,7 +158,7 @@ export default function AdminJob_ViewTavleReview({
             </Button>
           ) : (
             <Center w={150}>
-              <Text fw={"bold"} fz={"xs"} fs={"italic"}>
+              <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
                 Tidak ada poster
               </Text>
             </Center>
@@ -311,7 +311,7 @@ export default function AdminJob_ViewTavleReview({
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color={AdminColor.orange}
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -324,7 +324,7 @@ export default function AdminJob_ViewTavleReview({
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           {isShowReload && (
             <Paper bg={"red"} w={"50%"}>
               <Affix position={{ top: rem(200) }} w={"100%"}>
@@ -356,28 +356,27 @@ export default function AdminJob_ViewTavleReview({
               p={"md"}
               w={"100%"}
               h={"100%"}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Author</Center>
+                    <Center c={AdminColor.white}>Author</Center>
                   </th>
                   <th>
-                    <Text>Judul</Text>
+                    <Text c={AdminColor.white}>Judul</Text>
                   </th>
                   <th>
-                    <Center>Poster</Center>
+                    <Center c={AdminColor.white}>Poster</Center>
                   </th>
                   <th>
-                    <Text>Syarat Ketentuan</Text>
+                    <Text c={AdminColor.white}>Syarat Ketentuan</Text>
                   </th>
                   <th>
-                    <Text>Deskripsi</Text>
+                    <Text c={AdminColor.white}>Deskripsi</Text>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

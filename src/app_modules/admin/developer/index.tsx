@@ -24,6 +24,7 @@ import adminDeveloper_funGetListAllAdmin from "./fun/get/fun_get_list_all_admin"
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import adminDeveloper_funGetListAllUser from "./fun/get/fun_get_list_all_user";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDeveloper({
   listUser,
@@ -144,7 +145,8 @@ function NewTableUser({
       <Stack spacing={"xs"}>
         <Group
           position="apart"
-          bg={"cyan.4"}
+          c={AdminColor.white}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
@@ -158,24 +160,23 @@ function NewTableUser({
             }}
           />
         </Group>
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <Table
             verticalSpacing={"xs"}
             horizontalSpacing={"md"}
             p={"md"}
-            striped
-            highlightOnHover
+            
           >
             <thead>
               <tr>
                 <th>
-                  <Center>Username</Center>
+                  <Center c={AdminColor.white}>Username</Center>
                 </th>
                 <th>
-                  <Center>Nomor</Center>
+                  <Center c={AdminColor.white}>Nomor</Center>
                 </th>
                 <th>
-                  <Center>Aksi</Center>
+                  <Center c={AdminColor.white}>Aksi</Center>
                 </th>
               </tr>
             </thead>
@@ -183,10 +184,10 @@ function NewTableUser({
               {dataUser.map((v: any, i: any) => (
                 <tr key={v.id}>
                   <td>
-                    <Center>{v.username}</Center>
+                    <Center c={AdminColor.white}>{v.username}</Center>
                   </td>
                   <td>
-                    <Center>{v.nomor}</Center>
+                    <Center c={AdminColor.white}>{v.nomor}</Center>
                   </td>
                   <td>
                     <Center>
@@ -281,8 +282,9 @@ function NewTableAdmin({
     <>
       <Stack spacing={"xs"}>
         <Group
+          c={AdminColor.white}
           position="apart"
-          bg={"blue.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
@@ -296,24 +298,23 @@ function NewTableAdmin({
             }}
           />
         </Group>
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <Table
             verticalSpacing={"xs"}
             horizontalSpacing={"md"}
             p={"md"}
-            striped
-            highlightOnHover
+            
           >
             <thead>
               <tr>
                 <th>
-                  <Center>Username</Center>
+                  <Center c={AdminColor.white}>Username</Center>
                 </th>
                 <th>
-                  <Center>Nomor</Center>
+                  <Center c={AdminColor.white}>Nomor</Center>
                 </th>
                 <th>
-                  <Center>Aksi</Center>
+                  <Center c={AdminColor.white}>Aksi</Center>
                 </th>
               </tr>
             </thead>
@@ -321,10 +322,10 @@ function NewTableAdmin({
               {dataAdmin.map((v: any, i: any) => (
                 <tr key={v.id}>
                   <td>
-                    <Center>{v.username}</Center>
+                    <Center c={AdminColor.white}>{v.username}</Center>
                   </td>
                   <td>
-                    <Center>{v.nomor}</Center>
+                    <Center c={AdminColor.white}>{v.nomor}</Center>
                   </td>
                   <td>
                     <Center>
@@ -384,10 +385,10 @@ function TableAdmin({
   const tableBody = dataAdmin.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center>{e.username}</Center>
+        <Center c={AdminColor.white}>{e.username}</Center>
       </td>
       <td>
-        <Center>{e.nomor}</Center>
+        <Center c={AdminColor.white}>{e.nomor}</Center>
       </td>
       <td>
         <Center>
@@ -404,35 +405,34 @@ function TableAdmin({
       <Stack spacing={"xs"}>
         <Group
           position="apart"
-          bg={"blue.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Table Admin</Title>
+          <Title c={AdminColor.white} order={4}>Table Admin</Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
             placeholder="Masukan username"
           />
         </Group>
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <Table
             verticalSpacing={"xs"}
             horizontalSpacing={"md"}
             p={"md"}
-            striped
-            highlightOnHover
+            
           >
             <thead>
               <tr>
                 <th>
-                  <Center>Username</Center>
+                  <Center c={AdminColor.white}>Username</Center>
                 </th>
                 <th>
-                  <Center>Nomor</Center>
+                  <Center c={AdminColor.white}>Nomor</Center>
                 </th>
                 <th>
-                  <Center>Aksi</Center>
+                  <Center c={AdminColor.white}>Aksi</Center>
                 </th>
               </tr>
             </thead>
@@ -472,10 +472,10 @@ function TableUser({
   const tableBody = dataUser.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center>{e.username}</Center>
+        <Center c={AdminColor.white}>{e.username}</Center>
       </td>
       <td>
-        <Center>{e.nomor}</Center>
+        <Center c={AdminColor.white}>{e.nomor}</Center>
       </td>
       <td>
         <Center>
@@ -492,35 +492,34 @@ function TableUser({
       <Stack spacing={"xs"}>
         <Group
           position="apart"
-          bg={"cyan.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Table User</Title>
+          <Title c={AdminColor.white} order={4}>Table User</Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
             placeholder="Masukan username"
           />
         </Group>
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <Table
             verticalSpacing={"xs"}
             horizontalSpacing={"md"}
             p={"md"}
-            striped
-            highlightOnHover
+            
           >
             <thead>
               <tr>
                 <th>
-                  <Center>Username</Center>
+                  <Center c={AdminColor.white}>Username</Center>
                 </th>
                 <th>
-                  <Center>Nomor</Center>
+                  <Center c={AdminColor.white}>Nomor</Center>
                 </th>
                 <th>
-                  <Center>Aksi</Center>
+                  <Center c={AdminColor.white}>Aksi</Center>
                 </th>
               </tr>
             </thead>

@@ -94,7 +94,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
     <tr key={i}>
       <td>
         <Center w={200}>
-          <Text lineClamp={1}>{e?.Author?.username}</Text>
+          <Text c={AdminColor.white} lineClamp={1}>{e?.Author?.username}</Text>
         </Center>
       </td>
       <td>
@@ -126,7 +126,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
       </td>
       <td>
         <Center w={150}>
-          <Text>
+          <Text c={AdminColor.white}>
             {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
               e.createdAt
             )}
@@ -135,7 +135,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
       </td>
       <td>
         <Center w={150}>
-          <Text fw={"bold"} fz={"lg"}>
+          <Text c={AdminColor.white} fw={"bold"} fz={"lg"}>
             {e?.Forum_Komentar.length}
           </Text>
         </Center>
@@ -172,7 +172,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Posting"
-          color={AdminColor.green}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -206,7 +206,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -214,31 +214,30 @@ function TablePublish({ listPublish }: { listPublish: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Username</Center>
+                      <Center c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center>Status</Center>
+                      <Center c={AdminColor.white}>Status</Center>
                     </th>
                     <th>
-                      <Text>Postingan</Text>
+                      <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
-                      <Center>Tanggal Publish</Center>
+                      <Center c={AdminColor.white}>Tanggal Publish</Center>
                     </th>
                     <th>
-                      <Center>Komentar Aktif</Center>
+                      <Center c={AdminColor.white}>Komentar Aktif</Center>
                     </th>
                     <th>
-                      <Center>Total Report Posting</Center>
+                      <Center c={AdminColor.white}>Total Report Posting</Center>
                     </th>
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

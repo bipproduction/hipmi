@@ -1,7 +1,10 @@
 "use client";
 
-import { Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Flex, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { IconFlag, IconMessageReport, IconUpload } from "@tabler/icons-react";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_Main({
   countPublish,
@@ -41,18 +44,21 @@ function ForumMain({
       name: "Publish",
       jumlah: countPublish,
       color: "green",
+      icon: <IconUpload size={18} color="#4CAF4F" />
     },
     {
       id: 2,
       name: "Report Posting",
       jumlah: countLaporanPosting,
       color: "orange",
+      icon: <IconFlag size={18} color="#FF9800" />
     },
     {
       id: 3,
       name: "Report Komentar",
       jumlah: countLaporanKomentar,
       color: "red",
+      icon: <IconMessageReport size={18} color="#F44336" />
     },
   ];
   return (
@@ -69,18 +75,25 @@ function ForumMain({
         {listBox.map((e, i) => (
           <Paper
             key={i}
-            bg={`${e.color}.2`}
+            bg={AdminColor.softBlue}
             shadow="md"
             radius="md"
             p="md"
-            // sx={{ borderColor: e.color, borderStyle: "solid" }}
+          // sx={{ borderColor: e.color, borderStyle: "solid" }}
           >
-            <Group position="center">
-              <Stack align="center" spacing={0}>
-                <Text>{e.name}</Text>
-                <Title>{e.jumlah ? e.jumlah : 0}</Title>
-              </Stack>
-            </Group>
+            <Stack spacing={0}>
+              <Text fw={"bold"} c={AccentColor.white}>{e.name}</Text>
+              <Flex align={"center"} justify={"space-between"}>
+                <Title color={AccentColor.white}>{e.jumlah ? e.jumlah : 0}</Title>
+                <ThemeIcon
+                  radius={"xl"}
+                  size={"md"}
+                  color={AccentColor.white}
+                >
+                  {e.icon}
+                </ThemeIcon>
+              </Flex>
+            </Stack>
           </Paper>
         ))}
       </SimpleGrid>

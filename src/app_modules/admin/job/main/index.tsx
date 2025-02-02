@@ -1,10 +1,13 @@
 "use client";
 
-import { Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Flex, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { clientLogger } from "@/util/clientLogger";
+import { IconAlertTriangle, IconArchive, IconBookmark, IconUpload } from "@tabler/icons-react";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_Main({
   // countPublish,
@@ -12,10 +15,10 @@ export default function AdminJob_Main({
   // countReject,
   // countArsip,
 }: {
-  // countPublish: number;
-  // countReview: number;
-  // countReject: number;
-  // countArsip: number
+    // countPublish: number;
+    // countReview: number;
+    // countReject: number;
+    // countArsip: number
   }) {
   const [countPublish, setCountPublish] = useState<number | null>(null);
   const [countReview, setCountReview] = useState<number | null>(null);
@@ -24,12 +27,12 @@ export default function AdminJob_Main({
   const router = useRouter();
 
   async function onLoadCountPublish() {
-  try {
-    
-  } catch (error) {
-    clientLogger.error("Error get count publish", error)
+    try {
+
+    } catch (error) {
+      clientLogger.error("Error get count publish", error)
+    }
   }
-}
 
   const listStatus = [
     {
@@ -38,6 +41,9 @@ export default function AdminJob_Main({
       jumlah: countPublish,
       color: "green",
       text_color: "white",
+      icon: <IconUpload size={18} color="#4CAF4F" />
+      
+      
     },
     {
       id: 2,
@@ -45,6 +51,7 @@ export default function AdminJob_Main({
       jumlah: countReview,
       color: "orange",
       text_color: "white",
+      icon: <IconBookmark size={18} color="#FF7043" />
     },
     {
       id: 3,
@@ -52,6 +59,7 @@ export default function AdminJob_Main({
       jumlah: countReject,
       color: "red",
       text_color: "white",
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
     },
     {
       id: 4,
@@ -59,6 +67,7 @@ export default function AdminJob_Main({
       jumlah: countArsip,
       color: "gray",
       text_color: "white",
+      icon: <IconArchive size={18} color="#007CBA" />
     },
   ];
   return (
@@ -77,18 +86,27 @@ export default function AdminJob_Main({
           {listStatus.map((e, i) => (
             <Paper
               key={i}
-              bg={`${e.color}.2`}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-              <Group position="center">
-                <Stack align="center" spacing={0}>
-                  <Text>{e.name}</Text>
-                  <Title>{e.jumlah ? e.jumlah : 0}</Title>
-                </Stack>
-              </Group>
+
+              <Stack spacing={0}>
+                <Text fw={"bold"} c={AccentColor.white}>{e.name}</Text>
+                <Flex align={"center"} justify={"space-between"}>
+                  <Title color={AccentColor.white}>{e.jumlah ? e.jumlah : 0}</Title>
+                  <ThemeIcon
+                    radius={"xl"}
+                    size={"md"}
+                    color={AccentColor.white}
+                  >
+                    {e.icon}
+                  </ThemeIcon>
+                </Flex>
+              </Stack>
+
             </Paper>
           ))}
         </SimpleGrid>
