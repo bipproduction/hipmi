@@ -42,6 +42,7 @@ const middlewareConfig: MiddlewareConfig = {
     // "/api/admin/donasi/dashboard/*",
     // "/api/admin/voting/dashboard/*",
     // "/api/admin/job/dashboard/*",
+    // "/api/admin/forum/dashboard/*",
 
 
     // Akses awal
