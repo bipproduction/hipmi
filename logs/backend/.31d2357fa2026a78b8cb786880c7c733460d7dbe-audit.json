@@ -1,0 +1,60 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs/backend/.31d2357fa2026a78b8cb786880c7c733460d7dbe-audit.json",
+    "files": [
+        {
+            "date": 1737425815219,
+            "name": "logs/backend/combined-2025-01-21.log",
+            "hash": "b9cbc8d149568aaeb134725613e3cbf7e862bfe2acb7e6db56292abbf79e51a1"
+        },
+        {
+            "date": 1737497241982,
+            "name": "logs/backend/combined-2025-01-22.log",
+            "hash": "574f8bfec27f059626b3174fe1911a733e84d38ac91be87f853456aae15b11a7"
+        },
+        {
+            "date": 1737685849478,
+            "name": "logs/backend/combined-2025-01-24.log",
+            "hash": "3bcfbb9f339c6804de480c8e34b611205742cba7c83531351bbece957f2a549a"
+        },
+        {
+            "date": 1737875696352,
+            "name": "logs/backend/combined-2025-01-26.log",
+            "hash": "02a7b7dab5ea14476b484e872764a10b41a6333955bfe5f31e840d63540c41f5"
+        },
+        {
+            "date": 1737966690119,
+            "name": "logs/backend/combined-2025-01-27.log",
+            "hash": "bde5c157dbd7f5ea121b10443e71c7149be6d0b8c596f8630ae2b064623db4da"
+        },
+        {
+            "date": 1738016584050,
+            "name": "logs/backend/combined-2025-01-28.log",
+            "hash": "1f18ade25b9d29cfd3f59f3d2306129ae5a2ffc540c522391caea472eb80efab"
+        },
+        {
+            "date": 1738148275727,
+            "name": "logs/backend/combined-2025-01-29.log",
+            "hash": "bad86404bf14ce45cbb0198bb3cdad579908a4e564aeefb8173d5bca0ce73824"
+        },
+        {
+            "date": 1738203092253,
+            "name": "logs/backend/combined-2025-01-30.log",
+            "hash": "4092bbfc27d7c7d56bff3b66f86b1d09611fad554dca0ca880ac3fba58fe2e64"
+        },
+        {
+            "date": 1738289497945,
+            "name": "logs/backend/combined-2025-01-31.log",
+            "hash": "d6f9e26f307a5ab66d5dd7336051d9241c70c862cdfec8a412be6bc4ed431ae4"
+        },
+        {
+            "date": 1738549408639,
+            "name": "logs/backend/combined-2025-02-03.log",
+            "hash": "f3f6220a7d5836dbdd5893576479feee4d13abcdfe1ee2e89375e18abea72ee5"
+        }
+    ],
+    "hashType": "sha256"
+}
