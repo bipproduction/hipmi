@@ -21,8 +21,7 @@
 
 # debug
 npm-debug.log*
-
-rn-debug.log*
+yarn-debug.log*
 yarn-error.log*
 
 # local env files
@@ -34,8 +33,10 @@ yarn-error.log*
 # vercel
 .vercel
 
-# # logs
-# /logs
+# logs - allow only specific folders
+/logs/*
+!/logs/backend/
+!/logs/frontend/
 
 # typescript
 *.tsbuildinfo
