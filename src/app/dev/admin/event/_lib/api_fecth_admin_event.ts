@@ -4,6 +4,7 @@ export {
   apiGetAdminEventRiwayatCount as apiGetEventRiwayatCount,
   apiGetAdminEventByStatus as apiGetDataEventByStatus,
   apiGetAdminEventRiwayat,
+  apiGetAdminEventTipeAcara,
 };
 
 const apiGetAdminEventStatusCountDashboard = async ({
@@ -103,6 +104,23 @@ const apiGetAdminEventRiwayat = async ({
   const isPage = page ? `?page=${page}` : "";
   const isSearch = search ? `&search=${search}` : "";
   const response = await fetch(`/api/admin/event/riwayat${isPage}${isSearch}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
+};
+
+const apiGetAdminEventTipeAcara = async () => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/event/tipe-acara`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
