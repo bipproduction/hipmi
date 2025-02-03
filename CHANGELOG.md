@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.43](https://github.com/bipproduction/hipmi/compare/v1.2.42...v1.2.43) (2025-02-03)
+
 ## [1.2.42](https://github.com/bipproduction/hipmi/compare/v1.2.41...v1.2.42) (2025-01-30)
 
 ## [1.2.41](https://github.com/bipproduction/hipmi/compare/v1.2.40...v1.2.41) (2025-01-21)
