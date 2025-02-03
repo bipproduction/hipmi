@@ -1,26 +1,32 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Center, Grid, SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core";
-import { MODEL_EVENT } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
+import {
+  Grid,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title
+} from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { useState } from "react";
-import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
-import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 import moment from "moment";
 import "moment/locale/id";
-import { MainColor } from "@/app_modules/_global/color";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetEventDetailById } from "../../_lib/api_event";
+import { MODEL_EVENT } from "../../_lib/interface";
+import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 import Event_ComponentBoxDaftarPeserta from "./comp_box_daftar_peserta";
 import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";
 
-export default function ComponentEvent_DetailMainData({
-  eventId,
-}: {
-  eventId: string;
-}) {
+export default function ComponentEvent_DetailMainData() {
+  const params = useParams<{ id: string }>();
+  const eventId = params.id as string;
   const [data, setData] = useState<MODEL_EVENT | null>(null);
 
   useShallowEffect(() => {
@@ -28,11 +34,17 @@ export default function ComponentEvent_DetailMainData({
   }, []);
 
   async function onLoadData() {
-    const data = await fetch(
-      API_RouteEvent.get_one_by_id({ eventId: eventId })
-    );
-    const res = await data.json();
-    setData(res.data);
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
   }
 
   return (
@@ -52,7 +64,9 @@ export default function ComponentEvent_DetailMainData({
               </Title>
               <Grid>
                 <Grid.Col span={4}>
-                  <Text c={MainColor.white} fw={"bold"}>Lokasi</Text>
+                  <Text c={MainColor.white} fw={"bold"}>
+                    Lokasi
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={1}>:</Grid.Col>
                 <Grid.Col span={"auto"}>
@@ -61,19 +75,27 @@ export default function ComponentEvent_DetailMainData({
               </Grid>
               <Grid>
                 <Grid.Col span={4}>
-                  <Text c={MainColor.white} fw={"bold"}>Tipe Acara</Text>
+                  <Text c={MainColor.white} fw={"bold"}>
+                    Tipe Acara
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={1}>:</Grid.Col>
                 <Grid.Col span={"auto"}>
-                  <Text c={MainColor.white}>{data ? data.EventMaster_TipeAcara.name : null}</Text>
+                  <Text c={MainColor.white}>
+                    {data ? data.EventMaster_TipeAcara.name : null}
+                  </Text>
                 </Grid.Col>
               </Grid>
 
               <Stack spacing={"xs"}>
-                <Text c={MainColor.white} fw={"bold"}>Tanggal & Waktu</Text>
+                <Text c={MainColor.white} fw={"bold"}>
+                  Tanggal & Waktu
+                </Text>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>Mulai</Text>
+                    <Text c={MainColor.white} fw={"bold"}>
+                      Mulai
+                    </Text>
                   </Grid.Col>
                   <Grid.Col span={1}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
@@ -88,7 +110,9 @@ export default function ComponentEvent_DetailMainData({
                 </Grid>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>Selesai</Text>
+                    <Text c={MainColor.white} fw={"bold"}>
+                      Selesai
+                    </Text>
                   </Grid.Col>
                   <Grid.Col span={1}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
@@ -104,7 +128,9 @@ export default function ComponentEvent_DetailMainData({
               </Stack>
 
               <Stack spacing={2}>
-                <Text c={MainColor.white} fw={"bold"}>Deskripsi</Text>
+                <Text c={MainColor.white} fw={"bold"}>
+                  Deskripsi
+                </Text>
                 <Text c={MainColor.white}>{data ? data?.deskripsi : null}</Text>
               </Stack>
               <SimpleGrid
@@ -114,8 +140,8 @@ export default function ComponentEvent_DetailMainData({
                   { maxWidth: "36rem", cols: 1, spacing: "sm" },
                 ]}
               >
-                  <Event_ComponentBoxDaftarPeserta/>
-                  <Event_ComponentBoxDaftarSponsor />
+                <Event_ComponentBoxDaftarPeserta />
+                <Event_ComponentBoxDaftarSponsor />
               </SimpleGrid>
             </Stack>
           </Stack>

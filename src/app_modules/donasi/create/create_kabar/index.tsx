@@ -1,33 +1,38 @@
 "use client";
 
+import { DIRECTORY_ID } from "@/app/lib";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_BoxUploadImage } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
+} from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { notifikasiToUser_CreateKabarDonasi } from "@/app_modules/notifikasi/fun/create/create_notif_to_user_kabar_donasi";
+import { clientLogger } from "@/util/clientLogger";
 import {
   AspectRatio,
   Button,
-  FileButton,
-  Group,
+  Center,
   Image,
   Stack,
-  Text,
   TextInput,
-  Textarea,
+  Textarea
 } from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Donasi_funCreateKabar } from "../../fun/create/fun_create_kabar";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
 
-export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
+export default function Donasi_CreateKabar() {
+  const params = useParams<{ id: string }>();
+  const donasiId = params.id;
+
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
@@ -58,9 +63,8 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
 
         if (!uploadImage.success) {
           setLoading(false);
-          return ComponentGlobal_NotifikasiPeringatan(
-            "Gagal upload file gambar"
-          );
+          ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+          return;
         }
 
         const res = await Donasi_funCreateKabar({
@@ -76,7 +80,6 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
 
           ComponentGlobal_NotifikasiBerhasil(res.message);
           router.back();
-          setLoading(false);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
           setLoading(false);
@@ -94,21 +97,21 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
 
           ComponentGlobal_NotifikasiBerhasil(res.message);
           router.back();
-          setLoading(false);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
           setLoading(false);
         }
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      clientLogger.error("Error upload berita", error);
     }
   }
 
   return (
     <>
       <Stack px={"lg"} pb={"lg"}>
-        <ComponentGlobal_BoxInformation informasi="Gambar tidak wajib di isi ! Hanya upload jika di butuhkan." />
+        <ComponentGlobal_BoxInformation informasi="Upload gambar bersifat opsional untuk melengkapi kabar terkait donasi Anda." />
 
         <TextInput
           maxLength={100}
@@ -128,7 +131,7 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
           }}
         />
         <Textarea
-          maxLength={500}
+          maxLength={1000}
           styles={{
             label: {
               color: "white",
@@ -138,7 +141,7 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
           withAsterisk
           placeholder="Masukan deskripsi kabar"
           autosize
-          maxRows={4}
+          maxRows={10}
           minRows={2}
           onChange={(val) => {
             setKabar({
@@ -149,7 +152,7 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
         />
         <ComponentGlobal_InputCountDown
           lengthInput={kabar.deskripsi.length}
-          maxInput={500}
+          maxInput={1000}
         />
 
         <Stack spacing={5}>
@@ -165,44 +168,18 @@ export default function Donasi_CreateKabar({ donasiId }: { donasiId: string }) {
               </AspectRatio>
             ) : (
               <Stack justify="center" align="center" h={"100%"}>
-                <IconUpload color="white" />
-                <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                  Upload Gambar
-                </Text>
+                <IconPhoto size={100} />
               </Stack>
             )}
           </ComponentGlobal_BoxUploadImage>
 
           {/* Upload Foto */}
-          <Group position="center">
-            <FileButton
-              onChange={async (files: any) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-                  setImg(buffer);
-                  setFile(files);
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  leftIcon={<IconCamera color="black" />}
-                  radius={50}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload Gambar
-                </Button>
-              )}
-            </FileButton>
-          </Group>
+          <Center>
+            <ComponentGlobal_ButtonUploadFileImage
+              onSetFile={setFile}
+              onSetImage={setImg}
+            />
+          </Center>
         </Stack>
 
         <Button

@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import adminJob_getListPublish from "../../fun/get/get_list_publish";
 import { RouterAdminGlobal } from "@/app/lib";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_TablePublish({
   dataPublish,
@@ -73,7 +74,7 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
     <tr key={i}>
       <td>
         <Center w={150}>
-          <Text>{e?.Author?.username}</Text>
+          <Text c={AdminColor.white}>{e?.Author?.username}</Text>
         </Center>
       </td>
       <td>
@@ -116,7 +117,7 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
             </Button>
           ) : (
             <Center w={200}>
-              <Text fw={"bold"} fz={"xs"} fs={"italic"}>
+              <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
                 Tidak ada poster
               </Text>
             </Center>
@@ -152,7 +153,7 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Publish"
-          color="green.4"
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -165,7 +166,7 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
@@ -173,28 +174,27 @@ function TableStatus({ dataPublish }: { dataPublish: any }) {
               p={"md"}
               w={"100%"}
               h={"100%"}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Author</Center>
+                    <Center c={AdminColor.white}>Author</Center>
                   </th>
                   <th>
-                    <Center>Status</Center>
+                    <Center c={AdminColor.white}>Status</Center>
                   </th>
                   <th>
-                    <Text>Judul</Text>
+                    <Text c={AdminColor.white}>Judul</Text>
                   </th>
                   <th>
-                    <Center>Poster</Center>
+                    <Center c={AdminColor.white}>Poster</Center>
                   </th>
                   <th>
-                    <Text>Syarat Ketentuan</Text>
+                    <Text c={AdminColor.white}>Syarat Ketentuan</Text>
                   </th>
                   <th>
-                    <Text>Deskripsi</Text>
+                    <Text c={AdminColor.white}>Deskripsi</Text>
                   </th>
                 </tr>
               </thead>

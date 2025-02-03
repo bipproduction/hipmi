@@ -22,7 +22,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
-import { MODEL_EVENT } from "../model/interface";
+import { MODEL_EVENT } from "../_lib/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
 import { clientLogger } from "@/util/clientLogger";
 

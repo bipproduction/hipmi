@@ -1,3 +1,4 @@
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { Paper, Stack, Title, Grid, Text } from "@mantine/core";
 
@@ -7,8 +8,8 @@ export function ComponentAdminInvestasi_DetailDataAuthor({
   data: any;
 }) {
   return (
-    <Paper withBorder p={"lg"}>
-      <Stack>
+    <Paper bg={AdminColor.softBlue} p={"lg"}>
+      <Stack c={AdminColor.white}>
         <Title order={3}>Data User</Title>
         <Stack spacing={"xs"}>
           <Grid>

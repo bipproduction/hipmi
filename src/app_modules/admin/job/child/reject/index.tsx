@@ -30,6 +30,7 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminJob_TableReject({
   dataReject,
@@ -83,7 +84,7 @@ function TableStatus({ listReject }: { listReject: any }) {
     <tr key={i}>
       <td>
         <Center w={150}>
-          <Text>{e?.Author?.username}</Text>
+          <Text c={AdminColor.white}>{e?.Author?.username}</Text>
         </Center>
       </td>
       <td>
@@ -115,7 +116,7 @@ function TableStatus({ listReject }: { listReject: any }) {
             </Button>
           ) : (
             <Center w={150}>
-              <Text fw={"bold"} fz={"xs"} fs={"italic"}>
+              <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
                 Tidak ada poster
               </Text>
             </Center>
@@ -231,7 +232,7 @@ function TableStatus({ listReject }: { listReject: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color="red.4"
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -244,7 +245,7 @@ function TableStatus({ listReject }: { listReject: any }) {
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
@@ -252,31 +253,30 @@ function TableStatus({ listReject }: { listReject: any }) {
               p={"md"}
               w={"100%"}
               h={"100%"}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Author</Center>
+                    <Center c={AdminColor.white}>Author</Center>
                   </th>
                   <th>
-                    <Text>Judul</Text>
+                    <Text c={AdminColor.white}>Judul</Text>
                   </th>
                   <th>
-                    <Center>Poster</Center>
+                    <Center c={AdminColor.white}>Poster</Center>
                   </th>
                   <th>
-                    <Text>Syarat Ketentuan</Text>
+                    <Text c={AdminColor.white}>Syarat Ketentuan</Text>
                   </th>
                   <th>
-                    <Text>Deskripsi</Text>
+                    <Text c={AdminColor.white}>Deskripsi</Text>
                   </th>
                   <th>
-                    <Text>Report</Text>
+                    <Text c={AdminColor.white}>Report</Text>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

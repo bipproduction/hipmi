@@ -18,60 +18,76 @@ import {
 } from "@mantine/core";
 import { IconPencilPlus, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { adminEvent_funGetListReject } from "../fun";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function AdminEvent_TableReject({
-  listReject,
-}: {
-  listReject: any;
-}) {
+export default function AdminEvent_TableReject() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Event" />
-        <TableStatus listReject={listReject} />
+        <TableStatus />
       </Stack>
     </>
   );
 }
 
-function TableStatus({ listReject }: { listReject: any }) {
+function TableStatus() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_EVENT[]>(listReject.data);
-  const [isNPage, setNPage] = useState(listReject.nPage);
-  const [isActivePage, setActivePage] = useState(1);
+  const [data, setData] = useState<MODEL_EVENT[] | null>(null);
+  const [isNPage, setNPage] = useState(1);
+  const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
   const [opened, { open, close }] = useDisclosure(false);
   const [eventId, setEventId] = useState("");
   const [catatan, setCatatan] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminEvent_funGetListReject({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetDataEventByStatus({
+          status: "Reject",
+          page: `${activePage}`,
+          search: isSearch,
+        });
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminEvent_funGetListReject({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+    };
+
+    loadInitialData();
+  }, [activePage, isSearch]);
+
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
+  };
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
 
   async function onUpdate(eventId: string, catatan: string) {
     const body = {
@@ -80,12 +96,24 @@ function TableStatus({ listReject }: { listReject: any }) {
     };
     const res = await AdminEvent_funEditCatatanById(body as any, "4");
     if (res.status === 200) {
-      const loadData = await adminEvent_funGetListReject({
-        search: isSearch,
-        page: isActivePage,
-      });
-      setData(loadData.data as any);
-      setNPage(loadData.nPage);
+      try {
+        const response = await apiGetDataEventByStatus({
+          status: "Reject",
+          page: `${activePage}`,
+          search: isSearch,
+        });
+
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
       ComponentGlobal_NotifikasiBerhasil(res.message);
       close();
     } else {
@@ -93,162 +121,185 @@ function TableStatus({ listReject }: { listReject: any }) {
     }
   }
 
-  const TableRows = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={200}>{e?.Author?.username}</Center>
-      </td>
-      <td>
-        <Center w={200}>{e.title}</Center>
-      </td>
-      <td>
-        <Center w={200}>{e.lokasi}</Center>
-      </td>
-      <td>
-        <Center w={200}>{e.EventMaster_TipeAcara.name}</Center>
-      </td>
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
 
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggal)}
-            ,{" "}
-            <Text span inherit>
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center w={200}>{e?.Author?.username}</Center>
+        </td>
+        <td>
+          <Center w={200}>{e.title}</Center>
+        </td>
+        <td>
+          <Center w={200}>{e.lokasi}</Center>
+        </td>
+        <td>
+          <Center w={200}>{e.EventMaster_TipeAcara.name}</Center>
+        </td>
+
+        <td>
+          <Center w={200}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggal)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggal))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggal))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggalSelesai)}
-            ,{" "}
-            <Text span inherit>
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggalSelesai)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggalSelesai))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggalSelesai))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
+          </Center>
+        </td>
 
-      <td>
-        <Center w={500}>
-          <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
-            {e.deskripsi}
-          </Spoiler>
-        </Center>
-      </td>
-      <td>
-        {" "}
-        <Center w={400}>
-          <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
-            {e.catatan}
-          </Spoiler>
-        </Center>
-      </td>
+        <td>
+          <Center w={500}>
+            <Spoiler
+              hideLabel="sembunyikan"
+              maxHeight={50}
+              showLabel="tampilkan"
+            >
+              {e.deskripsi}
+            </Spoiler>
+          </Center>
+        </td>
+        <td>
+          {" "}
+          <Center w={400}>
+            <Spoiler
+              hideLabel="sembunyikan"
+              maxHeight={50}
+              showLabel="tampilkan"
+            >
+              {e.catatan}
+            </Spoiler>
+          </Center>
+        </td>
 
-      <td>
-        <Button
-          color={"red"}
-          leftIcon={<IconPencilPlus />}
-          radius={"xl"}
-          onClick={() => {
-            setEventId(e.id);
-            setCatatan(e.catatan);
-            open();
-          }}
-        >
-          Tambah Catatan
-        </Button>
-      </td>
-    </tr>
-  ));
+        <td>
+          <Button
+            color={"red"}
+            leftIcon={<IconPencilPlus />}
+            radius={"xl"}
+            onClick={() => {
+              setEventId(e.id);
+              setCatatan(e.catatan);
+              open();
+            }}
+          >
+            Tambah Catatan
+          </Button>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
-          position="apart"
-          bg={"red.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Reject</Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
-
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={1500}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>Username</Center>
-                  </th>
-                  <th>
-                    <Center>Judul</Center>
-                  </th>
-                  <th>
-                    <Center>Lokasi</Center>
-                  </th>
-                  <th>
-                    <Center>Tipe Acara</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Mulai</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Selesai</Center>
-                  </th>
-                  <th>
-                    <Center>Cacatan</Center>
-                  </th>
-                  <th>
-                    <Center>Deskripsi</Center>
-                  </th>
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{TableRows}</tbody>
-            </Table>
-          </ScrollArea>
-
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
+        <ComponentAdminGlobal_TitlePage
+          name="Reject"
+          color={"red.5"}
+          component={
+            <TextInput
+              disabled={!data}
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
               onChange={(val) => {
-                onPageClick(val);
+                onSearch(val.currentTarget.value);
               }}
             />
-          </Center>
-        </Paper>
+          }
+        />
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : (
+          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={1500}
+                striped
+                highlightOnHover
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center>Username</Center>
+                    </th>
+                    <th>
+                      <Center>Judul</Center>
+                    </th>
+                    <th>
+                      <Center>Lokasi</Center>
+                    </th>
+                    <th>
+                      <Center>Tipe Acara</Center>
+                    </th>
+                    <th>
+                      <Center>Tanggal & Waktu Mulai</Center>
+                    </th>
+                    <th>
+                      <Center>Tanggal & Waktu Selesai</Center>
+                    </th>
+                    <th>
+                      <Center>Cacatan</Center>
+                    </th>
+                    <th>
+                      <Center>Deskripsi</Center>
+                    </th>
+                    <th>
+                      <Center>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+
+            <Center mt={"xl"}>
+              <Pagination
+                value={activePage}
+                total={isNPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+            </Center>
+          </Paper>
+        )}
       </Stack>
 
       <Modal

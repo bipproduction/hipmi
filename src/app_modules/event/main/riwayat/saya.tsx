@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentEvent_CardRiwayat } from "../../component/card_view/card_riwayat";
 import { event_getListSemuaRiwayat } from "../../fun/get/riwayat/get_list_semua_riwayat";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 import { event_getListRiwayatSaya } from "../../fun/get/riwayat/get_list_riwayat_saya";
 
 export default function Event_RiwayatSaya({

@@ -1,8 +1,16 @@
 import { event_funCheckKehadiran } from "@/app_modules/event/fun";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+export async function GET(request: Request) {
+  const method = request.method;
+  if (method !== "GET") {
+    return NextResponse.json(
+      { success: false, message: "Method not allowed" },
+      { status: 405 }
+    );
+  }
+
+  const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
   const eventId = searchParams.get("eventId");
 

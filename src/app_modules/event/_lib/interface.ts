@@ -30,6 +30,22 @@ export interface MODEL_EVENT_PESERTA {
   userId: string;
   User: MODEL_USER;
   eventId: string;
-  isPresent: boolean
+  isPresent: boolean;
   Event: MODEL_EVENT;
+}
+
+export interface IEventSponsor {
+  id?: string;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  name?: string;
+  isTransfer?: boolean;
+  fileName?: string;
+  fileExt?: string;
+  fileId?: string;
+  eventId?: string;
+  Event?: MODEL_EVENT;
+  authorId?: string;
+  Author?: MODEL_USER;
 }

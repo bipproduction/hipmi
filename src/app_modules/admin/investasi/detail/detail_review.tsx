@@ -1,6 +1,7 @@
 "use client";
 
 import { IRealtimeData } from "@/app/lib/global_state";
+import { MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
 import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
@@ -10,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Admin_ComponentModalReport } from "../../_admin_global/_component";
+import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_admin_modal_publish";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
@@ -30,7 +32,8 @@ export default function AdminInvestasi_DetailReview({
   const router = useRouter();
   const [data, setData] = useState(dataInvestasi);
   const [publish, setPublish] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalPublish, setOpenModalPublish] = useState(false);
+  const [openModalReject, setOpenModalReject] = useState(false);
   const [isLoadingPublish, setIsLoadingPublish] = useState(false);
   const [isLoadingReject, setIsLoadingReject] = useState(false);
   const [report, setReport] = useState("");
@@ -82,11 +85,11 @@ export default function AdminInvestasi_DetailReview({
 
       ComponentAdminGlobal_NotifikasiBerhasil(res.message);
       router.back();
-      setOpenModal(false);
+      setOpenModalReject(false);
       setIsLoadingReject(false);
     } else {
       ComponentAdminGlobal_NotifikasiGagal(res.message);
-      setOpenModal(false);
+      setOpenModalReject(false);
     }
   }
 
@@ -97,6 +100,7 @@ export default function AdminInvestasi_DetailReview({
       progesInvestasiId: "1",
     });
     if (res.status === 200) {
+      setIsLoadingPublish(true);
       const dataNotifikasi: IRealtimeData = {
         appId: res.data?.id as string,
         userId: res.data?.authorId as any,
@@ -127,11 +131,14 @@ export default function AdminInvestasi_DetailReview({
         setData(loadData as any);
 
         ComponentAdminGlobal_NotifikasiBerhasil("Proyek Investasi Di Publish");
+        setOpenModalPublish(false);
+        setIsLoadingPublish(false);
         router.back();
         // router.push(RouterAdminInvestasi_OLD.table_status_review);
       }
     } else {
       ComponentAdminGlobal_NotifikasiGagal(res.message);
+      setOpenModalPublish(false);
     }
   }
 
@@ -148,14 +155,14 @@ export default function AdminInvestasi_DetailReview({
                 loading={isLoadingPublish}
                 radius={"xl"}
                 color="green"
-                onClick={() => onPublish()}
+                onClick={() => setOpenModalPublish(true)}
               >
                 Publish
               </Button>
               <Button
                 radius={"xl"}
                 color="red"
-                onClick={() => setOpenModal(true)}
+                onClick={() => setOpenModalReject(true)}
               >
                 Reject
               </Button>
@@ -193,22 +200,46 @@ export default function AdminInvestasi_DetailReview({
       </Stack>
 
       <Admin_ComponentModalReport
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
+        opened={openModalReject}
+        onClose={() => setOpenModalReject(false)}
         title="Alasan Penolakan"
         onHandlerChange={(val) => setReport(val.target.value)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button radius={"xl"} onClick={() => setOpenModalReject(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             loaderPosition="center"
+            style={{ backgroundColor: MainColor.green }}
             loading={isLoadingReject}
             radius={"xl"}
             onClick={() => {
               onReject();
+            }}
+          >
+            Simpan
+          </Button>
+        }
+      />
+      <Admin_ComponentModalPublish
+        opened={openModalPublish}
+        onClose={() => setOpenModalPublish(false)}
+        title="Anda Yakin Ingin Mempublish Investasi Ini ?"
+        buttonKiri={
+          <Button radius={"xl"} onClick={() => setOpenModalPublish(false)}>
+            Batal
+          </Button>
+        }
+        buttonKanan={
+          <Button
+            loaderPosition="center"
+            style={{ backgroundColor: MainColor.green }}
+            loading={isLoadingPublish}
+            radius={"xl"}
+            onClick={() => {
+              onPublish();
             }}
           >
             Simpan

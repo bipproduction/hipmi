@@ -8,7 +8,7 @@ import {
 } from "@/app_modules/_global/component";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 
 export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
   const router = useRouter();

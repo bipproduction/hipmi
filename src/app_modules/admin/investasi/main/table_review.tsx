@@ -1,7 +1,7 @@
 "use client";
 import { gs_adminInvestasi_triggerReview } from "@/app/lib/global_state";
 import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   Affix,
@@ -19,7 +19,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconRefresh, IconSearch } from "@tabler/icons-react";
+import { IconDetails, IconEyeCheck, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -28,6 +28,8 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function Admin_TableReviewInvestasi({
   dataInvestsi,
@@ -99,29 +101,29 @@ function TableView({ listData }: { listData: any }) {
   const tableBody = data.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <Text lineClamp={1}>{e.author.username}</Text>
         </Center>
       </td>
       <td>
-        <Center w={400}>
+        <Center c={AccentColor.white} w={400}>
           <Text lineClamp={1}>{e.title}</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <Text lineClamp={1}>{e.roi} %</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <ComponentAdminGlobal_TampilanRupiahDonasi
             nominal={_.toNumber(e.targetDana)}
           />
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AccentColor.white} w={200}>
           <ComponentAdminGlobal_TampilanRupiahDonasi
             nominal={_.toNumber(e.hargaLembar)}
           />
@@ -132,7 +134,8 @@ function TableView({ listData }: { listData: any }) {
           <Button
             loading={isLoading && idData === e.id}
             loaderPosition="center"
-            color="orange"
+            color="green"
+            leftIcon={<IconEyeCheck size={20}/>}
             radius={"xl"}
             onClick={() => {
               setIdData(e.id);
@@ -150,7 +153,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari nama proyek"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -167,12 +184,12 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             {isShowReload && (
               <Paper bg={"red"} w={"50%"}>
                 <Affix position={{ top: rem(200) }} w={"100%"}>
@@ -204,29 +221,27 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Center c={AccentColor.white} w={200}>Username</Center>
                     </th>
                     <th>
-                      <Center w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center w={200}>ROI</Center>
+                      <Center c={AccentColor.white} w={200}>ROI</Center>
                     </th>
                     <th>
-                      <Center w={200}>Target Dana</Center>
+                      <Center c={AccentColor.white} w={200}>Target Dana</Center>
                     </th>
                     <th>
-                      <Center w={200}>Harga Perlembar</Center>
+                      <Center c={AccentColor.white} w={200}>Harga Perlembar</Center>
                     </th>
 
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} w={200}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

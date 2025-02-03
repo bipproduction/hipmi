@@ -36,6 +36,7 @@ import {
 } from "./_admin_global/new_global_state";
 import adminNotifikasi_getByUserId from "./notifikasi/fun/get/get_notifikasi_by_user_id";
 import { ComponentAdmin_UIDrawerNotifikasi } from "./notifikasi/ui_drawer_notifikasi";
+import { AdminColor } from "../_global/color/color_pallet";
 
 export function Admin_NewLayout({
   children,
@@ -93,10 +94,12 @@ export function Admin_NewLayout({
   return (
     <>
       <AppShell
+        bg={"#001f3b"}
         padding="md"
         navbarOffsetBreakpoint={1024}
         navbar={
           <Navbar
+            style={{ borderColor: "transparent" }}
             height={"100%"}
             width={{ base: 250 }}
             hiddenBreakpoint={1024}
@@ -113,7 +116,7 @@ export function Admin_NewLayout({
                     <Grid>
                       <Grid.Col span={7}>
                         <Title order={3} lineClamp={1}>
-                          {userRoleId == "2" ? "Admin" : "Developer"}
+                          {userRoleId == "2" ? "Admin" : "SuperAdmin"}
                         </Title>
                       </Grid.Col>
 
@@ -130,7 +133,8 @@ export function Admin_NewLayout({
                                 onLoadListNotifikasi();
                               }}
                             >
-                              {countNtf == 0 ? (
+                              {countNtf == 0 ||
+                              dataUser.masterUserRoleId == "3" ? (
                                 <IconBell color="white" />
                               ) : (
                                 <Indicator
@@ -181,9 +185,9 @@ export function Admin_NewLayout({
         }
       >
         {!matches ? (
-          <Stack align="center" justify="center" h={"100%"}>
-            <Title>Sorry !</Title>
-            <Title order={4} align="center">
+          <Stack  align="center" justify="center" h={"100%"}>
+            <Title c={AdminColor.white}>Sorry !</Title>
+            <Title c={AdminColor.white} order={4} align="center">
               View Only Available For Desktop
             </Title>
             <Button onClick={() => onClickLogout()}>Logout</Button>

@@ -26,6 +26,7 @@ import {
     adminAppInformation_funGetBidangBisnis,
     adminAppInformation_funUpdateBidangBisnis,
 } from "../fun";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export function AdminAppInformation_ViewKategoriPortofolio({
   dataBidangBisnis,
@@ -128,7 +129,7 @@ export function AdminAppInformation_ViewKategoriPortofolio({
     <tr key={i}>
       <td>
         <Center>
-          <Text>{e?.name}</Text>
+          <Text c={AdminColor.white}>{e?.name}</Text>
         </Center>
       </td>
       <td>
@@ -164,7 +165,7 @@ export function AdminAppInformation_ViewKategoriPortofolio({
             }}
           >
             <Tooltip label="Edit">
-              <IconEdit color="green" />
+              <IconEdit color={AdminColor.white} />
             </Tooltip>
           </ActionIcon>
         </Stack>
@@ -193,26 +194,25 @@ export function AdminAppInformation_ViewKategoriPortofolio({
 
         <Grid>
           <Grid.Col span={9}>
-            <Paper p={"md"} withBorder shadow="lg" h={"65vh"}>
+            <Paper p={"md"} bg={AdminColor.softBlue} h={"65vh"}>
               <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
                 <Table
                   verticalSpacing={"xs"}
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
-                  striped
-                  highlightOnHover
+                  
                 >
                   <thead>
                     <tr>
                       <th>
-                        <Center>Kategori</Center>
+                        <Center c={AdminColor.white}>Kategori</Center>
                       </th>
                       <th>
-                        <Center>Status</Center>
+                        <Center c={AdminColor.white}>Status</Center>
                       </th>
                       <th>
-                        <Center>Aksi</Center>
+                        <Center c={AdminColor.white}>Aksi</Center>
                       </th>
                     </tr>
                   </thead>
@@ -225,10 +225,10 @@ export function AdminAppInformation_ViewKategoriPortofolio({
           <Grid.Col span={3}>
             {/* Form Create */}
             {isCreate ? (
-              <Paper p={"md"} withBorder shadow="lg">
+              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
                 <Stack>
                   <Center>
-                    <Title order={5}>Tambah Bidang Bisnis</Title>
+                    <Title c={AdminColor.white} order={5}>Tambah Bidang Bisnis</Title>
                   </Center>
 
                   <TextInput
@@ -269,10 +269,10 @@ export function AdminAppInformation_ViewKategoriPortofolio({
             )}
             {/* Form Update */}
             {isUpdate ? (
-              <Paper p={"md"} withBorder shadow="lg">
+              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
                 <Stack>
                   <Center>
-                    <Title order={5}>Update Bidang Bisnis</Title>
+                    <Title c={AdminColor.white} order={5}>Update Bidang Bisnis</Title>
                   </Center>
                   <TextInput
                     placeholder="Masukan bidang bisnis"

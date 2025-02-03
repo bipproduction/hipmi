@@ -22,6 +22,7 @@ export const RouterAdminDonasi_OLD = {
   table_publish: "/dev/admin/donasi/table/publish",
   table_review: "/dev/admin/donasi/table/review",
   table_reject: "/dev/admin/donasi/table/reject",
+  table_kategori: "/dev/admin/donasi/table/kategori",
 
   // detail
   detail_publish: "/dev/admin/donasi/detail/publish/",

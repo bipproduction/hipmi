@@ -27,6 +27,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import adminForum_funGetAllReportKomentar from "../fun/get/get_all_report_komentar";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_TableReportKomentar({
   listData,
@@ -96,15 +98,15 @@ function TableView({ listData }: { listData: any }) {
     <tr key={i}>
       <td>
         <Center w={200}>
-          <Text lineClamp={1}>{e?.User.username}</Text>
+          <Text c={AdminColor.white} lineClamp={1}>{e?.User.username}</Text>
         </Center>
       </td>
       <td>
         <Center w={200}>
           {e?.forumMaster_KategoriReportId === null ? (
-            <Text>Lainnya</Text>
+            <Text c={AdminColor.white}>Lainnya</Text>
           ) : (
-            <Text lineClamp={1}>{e?.ForumMaster_KategoriReport.title}</Text>
+            <Text c={AdminColor.white} lineClamp={1}>{e?.ForumMaster_KategoriReport.title}</Text>
           )}
         </Center>
       </td>
@@ -156,7 +158,21 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Report Komentar"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari postingan"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"yellow.4"}
           p={"xs"}
@@ -173,12 +189,12 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -186,29 +202,28 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Pelapor</Center>
+                      <Center c={AdminColor.white}>Pelapor</Center>
                     </th>
                     
                     <th>
-                      <Center>Jenis Laporan</Center>
+                      <Center c={AdminColor.white}>Jenis Laporan</Center>
                     </th>
 
                     <th>
-                      <Text>Komentar</Text>
+                      <Text c={AdminColor.white}>Komentar</Text>
                     </th>
 
                     <th>
-                      <Center>Tanggal Report</Center>
+                      <Center c={AdminColor.white}>Tanggal Report</Center>
                     </th>
 
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
 
                   </tr>

@@ -29,6 +29,9 @@ import adminDonasi_getMasterKategori from "../fun/master/get_list_kategori";
 import adminDonasi_funDeleteKategori from "../fun/delete/fun_delete_by_id";
 import adminDonasi_funUpdatekategoriById from "../fun/update/fun_update_kategori_by_id";
 import _ from "lodash";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_TableKategori({
   listKategori,
@@ -114,7 +117,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
   const rowTable = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           <Text>{e?.name}</Text>
         </Center>
       </td>
@@ -148,7 +151,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
               });
             }}
           >
-            <IconEdit color="green" />
+            <IconEdit color={AdminColor.green} />
           </ActionIcon>
         </Group>
       </td>
@@ -159,7 +162,24 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Kategori"
+          color={AdminColor.softBlue}
+          component={
+            <Button
+            w={120}
+            leftIcon={<IconCirclePlus />}
+            radius={"xl"}
+            onClick={() => {
+              setIsCreate(true);
+              setIsUpdate(false);
+            }}
+          >
+            Tambah
+          </Button>
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -177,30 +197,29 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
           >
             Tambah
           </Button>
-        </Group>
+        </Group> */}
 
         <Grid>
           <Grid.Col span={"auto"}>
-            <Paper p={"md"} withBorder shadow="lg" h={"70vh"}>
+            <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"70vh"}>
               <ScrollArea w={"100%"} h={"90%"}>
                 <Table
                   verticalSpacing={"xs"}
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
-                  striped
-                  highlightOnHover
+                 
                 >
                   <thead>
                     <tr>
                       <th>
-                        <Center>Kategori</Center>
+                        <Center c={AccentColor.white}>Kategori</Center>
                       </th>
                       <th>
-                        <Center>Status</Center>
+                        <Center c={AccentColor.white}>Status</Center>
                       </th>
                       <th>
-                        <Center>Aksi</Center>
+                        <Center c={AccentColor.white}>Aksi</Center>
                       </th>
                     </tr>
                   </thead>

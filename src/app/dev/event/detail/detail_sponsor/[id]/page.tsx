@@ -1,10 +1,12 @@
+import { funGetUserIdByToken } from '@/app_modules/_global/fun/get';
 import DetailSponsor_Event from '@/app_modules/event/detail/detail_sponsor';
 import React from 'react';
 
-function Page() {
+async function Page() {
+  const userLoginId = await funGetUserIdByToken();
   return (
     <>
-      <DetailSponsor_Event/>
+      <DetailSponsor_Event userLoginId={userLoginId} />
     </>
   );
 }

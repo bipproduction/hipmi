@@ -20,6 +20,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminDonasi_getListPublish from "../fun/get/get_list_publish";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminDonasi_TablePublish({
   listPublish,
@@ -69,33 +72,33 @@ function TableStatus({ listPublish }: { listPublish: any }) {
   const TableRows = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e.title}</Center>
+        <Center c={AccentColor.white}>{e.title}</Center>
       </td>
       <td>
-        <Center>
-          <ComponentGlobal_TampilanRupiah color="black" nominal={+e.target} />
+        <Center c={AccentColor.white}>
+          <ComponentGlobal_TampilanRupiah nominal={+e.target} />
         </Center>
       </td>
       <td>
-        <Center>
-          <ComponentGlobal_TampilanRupiah color="black" nominal={+e.terkumpul} />
+        <Center c={AccentColor.white}>
+          <ComponentGlobal_TampilanRupiah nominal={+e.terkumpul} />
         </Center>
       </td>
       <td>
-        <Center>{e.DonasiMaster_Ketegori.name}</Center>
+        <Center c={AccentColor.white}>{e.DonasiMaster_Ketegori.name}</Center>
       </td>
       <td>
-        <Center>{e.DonasiMaster_Durasi.name} hari</Center>
+        <Center c={AccentColor.white}>{e.DonasiMaster_Durasi.name} hari</Center>
       </td>
       <td>
         <Center>
           <Button
             loaderPosition="center"
             loading={isLoading && e?.id === idData ? true : false}
-            color={"green"}
+            style={{ backgroundColor: MainColor.green,  }}
+            c={AccentColor.white}
             leftIcon={<IconEyeCheck />}
             radius={"xl"}
-            variant="outline"
             onClick={() => {
               setLoading(true);
               setIdData(e?.id);
@@ -113,7 +116,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Publish"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"green.4"}
           p={"xs"}
@@ -128,37 +145,36 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Target</Center>
+                    <Center c={AccentColor.white}>Target</Center>
                   </th>
                   <th>
-                    <Center>Terkumpul</Center>
+                    <Center c={AccentColor.white}>Terkumpul</Center>
                   </th>
                   <th>
-                    <Center>Ketegori</Center>
+                    <Center c={AccentColor.white}>Ketegori</Center>
                   </th>
                   <th>
-                    <Center>Durasi</Center>
+                    <Center c={AccentColor.white}>Durasi</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

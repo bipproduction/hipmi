@@ -28,6 +28,8 @@ import { useState } from "react";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import adminForum_funGetAllReportPosting from "../fun/get/get_all_report_posting";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_TableReportPosting({
   listData,
@@ -165,7 +167,22 @@ function TableView({ listData }: { listData: any }) {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Report Posting"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Cari postingan"
+            onChange={(val) => {
+
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"orange.4"}
           p={"xs"}
@@ -183,12 +200,12 @@ function TableView({ listData }: { listData: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -196,32 +213,31 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Pelapor</Center>
+                      <Center c={AdminColor.white}>Pelapor</Center>
                     </th>
                     <th>
-                      <Center>Jenis Laporan</Center>
+                      <Center c={AdminColor.white}>Jenis Laporan</Center>
                     </th>
                     {/* <th>
-                      <Center>Author</Center>
+                      <Center c={AdminColor.white}>Author</Center>
                     </th>
                     <th>
                       <Text>Postingan</Text>
                     </th> */}
                     <th>
-                      <Center w={200}>Status Posting</Center>
+                      <Center c={AdminColor.white} w={200}>Status Posting</Center>
                     </th>
                     <th>
-                      <Center>Tanggal Report</Center>
+                      <Center c={AdminColor.white}>Tanggal Report</Center>
                     </th>
 
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

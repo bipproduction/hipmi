@@ -68,18 +68,3 @@ export async function GET(
     );
   }
 }
-
-async function main({ id }: { id: string }) {
-  const fixData = await prisma.beritaInvestasi.findMany({
-    take: 10,
-    skip: 0,
-    orderBy: {
-      updatedAt: "desc",
-    },
-    where: {
-      investasiId: id.trim(),
-      active: true,
-    },
-  });
-  console.log("data sebelum disconnect>>", fixData);
-}

@@ -9,6 +9,7 @@ import {
   AdminAppInformation_ViewInformasiWhatApps,
   AdminAppInformation_ViewKategoriPortofolio,
 } from "../view";
+import { AccentColor, AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminAppInformation_UiMain({
   nomorAdmin,
@@ -45,8 +46,8 @@ export default function AdminAppInformation_UiMain({
             <Button
               key={i}
               radius={"xl"}
-              c={"white"}
-              bg={selectPage === e.id ? "blue" : "gray.3"}
+              c={selectPage === e.id ? AdminColor.white : "gray"}
+              bg={selectPage === e.id ? AccentColor.blue : AccentColor.darkblue}
               onClick={() => {
                 setSelectPage(e.id);
               }}

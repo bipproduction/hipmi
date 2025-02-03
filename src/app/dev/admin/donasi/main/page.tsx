@@ -10,10 +10,9 @@ export default async function Page() {
   return (
     <>
       <AdminDonasi_Main
-        countPublish={countPublish as number}
-        countReview={countReview as number}
-        countDraft={countDraft as number}
-        countReject={countReject as number}
+        // countPublish={countPublish as number}
+        // countReview={countReview as number}
+        // countReject={countReject as number}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { ComponentAdminGlobal_TampilanRupiah } from "@/app_modules/admin/_admin_global/_component";
+import { ComponentAdminGlobal_TampilanRupiah, ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import {
   MODEL_INVOICE_INVESTASI,
   MODEL_STATUS_INVOICE_INVESTASI,
@@ -26,6 +26,7 @@ import {
   AdminInvestasi_ComponentCekBuktiTransfer,
 } from "../../_component";
 import { adminInvestasi_funGetAllTransaksiById } from "../../fun";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export function AdminInvestasi_ViewDaftarTransaksi({
   dataTransaksi,
@@ -165,7 +166,38 @@ export function AdminInvestasi_ViewDaftarTransaksi({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Transkasi"
+          color={AdminColor.softBlue}
+          component={<Group>
+            <ActionIcon
+              size={"lg"}
+              radius={"xl"}
+              variant="light"
+              onClick={() => {
+                onReload();
+              }}
+            >
+              <IconReload />
+            </ActionIcon>
+            <Select
+              placeholder="Pilih status"
+              value={selectedStatus}
+              data={
+                isEmpty(listStatsus)
+                  ? []
+                  : listStatsus.map((e) => ({
+                      value: e.id,
+                      label: e.name,
+                    }))
+              }
+              onChange={(val: any) => {
+                onSelected(val);
+              }}
+            />
+          </Group>}
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -199,9 +231,9 @@ export function AdminInvestasi_ViewDaftarTransaksi({
               }}
             />
           </Group>
-        </Group>
+        </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper bg={AdminColor.softBlue} p={"md"} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
@@ -214,28 +246,28 @@ export function AdminInvestasi_ViewDaftarTransaksi({
               <thead>
                 <tr>
                   <th>
-                    <Center>Nama Investor</Center>
+                    <Center c={AdminColor.white}>Nama Investor</Center>
                   </th>
                   <th>
-                    <Center>Nama Bank</Center>
+                    <Center c={AdminColor.white}>Nama Bank</Center>
                   </th>
                   <th>
-                    <Center>Jumlah Investasi</Center>
+                    <Center c={AdminColor.white}>Jumlah Investasi</Center>
                   </th>
                   <th>
-                    <Center>Lembar Terbeli</Center>
+                    <Center c={AdminColor.white}>Lembar Terbeli</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center c={AdminColor.white}>Tanggal</Center>
                   </th>
                   <th>
-                    <Center>Status</Center>
+                    <Center c={AdminColor.white}>Status</Center>
                   </th>
                   <th>
-                    <Center>Bukti Transfer</Center>
+                    <Center c={AdminColor.white}>Bukti Transfer</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

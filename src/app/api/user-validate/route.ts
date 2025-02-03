@@ -1,33 +1,55 @@
 import { decrypt } from "@/app/auth/_lib/decrypt";
 import { prisma } from "@/app/lib";
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-    const token = req.headers.get('Authorization')?.split(' ')[1];
+  try {
+    const token = req.headers.get("Authorization")?.split(" ")[1];
 
     const decripted = await decrypt({
-        token: token!,
-        encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!
-    })
+      token: token!,
+      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
+    });
 
     if (!decripted) {
-        return NextResponse.json({
-            success: false,
-            message: "Unauthorized"
-        }, { status: 401 })
+      await prisma.$disconnect();
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized",
+        },
+        { status: 401 }
+      );
     }
 
     const user = await prisma.user.findUnique({
-        where: {
-            id: decripted.id
-        }
-    })
+      where: {
+        id: decripted.id,
+      },
+    });
+
+    // Disconnect after successful query
+    await prisma.$disconnect();
+
     return NextResponse.json({
-        success: true,
-        message: "Berhasil mendapatkan data",
-        data: user
-    })
+      success: true,
+      message: "Berhasil mendapatkan data",
+      data: user,
+    });
+  } catch (error) {
+    // Ensure connection is closed even if error occurs
+    await prisma.$disconnect();
+
+    console.error("Error in user validation:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Terjadi kesalahan pada server",
+      },
+      { status: 500 }
+    );
+  }
 }

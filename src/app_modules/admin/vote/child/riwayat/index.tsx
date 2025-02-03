@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Group,
   Modal,
   Pagination,
   Paper,
@@ -15,20 +14,20 @@ import {
   Stack,
   Table,
   Text,
-  TextInput,
-  Title,
+  TextInput
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
-import _ from "lodash";
+import { IconReportAnalytics, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import { useState } from "react";
 import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
+import { adminVote_funGetListRiwayat } from "../../fun";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
-import { adminVote_funGetListRiwayat } from "../../fun";
-import { IconCircleCheckFilled } from "@tabler/icons-react";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminVote_Riwayat({
   dataVote,
@@ -88,7 +87,7 @@ function TableStatus({ listPublish }: { listPublish: any }) {
             }
             radius={"xl"}
             color="green"
-            leftIcon={<IconCircleCheckFilled />}
+            leftIcon={<IconReportAnalytics />}
             onClick={async () => {
               setVoteId(e?.id);
               setLoading(true);
@@ -101,10 +100,10 @@ function TableStatus({ listPublish }: { listPublish: any }) {
         </Center>
       </td>
       <td>
-        <Center>{e?.Author?.username}</Center>
+        <Center c={AccentColor.white}>{e?.Author?.username}</Center>
       </td>
       <td>
-        <Center>{e?.title}</Center>
+        <Center c={AccentColor.white}>{e?.title}</Center>
       </td>
       <td>
         <Center>
@@ -122,18 +121,18 @@ function TableStatus({ listPublish }: { listPublish: any }) {
         <Stack>
           {e?.Voting_DaftarNamaVote.map((v) => (
             <Box key={v?.id}>
-              <Text>- {v?.value}</Text>
+              <Text c={AccentColor.white}>- {v?.value}</Text>
             </Box>
           ))}
         </Stack>
       </th>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e?.awalVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {e?.akhirVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
         </Center>
       </td>
@@ -144,7 +143,21 @@ function TableStatus({ listPublish }: { listPublish: any }) {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
-        <Group
+        <ComponentAdminGlobal_TitlePage
+          name="Riwayat"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+            icon={<IconSearch size={20} />}
+            radius={"xl"}
+            placeholder="Masukan judul"
+            onChange={(val) => {
+              onSearch(val.currentTarget.value);
+            }}
+          />
+          }
+        />
+        {/* <Group
           position="apart"
           bg={"gray.4"}
           p={"xs"}
@@ -159,40 +172,39 @@ function TableStatus({ listPublish }: { listPublish: any }) {
               onSearch(val.currentTarget.value);
             }}
           />
-        </Group>
+        </Group> */}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AccentColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Deskripsi</Center>
+                    <Center c={AccentColor.white}>Deskripsi</Center>
                   </th>
                   <th>
-                    <Center>Pilihan</Center>
+                    <Center c={AccentColor.white}>Pilihan</Center>
                   </th>
                   <th>
-                    <Center>Mulai Vote</Center>
+                    <Center c={AccentColor.white}>Mulai Vote</Center>
                   </th>
                   <th>
-                    <Center>Selesai Vote</Center>
+                    <Center c={AccentColor.white}>Selesai Vote</Center>
                   </th>
                 </tr>
               </thead>

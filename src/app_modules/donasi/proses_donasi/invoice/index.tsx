@@ -33,6 +33,8 @@ import TampilanRupiahDonasi from "../../component/tampilan_rupiah";
 import { Donasi_funUpdateStatusInvoice } from "../../fun/update/fun_update_status_invoice";
 import { gs_donasi_hot_menu } from "../../global_state";
 import { MODEL_DONASI_INVOICE } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
+import { ComponentGlobal_ButtonUploadFileImage } from "@/app_modules/_global/component";
 
 export default function Donasi_InvoiceProses({
   dataInvoice,
@@ -55,7 +57,8 @@ export default function Donasi_InvoiceProses({
 
       if (!uploadImage.success) {
         setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        return;
       }
 
       const res = await Donasi_funUpdateStatusInvoice({
@@ -64,15 +67,6 @@ export default function Donasi_InvoiceProses({
         fileId: uploadImage.data.id,
       });
       if (res.status === 200) {
-        // const dataNotif: any = {
-        //   appId: res.data?.Donasi?.id as any,
-        //   userId: res.data?.Donasi?.authorId as any,
-        //   pesan: res.data?.Donasi?.title as any,
-        //   status: res.data?.DonasiMaster_StatusInvoice?.name,
-        //   kategoriApp: "DONASI",
-        //   title: "Donatur melakukan transfer",
-        // };
-
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.Donasi?.id as any,
           status: res.data?.DonasiMaster_StatusInvoice?.name as any,
@@ -87,22 +81,22 @@ export default function Donasi_InvoiceProses({
         });
 
         if (notif.status === 201) {
-           WibuRealtime.setData({
-             type: "notification",
-             pushNotificationTo: "ADMIN",
-           });
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
           ComponentGlobal_NotifikasiBerhasil(res.message);
           setActive(2);
           router.push(RouterDonasi.proses_transaksi + `${invoice.id}`);
-          setLoading(false);
         }
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      clientLogger.error("Error upload data invoice", error);
     }
   }
 
@@ -259,35 +253,9 @@ export default function Donasi_InvoiceProses({
         >
           <Stack spacing={"sm"}>
             <Center>
-              <FileButton
-                onChange={async (files: any | null) => {
-                  try {
-                    // const buffer = URL.createObjectURL(
-                    //   new Blob([new Uint8Array(await files.arrayBuffer())])
-                    // );
-                    // console.log(buffer, "ini buffer");
-
-                    setFile(files);
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }}
-                accept="image/png,image/jpeg"
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    radius={"xl"}
-                    leftIcon={<IconCamera />}
-                    bg={MainColor.yellow}
-                    color="yellow"
-                    c={"black"}
-                  >
-                    Upload
-                  </Button>
-                )}
-              </FileButton>
+              <ComponentGlobal_ButtonUploadFileImage onSetFile={setFile} />
             </Center>
+
             {file ? (
               <Center>
                 <Group spacing={"xs"}>

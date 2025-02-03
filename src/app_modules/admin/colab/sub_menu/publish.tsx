@@ -30,6 +30,7 @@ import _ from "lodash";
 import { IconBan, IconCheck, IconEye } from "@tabler/icons-react";
 import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminColab_TablePublish({
   listData,
@@ -74,29 +75,29 @@ function TableMenu({ listData }: { listData: any }) {
   const tableRow = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{noAwal++}</Center>
+        <Center c={AdminColor.white}>{noAwal++}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text lineClamp={1}>{e?.Author?.Profile?.name}</Text>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Box>
-            <Center>
+            <Center c={AdminColor.white}>
               <Text lineClamp={1}>{e?.title}</Text>
             </Center>
           </Box>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>{e?.ProjectCollaboration_Partisipasi.length}</Text>
         </Center>
       </td>
@@ -209,41 +210,41 @@ function TableMenu({ listData }: { listData: any }) {
       <Stack spacing={"xs"}>
         <Group
           position="apart"
-          bg={"green.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
+          c={AdminColor.white}
         >
           <Title order={4}>Publish</Title>
         </Group>
-        <Paper p={"md"} withBorder shadow="lg" >
+        <Paper p={"md"} bg={AdminColor.softBlue} >
           <Stack>
             <ScrollArea h={"65vh"}>
               <Table
                 verticalSpacing={"xs"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>No</Center>
+                      <Center c={AdminColor.white}>No</Center>
                     </th>
                     <th>
-                      <Center>Username</Center>
+                      <Center c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center>Title</Center>
+                      <Center c={AdminColor.white}>Title</Center>
                     </th>
                     <th>
-                      <Center>Industri</Center>
+                      <Center c={AdminColor.white}>Industri</Center>
                     </th>
                     <th>
-                      <Center>Jumlah Partisipan</Center>
+                      <Center c={AdminColor.white}>Jumlah Partisipan</Center>
                     </th>
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

@@ -14,9 +14,9 @@ export default async function Page() {
   return (
     <>
       <AdminForum_Main
-        countPublish={countPublish}
-        countLaporanPosting={countLaporanPosting}
-        countLaporanKomentar={countLaporanKomentar}
+        // countPublish={countPublish}
+        // countLaporanPosting={countLaporanPosting}
+        // countLaporanKomentar={countLaporanKomentar}
       />
     </>
   );

@@ -18,17 +18,18 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconCirclePlus, IconEdit } from "@tabler/icons-react";
+import { IconEdit } from "@tabler/icons-react";
 import _ from "lodash";
 import { useState } from "react";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
+import { AdminAppInformation_ComponentTitlePageBank } from "../component";
 import adminAppInformation_createBank from "../fun/create/fun_create_new_bank";
 import adminAppInformation_getMasterBank from "../fun/master/get_list_bank";
 import adminAppInformation_updateStatusBankById from "../fun/update/fun_udpate_status_bank";
 import adminAppInformation_updateDataBankById from "../fun/update/fun_update_data_bank";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminAppInformation_ComponentTitlePageBank } from "../component";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminAppInformation_ViewInfoBank({
   listBank,
@@ -127,7 +128,7 @@ export default function AdminAppInformation_ViewInfoBank({
     data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={150}>
+          <Center c={AccentColor.white} w={150}>
             <Text>{e?.namaBank}</Text>
           </Center>
         </td>
@@ -149,12 +150,12 @@ export default function AdminAppInformation_ViewInfoBank({
           </Center>
         </td>
         <td>
-          <Center>
+          <Center c={AccentColor.white}>
             <Text>{e?.namaAkun}</Text>
           </Center>
         </td>
         <td>
-          <Center>
+          <Center c={AccentColor.white}>
             <Text>{e?.norek}</Text>
           </Center>
         </td>
@@ -176,7 +177,7 @@ export default function AdminAppInformation_ViewInfoBank({
               }}
             >
               <Tooltip label="Edit">
-                <IconEdit color="green" />
+                <IconEdit color={AccentColor.white} />
               </Tooltip>
             </ActionIcon>
           </Stack>
@@ -199,32 +200,31 @@ export default function AdminAppInformation_ViewInfoBank({
 
         <Grid>
           <Grid.Col span={9}>
-            <Paper p={"md"} withBorder shadow="lg" h={"65vh"}>
+            <Paper p={"md"} bg={AdminColor.softBlue}  h={"65vh"}>
               <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
                 <Table
                   verticalSpacing={"xs"}
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={1000}
-                  striped
-                  highlightOnHover
+                  
                 >
                   <thead>
                     <tr>
                       <th>
-                        <Center w={150}>Bank</Center>
+                        <Center c={AdminColor.white} w={150}>Bank</Center>
                       </th>
                       <th>
-                        <Center>Status</Center>
+                        <Center c={AdminColor.white}>Status</Center>
                       </th>
                       <th>
-                        <Center>Nama Rekening</Center>
+                        <Center c={AdminColor.white}>Nama Rekening</Center>
                       </th>
                       <th>
-                        <Center>Nomor Rekening</Center>
+                        <Center c={AdminColor.white}>Nomor Rekening</Center>
                       </th>
                       <th>
-                        <Center>Aksi</Center>
+                        <Center c={AdminColor.white}>Aksi</Center>
                       </th>
                     </tr>
                   </thead>
@@ -236,14 +236,18 @@ export default function AdminAppInformation_ViewInfoBank({
 
           <Grid.Col span={3}>
             {isCreate ? (
-              <Paper p={"md"} withBorder shadow="lg">
+              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
                 <Stack>
                   <Center>
-                    <Title order={5}>Tambah Daftar Bank</Title>
+                    <Title c={AccentColor.white} order={5}>Tambah Daftar Bank</Title>
                   </Center>
 
                   <TextInput
                     label={"Nama Bank"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder="Masukan nama bank"
                     onChange={(val) => {
                       setNewData({
@@ -255,6 +259,10 @@ export default function AdminAppInformation_ViewInfoBank({
 
                   <TextInput
                     label={"Nama Rekening"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder="Masukan nama rekening"
                     onChange={(val) => {
                       setNewData({
@@ -266,6 +274,10 @@ export default function AdminAppInformation_ViewInfoBank({
 
                   <TextInput
                     label={"Nomor Rekening Bank"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder=" Masukan nomor rekening bank"
                     type="number"
                     onChange={(val) => {
@@ -305,13 +317,17 @@ export default function AdminAppInformation_ViewInfoBank({
             )}
 
             {isUpdate ? (
-              <Paper p={"md"} withBorder shadow="lg">
+              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
                 <Stack>
                   <Center>
-                    <Title order={5}>Update Data Bank</Title>
+                    <Title c={AdminColor.white} order={5}>Update Data Bank</Title>
                   </Center>
                   <TextInput
                     label={"Nama Bank"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder="Masukan nama bank"
                     value={updateData.namaBank}
                     onChange={(val) => {
@@ -322,6 +338,10 @@ export default function AdminAppInformation_ViewInfoBank({
 
                   <TextInput
                     label={"Nama Rekening"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder="Masukan nama rekening"
                     value={updateData.namaAkun}
                     onChange={(val) => {
@@ -332,6 +352,10 @@ export default function AdminAppInformation_ViewInfoBank({
 
                   <TextInput
                     label={"Nomor Rekening Bank"}
+                    styles={{
+                      label: {
+                        color: AdminColor.white,}
+                    }}
                     placeholder=" Masukan nomor rekening bank"
                     type="number"
                     value={updateData.norek}
