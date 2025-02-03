@@ -96,6 +96,7 @@ export default function AdminVote_Main() {
       ),
       color: "green",
       icon: <IconUpload size={18} color="#4CAF4F" />
+      
     },
     {
       id: 2,

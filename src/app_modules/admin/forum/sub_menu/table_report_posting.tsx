@@ -169,7 +169,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Report Posting"
-          color={AdminColor.orange}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -205,7 +205,7 @@ function TableView({ listData }: { listData: any }) {
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -213,32 +213,31 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Pelapor</Center>
+                      <Center c={AdminColor.white}>Pelapor</Center>
                     </th>
                     <th>
-                      <Center>Jenis Laporan</Center>
+                      <Center c={AdminColor.white}>Jenis Laporan</Center>
                     </th>
                     {/* <th>
-                      <Center>Author</Center>
+                      <Center c={AdminColor.white}>Author</Center>
                     </th>
                     <th>
                       <Text>Postingan</Text>
                     </th> */}
                     <th>
-                      <Center w={200}>Status Posting</Center>
+                      <Center c={AdminColor.white} w={200}>Status Posting</Center>
                     </th>
                     <th>
-                      <Center>Tanggal Report</Center>
+                      <Center c={AdminColor.white}>Tanggal Report</Center>
                     </th>
 
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

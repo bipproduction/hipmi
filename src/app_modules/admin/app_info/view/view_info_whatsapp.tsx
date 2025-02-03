@@ -18,7 +18,7 @@ import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_
 import adminAppInformation_getNomorAdmin from "../fun/master/get_nomor_admin";
 import adminAppInformation_funUpdateNomorAdmin from "../fun/update/fun_update_nomor";
 import { useDisclosure } from "@mantine/hooks";
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminAppInformation_ViewInformasiWhatApps({
   nomorAdmin,
@@ -55,17 +55,17 @@ export default function AdminAppInformation_ViewInformasiWhatApps({
         <Stack spacing={"xs"}>
           <Group
             position="apart"
-            bg={"gray.4"}
+            bg={AdminColor.softBlue}
             p={"xs"}
             style={{ borderRadius: "6px" }}
           >
-            <Title order={4}>Informasi WhatsApp</Title>
+            <Title c={AdminColor.white} order={4}>Informasi WhatsApp</Title>
           </Group>
         </Stack>
 
-        <Paper w={"50%"} withBorder p={"md"}>
+        <Paper w={"50%"} bg={AdminColor.softBlue} p={"md"}>
           <Stack>
-            <Paper bg={"gray.4"} p={"xl"}>
+            <Paper c={AdminColor.white} bg={AccentColor.darkblue} p={"xl"}>
               <Group position="apart">
                 <Title order={2}>{`+${dataNomor.nomor}`}</Title>
                 <Tooltip label={"Edit"}>
@@ -82,7 +82,7 @@ export default function AdminAppInformation_ViewInformasiWhatApps({
                       style={{
                         transition: "0.2s",
                       }}
-                      color={MainColor.darkblue}
+                      color={AdminColor.white}
                     />
                   </ActionIcon>
                 </Tooltip>

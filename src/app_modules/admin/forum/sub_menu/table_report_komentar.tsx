@@ -98,15 +98,15 @@ function TableView({ listData }: { listData: any }) {
     <tr key={i}>
       <td>
         <Center w={200}>
-          <Text lineClamp={1}>{e?.User.username}</Text>
+          <Text c={AdminColor.white} lineClamp={1}>{e?.User.username}</Text>
         </Center>
       </td>
       <td>
         <Center w={200}>
           {e?.forumMaster_KategoriReportId === null ? (
-            <Text>Lainnya</Text>
+            <Text c={AdminColor.white}>Lainnya</Text>
           ) : (
-            <Text lineClamp={1}>{e?.ForumMaster_KategoriReport.title}</Text>
+            <Text c={AdminColor.white} lineClamp={1}>{e?.ForumMaster_KategoriReport.title}</Text>
           )}
         </Center>
       </td>
@@ -160,7 +160,7 @@ function TableView({ listData }: { listData: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Report Komentar"
-          color={AdminColor.yellow}
+          color={AdminColor.softBlue}
           component={
             <TextInput
             icon={<IconSearch size={20} />}
@@ -194,7 +194,7 @@ function TableView({ listData }: { listData: any }) {
         {isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -202,29 +202,28 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Pelapor</Center>
+                      <Center c={AdminColor.white}>Pelapor</Center>
                     </th>
                     
                     <th>
-                      <Center>Jenis Laporan</Center>
+                      <Center c={AdminColor.white}>Jenis Laporan</Center>
                     </th>
 
                     <th>
-                      <Text>Komentar</Text>
+                      <Text c={AdminColor.white}>Komentar</Text>
                     </th>
 
                     <th>
-                      <Center>Tanggal Report</Center>
+                      <Center c={AdminColor.white}>Tanggal Report</Center>
                     </th>
 
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
 
                   </tr>

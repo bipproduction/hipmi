@@ -31,6 +31,7 @@ import adminColab_getOneRoomChatById from "../fun/get/get_one_room_chat_by_id";
 import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminColab_TableGroup({
   listGroup,
@@ -84,29 +85,29 @@ function TableMenu({ listGroup }: { listGroup: any }) {
   const tableRow = data.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{noAwal++}</Center>
+        <Center c={AdminColor.white}>{noAwal++}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text lineClamp={1}>
             {e?.ProjectCollaboration?.Author?.Profile?.name}
           </Text>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text lineClamp={1}>{e?.name}</Text>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>
             {e?.ProjectCollaboration?.ProjectCollaborationMaster_Industri?.name}
           </Text>
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>{e?.ProjectCollaboration_AnggotaRoomChat.length}</Text>
         </Center>
       </td>
@@ -152,40 +153,39 @@ function TableMenu({ listGroup }: { listGroup: any }) {
       <Stack spacing={"xs"}>
         <ComponentAdminGlobal_TitlePage
           name="Group Chat"
-          color={AccentColor.softblue}
+          color={AdminColor.softBlue}
           component={
             <></>
           }
         />
-        <Paper p={"md"} withBorder shadow="lg">
+        <Paper p={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <ScrollArea h={"65vh"}>
               <Table
                 verticalSpacing={"xs"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>No</Center>
+                      <Center c={AdminColor.white}>No</Center>
                     </th>
                     <th>
-                      <Center>Admin Room</Center>
+                      <Center c={AdminColor.white}>Admin Room</Center>
                     </th>
                     <th>
-                      <Center>Nama Group</Center>
+                      <Center c={AdminColor.white}>Nama Group</Center>
                     </th>
                     <th>
-                      <Center>Industri</Center>
+                      <Center c={AdminColor.white}>Industri</Center>
                     </th>
                     <th>
-                      <Center>Anggota Group</Center>
+                      <Center c={AdminColor.white}>Anggota Group</Center>
                     </th>
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
