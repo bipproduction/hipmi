@@ -85,7 +85,6 @@ export async function GET(
       },
     });
 
-    await prisma.$disconnect();
     return NextResponse.json({
       success: true,
       message: "Success create sponsor",
@@ -93,7 +92,6 @@ export async function GET(
     });
   } catch (error) {
     backendLogger.error("Error get sponsor event", error);
-    await prisma.$disconnect();
     return NextResponse.json(
       {
         success: false,
@@ -102,5 +100,7 @@ export async function GET(
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
