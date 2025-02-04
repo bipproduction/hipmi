@@ -30,26 +30,25 @@ import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampi
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Admin_TableReviewInvestasi({
-  dataInvestsi,
-}: {
-  dataInvestsi: any[];
-}) {
+export default function Admin_TableReviewInvestasi() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Investasi" />
-        <TableView listData={dataInvestsi} />
+        <TableView />
       </Stack>
     </>
   );
 }
 
-function TableView({ listData }: { listData: any }) {
+function TableView() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_INVESTASI[]>(listData.data);
-  const [nPage, setNPage] = useState(listData.nPage);
+  const [data, setData] = useState<MODEL_INVESTASI[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -62,93 +61,107 @@ function TableView({ listData }: { listData: any }) {
   const [isLoadingReload, setLoadingReload] = useState(false);
 
   useShallowEffect(() => {
-    if (isAdminInvestasi_TriggerReview) {
-      setIsShowReload(false);
-      setIsAdminInvestasi_TriggerReview(false)
-    }
-  }, [isAdminInvestasi_TriggerReview]);
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminInvestasiByStatus({
+        status: "Review",
+        page: `${activePage}`,
+        search: isSearch,
+      });
 
+      if (response?.success && response?.data?.data) {
+        setData(response.data.data)
+        setNPage(response.data.nPage || 1)
+      } else {
+        console.error("Invalid data format received:", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data table review", error);
+      setData([]);
+    }
+  }
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
+  }
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  }
   async function onLoadData() {
-    const loadData = await adminInvestasi_funGetAllReview({ page: 1 });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-    setLoadingReload(false);
+    loadInitialData();
+    setLoading(false);
     setIsShowReload(false);
     setIsAdminInvestasi_TriggerReview(false);
   }
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    setActivePage(1);
-    const loadData = await adminInvestasi_funGetAllReview({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      )
+    }
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            <Text lineClamp={1}>{e.author.username}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={400}>
+            <Text lineClamp={1}>{e.title}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            <Text lineClamp={1}>{e.roi} %</Text>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            <ComponentAdminGlobal_TampilanRupiahDonasi
+              nominal={_.toNumber(e.targetDana)}
+            />
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            <ComponentAdminGlobal_TampilanRupiahDonasi
+              nominal={_.toNumber(e.hargaLembar)}
+            />
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Button
+              loading={isLoading && idData === e.id}
+              loaderPosition="center"
+              color="green"
+              leftIcon={<IconEyeCheck size={20} />}
+              radius={"xl"}
+              onClick={() => {
+                setIdData(e.id);
+                setLoading(true);
+                router.push(RouterAdminInvestasi_OLD.konfirmasi + `${e.id}`);
+              }}
+            >
+              Detail
+            </Button>
+          </Center>
+        </td>
+      </tr>
+    ));
   }
-
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminInvestasi_funGetAllReview({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
-
-  const tableBody = data.map((e) => (
-    <tr key={e.id}>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          <Text lineClamp={1}>{e.author.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={400}>
-          <Text lineClamp={1}>{e.title}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          <Text lineClamp={1}>{e.roi} %</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          <ComponentAdminGlobal_TampilanRupiahDonasi
-            nominal={_.toNumber(e.targetDana)}
-          />
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          <ComponentAdminGlobal_TampilanRupiahDonasi
-            nominal={_.toNumber(e.hargaLembar)}
-          />
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Button
-            loading={isLoading && idData === e.id}
-            loaderPosition="center"
-            color="green"
-            leftIcon={<IconEyeCheck size={20}/>}
-            radius={"xl"}
-            onClick={() => {
-              setIdData(e.id);
-              setLoading(true);
-              router.push(RouterAdminInvestasi_OLD.konfirmasi + `${e.id}`);
-            }}
-          >
-            Detail
-          </Button>
-        </Center>
-      </td>
-    </tr>
-  ));
 
   return (
     <>
@@ -158,13 +171,13 @@ function TableView({ listData }: { listData: any }) {
           color={AdminColor.softBlue}
           component={
             <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari nama proyek"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Cari nama proyek"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
           }
         />
         {/* <Group
@@ -186,8 +199,8 @@ function TableView({ listData }: { listData: any }) {
           />
         </Group> */}
 
-        {_.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             {isShowReload && (
@@ -245,7 +258,7 @@ function TableView({ listData }: { listData: any }) {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{tableBody}</tbody>
+                <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>
