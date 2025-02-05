@@ -1,8 +1,12 @@
 import { prisma } from "@/app/lib";
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export { DELETE };
-async function DELETE(request: Request) {
+async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   if (request.method !== "DELETE") {
     return NextResponse.json(
       { success: false, message: "Method not allowed" },
@@ -10,41 +14,24 @@ async function DELETE(request: Request) {
     );
   }
   try {
-    // Ambil parameter nomor dari URL
-    const { nomor } = await request.json();
+    // Ambil parameter id dari URL
+    const { id } = params;
 
-    // Validasi parameter nomor
-    if (!nomor) {
+    if (!id) {
       return NextResponse.json(
         {
           success: false,
-          message: "Parameter 'nomor' diperlukan",
+          message: "Parameter 'id' diperlukan",
         },
         { status: 400 }
       );
     }
 
-    // Cek apakah data OTP dengan nomor tersebut ada
-    const existingOtp = await prisma.kodeOtp.findFirst({
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: { nomor },
-    });
-
-    if (!existingOtp) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data OTP tidak ditemukan",
-        },
-        { status: 404 }
-      );
-    }
-
     // Hapus data OTP
-    await prisma.kodeOtp.deleteMany({
-      where: { nomor },
+    await prisma.kodeOtp.delete({
+      where: {
+        id: id,
+      },
     });
 
     return NextResponse.json(
@@ -55,7 +42,7 @@ async function DELETE(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting OTP:", error);
+    backendLogger.error("Error deleting OTP:", error);
     return NextResponse.json(
       {
         success: false,

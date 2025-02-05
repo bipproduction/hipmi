@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { apies, pages } from "./lib/routes";
 
 type MiddlewareConfig = {
   apiPath: string;
   loginPath: string;
-  // validasiPath: string;
-  // registarasiPath: string;
   userPath: string;
   publicRoutes: string[];
   encodedKey: string;
@@ -18,11 +15,8 @@ type MiddlewareConfig = {
 const middlewareConfig: MiddlewareConfig = {
   apiPath: "/api",
   loginPath: "/login",
-  // validasiPath: "/validasi",
-  // registarasiPath: "/register",
   userPath: "/dev/home",
   publicRoutes: [
-    // API
     "/",
     "/api/voting/*",
     "/api/collaboration/*",
@@ -32,24 +26,9 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
-    // "/api/master/*",
-    // "/api/image/*",
-    // "/api/user/*",
-    // "/api/new/*",
-    // ADMIN API
-    // "/api/admin/event/*",
-    // "/api/admin/investasi/*",
-    // "/api/admin/donasi/dashboard/*",
-    // "/api/admin/voting/dashboard/*",
-    // "/api/admin/job/dashboard/*",
-    // "/api/admin/forum/dashboard/*",
-
-    // Akses awal
     "/api/get-cookie",
     "/api/user/activation",
     "/api/user-validate",
-
-    // PAGE
     "/login",
     "/register",
     "/validasi",
@@ -60,8 +39,6 @@ const middlewareConfig: MiddlewareConfig = {
     "/auth/api/login",
     "/waiting-room",
     "/zCoba/*",
-
-    // ASSETS
     "/aset/global/main_background.png",
     "/aset/logo/logo-hipmi.png",
   ],
@@ -81,7 +58,7 @@ export const middleware = async (req: NextRequest) => {
     validationApiRoute,
     userPath,
   } = middlewareConfig;
-
+  
   const { pathname } = req.nextUrl;
 
   // Handle CORS
@@ -101,7 +78,6 @@ export const middleware = async (req: NextRequest) => {
 
   // Verify token and get user data
   const user = await verifyToken({ token, encodedKey });
-  console.log("USER >>", user?.username);
 
   // Handle login page access
   if (pathname === loginPath) {
@@ -111,9 +87,9 @@ export const middleware = async (req: NextRequest) => {
       if (token) {
         response.cookies.set(sessionKey, token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          path: "/",
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/'
         });
       }
       return setCorsHeaders(response);
@@ -140,7 +116,7 @@ export const middleware = async (req: NextRequest) => {
       });
 
       if (!userValidate.ok) {
-        throw new Error("Failed to validate user");
+        throw new Error('Failed to validate user');
       }
 
       const userValidateJson = await userValidate.json();
@@ -151,7 +127,7 @@ export const middleware = async (req: NextRequest) => {
         );
       }
     } catch (error) {
-      console.error("Error validating user:", error);
+      console.error('Error validating user:', error);
       return setCorsHeaders(unauthorizedResponse());
     }
   }
@@ -174,10 +150,10 @@ export const middleware = async (req: NextRequest) => {
       );
 
       if (!validationResponse.ok) {
-        throw new Error("Failed to validate API request");
+        throw new Error('Failed to validate API request');
       }
     } catch (error) {
-      console.error("Error validating API request:", error);
+      console.error('Error validating API request:', error);
       return setCorsHeaders(unauthorizedResponse());
     }
   }
@@ -187,19 +163,15 @@ export const middleware = async (req: NextRequest) => {
   if (token) {
     response.cookies.set(sessionKey, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
     });
   }
   return setCorsHeaders(response);
 };
 
-function isRoutePublic(
-  pathname: string,
-  publicRoutes: string[],
-  loginPath: string
-): boolean {
+function isRoutePublic(pathname: string, publicRoutes: string[], loginPath: string): boolean {
   return [...publicRoutes, loginPath].some((route) => {
     const pattern = route.replace(/\*/g, ".*");
     return new RegExp(`^${pattern}$`).test(pathname);
@@ -207,10 +179,8 @@ function isRoutePublic(
 }
 
 function getToken(req: NextRequest, sessionKey: string): string | undefined {
-  return (
-    req.cookies.get(sessionKey)?.value ||
-    req.headers.get("Authorization")?.split(" ")[1]
-  );
+  return req.cookies.get(sessionKey)?.value ||
+         req.headers.get("Authorization")?.split(" ")[1];
 }
 
 function unauthorizedResponse(): NextResponse {
