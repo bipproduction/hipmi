@@ -1,4 +1,4 @@
-import { decrypt } from "@/app/auth/_lib/decrypt";
+import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import { prisma } from "@/app/lib";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,7 +32,6 @@ export async function GET(req: NextRequest) {
     });
 
     // Disconnect after successful query
-    await prisma.$disconnect();
 
     return NextResponse.json({
       success: true,
@@ -41,7 +40,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     // Ensure connection is closed even if error occurs
-    await prisma.$disconnect();
 
     console.error("Error in user validation:", error);
     return NextResponse.json(
@@ -51,5 +49,7 @@ export async function GET(req: NextRequest) {
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }

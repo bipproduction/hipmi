@@ -25,7 +25,8 @@ import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import global_limit from "@/app/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
-import { apiGetDonasiKategoriCountDashboard, apiGetDonasiStatusCountDashboard } from "../lib/api_fetch_admin_donasi";
+import { apiGetAdminDonasiKategoriCountDashboard, apiGetAdminDonasiStatusCountDashboard } from "../lib/api_fetch_admin_donasi";
+
 
 export default function AdminDonasi_Main({
   // countPublish,
@@ -62,7 +63,7 @@ export default function AdminDonasi_Main({
   }
   async function onLoadCountPublish() {
     try {
-      const response = await apiGetDonasiStatusCountDashboard({
+      const response = await apiGetAdminDonasiStatusCountDashboard({
         name: "Publish",
       })
 
@@ -75,7 +76,7 @@ export default function AdminDonasi_Main({
   }
   async function onLoadCountReview() {
     try {
-      const response = await apiGetDonasiStatusCountDashboard({
+      const response = await apiGetAdminDonasiStatusCountDashboard({
         name: "Review",
       })
       if (response) {
@@ -87,7 +88,7 @@ export default function AdminDonasi_Main({
   }
   async function onLoadCountReject() {
     try {
-      const response = await apiGetDonasiStatusCountDashboard({
+      const response = await apiGetAdminDonasiStatusCountDashboard({
         name: "Reject",
       })
       if (response) {
@@ -99,7 +100,7 @@ export default function AdminDonasi_Main({
   }
   async function onLoadCountKategori() {
     try {
-      const response = await apiGetDonasiKategoriCountDashboard()
+      const response = await apiGetAdminDonasiKategoriCountDashboard()
       if (response) {
         setCountKategori(response.data);
       }
