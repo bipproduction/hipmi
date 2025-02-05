@@ -24,33 +24,27 @@ export default function Register() {
   const [isValue, setIsValue] = useState(false);
   const focusTrapRef = useFocusTrap();
   const [loading, setLoading] = useState(false);
+  const [idCode, setIdCode] = useState("");
 
   useShallowEffect(() => {
     const kodeId = localStorage.getItem("hipmi_auth_code_id");
     if (kodeId != null) {
-      onCheckAuthCode({ kodeId: kodeId as string, onSetData: setNomor });
+      onCheckAuthCode({ kodeId: kodeId as string });
     } else {
       console.log("code id not found");
     }
-  }, [setNomor]);
+  }, []);
 
-  async function onCheckAuthCode({
-    kodeId,
-    onSetData,
-  }: {
-    kodeId: string;
-    onSetData: any;
-  }) {
+  async function onCheckAuthCode({ kodeId }: { kodeId: string }) {
     try {
       const respone = await apiGetCheckCodeOtp({ id: kodeId });
       if (respone) {
-        onSetData(respone.nomor);
+        setIdCode(kodeId);
+        setNomor(respone.nomor);
       }
     } catch (error) {
       clientLogger.error("Error onCheckAuthCode:", error);
     }
-    // const res = await fetch(`/api/auth/check?id=${kodeId}`);
-    // const result = await res.json();
   }
 
   async function onRegistarsi() {

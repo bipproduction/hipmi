@@ -1,4 +1,4 @@
-import { sessionCreate } from "@/app/auth/_lib/session_create";
+import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import prisma from "@/app/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";

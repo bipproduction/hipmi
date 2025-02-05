@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { decrypt } from "../../../../app/auth/_lib/decrypt";
+import { decrypt } from "../../../../app/(auth)/_lib/decrypt";
 
 export async function funGetUserIdByToken() {
   const SESSION_KEY = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;

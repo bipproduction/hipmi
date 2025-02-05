@@ -181,18 +181,22 @@ export default function Validasi() {
     <>
       <UIGlobal_LayoutDefault>
         <Stack h={"100vh"}>
-          <Box
-            pt={"md"}
-            px={"md"}
-            style={{
-              position: "sticky",
-              top: 0,
-            }}
-          >
-            <ActionIcon variant="transparent" onClick={() => onBack()}>
-              <IconChevronLeft color="white" />
-            </ActionIcon>
-          </Box>
+          {data && data.nomor !== "" ? (
+            <Box
+              pt={"md"}
+              px={"md"}
+              style={{
+                position: "sticky",
+                top: 0,
+              }}
+            >
+              <ActionIcon variant="transparent" onClick={() => onBack()}>
+                <IconChevronLeft color="white" />
+              </ActionIcon>
+            </Box>
+          ) : (
+            ""
+          )}
 
           <Stack align="center" justify="center" h={"100vh"} spacing={50}>
             <Title order={2} color={MainColor.yellow}>

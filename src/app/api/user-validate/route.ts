@@ -1,4 +1,4 @@
-import { decrypt } from "@/app/auth/_lib/decrypt";
+import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import { prisma } from "@/app/lib";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
