@@ -131,7 +131,6 @@ export default function Validasi() {
   async function onBack() {
     try {
       router.back();
-      111;
       const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
         id: idCode,
       });
@@ -165,13 +164,12 @@ export default function Validasi() {
         setTriggerOtp(true);
         setCounter(60);
         setLoadingResend(false);
-        //  router.push("/validasi", { scroll: false });
       } else {
         setLoadingResend(false);
         ComponentGlobal_NotifikasiPeringatan(result.message);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error(" Error onResend", error);
       setLoadingResend(false);
       ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
     }
@@ -181,26 +179,26 @@ export default function Validasi() {
     <>
       <UIGlobal_LayoutDefault>
         <Stack h={"100vh"}>
-          {data && data.nomor !== "" ? (
-            <Box
-              pt={"md"}
-              px={"md"}
-              style={{
-                position: "sticky",
-                top: 0,
-              }}
-            >
-              <ActionIcon variant="transparent" onClick={() => onBack()}>
+          <Box
+            pt={"md"}
+            px={"md"}
+            style={{
+              position: "sticky",
+              top: 0,
+            }}
+          >
+            <ActionIcon variant="transparent" onClick={() => onBack()}>
+              {data && data.nomor !== "" ? (
                 <IconChevronLeft color="white" />
-              </ActionIcon>
-            </Box>
-          ) : (
-            ""
-          )}
+              ) : (
+                ""
+              )}
+            </ActionIcon>
+          </Box>
 
           <Stack align="center" justify="center" h={"100vh"} spacing={50}>
             <Title order={2} color={MainColor.yellow}>
-              Verifikasi Kode OTP {data.code}
+              Verifikasi Kode OTP
             </Title>
 
             <Stack spacing={"md"} align="center">
@@ -232,31 +230,40 @@ export default function Validasi() {
               </Center>
 
               <Stack h={"5vh"} align="center" justify="center">
-                <Text fs="italic" c={MainColor.white}>
-                  Tidak menerima kode ?{" "}
-                  {counter > 0 ? (
-                    <Text fw={"bold"} inherit span>
-                      {counter + "s"}
-                    </Text>
-                  ) : loadingResend ? (
-                    <Loader ml={"sm"} size={"xs"} color="yellow" />
+                <Group position="center">
+                  <Text fs="italic" c={MainColor.white}>
+                    Tidak menerima kode ?{" "}
+                  </Text>
+                  {data && data.nomor !== "" ? (
+                    counter > 0 ? (
+                      <Text fw={"bold"} c={MainColor.white}>
+                        {counter + "s"}
+                      </Text>
+                    ) : loadingResend ? (
+                      <Loader ml={"sm"} size={"xs"} color="yellow" />
+                    ) : (
+                      <Text
+                        c={MainColor.white}
+                        onClick={() => {
+                          onResendCode();
+                        }}
+                        fw={"bold"}
+                      >
+                        Kirim ulang
+                      </Text>
+                    )
                   ) : (
-                    <Text
-                      inherit
-                      span
-                      onClick={() => {
-                        onResendCode();
-                      }}
-                      fw={"bold"}
-                    >
-                      Kirim ulang
-                    </Text>
+                    <CustomSkeleton height={20} radius={"xl"} width={20} />
                   )}
-                </Text>
+                </Group>
               </Stack>
             </Stack>
             <Button
               w={300}
+              disabled={inputCode.length < 4 ? true : false}
+              style={{
+                transition: "all ease 0.3s",
+              }}
               loading={loading ? true : false}
               loaderPosition="center"
               radius={"md"}
@@ -265,9 +272,6 @@ export default function Validasi() {
               c={"black"}
               bg={MainColor.yellow}
               color={"yellow"}
-              style={{
-                borderColor: AccentColor.yellow,
-              }}
               onClick={() => {
                 data.nomor == "" && data.code == ""
                   ? null
@@ -277,8 +281,6 @@ export default function Validasi() {
               <Text>VERIFIKASI</Text>
             </Button>
           </Stack>
-
-          {/* {data.nomor == "" && data.code == "" ? <Validasi_SkeletonView /> : ""} */}
         </Stack>
       </UIGlobal_LayoutDefault>
     </>

@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "API Error or Server Error",
+        message: "Maaf, Terjadi Keselahan",
         reason: (error as Error).message,
       },
       { status: 500 }
