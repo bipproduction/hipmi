@@ -30,26 +30,22 @@ import { useShallowEffect } from "@mantine/hooks";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Admin_TablePublishInvestasi({
-  dataInvestsi,
-}: {
-  dataInvestsi: MODEL_INVESTASI[];
-}) {
+export default function Admin_TablePublishInvestasi() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Investasi" />
-        <TableView listData={dataInvestsi} />
+        <TableView  />
         {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
       </Stack>
     </>
   );
 }
 
-function TableView({ listData }: { listData: any }) {
+function TableView() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_INVESTASI[]>(listData.data);
-  const [nPage, setNPage] = useState(listData.nPage);
+  const [data, setData] = useState<MODEL_INVESTASI[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
