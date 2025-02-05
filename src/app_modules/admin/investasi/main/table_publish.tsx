@@ -25,6 +25,10 @@ import { adminInvestasi_funGetAllPublish } from "../fun/get/get_all_publish";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
 import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi";
+import { useShallowEffect } from "@mantine/hooks";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Admin_TablePublishInvestasi({
   dataInvestsi,
@@ -50,83 +54,116 @@ function TableView({ listData }: { listData: any }) {
   const [isSearch, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [idData, setIdData] = useState("");
+  const [origin, setOrigin] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
+  useShallowEffect(() => {
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, [])
+
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminInvestasiByStatus({
+          status: "Publish",
+          page: `${activePage}`,
+          search: isSearch,
+        });
+
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+    };
+
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
     setActivePage(1);
-    const loadData = await adminInvestasi_funGetAllPublish({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminInvestasi_funGetAllPublish({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  const onPageClick = (page: number) => {
+    setActivePage(page)
   }
 
-  const tableBody = data.map((e) => (
-    <tr key={e.id}>
-      <td>
-        <Center w={200}>
-          <Text c={AccentColor.white} lineClamp={1}>{e.author.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={400}>
-          <Text c={AccentColor.white} lineClamp={1}>{e.title}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>{_.toNumber(e.progress).toFixed(2)} %</Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          {new Intl.NumberFormat("id-ID", {
-            maximumFractionDigits: 10,
-          }).format(+e.sisaLembar)}
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white} w={200}>
-          {new Intl.NumberFormat("id-ID", {
-            maximumFractionDigits: 10,
-          }).format(+e.totalLembar)}
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text c={AccentColor.white} lineClamp={1}>{e.Investasi_Invoice.length}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Button
-            loading={isLoading && idData === e.id}
-            loaderPosition="center"
-            bg={"green"}
-            color="green"
-            radius={"xl"}
-            leftIcon={<IconEyeCheck size={20} />}
-            onClick={() => {
-              setIdData(e.id);
-              setLoading(true);
-              router.push(RouterAdminInvestasi.detail_publish + `${e.id}`);
-            }}
-          >
-            Detail
-          </Button>
-        </Center>
-      </td>
-    </tr>
-  ));
+  const renderTableBody = () => {
+    if(!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center w={200}>
+            <Text c={AccentColor.white} lineClamp={1}>{e.author.username}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={400}>
+            <Text c={AccentColor.white} lineClamp={1}>{e.title}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>{_.toNumber(e.progress).toFixed(2)} %</Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            {new Intl.NumberFormat("id-ID", {
+              maximumFractionDigits: 10,
+            }).format(+e.sisaLembar)}
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            {new Intl.NumberFormat("id-ID", {
+              maximumFractionDigits: 10,
+            }).format(+e.totalLembar)}
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Text c={AccentColor.white} lineClamp={1}>{e.Investasi_Invoice.length}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Button
+              loading={isLoading && idData === e.id}
+              loaderPosition="center"
+              bg={"green"}
+              color="green"
+              radius={"xl"}
+              leftIcon={<IconEyeCheck size={20} />}
+              onClick={() => {
+                setIdData(e.id);
+                setLoading(true);
+                router.push(RouterAdminInvestasi.detail_publish + `${e.id}`);
+              }}
+            >
+              Detail
+            </Button>
+          </Center>
+        </td>
+      </tr>
+    ));
+  }
+  
 
   return (
     <>
@@ -164,8 +201,8 @@ function TableView({ listData }: { listData: any }) {
           />
         </Group> */}
 
-        {_.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
           <Paper bg={AdminColor.softBlue} p={"md"} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
@@ -203,7 +240,7 @@ function TableView({ listData }: { listData: any }) {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{tableBody}</tbody>
+                <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>

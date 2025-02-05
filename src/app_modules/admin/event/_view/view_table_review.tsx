@@ -49,6 +49,7 @@ import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_cre
 import { adminEvent_funGetListReview } from "../fun";
 import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_ComponentTableReview() {
   const [data, setData] = useState<MODEL_EVENT[] | null>(null);
@@ -261,28 +262,28 @@ export default function AdminEvent_ComponentTableReview() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e?.Author?.username}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text lineClamp={2}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.lokasi}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.EventMaster_TipeAcara.name}</Text>
           </Center>
         </td>
 
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -297,7 +298,7 @@ export default function AdminEvent_ComponentTableReview() {
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -313,7 +314,7 @@ export default function AdminEvent_ComponentTableReview() {
         </td>
 
         <td>
-          <Center w={400}>
+          <Center c={AdminColor.white} w={400}>
             <Spoiler
               hideLabel="sembunyikan"
               maxHeight={50}
@@ -371,7 +372,7 @@ export default function AdminEvent_ComponentTableReview() {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color={"orange.5"}
+          color={AdminColor.softBlue}
           component={
             <TextInput
               disabled={!data}
@@ -387,7 +388,7 @@ export default function AdminEvent_ComponentTableReview() {
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             {isShowReload && (
               <Affix position={{ top: rem(200) }} w={"100%"}>
                 <Center>
@@ -416,35 +417,33 @@ export default function AdminEvent_ComponentTableReview() {
                 horizontalSpacing={"md"}
                 p={"md"}
                 w={1500}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Username</Center>
+                      <Center c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center>Judul</Center>
+                      <Center c={AdminColor.white}>Judul</Center>
                     </th>
                     <th>
-                      <Center>Lokasi</Center>
+                      <Center c={AdminColor.white}>Lokasi</Center>
                     </th>
                     <th>
-                      <Center>Tipe Acara</Center>
+                      <Center c={AdminColor.white}>Tipe Acara</Center>
                     </th>
                     <th>
-                      <Center>Tanggal & Waktu Mulai</Center>
+                      <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
                     </th>
                     <th>
-                      <Center>Tanggal & Waktu Selesai</Center>
+                      <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
                     </th>
                     <th>
-                      <Center>Deskripsi</Center>
+                      <Center c={AdminColor.white}>Deskripsi</Center>
                     </th>
 
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

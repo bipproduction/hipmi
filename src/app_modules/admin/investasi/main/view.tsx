@@ -50,7 +50,8 @@ import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import global_limit from "@/app/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
-import apiGetInvestasiCountDashboard from "../_lib/api_fetch_count_status";
+import { apiGetAdminInvestasiCountDashboard } from "../_lib/api_fetch_admin_investasi";
+
 
 export default function Admin_Investasi({
   listInvestasi,
@@ -88,7 +89,7 @@ export default function Admin_Investasi({
   async function onLoadCountPublish() {
     try {
 
-      const response = await apiGetInvestasiCountDashboard({
+      const response = await apiGetAdminInvestasiCountDashboard({
         name: "Publish",
       });
 
@@ -103,7 +104,7 @@ export default function Admin_Investasi({
   }
   async function onLoadCountReview() {
     try {
-      const response = await apiGetInvestasiCountDashboard({
+      const response = await apiGetAdminInvestasiCountDashboard({
         name: "Review",
       });
 
@@ -116,7 +117,7 @@ export default function Admin_Investasi({
   }
   async function onLoadCountReject() {
     try {
-      const response = await apiGetInvestasiCountDashboard({
+      const response = await apiGetAdminInvestasiCountDashboard({
         name: "Reject",
       });
 
