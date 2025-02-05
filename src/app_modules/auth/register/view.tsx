@@ -5,7 +5,7 @@ import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_in
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import { Button, Stack, Text, TextInput, Title } from "@mantine/core";
+import { Button, Center, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useFocusTrap, useShallowEffect } from "@mantine/hooks";
 import { IconUserCircle } from "@tabler/icons-react";
 import _ from "lodash";
@@ -14,6 +14,8 @@ import { useState } from "react";
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Register_SkeletonView from "./skeleton";
 import { clientLogger } from "@/util/clientLogger";
+import { apiGetCheckCodeOtp } from "../_lib/api_fetch_auth";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Register() {
   const router = useRouter();
@@ -39,10 +41,16 @@ export default function Register() {
     kodeId: string;
     onSetData: any;
   }) {
-    const res = await fetch(`/api/auth/check?id=${kodeId}`);
-    const result = await res.json();
-
-    onSetData(result.nomor);
+    try {
+      const respone = await apiGetCheckCodeOtp({ id: kodeId });
+      if (respone) {
+        onSetData(respone.nomor);
+      }
+    } catch (error) {
+      clientLogger.error("Error onCheckAuthCode:", error);
+    }
+    // const res = await fetch(`/api/auth/check?id=${kodeId}`);
+    // const result = await res.json();
   }
 
   async function onRegistarsi() {
@@ -102,71 +110,75 @@ export default function Register() {
   return (
     <>
       <UIGlobal_LayoutDefault>
-        {nomor == "" ? (
-          <Register_SkeletonView />
-        ) : (
-          <Stack h={"100vh"} align="center" justify="center" spacing={50}>
-            <Title order={2} c={MainColor.yellow}>
-              REGISTRASI
-            </Title>
+        <Stack h={"100vh"} align="center" justify="center" spacing={50}>
+          <Title order={2} c={MainColor.yellow}>
+            REGISTRASI
+          </Title>
 
-            <IconUserCircle size={100} color={MainColor.white} />
+          <IconUserCircle size={100} color={MainColor.white} />
 
-            <Stack spacing={"sm"} w={300}>
+          <Stack spacing={"sm"} w={300}>
+            <Stack spacing={0}>
               <Text align="center" c={MainColor.white}>
-                Anda akan terdaftar dengan nomor berikut{" "}
-                <Text inherit span fw={"bold"}>
+                Anda akan terdaftar dengan nomor
+              </Text>
+              {nomor == "" ? (
+                <Center>
+                  <CustomSkeleton height={20} w={150} />
+                </Center>
+              ) : (
+                <Text align="center" c={MainColor.white} fw={"bold"}>
                   +{nomor}
                 </Text>
-              </Text>
-              <TextInput
-                ref={focusTrapRef}
-                placeholder="Masukan Username"
-                maxLength={50}
-                error={
-                  value.length > 0 && value.length < 5 ? (
-                    <ComponentGlobal_ErrorInput text="Minimal 5 karakter !" />
-                  ) : _.values(value).includes(" ") ? (
-                    <Stack spacing={5}>
-                      <ComponentGlobal_ErrorInput text="Tidak boleh ada space" />
-                      <ComponentGlobal_ErrorInput text="Sambungkan huruf meggunakan karakter _" />
-                    </Stack>
-                  ) : isValue ? (
-                    <ComponentGlobal_ErrorInput text="Masukan username anda" />
-                  ) : (
-                    ""
-                  )
+              )}
+            </Stack>
+            <TextInput
+              ref={focusTrapRef}
+              placeholder="Masukan Username"
+              maxLength={50}
+              error={
+                value.length > 0 && value.length < 5 ? (
+                  <ComponentGlobal_ErrorInput text="Minimal 5 karakter !" />
+                ) : _.values(value).includes(" ") ? (
+                  <Stack spacing={5}>
+                    <ComponentGlobal_ErrorInput text="Tidak boleh ada space" />
+                    <ComponentGlobal_ErrorInput text="Sambungkan huruf meggunakan karakter _" />
+                  </Stack>
+                ) : isValue ? (
+                  <ComponentGlobal_ErrorInput text="Masukan username anda" />
+                ) : (
+                  ""
+                )
+              }
+              onChange={(val) => {
+                val.currentTarget.value.length > 0 ? setIsValue(false) : "";
+                setValue(val.currentTarget.value);
+              }}
+            />
+            <Stack>
+              <Button
+                disabled={
+                  value === "" ||
+                  value.length < 5 ||
+                  _.values(value).includes(" ")
                 }
-                onChange={(val) => {
-                  val.currentTarget.value.length > 0 ? setIsValue(false) : "";
-                  setValue(val.currentTarget.value);
+                loading={loading ? true : false}
+                loaderPosition="center"
+                radius={"md"}
+                compact
+                h={40}
+                c={"black"}
+                bg={MainColor.yellow}
+                color={"yellow"}
+                onClick={() => {
+                  onRegistarsi();
                 }}
-              />
-              <Stack>
-                <Button
-                  disabled={
-                    value === "" ||
-                    value.length < 5 ||
-                    _.values(value).includes(" ")
-                  }
-                  loading={loading ? true : false}
-                  loaderPosition="center"
-                  radius={"md"}
-                  compact
-                  h={40}
-                  c={"black"}
-                  bg={MainColor.yellow}
-                  color={"yellow"}
-                  onClick={() => {
-                    onRegistarsi();
-                  }}
-                >
-                  <Text>DAFTAR</Text>
-                </Button>
-              </Stack>
+              >
+                <Text>DAFTAR</Text>
+              </Button>
             </Stack>
           </Stack>
-        )}
+        </Stack>
       </UIGlobal_LayoutDefault>
     </>
   );

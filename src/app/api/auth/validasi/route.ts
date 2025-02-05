@@ -4,58 +4,60 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  if (req.method === "POST") {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { success: false, message: "Method Not Allowed" },
+      { status: 405 }
+    );
+  }
+
+  try {
     const { nomor } = await req.json();
+    const dataUser = await prisma.user.findUnique({
+      where: {
+        nomor: nomor,
+      },
+      select: {
+        id: true,
+        nomor: true,
+        username: true,
+        active: true,
+        masterUserRoleId: true,
+      },
+    });
 
-    try {
-      const dataUser = await prisma.user.findUnique({
-        where: {
-          nomor: nomor,
-        },
-        select: {
-          id: true,
-          nomor: true,
-          username: true,
-          active: true,
-          masterUserRoleId: true,
-        },
-      });
-
-      if (dataUser == null)
-        return NextResponse.json(
-          { success: false, message: "Nomor Belum Terdaftar" },
-          { status: 404 }
-        );
-
-      const token = await sessionCreate({
-        sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
-        encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
-        user: dataUser as any,
-      });
-
+    if (dataUser == null)
       return NextResponse.json(
-        {
-          success: true,
-          message: "Berhasil Login",
-          roleId: dataUser.masterUserRoleId,
-          active: dataUser.active,
-        },
+        { success: false, message: "Nomor Belum Terdaftar" },
         { status: 200 }
       );
-    } catch (error) {
-      backendLogger.log("Error Validasi:", error);
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Server Error",
-          reason: (error as Error).message,
-        },
-        { status: 500 }
-      );
-    }
+
+    const token = await sessionCreate({
+      sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
+      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
+      user: dataUser as any,
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil Login",
+        roleId: dataUser.masterUserRoleId,
+        active: dataUser.active,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    backendLogger.log("API Error or Server Error", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "API Error or Server Error",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
-  return NextResponse.json(
-    { success: false, message: "Method Not Allowed" },
-    { status: 405 }
-  );
 }
