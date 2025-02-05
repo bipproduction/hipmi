@@ -11,8 +11,7 @@ async function DELETE(request: Request) {
   }
   try {
     // Ambil parameter nomor dari URL
-    const { searchParams } = new URL(request.url);
-    const nomor = searchParams.get("nomor");
+    const { nomor } = await request.json();
 
     // Validasi parameter nomor
     if (!nomor) {
@@ -27,6 +26,9 @@ async function DELETE(request: Request) {
 
     // Cek apakah data OTP dengan nomor tersebut ada
     const existingOtp = await prisma.kodeOtp.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
       where: { nomor },
     });
 

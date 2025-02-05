@@ -129,6 +129,7 @@ export const middleware = async (req: NextRequest) => {
   // ==================== Authentication: Login, Validasi, Registrasi ==================== //
   // Token verification
   const user = await verifyToken({ token, encodedKey });
+  console.log("middlaware",user)
 
   // Handle login page access
   if (pathname === loginPath) {
