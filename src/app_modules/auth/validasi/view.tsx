@@ -10,8 +10,11 @@ import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
 import {
+  ActionIcon,
+  Box,
   Button,
   Center,
+  Group,
   Loader,
   PinInput,
   Stack,
@@ -26,6 +29,14 @@ import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_glo
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Validasi_SkeletonView from "./skeleton";
 import { clientLogger } from "@/util/clientLogger";
+import { IconChevronLeft } from "@tabler/icons-react";
+import _ from "lodash";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import {
+  apiDeleteAktivasiKodeOtpByNomor,
+  apiGetCheckCodeOtp,
+  apiPostVerifikasiCodeOtp,
+} from "../_lib/api_fetch_auth";
 
 export default function Validasi() {
   const router = useRouter();
@@ -61,20 +72,24 @@ export default function Validasi() {
   }, [triggerOtp]);
 
   async function onCheckAuthCode({ kodeId }: { kodeId: string }) {
-    const res = await fetch(`/api/auth/check?id=${kodeId}`);
-    const result = await res.json();
-
-    setData({
-      nomor: result.nomor,
-      code: result.otp,
-    });
+    try {
+      const respone = await apiGetCheckCodeOtp({ id: kodeId });
+      if (respone) {
+        setData({
+          nomor: respone.nomor,
+          code: respone.otp,
+        });
+      }
+    } catch (error) {
+      clientLogger.error("Error onCheckAuthCode:", error);
+    }
   }
 
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
   }, [counter]);
 
-  async function onVerifikasi() {
+  async function onSubmitVerifikasi() {
     if (!inputCode)
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi Kode");
     if (data.code != inputCode)
@@ -82,59 +97,77 @@ export default function Validasi() {
 
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/validasi", {
-        method: "POST",
-        body: JSON.stringify({
-          nomor: data.nomor,
-        }),
-      });
+      const respone = await apiPostVerifikasiCodeOtp({ nomor: data.nomor });
 
-      const result = await res.json();
+      if (respone && respone.success == true) {
+        if (respone.roleId == "1") {
+          ComponentGlobal_NotifikasiBerhasil(respone.message);
+          localStorage.removeItem("hipmi_auth_code_id");
 
-      if (res.status === 200 && result.roleId == "1") {
-        ComponentGlobal_NotifikasiBerhasil(result.message);
-        localStorage.removeItem("hipmi_auth_code_id");
-        await auth_funDeleteAktivasiKodeOtpByNomor({
-          nomor: data.nomor,
-        });
+          router.push(RouterHome.main_home, { scroll: false });
+        } else if (respone.roleId != "1") {
+          ComponentGlobal_NotifikasiBerhasil("Admin berhasil login");
+          localStorage.removeItem("hipmi_auth_code_id");
 
-        router.push(RouterHome.main_home, { scroll: false });
-        return;
-      }
+          router.push(RouterAdminDashboard.splash_admin, { scroll: false });
+        }
 
-      if (res.status === 200 && result.roleId != "1") {
-        ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
-        localStorage.removeItem("hipmi_auth_code_id");
-        await auth_funDeleteAktivasiKodeOtpByNomor({
-          nomor: data.nomor,
-        });
-
-        router.push(RouterAdminDashboard.splash_admin, { scroll: false });
-        return;
-      }
-
-      if (res.status === 404) {
-        setLoading(false);
+        try {
+          const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
+            nomor: data.nomor,
+          });
+        } catch (error) {
+          clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
+        }
+      } else if (respone && respone.success == false) {
         router.push("/register", { scroll: false });
-        ComponentGlobal_NotifikasiBerhasil(result.message);
-        return;
+        ComponentGlobal_NotifikasiBerhasil(respone.message);
       }
 
-      if (res.status === 400) {
-        setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(result.message);
-        return;
-      }
+      // if (respone.status === 200 && result.roleId == "1") {
+      //   ComponentGlobal_NotifikasiBerhasil(result.message);
+      //   localStorage.removeItem("hipmi_auth_code_id");
+      //   await auth_funDeleteAktivasiKodeOtpByNomor({
+      //     nomor: data.nomor,
+      //   });
 
-      if (res.status == 500) {
-        setLoading(false);
-        ComponentGlobal_NotifikasiGagal(result.message);
-        return;
-      }
+      //   router.push(RouterHome.main_home, { scroll: false });
+      //   return;
+      // }
+
+      // if (respone.status === 200 && result.roleId != "1") {
+      //   ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
+      //   localStorage.removeItem("hipmi_auth_code_id");
+      //   await auth_funDeleteAktivasiKodeOtpByNomor({
+      //     nomor: data.nomor,
+      //   });
+
+      //   router.push(RouterAdminDashboard.splash_admin, { scroll: false });
+      //   return;
+      // }
+
+      // if (respone.status === 404) {
+      //   setLoading(false);
+      //   router.push("/register", { scroll: false });
+      //   ComponentGlobal_NotifikasiBerhasil(result.message);
+      //   return;
+      // }
+
+      // if (respone.status === 400) {
+      //   setLoading(false);
+      //   ComponentGlobal_NotifikasiPeringatan(result.message);
+      //   return;
+      // }
+
+      // if (respone.status == 500) {
+      //   setLoading(false);
+      //   ComponentGlobal_NotifikasiGagal(result.message);
+      //   return;
+      // }
     } catch (error) {
       setLoading(false);
       clientLogger.error("Error validasi:", error);
-    } 
+    }
   }
 
   async function onBack() {
@@ -176,8 +209,6 @@ export default function Validasi() {
     }
   }
 
-  // console.log(data.code);
-
   return (
     <>
       <UIGlobal_LayoutDefault>
@@ -194,84 +225,88 @@ export default function Validasi() {
               <IconChevronLeft color="white" />
             </ActionIcon>
           </Box> */}
-          {data.nomor == "" && data.code == "" ? (
-            <Validasi_SkeletonView />
-          ) : (
-            <Stack align="center" justify="center" h={"100vh"} spacing={50}>
-              <Title order={2} color={MainColor.yellow}>
-                Verifikasi Kode OTP
-              </Title>
 
-              <Stack spacing={"md"} align="center">
-                <Stack spacing={0} align="center">
-                  <Text c={MainColor.white}>Masukan 4 digit kode otp</Text>
-                  <Text c={MainColor.white}>
-                    Yang dikirim ke{" "}
-                    <Text span inherit fw={"bold"}>
-                      {" "}
+          <Stack align="center" justify="center" h={"100vh"} spacing={50}>
+            <Title order={2} color={MainColor.yellow}>
+              Verifikasi Kode OTP
+            </Title>
+
+            <Stack spacing={"md"} align="center">
+              <Stack spacing={0} align="center">
+                <Text c={MainColor.white}>Masukan 4 digit kode otp</Text>
+                <Group position="center" spacing={"xs"}>
+                  <Text c={MainColor.white}>Yang dikirim ke</Text>
+                  {data && data.nomor !== "" ? (
+                    <Text fw={"bold"} c={MainColor.white}>
                       +{data.nomor}
                     </Text>
-                  </Text>
-                </Stack>
-                <Center>
-                  <PinInput
-                    size="xl"
-                    type={"number"}
-                    ref={focusTrapRef}
-                    spacing={"md"}
-                    mt={"md"}
-                    styles={{ input: { backgroundColor: MainColor.white } }}
-                    onChange={(val) => {
-                      setInputOtp(val);
-                    }}
-                  />
-                </Center>
-
-                <Stack h={"5vh"} align="center" justify="center">
-                  <Text fs="italic" c={MainColor.white}>
-                    Tidak menerima kode ?{" "}
-                    {counter > 0 ? (
-                      <Text fw={"bold"} inherit span>
-                        {counter + "s"}
-                      </Text>
-                    ) : loadingResend ? (
-                      <Loader ml={"sm"} size={"xs"} color="yellow" />
-                    ) : (
-                      <Text
-                        inherit
-                        span
-                        onClick={() => {
-                          onResendCode();
-                        }}
-                        fw={"bold"}
-                      >
-                        Kirim ulang
-                      </Text>
-                    )}
-                  </Text>
-                </Stack>
+                  ) : (
+                    <CustomSkeleton height={15} radius={"xl"} width={150} />
+                  )}
+                </Group>
               </Stack>
-              <Button
-                w={300}
-                loading={loading ? true : false}
-                loaderPosition="center"
-                radius={"md"}
-                compact
-                h={40}
-                c={"black"}
-                bg={MainColor.yellow}
-                color={"yellow"}
-                style={{
-                  borderColor: AccentColor.yellow,
-                }}
-                onClick={() => {
-                  onVerifikasi();
-                }}
-              >
-                <Text>VERIFIKASI</Text>
-              </Button>
+              <Center>
+                <PinInput
+                  size="xl"
+                  type={"number"}
+                  ref={focusTrapRef}
+                  spacing={"md"}
+                  mt={"md"}
+                  styles={{ input: { backgroundColor: MainColor.white } }}
+                  onChange={(val) => {
+                    setInputOtp(val);
+                  }}
+                />
+              </Center>
+
+              <Stack h={"5vh"} align="center" justify="center">
+                <Text fs="italic" c={MainColor.white}>
+                  Tidak menerima kode ?{" "}
+                  {counter > 0 ? (
+                    <Text fw={"bold"} inherit span>
+                      {counter + "s"}
+                    </Text>
+                  ) : loadingResend ? (
+                    <Loader ml={"sm"} size={"xs"} color="yellow" />
+                  ) : (
+                    <Text
+                      inherit
+                      span
+                      onClick={() => {
+                        onResendCode();
+                      }}
+                      fw={"bold"}
+                    >
+                      Kirim ulang
+                    </Text>
+                  )}
+                </Text>
+              </Stack>
             </Stack>
-          )}
+            <Button
+              w={300}
+              loading={loading ? true : false}
+              loaderPosition="center"
+              radius={"md"}
+              compact
+              h={40}
+              c={"black"}
+              bg={MainColor.yellow}
+              color={"yellow"}
+              style={{
+                borderColor: AccentColor.yellow,
+              }}
+              onClick={() => {
+                data.nomor == "" && data.code == ""
+                  ? null
+                  : onSubmitVerifikasi();
+              }}
+            >
+              <Text>VERIFIKASI</Text>
+            </Button>
+          </Stack>
+
+          {/* {data.nomor == "" && data.code == "" ? <Validasi_SkeletonView /> : ""} */}
         </Stack>
       </UIGlobal_LayoutDefault>
     </>
