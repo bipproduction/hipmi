@@ -1,7 +1,6 @@
 "use client";
 
 import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
 import {
   AccentColor,
   MainColor,
@@ -26,12 +25,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
-import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
-import Validasi_SkeletonView from "./skeleton";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { clientLogger } from "@/util/clientLogger";
 import { IconChevronLeft } from "@tabler/icons-react";
-import _ from "lodash";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   apiDeleteAktivasiKodeOtpByNomor,
   apiGetCheckCodeOtp,
@@ -46,6 +42,7 @@ export default function Validasi() {
   const [counter, setCounter] = useState(60);
   const [loadingResend, setLoadingResend] = useState(false);
   const [triggerOtp, setTriggerOtp] = useState(false);
+  const [idCode, setIdCode] = useState("");
 
   const [data, setData] = useState({
     nomor: "",
@@ -74,7 +71,9 @@ export default function Validasi() {
   async function onCheckAuthCode({ kodeId }: { kodeId: string }) {
     try {
       const respone = await apiGetCheckCodeOtp({ id: kodeId });
+
       if (respone) {
+        setIdCode(kodeId);
         setData({
           nomor: respone.nomor,
           code: respone.otp,
@@ -101,21 +100,21 @@ export default function Validasi() {
 
       if (respone && respone.success == true) {
         if (respone.roleId == "1") {
+          router.push("/login", { scroll: false });
           ComponentGlobal_NotifikasiBerhasil(respone.message);
-          localStorage.removeItem("hipmi_auth_code_id");
-
-          router.push(RouterHome.main_home, { scroll: false });
         } else if (respone.roleId != "1") {
-          ComponentGlobal_NotifikasiBerhasil("Admin berhasil login");
-          localStorage.removeItem("hipmi_auth_code_id");
-
           router.push(RouterAdminDashboard.splash_admin, { scroll: false });
+          ComponentGlobal_NotifikasiBerhasil("Admin berhasil login");
         }
 
         try {
           const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
-            nomor: data.nomor,
+            id: idCode,
           });
+
+          if (responeDelete) {
+            localStorage.removeItem("hipmi_auth_code_id");
+          }
         } catch (error) {
           clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
         }
@@ -123,47 +122,6 @@ export default function Validasi() {
         router.push("/register", { scroll: false });
         ComponentGlobal_NotifikasiBerhasil(respone.message);
       }
-
-      // if (respone.status === 200 && result.roleId == "1") {
-      //   ComponentGlobal_NotifikasiBerhasil(result.message);
-      //   localStorage.removeItem("hipmi_auth_code_id");
-      //   await auth_funDeleteAktivasiKodeOtpByNomor({
-      //     nomor: data.nomor,
-      //   });
-
-      //   router.push(RouterHome.main_home, { scroll: false });
-      //   return;
-      // }
-
-      // if (respone.status === 200 && result.roleId != "1") {
-      //   ComponentGlobal_NotifikasiBerhasil("Admin Logged in");
-      //   localStorage.removeItem("hipmi_auth_code_id");
-      //   await auth_funDeleteAktivasiKodeOtpByNomor({
-      //     nomor: data.nomor,
-      //   });
-
-      //   router.push(RouterAdminDashboard.splash_admin, { scroll: false });
-      //   return;
-      // }
-
-      // if (respone.status === 404) {
-      //   setLoading(false);
-      //   router.push("/register", { scroll: false });
-      //   ComponentGlobal_NotifikasiBerhasil(result.message);
-      //   return;
-      // }
-
-      // if (respone.status === 400) {
-      //   setLoading(false);
-      //   ComponentGlobal_NotifikasiPeringatan(result.message);
-      //   return;
-      // }
-
-      // if (respone.status == 500) {
-      //   setLoading(false);
-      //   ComponentGlobal_NotifikasiGagal(result.message);
-      //   return;
-      // }
     } catch (error) {
       setLoading(false);
       clientLogger.error("Error validasi:", error);
@@ -171,9 +129,18 @@ export default function Validasi() {
   }
 
   async function onBack() {
-    localStorage.removeItem("hipmi_auth_code_id");
-    await auth_funDeleteAktivasiKodeOtpByNomor({ nomor: data.nomor });
-    router.back();
+    try {
+      router.back();
+      const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
+        id: idCode,
+      });
+
+      if (responeDelete) {
+        localStorage.removeItem("hipmi_auth_code_id");
+      }
+    } catch (error) {
+      clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
+    }
   }
 
   async function onResendCode() {
@@ -197,13 +164,12 @@ export default function Validasi() {
         setTriggerOtp(true);
         setCounter(60);
         setLoadingResend(false);
-        //  router.push("/validasi", { scroll: false });
       } else {
         setLoadingResend(false);
         ComponentGlobal_NotifikasiPeringatan(result.message);
       }
     } catch (error) {
-      console.error(error);
+      clientLogger.error(" Error onResend", error);
       setLoadingResend(false);
       ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
     }
@@ -213,7 +179,7 @@ export default function Validasi() {
     <>
       <UIGlobal_LayoutDefault>
         <Stack h={"100vh"}>
-          {/* <Box
+          <Box
             pt={"md"}
             px={"md"}
             style={{
@@ -222,9 +188,13 @@ export default function Validasi() {
             }}
           >
             <ActionIcon variant="transparent" onClick={() => onBack()}>
-              <IconChevronLeft color="white" />
+              {data && data.nomor !== "" ? (
+                <IconChevronLeft color="white" />
+              ) : (
+                ""
+              )}
             </ActionIcon>
-          </Box> */}
+          </Box>
 
           <Stack align="center" justify="center" h={"100vh"} spacing={50}>
             <Title order={2} color={MainColor.yellow}>
@@ -260,31 +230,40 @@ export default function Validasi() {
               </Center>
 
               <Stack h={"5vh"} align="center" justify="center">
-                <Text fs="italic" c={MainColor.white}>
-                  Tidak menerima kode ?{" "}
-                  {counter > 0 ? (
-                    <Text fw={"bold"} inherit span>
-                      {counter + "s"}
-                    </Text>
-                  ) : loadingResend ? (
-                    <Loader ml={"sm"} size={"xs"} color="yellow" />
+                <Group position="center">
+                  <Text fs="italic" c={MainColor.white}>
+                    Tidak menerima kode ?{" "}
+                  </Text>
+                  {data && data.nomor !== "" ? (
+                    counter > 0 ? (
+                      <Text fw={"bold"} c={MainColor.white}>
+                        {counter + "s"}
+                      </Text>
+                    ) : loadingResend ? (
+                      <Loader ml={"sm"} size={"xs"} color="yellow" />
+                    ) : (
+                      <Text
+                        c={MainColor.white}
+                        onClick={() => {
+                          onResendCode();
+                        }}
+                        fw={"bold"}
+                      >
+                        Kirim ulang
+                      </Text>
+                    )
                   ) : (
-                    <Text
-                      inherit
-                      span
-                      onClick={() => {
-                        onResendCode();
-                      }}
-                      fw={"bold"}
-                    >
-                      Kirim ulang
-                    </Text>
+                    <CustomSkeleton height={20} radius={"xl"} width={20} />
                   )}
-                </Text>
+                </Group>
               </Stack>
             </Stack>
             <Button
               w={300}
+              disabled={inputCode.length < 4 ? true : false}
+              style={{
+                transition: "all ease 0.3s",
+              }}
               loading={loading ? true : false}
               loaderPosition="center"
               radius={"md"}
@@ -293,9 +272,6 @@ export default function Validasi() {
               c={"black"}
               bg={MainColor.yellow}
               color={"yellow"}
-              style={{
-                borderColor: AccentColor.yellow,
-              }}
               onClick={() => {
                 data.nomor == "" && data.code == ""
                   ? null
@@ -305,8 +281,6 @@ export default function Validasi() {
               <Text>VERIFIKASI</Text>
             </Button>
           </Stack>
-
-          {/* {data.nomor == "" && data.code == "" ? <Validasi_SkeletonView /> : ""} */}
         </Stack>
       </UIGlobal_LayoutDefault>
     </>

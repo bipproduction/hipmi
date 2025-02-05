@@ -14,8 +14,13 @@ import { useState } from "react";
 import { auth_funDeleteAktivasiKodeOtpByNomor } from "../fun/fun_edit_aktivasi_kode_otp_by_id";
 import Register_SkeletonView from "./skeleton";
 import { clientLogger } from "@/util/clientLogger";
-import { apiGetCheckCodeOtp } from "../_lib/api_fetch_auth";
+import {
+  apiDeleteAktivasiKodeOtpByNomor,
+  apiFetchRegister,
+  apiGetCheckCodeOtp,
+} from "../_lib/api_fetch_auth";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
 
 export default function Register() {
   const router = useRouter();
@@ -24,82 +29,52 @@ export default function Register() {
   const [isValue, setIsValue] = useState(false);
   const focusTrapRef = useFocusTrap();
   const [loading, setLoading] = useState(false);
+  const [idCode, setIdCode] = useState("");
 
   useShallowEffect(() => {
     const kodeId = localStorage.getItem("hipmi_auth_code_id");
     if (kodeId != null) {
-      onCheckAuthCode({ kodeId: kodeId as string, onSetData: setNomor });
+      onCheckAuthCode({ kodeId: kodeId as string });
     } else {
       console.log("code id not found");
     }
-  }, [setNomor]);
+  }, []);
 
-  async function onCheckAuthCode({
-    kodeId,
-    onSetData,
-  }: {
-    kodeId: string;
-    onSetData: any;
-  }) {
+  async function onCheckAuthCode({ kodeId }: { kodeId: string }) {
     try {
       const respone = await apiGetCheckCodeOtp({ id: kodeId });
       if (respone) {
-        onSetData(respone.nomor);
+        setIdCode(kodeId);
+        setNomor(respone.nomor);
       }
     } catch (error) {
       clientLogger.error("Error onCheckAuthCode:", error);
     }
-    // const res = await fetch(`/api/auth/check?id=${kodeId}`);
-    // const result = await res.json();
   }
 
   async function onRegistarsi() {
-    const data = {
-      username: value,
-      nomor: nomor,
-    };
-
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({
-          data,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const respone = await apiFetchRegister({ nomor: nomor, username: value });
 
-      const result = await res.json();
-
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil(result.message);
-        localStorage.removeItem("hipmi_auth_code_id");
-        await auth_funDeleteAktivasiKodeOtpByNomor({
-          nomor: data.nomor,
-        });
-
+      if (respone.success) {
         router.push("/waiting-room", { scroll: false });
-        return;
-      }
+        ComponentGlobal_NotifikasiBerhasil(respone.message);
 
-      if (res.status === 400) {
-        setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(result.message);
-        return;
-      }
+        try {
+          const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
+            id: idCode,
+          });
 
-      if (res.status === 405) {
+          if (responeDelete) {
+            localStorage.removeItem("hipmi_auth_code_id");
+          }
+        } catch (error) {
+          clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
+        }
+      } else {
         setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(result.message);
-        return;
-      }
-
-      if (res.status === 500) {
-        setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(result.message);
-        return;
+        ComponentGlobal_NotifikasiPeringatan(respone.message);
       }
     } catch (error) {
       setLoading(false);
@@ -162,6 +137,7 @@ export default function Register() {
                   value.length < 5 ||
                   _.values(value).includes(" ")
                 }
+                style={{ transition: "0.5s" }}
                 loading={loading ? true : false}
                 loaderPosition="center"
                 radius={"md"}

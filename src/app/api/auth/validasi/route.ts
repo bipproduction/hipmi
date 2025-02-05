@@ -1,4 +1,4 @@
-import { sessionCreate } from "@/app/auth/_lib/session_create";
+import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import prisma from "@/app/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "API Error or Server Error",
+        message: "Maaf, Terjadi Keselahan",
         reason: (error as Error).message,
       },
       { status: 500 }
