@@ -24,6 +24,7 @@ import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { apiGetAdminEventRiwayat } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_Riwayat() {
   return (
@@ -112,28 +113,28 @@ function DetailRiwayat() {
         </td>
 
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e?.Author?.username}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text lineClamp={2}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.lokasi}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.EventMaster_TipeAcara.name}</Text>
           </Center>
         </td>
 
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -148,7 +149,7 @@ function DetailRiwayat() {
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -164,7 +165,7 @@ function DetailRiwayat() {
         </td>
 
         <td>
-          <Center w={400}>
+          <Center c={AdminColor.white} w={400}>
             <Spoiler
               hideLabel="sembunyikan"
               maxHeight={50}
@@ -183,11 +184,11 @@ function DetailRiwayat() {
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"gray.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Riwayat</Title>
+          <Title c={AdminColor.white} order={4}>Riwayat</Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
@@ -201,41 +202,40 @@ function DetailRiwayat() {
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
               <Table
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
                 w={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                     <th>
-                      <Center>Username</Center>
+                      <Center c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center>Judul</Center>
+                      <Center c={AdminColor.white}>Judul</Center>
                     </th>
                     <th>
-                      <Center>Lokasi</Center>
+                      <Center c={AdminColor.white}>Lokasi</Center>
                     </th>
                     <th>
-                      <Center>Tipe Acara</Center>
+                      <Center c={AdminColor.white}>Tipe Acara</Center>
                     </th>
                     <th>
-                      <Center>Tanggal & Waktu Mulai</Center>
+                      <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
                     </th>
                     <th>
-                      <Center>Tanggal & Waktu Selesai</Center>
+                      <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
                     </th>
                     <th>
-                      <Center>Deskripsi</Center>
+                      <Center c={AdminColor.white}>Deskripsi</Center>
                     </th>
                   </tr>
                 </thead>
