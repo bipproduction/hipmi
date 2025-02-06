@@ -1,9 +1,10 @@
 export {
-    apiGetJobStatusCountDashboard,
-    apiGetJobArsipCount
+    apiGetAdminJobStatusCountDashboard as apiGetJobStatusCountDashboard ,
+    apiGetAdminJobArsipCount as apiGetJobArsipCount,
+    apiGetAdminJobByStatus
 }
 
-const apiGetJobStatusCountDashboard = async ({ name }: {
+const apiGetAdminJobStatusCountDashboard = async ({ name }: {
     name: "Publish" | "Review" | "Reject";
 }) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -21,7 +22,7 @@ const apiGetJobStatusCountDashboard = async ({ name }: {
     return await response.json().catch(() => null)
 }
 
-const apiGetJobArsipCount = async () => {
+const apiGetAdminJobArsipCount = async () => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
@@ -37,3 +38,30 @@ const apiGetJobArsipCount = async () => {
     return await response.json().catch(() => null)
 
 };
+const apiGetAdminJobByStatus = async ({
+    status,
+    page,
+    search
+}: {
+    status: "Publish" | "Review" | "Reject";
+    page: string;
+    search: string;
+}) => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const isPage = page ? `?page=${page}` : "";
+    const isSearch = search ? `&search=${search}` : "";
+    const response = await fetch(
+        `/api/admin/job/${status}${isPage}${isSearch}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+    return await response.json().catch(() => null)
+}

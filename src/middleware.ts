@@ -39,10 +39,11 @@ const middlewareConfig: MiddlewareConfig = {
     // ADMIN API
     // "/api/admin/event/*",
     // "/api/admin/investasi/*",
-    "/api/admin/donasi/*",
+    // "/api/admin/donasi/*",
     // "/api/admin/voting/dashboard/*",
     // "/api/admin/job/dashboard/*",
     // "/api/admin/forum/dashboard/*",
+    // "/api/admin/job/*",
 
     // Akses awal
     "/api/get-cookie",
