@@ -1,5 +1,5 @@
 
-import { decrypt } from "@/app/auth/_lib/decrypt";
+import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import _ from "lodash";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";

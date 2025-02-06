@@ -1,9 +1,10 @@
-import { RouterEvent } from '@/app/lib/router_hipmi/router_event';
-import { AccentColor, MainColor } from '@/app_modules/_global/color';
-import { ActionIcon, Flex, Loader, Paper, Text } from '@mantine/core';
-import { IconStar } from '@tabler/icons-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { ActionIcon, Flex, Loader, Paper, Text } from "@mantine/core";
+import { IconStar } from "@tabler/icons-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 function Event_ComponentBoxDaftarSponsor() {
   const router = useRouter();
@@ -20,11 +21,11 @@ function Event_ComponentBoxDaftarSponsor() {
           color: "white",
         }}
         onClick={() => {
-          setLoading(true);
-          router.push(RouterEvent.daftar_sponsor({ id: params.id }), {
-            scroll: false,
-          });
-          // router.push(RouterInvestasi_OLD.detail_dokumen + investasiId, { scroll: false });
+          // setLoading(true);
+          // router.push(RouterEvent.daftar_sponsor({ id: params.id }), {
+          //   scroll: false,
+          // });
+          ComponentGlobal_NotifikasiPeringatan("Fitur belum tersedia");
         }}
       >
         <Flex direction={"column"} align={"center"} justify={"center"}>

@@ -17,7 +17,7 @@ export const listMenuHomeFooter = [
   },
   {
     id: 2,
-    name: "MarketPlace",
+    name: "Marketplace",
     icon: <IconShoppingBag />,
     link: "",
   },
@@ -54,7 +54,7 @@ export const listMenuHomeBody = [
 
   {
     id: 4,
-    name: "Crowd Funding",
+    name: "Crowdfunding",
     icon: <IconHeartHandshake size={50} />,
     link: `/dev/crowd/splash`,
   },

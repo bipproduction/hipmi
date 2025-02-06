@@ -1,0 +1,65 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs/backend/.5d9a990e0c6075347623def466341a14f8ba4a12-audit.json",
+    "files": [
+        {
+            "date": 1737685849475,
+            "name": "logs/backend/error-2025-01-24.log",
+            "hash": "810c01049d3e97dae670c51bd2f18a72a63aafa2aa87ca26a26560db51a2d4f0"
+        },
+        {
+            "date": 1737875696351,
+            "name": "logs/backend/error-2025-01-26.log",
+            "hash": "afbbae3e0bbf2e418d80243676ddb2a77a424f733a76418c15baf1f839be55c2"
+        },
+        {
+            "date": 1737966690115,
+            "name": "logs/backend/error-2025-01-27.log",
+            "hash": "01507966dcbadf81b0b67873fb0600f5bd053f573f48931c3f44eb764b0d4f73"
+        },
+        {
+            "date": 1738016584047,
+            "name": "logs/backend/error-2025-01-28.log",
+            "hash": "9d5d3a7472bb530cb3673835d82445ed43e761046e4f29427a6e1b3349df8e4b"
+        },
+        {
+            "date": 1738148275712,
+            "name": "logs/backend/error-2025-01-29.log",
+            "hash": "2150ee9a169f690c001d975c38c5918a702df715f4baa13796a144ce16dedf46"
+        },
+        {
+            "date": 1738203092252,
+            "name": "logs/backend/error-2025-01-30.log",
+            "hash": "385f768b0a8be7131d0039af33d69ca6d6d01791ce68886dc89ff690026bb7e6"
+        },
+        {
+            "date": 1738289497942,
+            "name": "logs/backend/error-2025-01-31.log",
+            "hash": "f63354d854a89af547b240af164c7669241494b48c62117cedf358b9dc60c1eb"
+        },
+        {
+            "date": 1738549408637,
+            "name": "logs/backend/error-2025-02-03.log",
+            "hash": "ffd13b033c90d60d10c935a41fe42f3a4d065311cbf7beda1b76b9c5c985e90b"
+        },
+        {
+            "date": 1738635038164,
+            "name": "logs/backend/error-2025-02-04.log",
+            "hash": "7490b9f6c36fa2500bafa66c4aa590053c50234150ad9ad86ad9400f0ba76a43"
+        },
+        {
+            "date": 1738709515065,
+            "name": "logs/backend/error-2025-02-05.log",
+            "hash": "b76580b2a8b76ee8941e0d913ff1b38d66ad7bd45f154ed371c913ff898e5dfd"
+        },
+        {
+            "date": 1738810141026,
+            "name": "logs/backend/error-2025-02-06.log",
+            "hash": "b32b8fb983ef9dc575cacef2eb1e62c8d1bf022726922c804a6c6d0aea875cf4"
+        }
+    ],
+    "hashType": "sha256"
+}
