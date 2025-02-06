@@ -56,10 +56,16 @@
             "hash": "b76580b2a8b76ee8941e0d913ff1b38d66ad7bd45f154ed371c913ff898e5dfd"
         },
         {
+            "date": 1738809433011,
+            "name": "logs/backend/error-2025-02-06.log",
+            "hash": "a03373f136508a596be6e1f324cff13d6ad8cc9137b9903490125403e7cfd575"
+        },
+      {
+        
             "date": 1738810141026,
             "name": "logs/backend/error-2025-02-06.log",
             "hash": "b32b8fb983ef9dc575cacef2eb1e62c8d1bf022726922c804a6c6d0aea875cf4"
-        }
+      }
     ],
     "hashType": "sha256"
 }
