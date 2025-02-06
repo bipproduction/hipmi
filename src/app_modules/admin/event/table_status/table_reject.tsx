@@ -47,7 +47,7 @@ export default function AdminEvent_TableReject() {
 function TableStatus() {
   const router = useRouter();
   const [data, setData] = useState<MODEL_EVENT[] | null>(null);
-  const [isNPage, setNPage] = useState(1);
+  const [isNPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 

@@ -3,11 +3,11 @@ import adminJob_getListPublish from "@/app_modules/admin/job/fun/get/get_list_pu
 import { AdminJob_getListTableByStatusId } from "@/app_modules/admin/job/fun/get/get_list_table_by_status_id";
 
 export default async function Page() {
-    const listPublish = await adminJob_getListPublish({page: 1})
+    
 
     return (
       <>
-        <AdminJob_TablePublish dataPublish={listPublish as any} />
+        <AdminJob_TablePublish  />
       </>
     );
 }

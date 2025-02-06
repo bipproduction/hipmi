@@ -31,6 +31,9 @@ import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function AdminJob_TableReject({
   dataReject,
@@ -41,16 +44,16 @@ export default function AdminJob_TableReject({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Job Vacancy" />
-        <TableStatus listReject={dataReject} />
+        <TableStatus />
       </Stack>
     </>
   );
 }
 
-function TableStatus({ listReject }: { listReject: any }) {
+function TableStatus() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_JOB[]>(listReject.data);
-  const [nPage, setNPage] = useState(listReject.nPage);
+  const [data, setData] = useState<MODEL_JOB[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
@@ -59,119 +62,148 @@ function TableStatus({ listReject }: { listReject: any }) {
   const [isLoading, setIsLoading] = useState(false);
   const [catatan, setCatatan] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminJob_getListReject({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  useShallowEffect(() => {
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminJobByStatus({
+        status: "Reject",
+        page: `${activePage}`,
+        search: isSearch
+      });
+
+      if (response?.success && response?.data.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error('Invalid data format recieved:', response)
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Invalid data format recieced:", error);
+      setData([])
+    }
+  }
+
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
     setActivePage(1);
   }
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminJob_getListReject({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  const onPageClick = (page: number) => {
+    setActivePage(page);
   }
 
-  const rowTable = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={150}>
-          <Text c={AdminColor.white}>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          w={200}
-          maxHeight={50}
-          hideLabel="sembunyikan"
-          showLabel="tampilkan"
-        >
-          {e.title}
-        </Spoiler>
-      </td>
-      <td>
-        <Center w={150}>
-          {e.imageId ? (
-            <Button
-              loading={isLoading && e?.imageId === jobId}
-              loaderPosition="center"
-              color="green"
-              radius={"xl"}
-              leftIcon={<IconPhotoCheck />}
-              onClick={() => {
-                setJobId(e?.imageId);
-                setIsLoading(true);
-                router.push(RouterAdminJob.detail_poster + e?.imageId);
-              }}
-            >
-              Lihat
-            </Button>
-          ) : (
-            <Center w={150}>
-              <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
-                Tidak ada poster
-              </Text>
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
             </Center>
-          )}
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          w={400}
-          maxHeight={50}
-          hideLabel="sembunyikan"
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.content }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          {e.catatan}
-        </Spoiler>
-      </td>
-      <td>
-        <Button
-          color={"red"}
-          leftIcon={<IconBan />}
-          radius={"xl"}
-          onClick={() => {
-            setReject(true);
-            setJobId(e.id);
-            setCatatan(e.catatan);
-          }}
-        >
-          <Stack spacing={0}>
-            <Text fz={10}>Tambah</Text>
-            <Text fz={10}>Catatan</Text>
-          </Stack>
-        </Button>
-      </td>
-    </tr>
-  ));
+          </td>
+        </tr>
+      )
+    }
+    return data?.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center w={150}>
+            <Text c={AdminColor.white}>{e?.Author?.username}</Text>
+          </Center>
+        </td>
+        <td>
+          <Spoiler
+            w={200}
+            maxHeight={50}
+            hideLabel="sembunyikan"
+            showLabel="tampilkan"
+            c={AdminColor.white}
+          >
+            {e.title}
+          </Spoiler>
+        </td>
+        <td>
+          <Center w={150}>
+            {e.imageId ? (
+              <Button
+                loading={isLoading && e?.imageId === jobId}
+                loaderPosition="center"
+                color="green"
+                radius={"xl"}
+                leftIcon={<IconPhotoCheck />}
+                onClick={() => {
+                  setJobId(e?.imageId);
+                  setIsLoading(true);
+                  router.push(RouterAdminJob.detail_poster + e?.imageId);
+                }}
+              >
+                Lihat
+              </Button>
+            ) : (
+              <Center w={150}>
+                <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
+                  Tidak ada poster
+                </Text>
+              </Center>
+            )}
+          </Center>
+        </td>
+        <td>
+          <Spoiler
+            c={AdminColor.white}
+            w={400}
+            maxHeight={50}
+            hideLabel="sembunyikan"
+            showLabel="tampilkan"
+          >
+            <div dangerouslySetInnerHTML={{ __html: e.content }} />
+          </Spoiler>
+        </td>
+        <td>
+          <Spoiler
+            c={AdminColor.white}
+            hideLabel="sembunyikan"
+            w={400}
+            maxHeight={50}
+            showLabel="tampilkan"
+          >
+            <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
+          </Spoiler>
+        </td>
+        <td>
+          <Spoiler
+            c={AdminColor.white}
+            hideLabel="sembunyikan"
+            w={400}
+            maxHeight={50}
+            showLabel="tampilkan"
+          >
+            {e.catatan}
+          </Spoiler>
+        </td>
+        <td>
+          <Button
+            color={"red"}
+            leftIcon={<IconBan />}
+            radius={"xl"}
+            onClick={() => {
+              setReject(true);
+              setJobId(e.id);
+              setCatatan(e.catatan);
+            }}
+          >
+            <Stack spacing={0} c={AdminColor.white}>
+              <Text fz={10}>Tambah</Text>
+              <Text fz={10}>Catatan</Text>
+            </Stack>
+          </Button>
+        </td>
+      </tr>
+    ));
+  }
 
   return (
     <>
@@ -253,7 +285,7 @@ function TableStatus({ listReject }: { listReject: any }) {
               p={"md"}
               w={"100%"}
               h={"100%"}
-              
+
             >
               <thead>
                 <tr>
@@ -280,7 +312,7 @@ function TableStatus({ listReject }: { listReject: any }) {
                   </th>
                 </tr>
               </thead>
-              <tbody>{rowTable}</tbody>
+              <tbody>{renderTableBody()}</tbody>
             </Table>
           </ScrollArea>
           <Center mt={"xl"}>
