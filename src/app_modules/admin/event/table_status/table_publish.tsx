@@ -24,6 +24,7 @@ import { useState } from "react";
 import QRCode from "react-qr-code";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_TablePublish() {
   return (
@@ -135,28 +136,28 @@ function TableStatus() {
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e?.Author?.username}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text lineClamp={2}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.lokasi}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text>{e.EventMaster_TipeAcara?.name}</Text>
           </Center>
         </td>
 
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -171,7 +172,7 @@ function TableStatus() {
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center c={AdminColor.white} w={200}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -187,7 +188,7 @@ function TableStatus() {
         </td>
 
         <td>
-          <Center w={400}>
+          <Center c={AdminColor.white} w={400}>
             <Spoiler
               hideLabel="sembunyikan"
               maxHeight={50}
@@ -222,7 +223,7 @@ function TableStatus() {
     <Stack spacing="xs" h="100%">
       <ComponentAdminGlobal_TitlePage
         name="Publish"
-        color="green"
+        color={AdminColor.softBlue}
         component={
           <TextInput
             disabled={!data}
@@ -238,47 +239,45 @@ function TableStatus() {
       {!data ? (
         <CustomSkeleton height={"80vh"} width="100%" />
       ) : (
-        <Paper p="md" withBorder shadow="lg" h="80vh">
+        <Paper p="md" bg={AdminColor.softBlue} h="80vh">
           <ScrollArea w="100%" h="90%">
             <Table
               verticalSpacing="md"
               horizontalSpacing="md"
               p="md"
               w={1500}
-              striped
-              highlightOnHover
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>QR Code</Center>
+                    <Center c={AdminColor.white}>QR Code</Center>
                   </th>
                   <th>
-                    <Center>Download QR</Center>
+                    <Center c={AdminColor.white}>Download QR</Center>
                   </th>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AdminColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AdminColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center>Lokasi</Center>
+                    <Center c={AdminColor.white}>Lokasi</Center>
                   </th>
                   <th>
-                    <Center>Tipe Acara</Center>
+                    <Center c={AdminColor.white}>Tipe Acara</Center>
                   </th>
                   <th>
-                    <Center>Tanggal & Waktu Mulai</Center>
+                    <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
                   </th>
                   <th>
-                    <Center>Tanggal & Waktu Selesai</Center>
+                    <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
                   </th>
                   <th>
-                    <Center>Deskripsi</Center>
+                    <Center c={AdminColor.white}>Deskripsi</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

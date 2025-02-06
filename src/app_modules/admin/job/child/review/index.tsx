@@ -4,16 +4,12 @@ import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_glob
 import { Stack } from "@mantine/core";
 import { AdminJob_ViewTavleReview } from "../../_view";
 
-export default function AdminJob_TableReview({
-  dataReview,
-}: {
-  dataReview: any;
-}) {
+export default function AdminJob_TableReview() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Job Vacancy" />
-        <AdminJob_ViewTavleReview listReview={dataReview} />
+        <AdminJob_ViewTavleReview  />
       </Stack>
     </>
   );

@@ -28,6 +28,7 @@ import { AdminEvent_getListTipeAcara } from "../fun/get/get_list_tipe_acara";
 import { apiGetAdminEventTipeAcara } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { clientLogger } from "@/util/clientLogger";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_DetailTipeAcara() {
   return (
@@ -92,11 +93,11 @@ function DetailTipeAcara() {
 
       <Group
         position="apart"
-        bg={"gray.4"}
+        bg={AdminColor.softBlue}
         p={"xs"}
         style={{ borderRadius: "6px" }}
       >
-        <Title order={4}>Tipe Acara</Title>
+        <Title c={AdminColor.white} order={4}>Tipe Acara</Title>
         <Button
           leftIcon={<IconCirclePlus />}
           radius={"xl"}
@@ -123,14 +124,14 @@ function DetailTipeAcara() {
           ]}
         >
           <div>
-            <Paper p={"md"} shadow="lg" withBorder>
+            <Paper p={"md"} bg={AdminColor.softBlue}>
               <Stack>
-                <Title order={3}>Tipe Acara Yang Tersedia </Title>
+                <Title c={AdminColor.white} order={3}>Tipe Acara Yang Tersedia </Title>
                 <Stack px={"md"}>
                   {tipe.map((e, i) => (
                     <Stack key={e.id} spacing={"xs"}>
                       <Group position="apart">
-                        <Text>{e.name}</Text>
+                        <Text c={AdminColor.white}>{e.name}</Text>
                         <Group>
                           <ActionIcon
                             variant="transparent"
@@ -202,9 +203,10 @@ function DetailTipeAcara() {
 
           <div>
             {openEditor ? (
-              <Paper p={"sm"} shadow="lg" withBorder>
+              <Paper p={"sm"} bg={AdminColor.softBlue}>
                 <Stack>
                   <TextInput
+                    styles={{ label: { color: AdminColor.white } }}
                     value={edit?.name ? edit?.name : ""}
                     label="Edit Tipe"
                     placeholder="Contoh: Ramah Tamah, dll"
