@@ -73,7 +73,7 @@ function TableView() {
   try {
     const response = await apiGetAdminDonasiKategori();
     if (response) {
-      console.log("ini response", response)
+
       setData(response.data)
     }
   } catch (error) {
@@ -96,7 +96,7 @@ function TableView() {
   }
 
   async function onChangeStatus() {
-    // console.log(updateStatus.kategoriId, updateStatus.isActive);
+    
     const del = await adminDonasi_funDeleteKategori({
       kategoriId: updateStatus.kategoriId,
       isActive: updateStatus.isActive as any,

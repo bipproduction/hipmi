@@ -27,90 +27,64 @@ export async function GET(request: Request,
     try {
         let fixData;
         const fixStatus = _.startCase(status);
-        
 
-        if (!page && !search) {
-            fixData = await prisma.donasi.findMany({
+
+        if (!page) {
+            const data = await prisma.donasi.findMany({
                 orderBy: {
-                    updatedAt: "desc",
+                    createdAt: "desc",
                 },
                 where: {
-                    active: true,
                     DonasiMaster_Status: {
-                        name: fixStatus
-                    }
-                },
-                include: {
-                    Author: {
-                        select: {
-                            id: true,
-                            username: true,
-                            Profile: {
-                                select: {
-                                    name: true
-                                }
-                            }
-                        }
+                        name: fixStatus,
                     },
-                    DonasiMaster_Status: true,
-                    DonasiMaster_Ketegori: true,
-                    DonasiMaster_Durasi: true
-                }
-            })
-        } else if (!page && search) {
-            fixData = await prisma.donasi.findMany({
-                orderBy: {
-                    updatedAt: "desc"
-                },
-                where: {
                     active: true,
-                    DonasiMaster_Status: {
-                        name: fixStatus
-                    },
                     title: {
-                        contains: search,
-                        mode: "insensitive"
-                    }
-                },
-                include: {
-                    Author: {
-                        select: {
-                            id: true,
-                            username: true,
-                            Profile: {
-                                select: {
-                                    name: true
-                                }
-                            }
-                        }
+                        contains: search ? search : "",
+                        mode: "insensitive",
                     },
-                    DonasiMaster_Status: true,
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    target: true,
+                    authorId: true,
+                    terkumpul: true,
+                    imageDonasi: true,
                     DonasiMaster_Ketegori: true,
-                    DonasiMaster_Durasi: true
-                }
+                    DonasiMaster_Durasi: true,
+                    imageId: true,
+                },
             })
-        } else if (page && !search) {
+        } else {
             const data = await prisma.donasi.findMany({
                 take: takeData,
                 skip: skipData,
-                orderBy: [
-                    {
-                        publishTime: "desc"
-                    }
-                ],
-                where: {
-                    active: true,
-                    DonasiMaster_Status: {
-                        name: fixStatus
-                    }
+                orderBy: {
+                    createdAt: "desc",
                 },
-                include: {
-                    Author: true,
+                where: {
+                    DonasiMaster_Status: {
+                        name: fixStatus,
+                    },
+                    active: true,
+                    title: {
+                        contains: search ? search : "",
+                        mode: "insensitive",
+                    },
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    target: true,
+                    authorId: true,
+                    terkumpul: true,
                     imageDonasi: true,
-                    DonasiMaster_Status: true,
                     DonasiMaster_Ketegori: true,
-                    DonasiMaster_Durasi: true
-                }
+                    DonasiMaster_Durasi: true,
+                    imageId: true,
+                    
+                },
             })
 
             const nCount = await prisma.donasi.count({
@@ -122,7 +96,7 @@ export async function GET(request: Request,
                 }
             })
 
-            console.log("data >", data)
+
             fixData = {
                 data: data,
                 nCount: _.ceil(nCount / takeData)

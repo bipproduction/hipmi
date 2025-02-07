@@ -48,9 +48,7 @@ const apiGetAdminDonasiByStatus = async ({
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
-    console.log("Ini token", token)
-    console.log("Ini Page", page)
-    console.log("Ini search", search)
+   
     const isPage = page ? `?page=${page}` : "";
     const isSearch = search ? `&search=${search}` : "";
     const response = await fetch(
@@ -64,14 +62,14 @@ const apiGetAdminDonasiByStatus = async ({
             }
         }
     )
-    console.log("Ini response", response)
+    
     return await response.json().catch(() => null);
 }
 const apiGetAdminDonasiKategori = async () => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
-    console.log("ini token", token)
+    
     const response = await fetch(`/api/admin/donasi/kategori`, {
         method: "GET",
         headers: {

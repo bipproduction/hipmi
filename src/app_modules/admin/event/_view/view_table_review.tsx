@@ -162,11 +162,11 @@ export default function AdminEvent_ComponentTableReview() {
           });
 
           if (response?.success && response?.data?.data) {
-            console.log("review >>", response.data.data);
+            
             setData(response.data.data);
             setNPage(response.data.nPage || 1);
           } else {
-            console.error("Invalid data format received:", response);
+            
             setData([]);
           }
         } catch (error) {
@@ -227,7 +227,7 @@ export default function AdminEvent_ComponentTableReview() {
         });
 
         if (response?.success && response?.data?.data) {
-          console.log("review >>", response.data.data);
+          
           setData(response.data.data);
           setNPage(response.data.nPage || 1);
         } else {
