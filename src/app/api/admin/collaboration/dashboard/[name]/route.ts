@@ -19,8 +19,7 @@ export async function GET(request: Request, { params }: {
     try {
         let fixData;
         const fixStatus = _.startCase(name);
-        // console.log("status >>", fixStatus)
-
+        
         if (fixStatus === "Publish") {
             fixData = await prisma.projectCollaboration.count({
                 where: {

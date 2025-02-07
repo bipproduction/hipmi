@@ -35,11 +35,7 @@ import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
 import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 
-export default function AdminJob_TableReject({
-  dataReject,
-}: {
-  dataReject: any;
-}) {
+export default function AdminJob_TableReject() {
   return (
     <>
       <Stack>
