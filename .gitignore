@@ -33,11 +33,30 @@ yarn-error.log*
 # vercel
 .vercel
 
-# logs - allow only specific folders
-/logs
+# logs
+logs/
+**/logs/
+*.log
+**/*.log
+log/
+**/log/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-certificates
+# certificates
+certificates/
+**/certificates/
+*.cert
+*.key
+*.pem
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+.DS_Store
+Thumbs.db
