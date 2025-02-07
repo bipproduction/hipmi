@@ -32,25 +32,23 @@ import _ from "lodash";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetAdminDonasiKategori } from "../lib/api_fetch_admin_donasi";
+import { clientLogger } from "@/util/clientLogger";
 
-export default function AdminDonasi_TableKategori({
-  listKategori,
-}: {
-  listKategori: MODEL_NEW_DEFAULT_MASTER[];
-}) {
+export default function AdminDonasi_TableKategori() {
   return (
     <>
       <Stack h={"100%"}>
         <ComponentAdminGlobal_HeaderTamplate name="Donasi" />
-        <TableView list={listKategori} />
+        <TableView />
       </Stack>
     </>
   );
 }
 
-function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
-  const [data, setData] = useState(list);
-
+function TableView() {
+  const [data, setData] = useState<MODEL_NEW_DEFAULT_MASTER[] | null>(null);
   const [create, setCreate] = useState("");
   const [isCreate, setIsCreate] = useState(false);
 
@@ -66,6 +64,22 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
     isActive: "",
   });
   const [isChangeStatus, setIsChangeStatus] = useState(false);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+  try {
+    const response = await apiGetAdminDonasiKategori();
+    if (response) {
+      console.log("ini response", response)
+      setData(response.data)
+    }
+  } catch (error) {
+    clientLogger.error("Error get kategori" , error)
+  }
+}
 
   async function onCreateNewKategori() {
     const tambahData = await adminDonasi_funCreateKategori({
@@ -114,49 +128,63 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
     }
   }
 
-  const rowTable = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center c={AccentColor.white}>
-          <Text>{e?.name}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center>
-          <Switch
-            color="orange"
-            onLabel="ON"
-            offLabel="OFF"
-            checked={e?.active}
-            onChange={(val) => {
-              const status = val.currentTarget.checked;
-              setIsChangeStatus(true);
-              setUpdateStatus({
-                kategoriId: e?.id,
-                isActive: status as any,
-              });
-            }}
-          />
-        </Center>
-      </td>
-      <td>
-        <Group position="center">
-          <ActionIcon
-            onClick={() => {
-              setIsUpdate(true);
-              setIsCreate(false);
-              setUpdateKategori({
-                kategoriId: e?.id,
-                name: e?.name,
-              });
-            }}
-          >
-            <IconEdit color={AdminColor.green} />
-          </ActionIcon>
-        </Group>
-      </td>
-    </tr>
-  ));
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      )
+    }
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center c={AccentColor.white}>
+            <Text>{e?.name}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Switch
+              color="orange"
+              onLabel="ON"
+              offLabel="OFF"
+              checked={e?.active}
+              onChange={(val) => {
+                const status = val.currentTarget.checked;
+                setIsChangeStatus(true);
+                setUpdateStatus({
+                  kategoriId: e?.id,
+                  isActive: status as any,
+                });
+              }}
+            />
+          </Center>
+        </td>
+        <td>
+          <Group position="center">
+            <ActionIcon
+              onClick={() => {
+                setIsUpdate(true);
+                setIsCreate(false);
+                setUpdateKategori({
+                  kategoriId: e?.id,
+                  name: e?.name,
+                });
+              }}
+            >
+              <IconEdit color={AdminColor.green} />
+            </ActionIcon>
+          </Group>
+        </td>
+      </tr>
+    ));
+  }
+
 
   return (
     <>
@@ -167,16 +195,16 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
           color={AdminColor.softBlue}
           component={
             <Button
-            w={120}
-            leftIcon={<IconCirclePlus />}
-            radius={"xl"}
-            onClick={() => {
-              setIsCreate(true);
-              setIsUpdate(false);
-            }}
-          >
-            Tambah
-          </Button>
+              w={120}
+              leftIcon={<IconCirclePlus />}
+              radius={"xl"}
+              onClick={() => {
+                setIsCreate(true);
+                setIsUpdate(false);
+              }}
+            >
+              Tambah
+            </Button>
           }
         />
         {/* <Group
@@ -208,7 +236,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
-                 
+
                 >
                   <thead>
                     <tr>
@@ -223,7 +251,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>{rowTable}</tbody>
+                  <tbody>{renderTableBody()}</tbody>
                 </Table>
               </ScrollArea>
               {/* <Center mt={"xl"}>

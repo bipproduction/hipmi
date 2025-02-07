@@ -6,9 +6,11 @@ import { update } from "lodash";
 export default async function adminDonasi_funUpdatekategoriById({
   kategoriId,
   name,
+  
 }: {
   kategoriId: string;
   name: string;
+  
 }) {
   const updt = await prisma.donasiMaster_Kategori.update({
     where: {
@@ -16,6 +18,7 @@ export default async function adminDonasi_funUpdatekategoriById({
     },
     data: {
       name: name,
+      
     },
   });
 

@@ -1,9 +1,10 @@
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
+import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
 } from "@/app_modules/_global/notif_global";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
+import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
@@ -14,9 +15,6 @@ import {
   apiGetOnePortofolioById,
 } from "../lib/api_portofolio";
 import { IDetailPortofolioBisnis } from "../lib/type_portofolio";
-import { MainColor } from "@/app_modules/_global/color";
-import { apiGetUserId } from "@/app_modules/_global/lib/api_user";
-import { clientLogger } from "@/util/clientLogger";
 
 export default function ComponentPortofolio_ButtonDeleteNew({
   userLoginId,

@@ -85,7 +85,7 @@ export default function HomeViewNew() {
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconUserSearch color={MainColor.white} />
                 </ActionIcon>
-              ) : dataUser.profile === undefined ? (
+              ) : dataUser && dataUser?.profile === undefined ? (
                 <ActionIcon
                   radius={"xl"}
                   variant={"transparent"}
@@ -112,7 +112,7 @@ export default function HomeViewNew() {
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconBell color={MainColor.white} />
                 </ActionIcon>
-              ) : dataUser.profile === undefined ? (
+              ) : dataUser && dataUser?.profile === undefined ? (
                 <ActionIcon
                   radius={"xl"}
                   variant={"transparent"}

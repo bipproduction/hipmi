@@ -39,7 +39,7 @@ export default function FooterHome({ dataUser }: { dataUser: any | null }) {
               onClick={() => {
                 if (!dataUser) {
                   return null;
-                } else if (dataUser.profile === undefined) {
+                } else if (dataUser?.profile === undefined) {
                   router.push(RouterProfile.create, { scroll: false });
                 } else if (e.link == "") {
                   ComponentGlobal_NotifikasiPeringatan("Cooming Soon");
@@ -70,7 +70,7 @@ export default function FooterHome({ dataUser }: { dataUser: any | null }) {
           <Stack align="center" spacing={2}>
             {!dataUser ? (
               <CustomSkeleton height={25} width={25} radius={"xl"} />
-            ) : dataUser.profile === undefined ? (
+            ) : dataUser?.profile === undefined ? (
               <ActionIcon
                 variant={"transparent"}
                 onClick={() =>
