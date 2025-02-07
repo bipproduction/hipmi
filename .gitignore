@@ -34,9 +34,7 @@ yarn-error.log*
 .vercel
 
 # logs - allow only specific folders
-/logs/*
-!/logs/backend/
-!/logs/frontend/
+/logs
 
 # typescript
 *.tsbuildinfo
