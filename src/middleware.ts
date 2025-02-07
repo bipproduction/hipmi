@@ -32,7 +32,6 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
-    "/api/profile/*",
     // "/api/master/*",
     // "/api/image/*",
     // "/api/user/*",
