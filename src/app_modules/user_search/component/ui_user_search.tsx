@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { userSearch_getAllUser } from "../fun/get/get_all_user";
 import { apiGetUserSearch } from "./api_fetch_user_search";
+import { UserSearch_SkeletonView } from "./skeleton_view";
 
 export function UserSearch_UiView() {
   const [data, setData] = useState<MODEL_USER[]>([]);
@@ -107,15 +108,15 @@ export function UserSearch_UiView() {
           onChange={(val) => handleSearch(val.target.value)}
           // disabled={isLoading}
         />
-        {!data && isLoading ? (
-          <CustomSkeleton height={40} width={"100%"} />
+        {!data.length && isLoading ? (
+          <UserSearch_SkeletonView />
         ) : (
-          <Box >
+          <Box>
             {_.isEmpty(data) ? (
               <ComponentGlobal_IsEmptyData text="Pengguna tidak ditemukan" />
             ) : (
               <ScrollOnly
-                height="5vh"
+                height="84vh"
                 renderLoading={() => (
                   <Center mt={"lg"}>
                     <Loader color={"yellow"} />
@@ -170,61 +171,12 @@ function CardView({ data }: { data: MODEL_USER }) {
           <Group position="right" align="center" h={"100%"}>
             <Center>
               <ActionIcon variant="transparent">
-                {/* PAKE LOADING */}
-                {/* {loading ? (
-                  <ComponentGlobal_Loader />
-                ) : (
-                  <IconChevronRight color="white" />
-                )} */}
-
-                {/* GA PAKE LOADING */}
                 <IconChevronRight color="white" />
               </ActionIcon>
             </Center>
           </Group>
         </Grid.Col>
       </Grid>
-
-      {/* <Stack
-        spacing={"xs"}
-        c="white"
-        py={"xs"}
-        onClick={() => {
-          setLoading(true);
-          router.push(RouterProfile.katalogOLD + `${data?.Profile?.id}`);
-        }}
-      >
-
-        <Group position="apart" grow>
-          <Group position="left" bg={"blue"}>
-            <ComponentGlobal_LoaderAvatar
-              fileId={data.Profile.imageId as any}
-              imageSize="100"
-            />
-
-            <Stack spacing={0}>
-              <Text fw={"bold"} lineClamp={1}>
-                {data?.Profile.name}d sdasd sdas 
-              </Text>
-              <Text fz={"sm"} fs={"italic"}>
-                +{data?.nomor}
-              </Text>
-            </Stack>
-          </Group>
-
-          <Group position="right">
-            <Center>
-              <ActionIcon variant="transparent">
-                {loading ? (
-                  <ComponentGlobal_Loader />
-                ) : (
-                  <IconChevronRight color="white" />
-                )}
-              </ActionIcon>
-            </Center>
-          </Group>
-        </Group>
-      </Stack> */}
     </>
   );
 }

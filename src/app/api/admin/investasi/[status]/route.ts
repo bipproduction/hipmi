@@ -24,41 +24,13 @@ export async function GET(request: Request, { params }: {
     const takeData = 10
     const skipData = Number(page) * takeData - takeData;
 
-    console.log("Ini Status", status);
-    console.log("Ini Page", page)
-
     try {
         let fixData;
         const fixStatus = _.startCase(status);
 
-        if (!page && !search) {
-            fixData = await prisma.investasi.findMany({
-                orderBy: {
-                    updatedAt: "desc",
-                },
-                where: {
-                    active: true,
-                    MasterStatusInvestasi: {
-                        name: fixStatus
-                    },
-                },
-                include: {
-                    author: {
-                        select: {
-                            id: true,
-                            username: true,
-                            Profile: {
-                                select: {
-                                    name: true,
-                                },
-                            },
-                        },
-                    },
-                    MasterStatusInvestasi: true,
-                },
-            });
-        } else if (!page && search) {
-            fixData = await prisma.investasi.findMany({
+
+        if (!page) {
+            const data = await prisma.investasi.findMany({
                 orderBy: {
                     updatedAt: "desc",
                 },
@@ -68,41 +40,40 @@ export async function GET(request: Request, { params }: {
                         name: fixStatus
                     },
                     title: {
-                        contains: search,
-                        mode: "insensitive",
-                    },
+                        contains: search ? search : "",
+                        mode: "insensitive"
+                    }
                 },
                 include: {
-                    author: {
-                        select: {
-                            id: true,
-                            username: true,
-                            Profile: {
-                                select: {
-                                    name: true,
-                                },
-                            },
+                    MasterStatusInvestasi: true,
+                    BeritaInvestasi: true,
+                    DokumenInvestasi: true,
+                    ProspektusInvestasi: true,
+                    MasterPembagianDeviden: true,
+                    MasterPencarianInvestor: true,
+                    MasterPeriodeDeviden: true,
+                    author: true,
+                    Investasi_Invoice: {
+                        where: {
+                            statusInvoiceId: "2",
                         },
                     },
-                    MasterStatusInvestasi: true,
                 },
             });
-        } else if (page && !search) {
-
+        } else {
             const data = await prisma.investasi.findMany({
-                take: takeData,
-                skip: skipData,
-                orderBy: [
-                    {
-                        countDown: "desc",
-                    },
-                ],
+                orderBy: {
+                    updatedAt: "desc",
+                },
                 where: {
                     active: true,
                     MasterStatusInvestasi: {
                         name: fixStatus
+                    },
+                    title: {
+                        contains: search ? search : "",
+                        mode: "insensitive"
                     }
-
                 },
                 include: {
                     MasterStatusInvestasi: true,
@@ -130,8 +101,6 @@ export async function GET(request: Request, { params }: {
 
                 },
             });
-
-            console.log("data >", data)
 
             fixData = {
                 data: data,

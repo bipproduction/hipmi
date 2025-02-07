@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: {
         const fixStatus = _.startCase(status);
 
         if (!page) {
-            fixData = await prisma.job.findMany({
+           const data = await prisma.job.findMany({
                 orderBy: {
                     updatedAt: "desc"
                 },
@@ -53,7 +53,7 @@ export async function GET(request: Request, { params }: {
 
             })
         } else {
-            fixData = await prisma.job.findMany({
+            const data = await prisma.job.findMany({
                 take: takeData,
                 skip: skipData,
                 orderBy: {
@@ -87,7 +87,7 @@ export async function GET(request: Request, { params }: {
             })
 
             fixData = {
-                data: fixData,
+                data: data,
                 nPage: _.ceil(nCount / takeData)
             }   
         }

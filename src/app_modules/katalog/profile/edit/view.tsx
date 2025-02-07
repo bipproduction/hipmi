@@ -6,52 +6,69 @@ import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/noti
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { clientLogger } from "@/util/clientLogger";
-import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
+import { Button, Select, Stack, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { emailRegex } from "../../component/regular_expressions";
-import { Profile_funEditById } from "../fun/update/fun_edit_profile_by_id";
+import { Profile_SkeletonViewEdit } from "../_component/skeleton_view";
+import {
+  apiGetOneProfileById,
+  apiUpdateProfile,
+} from "../lib/api_fetch_profile";
 import { MODEL_PROFILE } from "../model/interface";
 
-export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
+export default function EditProfile() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const profileId = params.id;
 
   //Get data profile
-  const [dataProfile, setDataProfile] = useState(data);
+  const [data, setData] = useState<MODEL_PROFILE | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function onUpdate() {
-    const body = dataProfile;
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
 
+  async function onLoadData() {
+    try {
+      const respone = await apiGetOneProfileById({ id: profileId });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data profile", error);
+    }
+  }
+
+  async function onUpdate() {
     // console.log(body)
-    if (_.values(body).includes(""))
+    if (_.values(data).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
-    if (!body.email.match(emailRegex))
+    if (!data?.email.match(emailRegex))
       return ComponentGlobal_NotifikasiPeringatan("Format email salah");
 
     try {
       setLoading(true);
-      const res = await Profile_funEditById(body);
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil(res.message);
+      const respone = await apiUpdateProfile({ data: data });
+
+      if (respone && respone.success == true) {
+        ComponentGlobal_NotifikasiBerhasil(respone.message);
         router.back();
       } else {
         setLoading(false);
-        ComponentGlobal_NotifikasiGagal(res.message);
+        ComponentGlobal_NotifikasiGagal(respone.message);
       }
     } catch (error) {
       setLoading(false);
-      clientLogger.error("Error update foto profile", error);
+      clientLogger.error("Error client update profile", error);
     }
   }
 
-  if (!dataProfile)
-    return (
-      <>
-        <Loader />
-      </>
-    );
+  if (!data) return <Profile_SkeletonViewEdit />;
 
   return (
     <>
@@ -108,16 +125,16 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           placeholder="nama"
           maxLength={50}
           error={
-            dataProfile?.name === "" ? (
+            data?.name === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan nama" />
             ) : (
               ""
             )
           }
-          value={dataProfile?.name}
+          value={data?.name}
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               name: val.target.value,
             });
           }}
@@ -136,19 +153,18 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           label="Email"
           placeholder="email"
           error={
-            dataProfile?.email === "" ? (
+            data?.email === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan email " />
-            ) : dataProfile?.email?.length > 0 &&
-              !dataProfile?.email.match(emailRegex) ? (
+            ) : data?.email?.length > 0 && !data?.email.match(emailRegex) ? (
               <ComponentGlobal_ErrorInput text="Invalid email" />
             ) : (
               ""
             )
           }
-          value={dataProfile?.email}
+          value={data?.email}
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               email: val.target.value,
             });
           }}
@@ -166,18 +182,18 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           withAsterisk
           label="Alamat"
           placeholder="alamat"
-          value={dataProfile.alamat}
+          value={data.alamat}
           maxLength={100}
           error={
-            dataProfile?.alamat === "" ? (
+            data?.alamat === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan alamat " />
             ) : (
               ""
             )
           }
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               alamat: val.target.value,
             });
           }}
@@ -194,14 +210,14 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           }}
           withAsterisk
           label="Jenis Kelamin"
-          value={dataProfile?.jenisKelamin}
+          value={data?.jenisKelamin}
           data={[
             { value: "Laki-laki", label: "Laki-laki" },
             { value: "Perempuan", label: "Perempuan" },
           ]}
           onChange={(val: any) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               jenisKelamin: val,
             });
           }}
@@ -213,14 +229,13 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           bg={MainColor.yellow}
           color="yellow"
           c={"black"}
-          loading={loading ? true : false}
+          loading={loading}
           loaderPosition="center"
           onClick={() => onUpdate()}
         >
           Update
         </Button>
       </Stack>
-
     </>
   );
 }
