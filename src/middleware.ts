@@ -41,9 +41,9 @@ const middlewareConfig: MiddlewareConfig = {
     // "/api/admin/investasi/*",
     // "/api/admin/donasi/*",
     // "/api/admin/voting/dashboard/*",
-    // "/api/admin/job/dashboard/*",
-    // "/api/admin/forum/dashboard/*",
     // "/api/admin/job/*",
+    // "/api/admin/forum/*",
+    // "/api/admin/collaboration/*",
 
     // Akses awal
     "/api/get-cookie",

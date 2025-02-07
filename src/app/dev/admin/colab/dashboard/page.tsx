@@ -4,16 +4,13 @@ import adminColab_countIsPublish from "@/app_modules/admin/colab/fun/count/count
 import adminColab_countIsReject from "@/app_modules/admin/colab/fun/count/count_reject";
 
 export default async function Page() {
-  const countPublish = await adminColab_countIsPublish();
-  const countRoom = await adminColab_countGroupChat();
-  const countReject = await adminColab_countIsReject()
+  // const countPublish = await adminColab_countIsPublish();
+  // const countRoom = await adminColab_countGroupChat();
+  // const countReject = await adminColab_countIsReject()
 
   return (
     <>
       <AdminColab_Dashboard
-        countPublish={countPublish}
-        countRoom={countRoom}
-        countReject={countReject}
       />
     </>
   );

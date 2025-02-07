@@ -28,12 +28,10 @@ const apiGetAdminInvestasiByStatus = async ({ status, page, search }: {
     page: string,
     search: string
 }) => {
-    console.log("dgsdg")
+    
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
-    console.log("Ini token", token)
-    console.log("Ini Page", page)
-    console.log("Ini Search", search)
+    
     
 
     const isPage = page ? `?page=${page}` : "";
@@ -46,6 +44,6 @@ const apiGetAdminInvestasiByStatus = async ({ status, page, search }: {
             Authorization: `Bearer ${token}`,
         },
     })
-    console.log("Ini response", response)
+    
     return await response.json().catch(() => null);
 }

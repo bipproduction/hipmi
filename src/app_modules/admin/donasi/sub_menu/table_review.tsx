@@ -72,7 +72,7 @@ function TableStatus() {
         page: `${isActivePage}`,
         search: isSearch
       })
-      console.log("IniData", response)
+
 
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
