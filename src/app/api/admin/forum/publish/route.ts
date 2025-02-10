@@ -24,6 +24,40 @@ export async function GET(request: Request) {
         let fixData;
 
         if (!page) {
+            fixData = await prisma.forum_Posting.findMany({
+                orderBy: {
+                    createdAt: "desc",
+                },
+                where: {
+                    isActive: true,
+                    diskusi: {
+                        contains: search ? search : "",
+                        mode: "insensitive",
+                    },
+                },
+                select: {
+                    id: true,
+                    diskusi: true,
+                    isActive: true,
+                    createdAt: true,
+                    Author: {
+                        select: {
+                            id: true,
+                            username: true,
+                            Profile: true,
+                        },
+                    },
+                    Forum_ReportPosting: true,
+                    Forum_Komentar: {
+                        where: {
+                            isActive: true,
+                        },
+                    },
+                    ForumMaster_StatusPosting: true,
+                },
+            });
+
+        } else {
             const data = await prisma.forum_Posting.findMany({
                 take: takeData,
                 skip: skipData,
@@ -73,7 +107,6 @@ export async function GET(request: Request) {
                 data: data,
                 nCount: _.ceil(nCount / takeData)
             }
-
         }
         return NextResponse.json({
             success: true,
@@ -91,5 +124,7 @@ export async function GET(request: Request) {
         },
             { status: 500 }
         )
+    } finally {
+        await prisma.$disconnect()
     }
 }

@@ -61,6 +61,7 @@ export interface MODEL_FORUM_REPORT_POSTING {
 }
 
 export interface MODEL_FORUM_REPORT_KOMENTAR {
+  komentar: string | TrustedHTML;
   id: string;
   isActive: boolean;
   createdAt: Date;
