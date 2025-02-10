@@ -1,30 +1,44 @@
-import { useDisclosure } from "@mantine/hooks";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-// Singleton PrismaClient untuk pengembangan
-const globalForPrisma = globalThis as unknown as {
-  __prisma__: PrismaClient | undefined;
-};
+let prisma: PrismaClient;
 
-export const prisma =
-  globalForPrisma.__prisma__ ??
-  new PrismaClient({
-    // log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : [],
-  });
-
-// Gunakan PrismaClient yang sama jika sudah ada
-if (process.env.NODE_ENV !== "production") {
-  if (!globalForPrisma.__prisma__) {
-    console.log("PrismaClient initialized in development mode");
-  }
-  globalForPrisma.__prisma__ = prisma;
+if (process.env.NODE_ENV === 'production') {
+    prisma = new PrismaClient();
+} else {
+    const globalWithPrisma = global as typeof globalThis & {
+        prisma: PrismaClient;
+    };
+    if (!globalWithPrisma.prisma) {
+        globalWithPrisma.prisma = new PrismaClient();
+    }
+    prisma = globalWithPrisma.prisma;
 }
 
-process.on("SIGINT", async () => {
-  // console.log("Start in Disconnecting PrismaClient...");
-  const disconnect = await prisma.$disconnect();
-  // console.log("End of Disconnecting PrismaClient...", disconnect);
-  process.exit(0);
+// Handle uncaught errors
+process.on('uncaughtException', async (error) => {
+    console.error('Uncaught Exception:', error);
+    await prisma.$disconnect();
+    process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', async (error) => {
+    console.error('Unhandled Rejection:', error);
+    await prisma.$disconnect();
+    process.exit(1);
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Received SIGINT signal. Closing database connections...');
+    await prisma.$disconnect();
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    console.log('Received SIGTERM signal. Closing database connections...');
+    await prisma.$disconnect();
+    process.exit(0);
 });
 
 export default prisma;
