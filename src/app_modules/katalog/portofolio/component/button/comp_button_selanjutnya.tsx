@@ -94,6 +94,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
       //   ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
       //   router.replace(RouterMap.create + responeCreated.id, { scroll: false });
       // }
+      
       const res = await funCreatePortofolio({
         profileId: profileId,
         data: dataPortofolio as any,
