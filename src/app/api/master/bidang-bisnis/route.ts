@@ -1,10 +1,10 @@
 import { prisma } from "@/app/lib";
 import backendLogger from "@/util/backendLogger";
+import { clientLogger } from "@/util/clientLogger";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const method = request.method;
-  if (method !== "GET") {
+  if (request.method !== "GET") {
     return NextResponse.json(
       { success: false, message: "Method not allowed" },
       { status: 405 }
@@ -12,21 +12,23 @@ export async function GET(request: Request) {
   }
 
   try {
-    const res = await prisma.masterBank.findMany({
-      orderBy: {
-        updatedAt: "asc",
-      },
+    let fixData;
+    fixData = await prisma.masterBidangBisnis.findMany({
       where: {
-        isActive: true,
+        active: true,
       },
     });
 
     return NextResponse.json(
-      { success: true, message: "Berhasil mendapatkan data", data: res },
+      {
+        success: true,
+        message: "Berhasil mendapatkan data",
+        data: fixData,
+      },
       { status: 200 }
     );
   } catch (error) {
-    backendLogger.error("Error Get Master Bank >>", error);
+    backendLogger.error("Error Get Master Bidang Bisnis >>", error);
     return NextResponse.json(
       {
         success: false,
@@ -35,7 +37,5 @@ export async function GET(request: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
