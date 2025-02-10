@@ -1,5 +1,6 @@
 "use client";
 
+
 import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
 import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
@@ -30,13 +31,17 @@ import { useState } from "react";
 import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { adminForum_getListPosting } from "../fun/get/get_list_publish";
 import adminJob_getListPublish from "@/app_modules/admin/job/fun/get/get_list_publish";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+
 
 export default function AdminForum_TablePosting({
   listPublish,
@@ -47,125 +52,150 @@ export default function AdminForum_TablePosting({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum" />
-        <TablePublish listPublish={listPublish} />
+        <TablePublish />
         {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
       </Stack>
     </>
   );
 }
 
-function TablePublish({ listPublish }: { listPublish: any }) {
+
+function TablePublish() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_FORUM_POSTING[]>(listPublish.data);
-  const [nPage, setNPage] = useState(listPublish.nPage);
+  const [data, setData] = useState<MODEL_FORUM_POSTING[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    setActivePage(1);
-    const loadData = await adminForum_getListPosting({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminForum_getListPosting({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminForumPublish()
+
+
+        if (response?.success && response?.data.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format recieved:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Invlid data format recieved:", error);
+        setData([]);
+      }
+    }
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
   }
 
   async function onLoadData() {
-     const loadData = await adminForum_getListPosting({
-       page: 1,
-     });
-     setData(loadData.data as any);
-     setNPage(loadData.nPage);
+    const loadData = await adminForum_getListPosting({
+      page: 1,
+    });
+    setData(loadData.data as any);
+    setNPage(loadData.nPage);
   }
 
-  const TableRows = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={200}>
-          <Text c={AdminColor.white} lineClamp={1}>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={100}>
-          <Badge
-            color={
-              (e?.ForumMaster_StatusPosting?.id as any) === 1 ? "green" : "red"
-            }
-          >
-            {e?.ForumMaster_StatusPosting?.status}
-          </Badge>
-        </Center>
-      </td>
-      <td>
-        <Box w={400}>
-          <Spoiler
-            // w={400}
-            maxHeight={60}
-            hideLabel="sembunyikan"
-            showLabel="tampilkan"
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: e?.diskusi,
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  }
+
+
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      )
+    }
+    return data?.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center w={200}>
+            <Text c={AdminColor.white} lineClamp={1}>{e?.Author?.username}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={100}>
+            <Badge
+              color={
+                (e?.ForumMaster_StatusPosting?.id as any) === 1 ? "green" : "red"
+              }
+            >
+              {e?.ForumMaster_StatusPosting?.status}
+            </Badge>
+          </Center>
+        </td>
+        <td>
+          <Box w={400}>
+            <Spoiler
+              // w={400}
+              maxHeight={60}
+              hideLabel="sembunyikan"
+              showLabel="tampilkan"
+            >
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: e?.diskusi,
+                }}
+              />
+            </Spoiler>
+          </Box>
+        </td>
+        <td>
+          <Center w={150}>
+            <Text c={AdminColor.white}>
+              {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
+                e.createdAt
+              )}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={150}>
+            <Text c={AdminColor.white} fw={"bold"} fz={"lg"}>
+              {e?.Forum_Komentar.length}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={150}>
+            <Text
+              c={e?.Forum_ReportPosting?.length >= 3 ? "red" : "black"}
+              fw={"bold"}
+              fz={"lg"}
+            >
+              {e?.Forum_ReportPosting.length}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Stack align="center" spacing={"xs"}>
+            <ButtonAction postingId={e?.id} />
+            <ComponentAdminForum_ButtonDeletePosting
+              postingId={e?.id}
+              onSuccesDelete={(val) => {
+                if (val) {
+                  onLoadData();
+                }
               }}
             />
-          </Spoiler>
-        </Box>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text c={AdminColor.white}>
-            {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
-              e.createdAt
-            )}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text c={AdminColor.white} fw={"bold"} fz={"lg"}>
-            {e?.Forum_Komentar.length}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text
-            c={e?.Forum_ReportPosting?.length >= 3 ? "red" : "black"}
-            fw={"bold"}
-            fz={"lg"}
-          >
-            {e?.Forum_ReportPosting.length}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Stack align="center" spacing={"xs"}>
-          <ButtonAction postingId={e?.id} />
-          <ComponentAdminForum_ButtonDeletePosting
-            postingId={e?.id}
-            onSuccesDelete={(val) => {
-              if (val) {
-                onLoadData();
-              }
-            }}
-          />
-        </Stack>
-      </td>
-    </tr>
-  ));
+          </Stack>
+        </td>
+      </tr>
+    ));
+  }
+
 
   return (
     <>
@@ -175,36 +205,37 @@ function TablePublish({ listPublish }: { listPublish: any }) {
           color={AdminColor.softBlue}
           component={
             <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari postingan"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Cari postingan"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
           }
         />
         {/* <Group
-          position="apart"
-          bg={"green.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4} c={"white"}>
-            Posting
-          </Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari postingan"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group> */}
-        
-        {isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
+         position="apart"
+         bg={"green.4"}
+         p={"xs"}
+         style={{ borderRadius: "6px" }}
+       >
+         <Title order={4} c={"white"}>
+           Posting
+         </Title>
+         <TextInput
+           icon={<IconSearch size={20} />}
+           radius={"xl"}
+           placeholder="Cari postingan"
+           onChange={(val) => {
+             onSearch(val.currentTarget.value);
+           }}
+         />
+       </Group> */}
+
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
@@ -214,7 +245,8 @@ function TablePublish({ listPublish }: { listPublish: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                
+
+
               >
                 <thead>
                   <tr>
@@ -241,7 +273,7 @@ function TablePublish({ listPublish }: { listPublish: any }) {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{TableRows}</tbody>
+                <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>
@@ -260,10 +292,12 @@ function TablePublish({ listPublish }: { listPublish: any }) {
   );
 }
 
+
 function ButtonAction({ postingId }: { postingId: string }) {
   const router = useRouter();
   const [loadingKomentar, setLoadingKomentar] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
+
 
   return (
     <>
@@ -299,10 +333,12 @@ function ButtonAction({ postingId }: { postingId: string }) {
   );
 }
 
+
 // function ButtonDeletePosting({ postingId }: { postingId: string }) {
 //   const [opened, { open, close }] = useDisclosure(false);
 //   const [loadingDel, setLoadingDel] = useState(false);
 //   const [loadingDel2, setLoadingDel2] = useState(false);
+
 
 //   async function onDelete() {
 //     await adminForum_funDeletePostingById(postingId).then((res) => {
@@ -371,3 +407,6 @@ function ButtonAction({ postingId }: { postingId: string }) {
 //     </>
 //   );
 // }
+
+
+

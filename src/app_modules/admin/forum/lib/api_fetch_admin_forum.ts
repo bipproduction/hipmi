@@ -1,7 +1,10 @@
 export {
     apiGetAdminForumPublishCountDasboard,
+    apiGetAdminCountForumReportPosting ,
+    apiGetAdminCountForumReportKomentar,
     apiGetAdminForumReportPosting,
-    apiGetAdminForumReportKomentar
+    apiGetAdminForumReportKomentar,
+    apiGetAdminForumPublish
 }
 
 const apiGetAdminForumPublishCountDasboard = async () => {
@@ -21,7 +24,7 @@ const apiGetAdminForumPublishCountDasboard = async () => {
     return await response.json().catch(() => null);
 }
 
-const apiGetAdminForumReportPosting = async () => {
+const apiGetAdminCountForumReportPosting = async () => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
@@ -38,11 +41,59 @@ const apiGetAdminForumReportPosting = async () => {
     return await response.json().catch(() => null);
 }
 
+const apiGetAdminCountForumReportKomentar = async () => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/forum/dashboard/report_komentar`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return await response.json().catch(() => null);
+}
+const apiGetAdminForumReportPosting = async () => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/forum/dashboard/report_posting`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return await response.json().catch(() => null);
+}
 const apiGetAdminForumReportKomentar = async () => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
     const response = await fetch(`/api/admin/forum/dashboard/report_komentar`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return await response.json().catch(() => null);
+}
+const apiGetAdminForumPublish = async () => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/forum/dashboard/publish`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -31,7 +31,7 @@ export async function GET(request: Request) {
         )
     } catch (error) {
         backendLogger.error('Error get data voting dashboard >>', error);
-        NextResponse.json({
+        return NextResponse.json({
             success: false,
             message: 'Error get data voting dashboard',
             reason: (error as Error).message
