@@ -33,7 +33,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/event/*",
 
     // ADMIN API
-    // >> buat disini <<
+    // >> buat dibawah sini <<
 
     // Akses awal
     "/api/get-cookie",
