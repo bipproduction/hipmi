@@ -31,18 +31,9 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
-    // "/api/master/*",
-    // "/api/image/*",
-    // "/api/user/*",
-    // "/api/new/*",
+
     // ADMIN API
-    // "/api/admin/event/*",
-    "/api/admin/investasi/*",
-    // "/api/admin/donasi/*",
-    // "/api/admin/voting/dashboard/*",
-    // "/api/admin/job/*",
-    // "/api/admin/forum/*",
-    // "/api/admin/collaboration/*",
+    // >> buat disini <<
 
     // Akses awal
     "/api/get-cookie",

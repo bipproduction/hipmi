@@ -15,6 +15,21 @@ import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import funCreatePortofolio from "../../fun/fun_create_portofolio";
+import { apiCreatePortofolio } from "../api_fetch_portofolio";
+
+interface ICreatePortofolio {
+  namaBisnis: string;
+  masterBidangBisnisId: string;
+  alamatKantor: string;
+  tlpn: string;
+  deskripsi: string;
+  fileId: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+}
 
 export function Portofolio_ComponentButtonSelanjutnya({
   profileId,
@@ -31,15 +46,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
   const [loading, setLoading] = useState(false);
 
   async function onSubmit() {
-    const porto = {
-      namaBisnis: dataPortofolio.namaBisnis,
-      masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
-      alamatKantor: dataPortofolio.alamatKantor,
-      tlpn: dataPortofolio.tlpn,
-      deskripsi: dataPortofolio.deskripsi,
-    };
-
-    if (_.values(porto).includes("")) {
+    if (_.values(dataPortofolio).includes("")) {
       ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
       return;
     }
@@ -64,6 +71,29 @@ export function Portofolio_ComponentButtonSelanjutnya({
       }
 
       const fileId = uploadFile.data.id;
+
+      const newData: ICreatePortofolio = {
+        namaBisnis: dataPortofolio.namaBisnis,
+        masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
+        alamatKantor: dataPortofolio.alamatKantor,
+        tlpn: dataPortofolio.tlpn,
+        deskripsi: dataPortofolio.deskripsi,
+        facebook: dataMedsos.facebook,
+        twitter: dataMedsos.twitter,
+        instagram: dataMedsos.instagram,
+        tiktok: dataMedsos.tiktok,
+        youtube: dataMedsos.youtube,
+        fileId: fileId,
+      };
+
+      // const responeCreated = await apiCreatePortofolio({
+      //   data: newData,
+      // });
+
+      // if (responeCreated.success) {
+      //   ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
+      //   router.replace(RouterMap.create + responeCreated.id, { scroll: false });
+      // }
 
       const res = await funCreatePortofolio({
         profileId: profileId,

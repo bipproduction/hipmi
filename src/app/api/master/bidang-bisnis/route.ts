@@ -1,0 +1,41 @@
+import { prisma } from "@/app/lib";
+import backendLogger from "@/util/backendLogger";
+import { clientLogger } from "@/util/clientLogger";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  if (request.method !== "GET") {
+    return NextResponse.json(
+      { success: false, message: "Method not allowed" },
+      { status: 405 }
+    );
+  }
+
+  try {
+    let fixData;
+    fixData = await prisma.masterBidangBisnis.findMany({
+      where: {
+        active: true,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mendapatkan data",
+        data: fixData,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    backendLogger.error("Error Get Master Bidang Bisnis >>", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "API Error Get Data",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+}
