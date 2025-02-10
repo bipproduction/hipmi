@@ -31,19 +31,9 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
-    // "/api/master/*",
-    // "/api/image/*",
-    // "/api/user/*",
-    // "/api/new/*",
+
     // ADMIN API
-    // "/api/admin/event/*",
-    // "/api/admin/investasi/*",
-    // "/api/admin/donasi/*",
-    // "/api/admin/voting/dashboard/*",
-    // "/api/admin/job/*",
-    // "/api/admin/forum/*",
-    // "/api/admin/collaboration/*",
-    "api/admin/forum/*",
+    // >> buat dibawah sini <<
 
     // Akses awal
     "/api/get-cookie",
@@ -55,6 +45,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/register",
     "/validasi",
     "/splash",
+    "/invalid-user",
     "/job-vacancy",
     "/preview-image",
     "/auth/login",
@@ -146,16 +137,9 @@ export const middleware = async (req: NextRequest) => {
       const userValidateJson = await userValidate.json();
 
       if (userValidateJson.success == true && userValidateJson.data == null) {
-        const logout = await fetch(new URL("/api/auth/logout", req.url), {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!logout.ok) {
-          throw new Error("Failed to logout user");
-        }
+        return setCorsHeaders(
+          NextResponse.redirect(new URL("/invalid-user", req.url))
+        );
       }
 
       if (!userValidateJson.data.active) {
