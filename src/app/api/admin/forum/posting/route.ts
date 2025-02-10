@@ -131,8 +131,8 @@ export async function GET(request: Request,
         }
         return NextResponse.json({
             success: true,
-            data: fixData,
-            message: "Success get data forum posting"
+            message: "Success get data forum posting",
+            data: fixData
         },
             { status: 200 }
         )

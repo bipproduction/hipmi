@@ -38,7 +38,14 @@ export async function POST(req: Request) {
       user: dataUser as any,
     });
 
-    return NextResponse.json(
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: "Gagal membuat session" },
+        { status: 500 }
+      );
+    }
+    // Buat response dengan token dalam cookie
+    const response = NextResponse.json(
       {
         success: true,
         message: "Berhasil Login",
@@ -47,6 +54,16 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
+
+    // Set cookie dengan token yang sudah dipastikan tidak null
+    response.cookies.set(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!, token, {
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 30 * 24 * 60 * 60, // 30 hari dalam detik (1 bulan)
+    });
+
+    return response;
   } catch (error) {
     backendLogger.log("API Error or Server Error", error);
     return NextResponse.json(

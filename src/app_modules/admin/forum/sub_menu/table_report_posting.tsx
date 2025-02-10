@@ -86,12 +86,12 @@ function TableView({ listData }: { listData: any }) {
   const TableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={200}>
           <Text lineClamp={1}>{e?.User.username}</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={200}>
           {e?.forumMaster_KategoriReportId === null ? (
             <Text>Lainnya</Text>
           ) : (
@@ -139,7 +139,7 @@ function TableView({ listData }: { listData: any }) {
 
       <td>
         <Center w={150}>
-          <Text>
+          <Text c={AdminColor.white}>
             {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
               e.createdAt
             )}

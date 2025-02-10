@@ -25,7 +25,6 @@ export async function GET(request: Request) {
 
         if (!page) {
             fixData = await prisma.forum_Posting.findMany({
-               
                 orderBy: {
                     createdAt: "desc",
                 },

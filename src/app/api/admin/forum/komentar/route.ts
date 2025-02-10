@@ -4,7 +4,7 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
 
-export async function GET(request: Request, { komentarId }: { komentarId: string }) {
+export async function GET(request: Request) {
     const method = request.method;
     if (method !== "GET") {
         return NextResponse.json({
@@ -26,8 +26,6 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
     try {
         let fixData;
 
-        
-
         if (!page) {
             fixData = await prisma.forum_ReportKomentar.findMany({
                 
@@ -35,7 +33,13 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
                     createdAt: "desc"
                   },
                   where: {
-                    forum_KomentarId: komentarId,
+                    Forum_Komentar: {
+                      isActive: true,
+                      komentar: {
+                        contains: search ? search : "",
+                        mode: "insensitive",
+                      },
+                    },
                   },
                   select: {
                     id: true,
@@ -53,6 +57,7 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
                         },
                       },
                     },
+                    
                   },
             })
         } else {
@@ -63,7 +68,13 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
                     createdAt: "desc",
                 },
                 where: {
-                    forum_KomentarId: komentarId,
+                  Forum_Komentar: {
+                    isActive: true,
+                    komentar: {
+                      contains: search ? search : "",
+                      mode: "insensitive",
+                    },
+                  },
                   },
                   select: {
                     id: true,
@@ -85,7 +96,13 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
             })
             const nCount = await prisma.forum_ReportKomentar.count({
                 where: {
-                    forum_KomentarId: komentarId,
+                  Forum_Komentar: {
+                    isActive: true,
+                    komentar: {
+                      contains: search ? search : "",
+                      mode: "insensitive",
+                    },
+                  },
                 }
             })
 
@@ -94,7 +111,7 @@ export async function GET(request: Request, { komentarId }: { komentarId: string
                 nCount: _.ceil(nCount / takeData)
             }
         }
-        console.log("Ini fixData", fixData)
+        
         return NextResponse.json({
             success: true,
             message: "Success get data forum komentar",

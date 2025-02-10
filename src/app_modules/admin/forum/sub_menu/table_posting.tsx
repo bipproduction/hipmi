@@ -2,16 +2,16 @@
 
 
 import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_FORUM_POSTING } from "@/app_modules/forum/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
   Box,
   Button,
   Center,
-  Group,
-  Modal,
   Pagination,
   Paper,
   ScrollArea,
@@ -19,35 +19,18 @@ import {
   Stack,
   Table,
   Text,
-  TextInput,
-  Title,
+  TextInput
 } from "@mantine/core";
-import { IconMessageCircle, IconSearch } from "@tabler/icons-react";
-import { IconFlag3 } from "@tabler/icons-react";
-import { IconEyeCheck, IconTrash } from "@tabler/icons-react";
-import _, { isEmpty } from "lodash";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconFlag3, IconMessageCircle, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { adminForum_getListPosting } from "../fun/get/get_list_publish";
-import adminJob_getListPublish from "@/app_modules/admin/job/fun/get/get_list_publish";
-import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 
-export default function AdminForum_TablePosting({
-  listPublish,
-}: {
-  listPublish: any;
-}) {
+export default function AdminForum_TablePosting() {
   return (
     <>
       <Stack>
@@ -71,12 +54,14 @@ function TablePublish() {
   useShallowEffect(() => {
     const loadInitialData = async () => {
       try {
-        const response = await apiGetAdminForumPublish()
-
-
+        const response = await apiGetAdminForumPublish({
+          page: `${activePage}`
+        })
+        
+        
         if (response?.success && response?.data.data) {
           setData(response.data.data);
-          setNPage(response.data.nPage || 1);
+          setNPage(response.data.nCount || 1);
         } else {
           console.error("Invalid data format recieved:", response);
           setData([]);
@@ -88,17 +73,18 @@ function TablePublish() {
     }
     loadInitialData();
   }, [activePage, isSearch]);
-  const onSearch = async (searchTerm: string) => {
+  
+  const onSearch = (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
   }
 
   async function onLoadData() {
-    const loadData = await adminForum_getListPosting({
-      page: 1,
+    const loadData = await apiGetAdminForumPublish({
+      page: `${activePage}`
     });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+    setData(loadData.data.data);
+    setNPage(loadData.data.nPage);
   }
 
   const onPageClick = (page: number) => {
@@ -140,6 +126,7 @@ function TablePublish() {
           <Box w={400}>
             <Spoiler
               // w={400}
+              c={AdminColor.white}
               maxHeight={60}
               hideLabel="sembunyikan"
               showLabel="tampilkan"
@@ -155,8 +142,8 @@ function TablePublish() {
         <td>
           <Center w={150}>
             <Text c={AdminColor.white}>
-              {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
-                e.createdAt
+              {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
+               new Date(e?.createdAt)
               )}
             </Text>
           </Center>
@@ -171,7 +158,7 @@ function TablePublish() {
         <td>
           <Center w={150}>
             <Text
-              c={e?.Forum_ReportPosting?.length >= 3 ? "red" : "black"}
+              c={e?.Forum_ReportPosting?.length >= 3 ? "red" : AdminColor.white}
               fw={"bold"}
               fz={"lg"}
             >
