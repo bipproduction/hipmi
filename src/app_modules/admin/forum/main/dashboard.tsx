@@ -8,7 +8,7 @@ import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { useShallowEffect } from "@mantine/hooks";
 import { clientLogger } from "@/util/clientLogger";
 import global_limit from "@/app/lib/limit";
-import { apiGetAdminForumPublishCountDasboard } from "../lib/api_fetch_admin_forum";
+import { apiGetAdminCountForumReportKomentar, apiGetAdminCountForumReportPosting, apiGetAdminForumPublishCountDasboard } from "../lib/api_fetch_admin_forum";
 import { useState } from "react";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
@@ -63,7 +63,7 @@ function ForumMain() {
 
   async function onLoadCountReportPosting() {
     try {
-      const response = await apiGetAdminForumPublishCountDasboard()
+      const response = await apiGetAdminCountForumReportPosting()
       if (response) {
         setCountLaporanPosting(response.data)
       }
@@ -74,7 +74,7 @@ function ForumMain() {
 
   async function onLoadCountReportKomentar() {
     try {
-      const response = await apiGetAdminForumPublishCountDasboard()
+      const response = await apiGetAdminCountForumReportKomentar()
       if (response) {
         setCountLaporanKomentar(response.data)
       }
