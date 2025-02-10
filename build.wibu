@@ -1,0 +1,3 @@
+bun --env-file=.env.build prisma db push 
+bun --env-file=.env.build prisma db seed 
+bun --env-file=.env.build run build

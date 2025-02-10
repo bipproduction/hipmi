@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { apies, pages } from "./lib/routes";
+import { NextRequest, NextResponse } from "next/server";
 
 type MiddlewareConfig = {
   apiPath: string;
@@ -110,7 +109,7 @@ export const middleware = async (req: NextRequest) => {
       // Preserve token in cookie when redirecting
       if (token) {
         response.cookies.set(sessionKey, token, {
-          httpOnly: true,
+          // httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
           path: "/",
@@ -144,6 +143,19 @@ export const middleware = async (req: NextRequest) => {
       }
 
       const userValidateJson = await userValidate.json();
+
+      if (userValidateJson.success == true && userValidateJson.data == null) {
+        const logout = await fetch(new URL("/api/auth/logout", req.url), {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!logout.ok) {
+          throw new Error("Failed to logout user");
+        }
+      }
 
       if (!userValidateJson.data.active) {
         return setCorsHeaders(
@@ -186,7 +198,7 @@ export const middleware = async (req: NextRequest) => {
   // Ensure token is preserved in cookie
   if (token) {
     response.cookies.set(sessionKey, token, {
-      httpOnly: true,
+      // httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
