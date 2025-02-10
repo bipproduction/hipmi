@@ -1,0 +1,3 @@
+git add -A 
+git commit -m "data auto"
+git push origin staging
