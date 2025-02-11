@@ -84,7 +84,7 @@ function TablePublish() {
       page: `${activePage}`
     });
     setData(loadData.data.data);
-    setNPage(loadData.data.nPage);
+    setNPage(loadData.data.nCount);
   }
 
   const onPageClick = (page: number) => {
