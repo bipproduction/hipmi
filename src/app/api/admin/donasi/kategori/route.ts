@@ -4,14 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const method = request.method;
-    if (method !== "GET") {
-        return NextResponse.json({
-            success: false,
-            message: "Method nol allowed"
-        },
-            { status: 405 }
-        )
-    }
     try {
         const data = await prisma.donasiMaster_Kategori.findMany({
             orderBy: {
@@ -38,7 +30,5 @@ export async function GET(request: Request) {
         },
             { status: 500 }
         )
-    } finally {
-        await prisma.$disconnect
     }
 }

@@ -25,18 +25,17 @@ const apiGetAdminCollaborationStatusCountDashboard = async ({
     // console.log("Ini Response", await response.json());
     return await response.json().catch(() => null);
 }
-const apiGetAdminCollaborationStatusById = async ({ status, page, search }: {
+const apiGetAdminCollaborationStatusById = async ({ status, page}: {
     status: "Publish" | "Reject",
     page: string,
-    search: string
+    
 }) => {
     
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
     
     const isPage = page ? `?page=${page}` : "";
-    const isSearch = search ? `&search=${search}` : "";
-    const response = await fetch(`/api/admin/collaboration/${status}${isPage}${isSearch}`, {
+    const response = await fetch(`/api/admin/collaboration/${status}${isPage}`, {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",

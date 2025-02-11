@@ -10,7 +10,6 @@ export async function GET(request: Request, { params }:
 
     const { status } = params;
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search");
     const page = searchParams.get("page");
     const takeData = 10;
     const skipData = Number(page) * takeData - takeData;
@@ -21,8 +20,6 @@ export async function GET(request: Request, { params }:
 
         if (!page) {
             fixData = await prisma.projectCollaboration.findMany({
-                skip: skipData,
-                take: takeData,
                 orderBy: {
                     createdAt: "desc",
                 },
@@ -32,10 +29,7 @@ export async function GET(request: Request, { params }:
                     Author: {
                         active: true,
                     },
-                    title: {
-                        contains: search ? search : "",
-                        mode: "insensitive",
-                    },
+                    
                 },
                 select: {
                     id: true,
@@ -81,10 +75,6 @@ export async function GET(request: Request, { params }:
                     isReject: false,
                     Author: {
                         active: true,
-                    },
-                    title: {
-                        contains: search ? search : "",
-                        mode: "insensitive",
                     },
                 },
                 select: {

@@ -7,15 +7,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request,
     { params }: { params: { status: string } }) {
-    const method = request.method;
-    if (method !== "GET") {
-        return NextResponse.json({
-            succes: false,
-            message: "Method not allowed"
-        },
-            { status: 405 }
-        );
-    }
 
     const { status } = params;
     const { searchParams } = new URL(request.url);
@@ -30,7 +21,7 @@ export async function GET(request: Request,
 
 
         if (!page) {
-            const data = await prisma.donasi.findMany({
+            fixData = await prisma.donasi.findMany({
                 orderBy: {
                     createdAt: "desc",
                 },
@@ -83,7 +74,7 @@ export async function GET(request: Request,
                     DonasiMaster_Ketegori: true,
                     DonasiMaster_Durasi: true,
                     imageId: true,
-                    
+
                 },
             })
 
@@ -120,7 +111,5 @@ export async function GET(request: Request,
         },
             { status: 500 }
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }
