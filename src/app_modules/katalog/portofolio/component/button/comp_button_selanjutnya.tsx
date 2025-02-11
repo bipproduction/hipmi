@@ -14,7 +14,6 @@ import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import funCreatePortofolio from "../../fun/fun_create_portofolio";
 import { apiCreatePortofolio } from "../api_fetch_portofolio";
 
 interface ICreatePortofolio {
@@ -45,16 +44,51 @@ export function Portofolio_ComponentButtonSelanjutnya({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit() {
-    if (_.values(dataPortofolio).includes("")) {
+  const validateData = () => {
+    if (_.includes(_.values(dataPortofolio), "")) {
       ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-      return;
+      return false;
     }
 
     if (dataPortofolio.tlpn.length < 10) {
       ComponentGlobal_NotifikasiPeringatan("Nomor telepon minimal 10 angka");
-      return;
+      return false;
     }
+
+    return true;
+  };
+
+  const handleCreatePortofolio = async (fileId: string) => {
+    const newData: ICreatePortofolio = {
+      namaBisnis: dataPortofolio.namaBisnis,
+      masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
+      alamatKantor: dataPortofolio.alamatKantor,
+      tlpn: dataPortofolio.tlpn,
+      deskripsi: dataPortofolio.deskripsi,
+      facebook: dataMedsos.facebook,
+      twitter: dataMedsos.twitter,
+      instagram: dataMedsos.instagram,
+      tiktok: dataMedsos.tiktok,
+      youtube: dataMedsos.youtube,
+      fileId: fileId,
+    };
+
+    const response = await apiCreatePortofolio({
+      profileId: profileId,
+      data: newData,
+    });
+
+    if (response.success) {
+      ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
+      router.replace(RouterMap.create + response.data.id, { scroll: false });
+    } else {
+      setLoading(false);
+      throw new Error("Failed to create portfolio");
+    }
+  };
+
+  const onSubmit = async () => {
+    if (!validateData()) return;
 
     try {
       setLoading(true);
@@ -65,59 +99,22 @@ export function Portofolio_ComponentButtonSelanjutnya({
       });
 
       if (!uploadFile.success) {
-        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
         return;
       }
 
-      const fileId = uploadFile.data.id;
-
-      const newData: ICreatePortofolio = {
-        namaBisnis: dataPortofolio.namaBisnis,
-        masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
-        alamatKantor: dataPortofolio.alamatKantor,
-        tlpn: dataPortofolio.tlpn,
-        deskripsi: dataPortofolio.deskripsi,
-        facebook: dataMedsos.facebook,
-        twitter: dataMedsos.twitter,
-        instagram: dataMedsos.instagram,
-        tiktok: dataMedsos.tiktok,
-        youtube: dataMedsos.youtube,
-        fileId: fileId,
-      };
-
-      // const responeCreated = await apiCreatePortofolio({
-      //   data: newData,
-      // });
-
-      // if (responeCreated.success) {
-      //   ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
-      //   router.replace(RouterMap.create + responeCreated.id, { scroll: false });
-      // }
-
-      
-      const res = await funCreatePortofolio({
-        profileId: profileId,
-        data: dataPortofolio as any,
-        medsos: dataMedsos,
-        fileId: fileId,
-      });
-      if (res.status === 201) {
-        ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
-        router.replace(RouterMap.create + res.id, { scroll: false });
-      } else {
-        setLoading(false);
-        ComponentGlobal_NotifikasiGagal("Gagal disimpan");
-      }
+      await handleCreatePortofolio(uploadFile.data.id);
     } catch (error) {
       setLoading(false);
+      ComponentGlobal_NotifikasiGagal("Gagal disimpan");
       clientLogger.error("Error create portofolio", error);
     }
-  }
+  };
+
   return (
     <>
       <Button
-        disabled={_.values(dataPortofolio).includes("") || file === null}
+        disabled={_.values(dataPortofolio).includes("") || !file}
         mt={"md"}
         radius={50}
         loading={loading}

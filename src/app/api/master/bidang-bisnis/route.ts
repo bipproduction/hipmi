@@ -1,15 +1,8 @@
 import { prisma } from "@/app/lib";
 import backendLogger from "@/util/backendLogger";
-import { clientLogger } from "@/util/clientLogger";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  if (request.method !== "GET") {
-    return NextResponse.json(
-      { success: false, message: "Method not allowed" },
-      { status: 405 }
-    );
-  }
 
   try {
     let fixData;
