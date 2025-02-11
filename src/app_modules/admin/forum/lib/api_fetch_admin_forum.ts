@@ -58,11 +58,12 @@ const apiGetAdminCountForumReportKomentar = async () => {
 
     return await response.json().catch(() => null);
 }
-const apiGetAdminForumReportPosting = async () => {
+const apiGetAdminForumReportPosting = async ({page} : { page?: string}) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
-    const response = await fetch(`/api/admin/forum/posting`, {
+    const isPage = page ? `?page=${page}` : "";
+    const response = await fetch(`/api/admin/forum/posting${isPage}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
