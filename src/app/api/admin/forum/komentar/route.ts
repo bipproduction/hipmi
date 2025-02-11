@@ -5,15 +5,6 @@ import { NextResponse } from "next/server";
 import _ from 'lodash';
 
 export async function GET(request: Request) {
-    const method = request.method;
-    if (method !== "GET") {
-        return NextResponse.json({
-            success: false,
-            message: "Method not allowed"
-        },
-            { status: 405 }
-        );
-    }
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
@@ -127,7 +118,5 @@ export async function GET(request: Request) {
             reason: (error as Error).message
         },
         )
-    } finally {
-        await prisma.$disconnect();
     }
 }
