@@ -4,14 +4,6 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const method = request.method;
-  if (method !== "GET") {
-    return NextResponse.json(
-      { success: false, message: "Method not allowed" },
-      { status: 405 }
-    );
-  }
-
   try {
     let fixData;
     fixData = await prisma.event.count({
@@ -41,7 +33,5 @@ export async function GET(request: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -7,13 +7,6 @@ export async function GET(
   request: Request,
   { params }: { params: { name: string } }
 ) {
-  const method = request.method;
-  if (method !== "GET") {
-    return NextResponse.json(
-      { success: false, message: "Method not allowed" },
-      { status: 405 }
-    );
-  }
 
   const { name } = params;
 
@@ -47,7 +40,5 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 }

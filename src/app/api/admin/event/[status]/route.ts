@@ -8,13 +8,7 @@ export async function GET(
   request: Request,
   { params }: { params: { status: string } }
 ) {
-  const method = request.method;
-  if (method !== "GET") {
-    return NextResponse.json(
-      { success: false, message: "Method not allowed" },
-      { status: 405 }
-    );
-  }
+  
 
   const { status } = params;
   const { searchParams } = new URL(request.url);
@@ -249,7 +243,5 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 }
