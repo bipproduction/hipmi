@@ -30,7 +30,7 @@ export async function GET(request: Request, { params }: {
 
 
         if (!page) {
-            const data = await prisma.investasi.findMany({
+            fixData = await prisma.investasi.findMany({
                 orderBy: {
                     updatedAt: "desc",
                 },
@@ -62,6 +62,8 @@ export async function GET(request: Request, { params }: {
             });
         } else {
             const data = await prisma.investasi.findMany({
+                take: takeData,
+                skip: skipData,
                 orderBy: {
                     updatedAt: "desc",
                 },
