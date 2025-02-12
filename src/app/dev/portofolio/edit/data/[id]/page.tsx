@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <Portofolio_EditDataBisnis dataPorto={dataPorto as any} listBidang={listBidang as any} />
+      <Portofolio_EditDataBisnis />
     </>
   );
 }
