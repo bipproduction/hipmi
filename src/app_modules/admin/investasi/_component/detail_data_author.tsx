@@ -8,6 +8,10 @@ export function ComponentAdminInvestasi_DetailDataAuthor({
   data: any;
 }) {
   return (
+
+
+
+
     <Paper bg={AdminColor.softBlue} p={"lg"}>
       <Stack c={AdminColor.white}>
         <Title order={3}>Data User</Title>

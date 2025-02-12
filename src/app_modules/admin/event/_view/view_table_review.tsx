@@ -367,6 +367,7 @@ export default function AdminEvent_ComponentTableReview() {
     ));
   };
 
+
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
@@ -385,6 +386,9 @@ export default function AdminEvent_ComponentTableReview() {
             />
           }
         />
+
+      
+
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
         ) : (

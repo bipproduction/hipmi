@@ -40,6 +40,7 @@ export default function AdminInvestasi_DetailReview({
 
   useShallowEffect(() => {
     cekStatusPublish();
+    // omload()
   }, []);
 
   async function cekStatusPublish() {
@@ -142,6 +143,8 @@ export default function AdminInvestasi_DetailReview({
     }
   }
 
+
+
   return (
     <>
       <Stack px={"lg"}>
@@ -182,6 +185,9 @@ export default function AdminInvestasi_DetailReview({
           ]}
         >
           {/* Data Author */}
+          if(!data.author){
+            
+          }
           <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
 
           {/* Data Foto */}
