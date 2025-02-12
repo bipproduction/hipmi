@@ -6,7 +6,7 @@ import {
   apiGetEventRiwayatCount,
   apiGetEventStatusCountDashboard,
   apiGetEventTipeAcara,
-} from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+} from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import global_limit from "@/lib/limit";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
@@ -229,7 +229,7 @@ export default function AdminEvent_Main() {
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
               <Stack spacing={0}>
                 <Text fw={"bold"} color={AccentColor.white}>
@@ -265,7 +265,7 @@ export default function AdminEvent_Main() {
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
               <Stack spacing={0}>
                 <Text fw={"bold"} color={AccentColor.white}>

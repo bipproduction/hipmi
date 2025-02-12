@@ -1,4 +1,4 @@
-import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import {
   gs_adminEvent_triggerReview,
   IRealtimeData,
@@ -75,7 +75,7 @@ export default function AdminEvent_ComponentTableReview() {
   const loadInitialData = async () => {
     try {
       const response = await apiGetDataEventByStatus({
-        status: "Review",
+        name: "Review",
         page: `${activePage}`,
         search: isSearch,
       });
@@ -156,17 +156,17 @@ export default function AdminEvent_ComponentTableReview() {
 
         try {
           const response = await apiGetDataEventByStatus({
-            status: "Review",
+            name: "Review",
             page: `${activePage}`,
             search: isSearch,
           });
 
           if (response?.success && response?.data?.data) {
-            
+
             setData(response.data.data);
             setNPage(response.data.nPage || 1);
           } else {
-            
+
             setData([]);
           }
         } catch (error) {
@@ -221,13 +221,13 @@ export default function AdminEvent_ComponentTableReview() {
 
       try {
         const response = await apiGetDataEventByStatus({
-          status: "Review",
+          name: "Review",
           page: `${activePage}`,
           search: isSearch,
         });
 
         if (response?.success && response?.data?.data) {
-          
+
           setData(response.data.data);
           setNPage(response.data.nPage || 1);
         } else {
@@ -387,7 +387,7 @@ export default function AdminEvent_ComponentTableReview() {
           }
         />
 
-      
+
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />

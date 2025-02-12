@@ -25,7 +25,7 @@ import { AdminEvent_funCreateTipeAcara } from "../fun/create/fun_create_tipe_aca
 import { AdminEvent_funEditActivationTipeAcaraById } from "../fun/edit/fun_edit_activation_tipe_acara";
 import { AdminEvent_funEditTipeAcara } from "../fun/edit/fun_edit_tipe_acara";
 import { AdminEvent_getListTipeAcara } from "../fun/get/get_list_tipe_acara";
-import { apiGetAdminEventTipeAcara } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { apiGetAdminEventTipeAcara } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { clientLogger } from "@/util/clientLogger";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
@@ -168,9 +168,10 @@ function DetailTipeAcara() {
 
           {openCreate ? (
             <div>
-              <Paper p={"sm"} shadow="lg" withBorder>
+              <Paper p={"sm"} bg={AdminColor.softBlue} shadow="lg" >
                 <Stack>
-                  <TextInput
+                    <TextInput
+                    styles={{ label: { color: AdminColor.white } }}
                     value={name ? name : ""}
                     label="Masukan Tipe"
                     placeholder="Contoh: Seminar, Workshop, dll."

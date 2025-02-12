@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_FORUM_POSTING } from "@/app_modules/forum/model/interface";
 import {
   Badge,
@@ -21,17 +22,17 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"} w={"50%"}>
-        <Paper bg={"gray"} p={"xs"} style={{ borderRadius: "6px" }}>
+        <Paper bg={AdminColor.softBlue} p={"xs"} style={{ borderRadius: "6px" }}>
           <Title order={4} c={"white"}>
             Detail Posting
           </Title>
         </Paper>
 
-        <Paper withBorder p={"md"} radius={"md"} shadow="sm">
+        <Paper  p={"md"} radius={"md"} bg={AdminColor.softBlue} shadow="sm">
           <Stack>
             <Stack spacing={5}>
               <Group position="apart">
-                <Text fw={"bold"}>
+                <Text c={AdminColor.white} fw={"bold"}>
                   Username:{" "}
                   <Text span inherit>
                     {dataPosting?.Author?.username}
@@ -53,6 +54,7 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
 
             <Box>
               <Spoiler
+                c={AdminColor.white}
                 w={500}
                 hideLabel="sembunyikan"
                 maxHeight={100}

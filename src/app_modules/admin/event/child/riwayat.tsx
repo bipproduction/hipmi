@@ -22,7 +22,7 @@ import { IconCircleCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { apiGetAdminEventRiwayat } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { apiGetAdminEventRiwayat } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
@@ -209,7 +209,7 @@ function DetailRiwayat() {
                 horizontalSpacing={"md"}
                 p={"md"}
                 w={"100%"}
-                
+
               >
                 <thead>
                   <tr>

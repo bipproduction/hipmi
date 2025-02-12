@@ -110,3 +110,11 @@ const  apiGetAdminForumPublish = async ({ page }: { page?: string }) => {
 
     return await response.json().catch(() => null);
 }
+
+const apiGetAdminHasilReportPosting = async ({id} : {id: string}) => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    
+
+}
