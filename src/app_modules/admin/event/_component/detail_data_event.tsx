@@ -1,11 +1,12 @@
+import { AdminColor } from '@/app_modules/_global/color/color_pallet';
 import { Box, Grid, Paper, Stack, Text, Title } from '@mantine/core';
 import React from 'react';
 
 function ComponentEvent_DetailDataEvent() {
   return (
     <>
-      <Paper withBorder p={"lg"}>
-        <Stack>
+      <Paper bg={AdminColor.softBlue} p={"lg"}>
+        <Stack c={AdminColor.white}>
           <Title order={3}>Coba</Title>
           <Stack spacing={"xs"}>
             <Grid>

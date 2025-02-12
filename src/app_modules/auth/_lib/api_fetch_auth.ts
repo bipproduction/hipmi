@@ -37,7 +37,7 @@ const apiPostVerifikasiCodeOtp = async ({ nomor }: { nomor: string }) => {
 };
 
 const apiDeleteAktivasiKodeOtpByNomor = async ({ id }: { id: string }) => {
-  const respone = await fetch(`/api/auth/code/${id}`, {
+  const respone = await fetch(`/api/auth/code/${id}/peserta`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
