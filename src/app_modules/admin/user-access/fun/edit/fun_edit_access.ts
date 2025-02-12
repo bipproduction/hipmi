@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";

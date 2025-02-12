@@ -1,4 +1,5 @@
-import { RouterAdminEvent } from '@/app/lib/router_admin/router_admin_event';
+import { RouterAdminEvent } from '@/lib/router_admin/router_admin_event';
+import { AdminColor } from '@/app_modules/_global/color/color_pallet';
 import { Button, Center, Pagination, Paper, ScrollArea, Stack, Table, Title } from '@mantine/core';
 import { IconDeviceDesktop, IconDownload, IconImageInPicture } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
@@ -20,7 +21,7 @@ function AdminEvent_DetailDataSponsor() {
   const rows = tableRows.map((row, i) => (
     <tr key={i}>
       <td>
-        <Center>{row.sponsor}</Center>
+        <Center c={AdminColor.white}>{row.sponsor}</Center>
       </td>
       <td>
         <Center>
@@ -28,16 +29,16 @@ function AdminEvent_DetailDataSponsor() {
         </Center>
       </td>
       <td>
-        <Center>{row.username}</Center>
+        <Center c={AdminColor.white}>{row.username}</Center>
       </td>
       <td>
-        <Center>{row.name}</Center>
+        <Center c={AdminColor.white}>{row.name}</Center>
       </td>
       <td>
-        <Center>{row.nomor}</Center>
+        <Center c={AdminColor.white}>{row.nomor}</Center>
       </td>
       <td>
-        <Center>{row.email}</Center>
+        <Center c={AdminColor.white}>{row.email}</Center>
       </td>
       <td>
         <Center>
@@ -50,45 +51,44 @@ function AdminEvent_DetailDataSponsor() {
     <>
       <Stack spacing={"xs"} h={"100%"}>
         <Paper
-          bg={"gray.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Daftar Sponsor</Title>
+          <Title c={AdminColor.white} order={4}>Daftar Sponsor</Title>
         </Paper>
 
-        <Paper p={"md"} withBorder shadow='lg' h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow='lg' h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Sponsor</Center>
+                    <Center c={AdminColor.white}>Sponsor</Center>
                   </th>
                   <th>
-                    <Center>Download</Center>
+                    <Center c={AdminColor.white}>Download</Center>
                   </th>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AdminColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Nama</Center>
+                    <Center c={AdminColor.white}>Nama</Center>
                   </th>
                   <th>
-                    <Center>Nomor</Center>
+                    <Center c={AdminColor.white}>Nomor</Center>
                   </th>
                   <th>
-                    <Center>Email</Center>
+                    <Center c={AdminColor.white}>Email</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AdminColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>

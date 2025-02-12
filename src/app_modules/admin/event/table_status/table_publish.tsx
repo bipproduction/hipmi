@@ -1,7 +1,7 @@
 "use client";
 
 import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
-import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import { clientLogger } from "@/util/clientLogger";

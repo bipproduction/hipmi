@@ -1,8 +1,8 @@
-import { RouterAdminGlobal } from "@/app/lib";
+import { RouterAdminGlobal } from "@/lib";
 import {
   gs_adminJob_triggerReview,
   IRealtimeData,
-} from "@/app/lib/global_state";
+} from "@/lib/global_state";
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
 import {
   ComponentGlobal_NotifikasiBerhasil,

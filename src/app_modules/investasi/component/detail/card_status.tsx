@@ -1,4 +1,4 @@
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { Paper, Grid, Stack, AspectRatio, Text, Image } from "@mantine/core";
 import _ from "lodash";
 

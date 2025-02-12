@@ -21,7 +21,7 @@ import { useState } from "react";
 import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import adminUserAccess_getListUser from "../fun/get/get_list_all_user";
 import { WibuRealtime } from "wibu-pkg";
-import { gs_access_user, IRealtimeData } from "@/app/lib/global_state";
+import { gs_access_user, IRealtimeData } from "@/lib/global_state";
 import { useAtom } from "jotai";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 

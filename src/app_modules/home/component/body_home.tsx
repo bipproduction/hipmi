@@ -1,4 +1,4 @@
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";

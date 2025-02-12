@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function getOneBeritaInvestasiById(id: string) {
   const res = await prisma.beritaInvestasi.findUnique({

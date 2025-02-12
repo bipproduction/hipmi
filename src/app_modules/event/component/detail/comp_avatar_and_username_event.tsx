@@ -1,4 +1,4 @@
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,

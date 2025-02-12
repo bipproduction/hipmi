@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import bidangBisnis from "../../../bin/seeder/bidang_bisnis.json";
 import collaboration_industri from "../../../bin/seeder/colab/master_industri.json";
 import collaboration_status from "../../../bin/seeder/colab/master_status.json";

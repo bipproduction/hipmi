@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import ComponentAdminDonasi_TombolKembali from "@/app_modules/admin/donasi/component/tombol_kembali";
 import {

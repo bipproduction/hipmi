@@ -1,8 +1,8 @@
 import RootStyleRegistry from "./emotion";
 // import "./globals.css";
 import dotenv from "dotenv";
-import { ServerEnv } from "./lib/server_env";
-import { TokenProvider } from "./lib/token";
+import { ServerEnv } from "../lib/server_env";
+import { TokenProvider } from "../lib/token";
 dotenv.config({
   path: ".env",
 });

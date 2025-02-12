@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import {
   Stack,
   Title,
@@ -23,7 +23,7 @@ import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { useState } from "react";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import global_limit from "@/app/lib/limit";
+import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetAdminDonasiKategoriCountDashboard, apiGetAdminDonasiStatusCountDashboard } from "../lib/api_fetch_admin_donasi";
 

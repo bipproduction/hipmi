@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function AdminVote_getListTableByStatusId(statusId: string) {
   if (statusId === "0") {

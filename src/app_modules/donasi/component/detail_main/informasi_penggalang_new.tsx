@@ -1,5 +1,5 @@
 "use client";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { AccentColor, MainColor, } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

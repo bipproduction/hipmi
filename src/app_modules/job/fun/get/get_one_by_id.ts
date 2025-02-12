@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function job_getOneById(jobId: any) {
   const get = await prisma.job.findFirst({

@@ -1,7 +1,7 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { notifikasi_funDonasiCheckStatus } from "../../fun/check/fun_check_donasi_status";
 import notifikasi_getByUserId from "../../fun/get/get_notifiaksi_by_id";
 import notifikasi_countUserNotifikasi from "../../fun/count/fun_count_by_id";

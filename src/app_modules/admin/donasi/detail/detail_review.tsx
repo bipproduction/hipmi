@@ -1,6 +1,6 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import { Button, Group, SimpleGrid, Stack } from "@mantine/core";

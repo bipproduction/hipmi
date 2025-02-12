@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { MODEL_DONASI_KABAR } from "../../model/interface";
 import { revalidatePath } from "next/cache";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 
 export async function donasi_funUpdateKabar({
   data,

@@ -1,8 +1,8 @@
 "use client";
 
-import { API_RouteJob } from "@/app/lib/api_user_router/route_api_job";
-import { gs_jobTiggerBeranda } from "@/app/lib/global_state";
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { API_RouteJob } from "@/lib/api_user_router/route_api_job";
+import { gs_jobTiggerBeranda } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { Center, Loader, Stack, TextInput } from "@mantine/core";

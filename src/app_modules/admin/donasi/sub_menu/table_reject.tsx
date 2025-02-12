@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";

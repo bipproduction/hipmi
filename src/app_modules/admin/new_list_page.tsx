@@ -1,15 +1,15 @@
-import { RouterAdminColab } from "@/app/lib/router_admin/router_admin_colab";
-import { RouterAdminDeveloper } from "@/app/lib/router_admin/router_admin_developer";
-import { RouterAdminDonasi } from "@/app/lib/router_admin/router_admin_donasi";
-import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
-import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
-import { RouterAdminJob } from "@/app/lib/router_admin/router_admin_job";
-import { RouterAdminMap } from "@/app/lib/router_admin/router_admin_map";
-import { RouterAdminVote } from "@/app/lib/router_admin/router_admin_vote";
-import { RouterAdminUserAccess } from "@/app/lib/router_admin/router_admn_user_acces";
-import { RouterAdminAppInformation } from "@/app/lib/router_admin/router_app_information";
-import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminColab } from "@/lib/router_admin/router_admin_colab";
+import { RouterAdminDeveloper } from "@/lib/router_admin/router_admin_developer";
+import { RouterAdminDonasi } from "@/lib/router_admin/router_admin_donasi";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
+import { RouterAdminMap } from "@/lib/router_admin/router_admin_map";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
+import { RouterAdminUserAccess } from "@/lib/router_admin/router_admn_user_acces";
+import { RouterAdminAppInformation } from "@/lib/router_admin/router_app_information";
+import { RouterAdminDashboard } from "@/lib/router_hipmi/router_admin";
 import {
   IconAffiliate,
   IconBriefcase,

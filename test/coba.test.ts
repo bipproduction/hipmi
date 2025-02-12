@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { describe, test, expect } from "bun:test";
 
 describe("coba test", () => {

@@ -5,7 +5,7 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,

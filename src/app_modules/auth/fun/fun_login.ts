@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { randomOTP } from "./rondom_otp";
 
 export async function auth_funLogin({ nomor }: { nomor: string }) {

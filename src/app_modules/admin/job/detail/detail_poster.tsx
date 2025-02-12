@@ -1,9 +1,9 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { Center, Image, Stack } from "@mantine/core";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import { useState } from "react";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 

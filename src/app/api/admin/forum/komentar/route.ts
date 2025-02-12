@@ -1,5 +1,5 @@
 import { count } from 'console';
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import _ from 'lodash';

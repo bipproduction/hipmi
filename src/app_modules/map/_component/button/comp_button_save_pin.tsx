@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { map_funCreatePin } from "../../fun/create/fun_create_pin";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { clientLogger } from "@/util/clientLogger";
 import { data } from "autoprefixer";
 import { apiCreatePinMap } from "../api_fetch_map";

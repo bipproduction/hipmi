@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import {

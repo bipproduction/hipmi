@@ -15,7 +15,7 @@ import { useFocusTrap, useLocalStorage } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { NEW_RouterInvestasi } from "../../../../app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "../../../../lib/router_hipmi/router_investasi";
 import { MODEL_INVESTASI } from "../../_lib/interface";
 import { gs_investas_menu } from "../../g_state";
 

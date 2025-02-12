@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import {
   AccentColor,
   MainColor,

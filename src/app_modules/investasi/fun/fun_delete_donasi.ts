@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from "@/app/lib";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { prisma } from "@/lib";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { revalidatePath } from "next/cache";
 
 export default async function funDeleteDonasi(id: string) {

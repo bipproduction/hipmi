@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";

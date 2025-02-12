@@ -1,7 +1,7 @@
 "use client";
 
 import { Stack, Tabs } from "@mantine/core";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import {
   AccentColor,
   MainColor,

@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import { useState } from "react";
-import { DIRECTORY_ID } from "../lib";
+import { DIRECTORY_ID } from "../../lib";
 
 export default function Page() {
   const [data, setData] = useState({

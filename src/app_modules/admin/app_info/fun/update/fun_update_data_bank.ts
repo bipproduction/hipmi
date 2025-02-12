@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_MASTER_BANK } from "@/app_modules/investasi/_lib/interface"; 
 
 export default async function adminAppInformation_updateDataBankById({

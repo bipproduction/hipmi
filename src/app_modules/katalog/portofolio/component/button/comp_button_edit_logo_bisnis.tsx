@@ -8,7 +8,7 @@ import {
 } from "@/app_modules/_global/notif_global";
 import { Box, Button } from "@mantine/core";
 
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,

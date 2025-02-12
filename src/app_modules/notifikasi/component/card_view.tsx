@@ -1,6 +1,6 @@
 "use client";
 
-import { gs_count_ntf } from "@/app/lib/global_state";
+import { gs_count_ntf } from "@/lib/global_state";
 import {
   AccentColor,
   MainColor,

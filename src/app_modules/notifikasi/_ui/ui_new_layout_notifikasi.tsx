@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterNotifikasi } from "@/app/lib/router_hipmi/router_notifikasi";
+import { RouterNotifikasi } from "@/lib/router_hipmi/router_notifikasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   BackgroundImage,
@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { gs_notifikasi_kategori_app } from "../lib/global_state";
 import { useShallowEffect } from "@mantine/hooks";
-import { API_RouteNotifikasi } from "@/app/lib/api_user_router/route_api_notifikasi";
+import { API_RouteNotifikasi } from "@/lib/api_user_router/route_api_notifikasi";
 
 export default function Notifikasi_UiNewLayout({
   children,

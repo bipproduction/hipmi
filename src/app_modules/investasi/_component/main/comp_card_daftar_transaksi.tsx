@@ -14,7 +14,7 @@ import moment from "moment";
 import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import {
   AccentColor,
   MainColor,
@@ -40,11 +40,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_USER } from "../model/interface";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { Home_ComponentAvatarProfile } from "./comp_avatar_profile";
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 
 export function Home_UiView({
   dataUser,

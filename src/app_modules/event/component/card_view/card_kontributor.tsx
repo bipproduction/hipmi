@@ -1,4 +1,4 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardLoadingOverlay,

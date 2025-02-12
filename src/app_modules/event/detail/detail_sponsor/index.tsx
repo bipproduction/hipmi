@@ -26,7 +26,7 @@ import { useParams, useRouter } from "next/navigation";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { IEventSponsor } from "../../_lib/interface";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 
 function DetailSponsor_Event({ userLoginId }: { userLoginId: string }) {
   const params = useParams<{ id: string }>();

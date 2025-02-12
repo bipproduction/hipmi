@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import {
   NEW_RouterInvestasi
-} from "@/app/lib/router_hipmi/router_investasi";
+} from "@/lib/router_hipmi/router_investasi";
 import { revalidatePath } from "next/cache";
 
 export default async function funDeleteInvestasi(id: string) {

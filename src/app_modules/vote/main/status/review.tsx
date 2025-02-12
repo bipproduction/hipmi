@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { clientLogger } from "@/util/clientLogger";
 import { Box, Center, Loader } from "@mantine/core";

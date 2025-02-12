@@ -1,5 +1,5 @@
 "use client";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { gs_nominal_sponsor } from "@/app_modules/event/global_state";
 import {

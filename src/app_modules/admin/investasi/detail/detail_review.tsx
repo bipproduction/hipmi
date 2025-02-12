@@ -1,6 +1,6 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
@@ -40,6 +40,7 @@ export default function AdminInvestasi_DetailReview({
 
   useShallowEffect(() => {
     cekStatusPublish();
+    // omload()
   }, []);
 
   async function cekStatusPublish() {
@@ -142,6 +143,8 @@ export default function AdminInvestasi_DetailReview({
     }
   }
 
+
+
   return (
     <>
       <Stack px={"lg"}>
@@ -182,6 +185,9 @@ export default function AdminInvestasi_DetailReview({
           ]}
         >
           {/* Data Author */}
+          if(!data.author){
+            
+          }
           <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
 
           {/* Data Foto */}

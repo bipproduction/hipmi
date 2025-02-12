@@ -4,7 +4,7 @@ import { Avatar, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import ComponentGlobal_Loader from "./loader";
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 
 export function ComponentGlobal_LoaderAvatar({
   fileId,

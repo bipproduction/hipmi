@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminJob } from "@/app/lib/router_admin/router_admin_job";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
@@ -21,7 +21,7 @@ import { IconPhotoCheck, IconSearch, IconSettingsSearch } from "@tabler/icons-re
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import adminJob_getListPublish from "../../fun/get/get_list_publish";
-import { RouterAdminGlobal } from "@/app/lib";
+import { RouterAdminGlobal } from "@/lib";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";

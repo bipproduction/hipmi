@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function adminMap_funGetAllMaps() {
   const data = await prisma.businessMaps.findMany({

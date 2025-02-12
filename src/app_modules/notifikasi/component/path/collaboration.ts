@@ -1,4 +1,4 @@
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
 

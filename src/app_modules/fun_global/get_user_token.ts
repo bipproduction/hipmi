@@ -1,7 +1,7 @@
 "use server";
 
-import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
-import { ServerEnv } from "@/app/lib/server_env";
+import { RouterAuth } from "@/lib/router_hipmi/router_auth";
+import { ServerEnv } from "@/lib/server_env";
 import { unsealData } from "iron-session";
 import _ from "lodash";
 import { cookies } from "next/headers";

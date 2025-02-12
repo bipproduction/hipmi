@@ -2,7 +2,7 @@ import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_ad
 import {
   gs_adminEvent_triggerReview,
   IRealtimeData,
-} from "@/app/lib/global_state";
+} from "@/lib/global_state";
 import { AccentColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -367,6 +367,7 @@ export default function AdminEvent_ComponentTableReview() {
     ));
   };
 
+
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
@@ -385,6 +386,9 @@ export default function AdminEvent_ComponentTableReview() {
             />
           }
         />
+
+      
+
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
         ) : (

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDashboard } from "@/lib/router_hipmi/router_admin";
 import {
   AccentColor,
   MainColor,

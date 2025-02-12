@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { clientLogger } from "@/util/clientLogger";
 import { Box, Center, Loader } from "@mantine/core";

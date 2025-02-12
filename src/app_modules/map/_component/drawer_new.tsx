@@ -1,4 +1,4 @@
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import { ActionIcon, Box, Button, Drawer, Grid, Group, Skeleton, Stack, Text, Title } from "@mantine/core";

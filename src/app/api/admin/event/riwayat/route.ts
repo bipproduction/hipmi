@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
 import { NextResponse } from "next/server";

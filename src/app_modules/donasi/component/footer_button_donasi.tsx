@@ -1,5 +1,5 @@
 "use client";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { Footer, Center, Button } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";

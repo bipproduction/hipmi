@@ -1,5 +1,5 @@
-import { IRealtimeData } from "@/app/lib/global_state";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { IRealtimeData } from "@/lib/global_state";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,

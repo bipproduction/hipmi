@@ -1,4 +1,4 @@
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
 import { notifikasi_funVotingCheckStatus } from "../../fun/check/fun_check_voting_status";

@@ -1,4 +1,4 @@
-import prisma from "./../src/app/lib/prisma";
+import prisma from "../src/lib/prisma";
 import { generate_seeder } from "./../src/app_modules/_global/fun/generate_seeder";
 
 (async () => {

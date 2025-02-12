@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_LoadImage, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import {

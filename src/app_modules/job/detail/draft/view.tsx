@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { Button, Group, Stack } from "@mantine/core";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
@@ -18,7 +18,7 @@ import { MODEL_JOB } from "../../model/interface";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { job_getOneById } from "../../fun/get/get_one_by_id";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 
 export default function Job_DetailDraft({

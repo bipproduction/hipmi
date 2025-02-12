@@ -3,7 +3,7 @@
 import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
-} from "@/app/lib/router_hipmi/router_investasi";
+} from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,

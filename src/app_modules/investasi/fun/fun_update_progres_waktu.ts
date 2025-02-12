@@ -1,7 +1,7 @@
 "use server";
 import { MODEL_INVESTASI } from "../_lib/interface";
 import moment from "moment";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function funUpadteProgresWaktuInvestasi(data: MODEL_INVESTASI) {
 

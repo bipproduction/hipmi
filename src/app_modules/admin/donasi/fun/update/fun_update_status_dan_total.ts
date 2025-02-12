@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import prisma from "@/lib/prisma";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { revalidatePath } from "next/cache";
 
 // NEW FUNCTION

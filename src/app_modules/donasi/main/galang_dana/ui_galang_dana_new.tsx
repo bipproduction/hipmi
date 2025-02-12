@@ -1,5 +1,5 @@
 "use client";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { AccentColor, MainColor, } from "@/app_modules/_global/color/color_pallet";
 import { Stack, Tabs } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";

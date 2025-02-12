@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import backendLogger from "@/util/backendLogger";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -17,7 +17,7 @@ import ComponentVote_DetailDataSebelumPublish from "../../component/detail/detai
 import { Vote_funDeleteById } from "../../fun/delete/fun_delete_by_id";
 import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_VOTING } from "../../model/interface";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 import { useShallowEffect } from "@mantine/hooks";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";

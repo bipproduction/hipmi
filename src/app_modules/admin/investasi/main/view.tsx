@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   ActionIcon,
@@ -48,7 +48,7 @@ import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import global_limit from "@/app/lib/limit";
+import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetAdminInvestasiCountDashboard } from "../_lib/api_fetch_admin_investasi";
 

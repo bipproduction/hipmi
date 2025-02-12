@@ -1,4 +1,4 @@
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -9,7 +9,7 @@ import { MODEL_PORTOFOLIO_OLD } from "@/app_modules/model_global/portofolio";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";

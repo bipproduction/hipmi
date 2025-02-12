@@ -1,5 +1,5 @@
-import { APIs } from "@/app/lib";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { APIs } from "@/lib";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_INVESTASI_DOKUMEN } from "@/app_modules/investasi/_lib/interface";
 import {

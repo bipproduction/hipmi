@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

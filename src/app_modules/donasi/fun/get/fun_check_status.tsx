@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 
 export async function donasi_checkStatus({ id }: { id: string }) {
   const checkStatus = await prisma.donasi.findFirst({

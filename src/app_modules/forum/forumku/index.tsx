@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import {
   AccentColor
 } from "@/app_modules/_global/color/color_pallet";

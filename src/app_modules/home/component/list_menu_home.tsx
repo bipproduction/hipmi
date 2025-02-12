@@ -1,9 +1,9 @@
-import { RouterColab } from '@/app/lib/router_hipmi/router_colab';
-import { RouterEvent } from '@/app/lib/router_hipmi/router_event';
-import { RouterForum } from '@/app/lib/router_hipmi/router_forum';
-import { RouterJob } from '@/app/lib/router_hipmi/router_job';
-import { RouterMap } from '@/app/lib/router_hipmi/router_map';
-import { RouterVote } from '@/app/lib/router_hipmi/router_vote';
+import { RouterColab } from '@/lib/router_hipmi/router_colab';
+import { RouterEvent } from '@/lib/router_hipmi/router_event';
+import { RouterForum } from '@/lib/router_hipmi/router_forum';
+import { RouterJob } from '@/lib/router_hipmi/router_job';
+import { RouterMap } from '@/lib/router_hipmi/router_map';
+import { RouterVote } from '@/lib/router_hipmi/router_vote';
 import { IconAffiliate, IconBriefcase, IconHeartHandshake, IconMap2, IconMessages, IconPackageImport, IconPresentation, IconShoppingBag } from '@tabler/icons-react';
 
 

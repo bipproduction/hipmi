@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function adminForum_countLaporanKomentar() {
   const count = await prisma.forum_ReportKomentar.count({

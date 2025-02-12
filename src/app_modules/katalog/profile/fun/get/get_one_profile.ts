@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function Profile_getOneById(profileId: string) {
   const data = await prisma.profile.findFirst({
