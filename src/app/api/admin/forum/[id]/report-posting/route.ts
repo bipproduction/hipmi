@@ -3,7 +3,8 @@ import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: Request,
+    { params }: { params: { id: string } }) {
     
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
@@ -13,6 +14,8 @@ export async function GET(request: Request) {
 
     try {
         let fixData;
+        const { id } = params;
+        const postingId = id
 
         if (!page) {
             fixData = await prisma.forum_ReportPosting.findMany({
@@ -21,13 +24,7 @@ export async function GET(request: Request) {
                     createdAt: "desc",
                 },
                 where: {
-                    Forum_Posting: {
-                        isActive: true,
-                        diskusi: {
-                            contains: search ? search : '',
-                            mode: "insensitive"
-                        }
-                    },
+                    forum_PostingId: postingId,
                 },
                 select: {
                     id: true,
@@ -58,60 +55,35 @@ export async function GET(request: Request) {
                 take: takeData,
                 skip: skipData,
                 orderBy: {
-                    createdAt: "desc",
+                  createdAt: "desc",
                 },
                 where: {
-                    Forum_Posting: {
-                        isActive: true,
-                        diskusi: {
-                            contains: search ? search : '',
-                            mode: "insensitive"
-                        }
-                    },
-
+                  forum_PostingId: postingId,
                 },
                 select: {
-                    id: true,
-                    isActive: true,
-                    createdAt: true,
-                    deskripsi: true,
-                    forumMaster_KategoriReportId: true,
-                    ForumMaster_KategoriReport: {
+                  id: true,
+                  deskripsi: true,
+                  createdAt: true,
+                  User: {
+                    select: {
+                      id: true,
+                      username: true,
+                      Profile: {
                         select: {
-                            id: true,
-                            title: true,
-                            deskripsi: true,
+                          name: true,
                         },
+                      },
                     },
-
-                    forum_PostingId: true,
-                    Forum_Posting: {
-                        select: {
-                            id: true,
-                            diskusi: true,
-                            ForumMaster_StatusPosting: {
-                                select: {
-                                    id: true,
-                                    status: true,
-                                }
-                            },
-                            Author: {
-                                select: {
-                                    id: true,
-                                    username: true
-                                }
-                            }
-                        },
+                  },
+                  ForumMaster_KategoriReport: {
+                    select: {
+                      id: true,
+                      title: true,
+                      deskripsi: true,
                     },
-                    userId: true,
-                    User: {
-                        select: {
-                            id: true,
-                            username: true,
-                        },
-                    },
+                  },
                 },
-            });
+              });
             const nCount = await prisma.forum_ReportPosting.count({
                 where: {
                     isActive: true,

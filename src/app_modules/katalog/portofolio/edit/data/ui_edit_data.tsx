@@ -1,66 +1,179 @@
 "use client";
 
-import {
-  MainColor
-} from "@/app_modules/_global/color/color_pallet";
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_master";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { Button, Select, Stack, TextInput, Textarea } from "@mantine/core";
+import { clientLogger } from "@/util/clientLogger";
+import {
+  Button,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Portofolio_funEditDataBisnis } from "../../fun/edit/fun_edit_data_bisnis_by_id";
+import { PhoneInput } from "react-international-phone";
+import {
+  apiGetPortofolioById,
+  apiUpdatePortofolioById,
+} from "../../component/api_fetch_portofolio";
+import { Portofolio_SkeletonEditDataBisnis } from "../../component/skeleton_view";
 import {
   MODEL_PORTOFOLIO,
   MODEL_PORTOFOLIO_BIDANG_BISNIS,
 } from "../../model/interface";
 
-export default function Portofolio_EditDataBisnis({
-  dataPorto,
-  listBidang,
-}: {
-  dataPorto: MODEL_PORTOFOLIO;
-  listBidang: MODEL_PORTOFOLIO_BIDANG_BISNIS[];
-}) {
+interface IUpdatePortofoli {
+  namaBisnis: string;
+  alamatKantor: string;
+  tlpn: string;
+  deskripsi: string;
+  masterBidangBisnisId: string;
+}
+
+export default function Portofolio_EditDataBisnis() {
   const router = useRouter();
-  const [value, setValue] = useState(dataPorto);
   const [loading, setLoading] = useState(false);
+
+  const params = useParams<{ id: string }>();
+  const portofolioId = params.id;
+  const [data, setData] = useState<MODEL_PORTOFOLIO | null>(null);
+  const [listBidang, setListBidang] = useState<
+    MODEL_PORTOFOLIO_BIDANG_BISNIS[]
+  >([]);
+
+  useShallowEffect(() => {
+    onLoadBidang();
+    onLoadData();
+  }, []);
+
+  const onLoadData = async () => {
+    try {
+      const respone = await apiGetPortofolioById({
+        id: portofolioId,
+      });
+
+      if (respone.success) {
+        setData(respone.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data portofolio", error);
+    }
+  };
+
+  const onLoadBidang = async () => {
+    try {
+      const respone = await apiGetMasterBidangBisnis();
+      if (respone.success) {
+        setListBidang(respone.data);
+      } else {
+        setListBidang([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data master bidang bisnis", error);
+    }
+  };
+
+  const validateData = async (data: any) => {
+    if (_.values(data).includes("")) {
+      // VALIDASI NOMOR TELEPON
+      return "Lengkapi data";
+    }
+
+    if (data?.tlpn.length < 8) {
+      return "Nomor telepon minimal 8 digit";
+    }
+  };
+
+  const hanldeUpadteData = async (data: any) => {
+    try {
+      const newData: IUpdatePortofoli = {
+        namaBisnis: data?.namaBisnis,
+        alamatKantor: data?.alamatKantor,
+        tlpn: data?.tlpn,
+        deskripsi: data?.deskripsi,
+        masterBidangBisnisId: data?.MasterBidangBisnis.id,
+      };
+
+      const respone = await apiUpdatePortofolioById({
+        data: newData,
+        id: portofolioId,
+      });
+
+      return respone;
+    } catch (error) {
+      console.error("Error update data portofolio", error);
+      return null;
+    }
+  };
+
+  const submitUpdate = async () => {
+    const validate = await validateData(data);
+    if (validate) {
+      ComponentGlobal_NotifikasiPeringatan(validate);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updateData = await hanldeUpadteData(data);
+
+      if (updateData.success) {
+        ComponentGlobal_NotifikasiBerhasil(updateData.message);
+        router.back();
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(updateData.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error update data portofolio", error);
+    }
+  };
+
+  if (!data) return <Portofolio_SkeletonEditDataBisnis />;
 
   return (
     <>
-      {/* <pre>{JSON.stringify(porto, null, 2)}</pre> */}
       <Stack spacing={50} p={"sm"}>
         <Stack>
           <TextInput
             styles={{
               label: {
-                color: MainColor.white
+                color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
-                color: MainColor.red
-              }
+                color: MainColor.red,
+              },
             }}
             withAsterisk
-            value={value.namaBisnis}
+            value={data?.namaBisnis}
             label="Nama Bisnis"
             placeholder="Nama bisnis"
             maxLength={100}
             error={
-              value.namaBisnis === "" ? (
+              data?.namaBisnis === "" ? (
                 <ComponentGlobal_ErrorInput text="Masukan nama bisnis" />
               ) : (
                 ""
               )
             }
             onChange={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 namaBisnis: val.target.value,
               });
             }}
@@ -68,17 +181,17 @@ export default function Portofolio_EditDataBisnis({
           <Select
             styles={{
               label: {
-                color: MainColor.white
+                color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
-                color: MainColor.red
-              }
+                color: MainColor.red,
+              },
             }}
             withAsterisk
-            value={value.MasterBidangBisnis.id}
+            value={data?.MasterBidangBisnis.id}
             label="Bidang Bisnis"
             placeholder="Pilih salah satu bidang bisnis"
             data={listBidang.map((e) => ({
@@ -86,8 +199,8 @@ export default function Portofolio_EditDataBisnis({
               label: e.name,
             }))}
             onChange={(val) => {
-              setValue({
-                ...(value as any),
+              setData({
+                ...(data as any),
                 MasterBidangBisnis: {
                   id: val,
                 },
@@ -97,114 +210,145 @@ export default function Portofolio_EditDataBisnis({
           <TextInput
             styles={{
               label: {
-                color: MainColor.white
+                color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
-                color: MainColor.red
-              }
+                color: MainColor.red,
+              },
             }}
             withAsterisk
-            value={value.alamatKantor}
+            value={data?.alamatKantor}
             label="Alamat Kantor"
             placeholder="Alamat kantor"
             maxLength={100}
             error={
-              value.alamatKantor === "" ? (
+              data?.alamatKantor === "" ? (
                 <ComponentGlobal_ErrorInput text="Masukan alamat kantor" />
               ) : (
                 ""
               )
             }
             onChange={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 alamatKantor: val.target.value,
               });
             }}
           />
-          <TextInput
+
+          {/* <TextInput
             styles={{
               label: {
-                color: MainColor.white
+                color: MainColor.white,
               },
               input: {
-                backgroundColor: MainColor.white
+                backgroundColor: MainColor.white,
               },
               required: {
-                color: MainColor.red
-              }
+                color: MainColor.red,
+              },
             }}
             withAsterisk
-            value={value.tlpn}
+            value={data?.tlpn}
             label="Nomor Telepon Kantor"
             placeholder="Nomor telepon kantor"
             type="number"
             maxLength={15}
             error={
-              value.tlpn === "" ? (
+              data?.tlpn === "" ? (
                 <ComponentGlobal_ErrorInput text="Masukan nomor telepon kantor" />
               ) : (
                 ""
               )
             }
             onChange={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 tlpn: val.target.value,
               });
             }}
-          />
+          /> */}
+
+          <Stack spacing={5}>
+            <Text c={MainColor.white} fz={"sm"}>
+              Nomor Telepon{" "}
+              <Text c={"red"} span inherit>
+                *
+              </Text>
+            </Text>
+
+            <PhoneInput
+              value={data?.tlpn}
+              placeholder="Nomor telepon"
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  backgroundColor: MainColor.login,
+                },
+              }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.white }}
+              defaultCountry="id"
+              onChange={(val) => {
+                const valPhone = val.substring(1);
+                setData({
+                  ...data,
+                  tlpn: valPhone,
+                });
+              }}
+            />
+          </Stack>
+
           <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
-                  color: MainColor.white
+                  color: MainColor.white,
                 },
                 input: {
-                  backgroundColor: MainColor.white
+                  backgroundColor: MainColor.white,
                 },
                 required: {
-                  color: MainColor.red
-                }
+                  color: MainColor.red,
+                },
               }}
               autosize
               minRows={2}
               maxRows={5}
               withAsterisk
-              value={value.deskripsi}
+              value={data?.deskripsi}
               label="Deskripsi"
               placeholder="Deskripsi singkat mengenai usaha"
               maxLength={300}
               error={
-                value.deskripsi === "" ? (
+                data.deskripsi === "" ? (
                   <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
                 ) : (
                   ""
                 )
               }
               onChange={(val) => {
-                setValue({
-                  ...value,
+                setData({
+                  ...data,
                   deskripsi: val.target.value,
                 });
               }}
             />
             <ComponentGlobal_InputCountDown
               maxInput={300}
-              lengthInput={value.deskripsi.length}
+              lengthInput={data?.deskripsi.length as any}
             />
           </Stack>
         </Stack>
+
         <Button
-          disabled={_.values(value).includes("") ? true : false}
+          disabled={_.values(data).includes("")}
           radius={"xl"}
           loading={loading ? true : false}
           loaderPosition="center"
           onClick={() => {
-            onUpdate(router, value as any, setLoading);
+            submitUpdate();
           }}
           bg={MainColor.yellow}
           color={"yellow"}
@@ -218,28 +362,4 @@ export default function Portofolio_EditDataBisnis({
       </Stack>
     </>
   );
-}
-
-async function onUpdate(
-  router: AppRouterInstance,
-  data: MODEL_PORTOFOLIO,
-  setLoading: any
-) {
-  if (_.values(data).includes("")) {
-    return null;
-  }
-
-  // if (data.namaBisnis.length > 100) return null;
-  // if (data.alamatKantor.length > 100) return null;
-  // if (data.deskripsi.length > 150) return null;
-
-  await Portofolio_funEditDataBisnis(data).then((res) => {
-    if (res.status === 200) {
-      setLoading(true);
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      router.back();
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
-    }
-  });
 }

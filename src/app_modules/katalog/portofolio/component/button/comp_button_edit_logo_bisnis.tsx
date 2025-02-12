@@ -76,8 +76,6 @@ export function ComponentPortofolio_ButtonEditLogoBisnis({
   return (
     <>
       <Box
-        p={"xs"}
-        bg={"red"}
         style={{
           display: "flex",
           justifyContent: "center",
@@ -93,7 +91,7 @@ export function ComponentPortofolio_ButtonEditLogoBisnis({
           color="yellow"
           c={"black"}
           style={{
-            width: "100%",
+            width: "90%",
             transition: "0.5s",
             position: "absolute",
             bottom: 20,

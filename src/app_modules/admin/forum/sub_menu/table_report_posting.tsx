@@ -58,11 +58,11 @@ function TableView() {
     const loadInitialData = async () => {
       try {
         const response = await apiGetAdminForumReportPosting({
-          page: `${activePage}`
+          page: `${activePage}`,
         })
 
-        if (response?.success && response?.data) {
-          setData(response.data);
+        if (response?.success && response?.data.data) {
+          setData(response.data.data);
           setNPage(response.data.nCount || 1)
         } else {
           console.error("Invalid data format recieved", response),

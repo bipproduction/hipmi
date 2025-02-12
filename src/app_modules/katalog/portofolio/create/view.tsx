@@ -184,12 +184,13 @@ export default function CreatePortofolio() {
                   backgroundColor: MainColor.login,
                 },
               }}
-              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.white }}
               defaultCountry="id"
               onChange={(val) => {
                 const valPhone = val.substring(1);
                 setDataPortofolio({
                   ...dataPortofolio,
+                  
                   tlpn: valPhone,
                 });
               }}
