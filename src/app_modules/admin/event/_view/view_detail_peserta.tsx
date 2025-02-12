@@ -16,6 +16,7 @@ import { useState } from "react";
 import { adminEvent_getListPesertaById } from "../fun";
 import _ from "lodash";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export function AdminEvent_ViewDetailPeserta({
   dataPeserta,
@@ -44,16 +45,16 @@ export function AdminEvent_ViewDetailPeserta({
     : data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center>{e?.User?.username}</Center>
+          <Center c={AdminColor.white}>{e?.User?.username}</Center>
         </td>
         <td>
-          <Center>{e?.User?.Profile?.name}</Center>
+          <Center c={AdminColor.white}>{e?.User?.Profile?.name}</Center>
         </td>
         <td>
-          <Center>+{e?.User?.nomor}</Center>
+          <Center c={AdminColor.white}>+{e?.User?.nomor}</Center>
         </td>
         <td>
-          <Center>{e?.User?.Profile?.email}</Center>
+          <Center c={AdminColor.white}>{e?.User?.Profile?.email}</Center>
         </td>
         <td>
           <Center>
@@ -70,37 +71,36 @@ export function AdminEvent_ViewDetailPeserta({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Paper bg={"gray.4"}
+        <Paper bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}>
-          <Title order={4}>Daftar Peserta</Title>
+          <Title c={AdminColor.white} order={4}>Daftar Peserta</Title>
         </Paper>
-        <Paper p={"md"} withBorder shadow="lg" h={"75vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"75vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"md"}
               horizontalSpacing={"md"}
               p={"md"}
               w={"100%"}
-              striped
-              highlightOnHover
+              
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Username</Center>
+                    <Center c={AdminColor.white}>Username</Center>
                   </th>
                   <th>
-                    <Center>Name</Center>
+                    <Center c={AdminColor.white}>Name</Center>
                   </th>
                   <th>
-                    <Center>Nomor</Center>
+                    <Center c={AdminColor.white}>Nomor</Center>
                   </th>
                   <th>
-                    <Center>Email</Center>
+                    <Center c={AdminColor.white}>Email</Center>
                   </th>
                   <th>
-                    <Center>Konfirmasi Kehadiran</Center>
+                    <Center c={AdminColor.white}>Konfirmasi Kehadiran</Center>
                   </th>
                 </tr>
               </thead>
