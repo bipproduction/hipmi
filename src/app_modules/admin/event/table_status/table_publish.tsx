@@ -1,6 +1,6 @@
 "use client";
 
-import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
@@ -55,7 +55,7 @@ function TableStatus() {
     const loadInitialData = async () => {
       try {
         const response = await apiGetDataEventByStatus({
-          status: "Publish",
+          name: "Publish",
           page: `${activePage}`,
           search: isSearch,
         });

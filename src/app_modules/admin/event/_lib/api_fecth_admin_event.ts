@@ -5,6 +5,7 @@ export {
   apiGetAdminEventByStatus as apiGetDataEventByStatus,
   apiGetAdminEventRiwayat,
   apiGetAdminEventTipeAcara,
+  apiGetAdminDetailEventById
 };
 
 const apiGetAdminEventStatusCountDashboard = async ({
@@ -63,11 +64,11 @@ const apiGetAdminEventCountTipeAcara = async () => {
 };
 
 const apiGetAdminEventByStatus = async ({
-  status,
+  name,
   page,
   search,
 }: {
-  status: "Publish" | "Review" | "Reject";
+  name: "Publish" | "Review" | "Reject";
   page: string;
   search: string;
 }) => {
@@ -77,7 +78,7 @@ const apiGetAdminEventByStatus = async ({
   const isPage = page ? `?page=${page}` : "";
   const isSearch = search ? `&search=${search}` : "";
   const respone = await fetch(
-    `/api/admin/event/${status}${isPage}${isSearch}`,
+    `/api/admin/event/status/${name}${isPage}${isSearch}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -132,3 +133,20 @@ const apiGetAdminEventTipeAcara = async () => {
 
   return await response.json().catch(() => null);
 };
+
+const apiGetAdminDetailEventById = async ({ id }: { id: string }) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/admin/event/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  return await response.json().catch(() => null);
+}

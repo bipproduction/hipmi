@@ -6,11 +6,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { status: string } }
+  { params }: { params: { name: string } }
 ) {
-  
 
-  const { status } = params;
+
+  const { name } = params;
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
   const page = searchParams.get("page");
@@ -19,7 +19,7 @@ export async function GET(
 
   try {
     let fixData;
-    const fixStatus = _.startCase(status);
+    const fixStatus = _.startCase(name);
 
     if (!page && !search) {
       fixData = await prisma.event.findMany({
@@ -230,9 +230,11 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      message: `Success get data table event ${status}`,
+      message: `Success get data table event ${name}`,
       data: fixData,
-    });
+    },
+      { status: 200 }
+    );
   } catch (error) {
     backendLogger.error("Error get data table event dashboard >>", error);
     return NextResponse.json(
@@ -243,5 +245,5 @@ export async function GET(
       },
       { status: 500 }
     );
-  } 
+  }
 }

@@ -33,6 +33,7 @@ import { adminForum_getListReportPostingById } from "../fun/get/get_list_report_
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import mqtt_client from "@/util/mqtt_client";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_HasilReportPosting({
   dataPosting,
@@ -177,12 +178,12 @@ function HasilReportPosting({
   const TableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={200}>
           <Text>{e?.User?.username}</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={200}>
           <Text>
             {e?.ForumMaster_KategoriReport?.title
               ? e?.ForumMaster_KategoriReport?.title
@@ -192,7 +193,7 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center w={500}>
+        <Center c={AdminColor.white} w={500}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.ForumMaster_KategoriReport?.deskripsi ? (
               <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
@@ -204,7 +205,7 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center w={500}>
+        <Center c={AdminColor.white} w={500}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
           </Spoiler>
@@ -218,12 +219,12 @@ function HasilReportPosting({
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"red.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
           <Title order={4} c={"white"}>
-            Report Postingan
+            Hasil Report Postingan
           </Title>
           {/* <TextInput
             icon={<IconSearch size={20} />}
@@ -238,7 +239,7 @@ function HasilReportPosting({
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"}  bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -246,22 +247,21 @@ function HasilReportPosting({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Username</Center>
+                      <Center c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center>Kategori</Center>
+                      <Center c={AdminColor.white}>Kategori</Center>
                     </th>
                     <th>
-                      <Center>Deskripsi</Center>
+                      <Center c={AdminColor.white}>Deskripsi</Center>
                     </th>
                     <th>
-                      <Center>Deskripsi Lainnya</Center>
+                      <Center c={AdminColor.white}>Deskripsi Lainnya</Center>
                     </th>
                   </tr>
                 </thead>

@@ -29,7 +29,7 @@ import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_rejec
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { apiGetDataEventByStatus } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
+import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
@@ -59,7 +59,7 @@ function TableStatus() {
     const loadInitialData = async () => {
       try {
         const response = await apiGetDataEventByStatus({
-          status: "Reject",
+          name: "Reject",
           page: `${activePage}`,
           search: isSearch,
         });
@@ -98,7 +98,7 @@ function TableStatus() {
     if (res.status === 200) {
       try {
         const response = await apiGetDataEventByStatus({
-          status: "Reject",
+          name: "Reject",
           page: `${activePage}`,
           search: isSearch,
         });
@@ -251,7 +251,7 @@ function TableStatus() {
                 horizontalSpacing={"md"}
                 p={"md"}
                 w={1500}
-                
+
               >
                 <thead>
                   <tr>
