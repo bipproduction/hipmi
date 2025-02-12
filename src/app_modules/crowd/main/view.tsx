@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterCrowd } from "@/app/lib/router_hipmi/router_crowd";
+import { RouterCrowd } from "@/lib/router_hipmi/router_crowd";
 import {
   AccentColor,
   MainColor,

@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminColab } from "@/app/lib/router_admin/router_admin_colab";
+import prisma from "@/lib/prisma";
+import { RouterAdminColab } from "@/lib/router_admin/router_admin_colab";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { revalidatePath } from "next/cache";
 

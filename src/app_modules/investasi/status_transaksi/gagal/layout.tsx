@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
-import { Warna } from "@/app/lib/warna";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { Warna } from "@/lib/warna";
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import {
   ActionIcon,

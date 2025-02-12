@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import UIGlobal_SplashScreen from "@/app_modules/_global/ui/ui_splash";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconAffiliate } from "@tabler/icons-react";

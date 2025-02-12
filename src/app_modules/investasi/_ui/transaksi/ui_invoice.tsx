@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 import { useState } from "react";
 import { gs_investas_menu } from "../../g_state";
 import { useRouter } from "next/navigation";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { ActionIcon, Loader } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 

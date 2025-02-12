@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import TampilanRupiahDonasi from "@/app_modules/donasi/component/tampilan_rupiah";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import {

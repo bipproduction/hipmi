@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import { clientLogger } from "@/util/clientLogger";
 import {

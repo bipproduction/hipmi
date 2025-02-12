@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentGlobal_CardStyles } from "../_global/component";
 import { apiGetACtivationUser } from "../_global/lib/api_user";
-import { gs_access_user } from "@/app/lib/global_state";
+import { gs_access_user } from "@/lib/global_state";
 import { useAtom } from "jotai";
 import { MainColor } from "../_global/color";
 import CustomSkeleton from "../components/CustomSkeleton";

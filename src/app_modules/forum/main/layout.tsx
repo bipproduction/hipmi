@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";

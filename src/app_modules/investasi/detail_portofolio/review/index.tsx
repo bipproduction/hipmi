@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { Button, Stack } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";

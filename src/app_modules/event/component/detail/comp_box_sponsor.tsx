@@ -1,4 +1,4 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ActionIcon, Flex, Loader, Paper, Text } from "@mantine/core";

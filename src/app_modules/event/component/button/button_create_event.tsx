@@ -1,5 +1,5 @@
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,

@@ -1,7 +1,7 @@
 "use client";
 
-import { API_RouteEvent } from "@/app/lib/api_user_router/route_api_event";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { API_RouteEvent } from "@/lib/api_user_router/route_api_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import {

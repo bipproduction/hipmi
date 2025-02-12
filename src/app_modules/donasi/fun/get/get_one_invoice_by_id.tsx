@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function Donasi_getOneInvoiceById(invoiceId: string) {
   const res = await prisma.donasi_Invoice.findFirst({

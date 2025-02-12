@@ -5,7 +5,7 @@ import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { IconCaretRight } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 
 export function ComponentPortofolio_DaftarBoxView({
   data,

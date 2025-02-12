@@ -1,6 +1,6 @@
 "use client";
-import { gs_adminInvestasi_triggerReview } from "@/app/lib/global_state";
-import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { gs_adminInvestasi_triggerReview } from "@/lib/global_state";
+import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {

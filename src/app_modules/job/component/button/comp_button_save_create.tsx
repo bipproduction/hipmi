@@ -1,8 +1,8 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {

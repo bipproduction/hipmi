@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";

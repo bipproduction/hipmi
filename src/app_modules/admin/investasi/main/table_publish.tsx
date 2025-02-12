@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   Button,

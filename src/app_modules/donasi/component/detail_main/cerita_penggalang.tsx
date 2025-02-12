@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { MODEL_DONASI } from "../../model/interface";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { Stack, Title, Paper, Group, ActionIcon, Text } from "@mantine/core";
 import { IconCircleChevronRight } from "@tabler/icons-react";
 import moment from "moment";

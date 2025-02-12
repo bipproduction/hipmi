@@ -1,5 +1,5 @@
 "use client";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_CardStyles, ComponentGlobal_LoadImageLandscape, } from "@/app_modules/_global/component";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";

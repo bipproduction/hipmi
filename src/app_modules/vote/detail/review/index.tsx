@@ -1,7 +1,7 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";

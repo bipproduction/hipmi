@@ -1,6 +1,6 @@
 "use client";
 
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import {
   AccentColor,
   MainColor,

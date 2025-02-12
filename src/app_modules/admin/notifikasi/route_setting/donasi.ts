@@ -1,5 +1,5 @@
-import { ITypeStatusNotifikasi } from "@/app/lib/global_state";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { ITypeStatusNotifikasi } from "@/lib/global_state";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 import adminNotifikasi_countNotifikasi from "../fun/count/count_is_read";

@@ -1,4 +1,4 @@
-import { API_RouteNotifikasi } from "@/app/lib/api_user_router/route_api_notifikasi";
+import { API_RouteNotifikasi } from "@/lib/api_user_router/route_api_notifikasi";
 import { ICategoryapp } from "../model/interface";
 
 export const apiGetAllNotifikasiByCategory = async ({category, page}: {category: ICategoryapp; page: number}) => {

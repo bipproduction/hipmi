@@ -1,5 +1,5 @@
 "use client";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,

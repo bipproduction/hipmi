@@ -1,8 +1,8 @@
-import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDashboard } from "@/lib/router_hipmi/router_admin";
 import {
   RouterPortofolio,
   RouterProfile,
-} from "@/app/lib/router_hipmi/router_katalog";
+} from "@/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import {
   gs_admin_navbar_menu,

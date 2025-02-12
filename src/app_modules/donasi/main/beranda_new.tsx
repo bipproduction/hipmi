@@ -1,6 +1,6 @@
 "use client";
-import { gs_donasiTriggerBeranda } from "@/app/lib/global_state";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { gs_donasiTriggerBeranda } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { AccentColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";

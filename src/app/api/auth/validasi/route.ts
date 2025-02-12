@@ -1,5 +1,5 @@
 import { sessionCreate } from "@/app/(auth)/_lib/session_create";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";

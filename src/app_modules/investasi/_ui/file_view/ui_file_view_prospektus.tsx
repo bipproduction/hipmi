@@ -1,7 +1,7 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { APIs } from "@/lib";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import { Box } from "@mantine/core";

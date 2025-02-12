@@ -14,7 +14,7 @@ import {
 import { IconImageInPicture } from "@tabler/icons-react";
 import moment from "moment";
 
-import { RouterImagePreview } from "@/app/lib";
+import { RouterImagePreview } from "@/lib";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_DONASI_PENCAIRAN_DANA } from "../../model/interface";

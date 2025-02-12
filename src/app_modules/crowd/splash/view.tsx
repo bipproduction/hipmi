@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterCrowd } from "@/app/lib/router_hipmi/router_crowd";
+import { RouterCrowd } from "@/lib/router_hipmi/router_crowd";
 import UIGlobal_SplashScreen from "@/app_modules/_global/ui/ui_splash";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconHeartHandshake } from "@tabler/icons-react";

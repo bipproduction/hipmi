@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
 
 export default async function notifikasiToAdmin_funCreate({

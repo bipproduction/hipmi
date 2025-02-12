@@ -1,6 +1,6 @@
 "use client";
 
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import {
   defaultLatLong,

@@ -1,5 +1,5 @@
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { UIGlobal_Drawer } from "@/app_modules/_global/ui";
 import { ActionIcon } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";

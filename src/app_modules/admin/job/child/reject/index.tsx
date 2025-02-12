@@ -1,7 +1,7 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterAdminJob } from "@/app/lib/router_admin/router_admin_job";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";

@@ -31,9 +31,9 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { IEventSponsor } from "../../_lib/interface";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 
 function Event_TambahSponsor() {
   const params = useParams<{ id: string }>();

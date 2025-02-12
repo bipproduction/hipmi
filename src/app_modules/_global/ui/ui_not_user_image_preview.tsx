@@ -1,7 +1,7 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
 import {
     ActionIcon,
     Box,

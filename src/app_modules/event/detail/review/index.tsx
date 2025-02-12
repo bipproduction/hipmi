@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
@@ -13,7 +13,7 @@ import { useState } from "react";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 import { MODEL_EVENT } from "../../_lib/interface";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";

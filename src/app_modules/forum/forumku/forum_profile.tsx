@@ -1,8 +1,8 @@
 "use client";
 
-import { pathAssetImage } from "@/app/lib";
-import { RouterImagePreview } from "@/app/lib/router_hipmi/router_image_preview";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { pathAssetImage } from "@/lib";
+import { RouterImagePreview } from "@/lib/router_hipmi/router_image_preview";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import {
   AccentColor,
   MainColor,

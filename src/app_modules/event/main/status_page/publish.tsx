@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Box, Center } from "@mantine/core";

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
@@ -14,7 +14,7 @@ import ComponentDonasi_DetailDataGalangDana from "../../component/detail_galang_
 import ComponentDonasi_CeritaPenggalangMain from "../../component/detail_main/cerita_penggalang";
 import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import funDeleteDonasi from "@/app_modules/investasi/fun/fun_delete_donasi";

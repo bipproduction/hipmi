@@ -1,8 +1,8 @@
 "use client";
 
-import { RouterAdminGlobal } from "@/app/lib";
-import { RouterAdminDonasi } from "@/app/lib/router_admin/router_admin_donasi";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminGlobal } from "@/lib";
+import { RouterAdminDonasi } from "@/lib/router_admin/router_admin_donasi";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { Admin_ComponentLoadImageLandscape } from "@/app_modules/admin/_admin_global";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";

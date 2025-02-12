@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_VOTING_DAFTAR_NAMA_VOTE } from "../../model/interface";
 import _ from "lodash";
 

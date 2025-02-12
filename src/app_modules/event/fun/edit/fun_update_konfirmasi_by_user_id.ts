@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 
 export async function event_funUpdateKehadiran({
   userId,

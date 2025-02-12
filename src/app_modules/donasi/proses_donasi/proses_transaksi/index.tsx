@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
-import { Warna } from "@/app/lib/warna";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
+import { Warna } from "@/lib/warna";
 import {
   AccentColor,
   MainColor,

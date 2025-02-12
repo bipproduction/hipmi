@@ -1,4 +1,4 @@
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_BoxInformation,

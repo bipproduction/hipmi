@@ -1,5 +1,5 @@
 "use client";
-import { Warna } from "@/app/lib/warna";
+import { Warna } from "@/lib/warna";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { auth_Logout } from "@/app_modules/auth/fun/fun_logout";

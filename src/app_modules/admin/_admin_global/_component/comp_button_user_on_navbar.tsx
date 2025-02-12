@@ -1,6 +1,6 @@
 "use client";
 
-import { Warna } from "@/app/lib/warna";
+import { Warna } from "@/lib/warna";
 import { AccentColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
 import { MODEL_USER } from "@/app_modules/home/model/interface";

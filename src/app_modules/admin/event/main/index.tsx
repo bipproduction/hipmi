@@ -1,13 +1,13 @@
 "use client";
 
-import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 
 import {
   apiGetEventRiwayatCount,
   apiGetEventStatusCountDashboard,
   apiGetEventTipeAcara,
 } from "@/app/dev/admin/event/_lib/api_fecth_admin_event";
-import global_limit from "@/app/lib/limit";
+import global_limit from "@/lib/limit";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

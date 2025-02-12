@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import React from "react";

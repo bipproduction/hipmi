@@ -13,7 +13,7 @@ import { Vote_funDeleteById } from "../../fun/delete/fun_delete_by_id";
 import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_id";
 import { gs_vote_status } from "../../global_state";
 import { MODEL_VOTING } from "../../model/interface";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { clientLogger } from "@/util/clientLogger";
 

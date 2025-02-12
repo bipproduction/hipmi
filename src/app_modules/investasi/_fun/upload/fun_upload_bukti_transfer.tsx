@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import _ from "lodash";
 import { v4 } from "uuid";
 import fs from "fs";

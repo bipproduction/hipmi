@@ -1,4 +1,4 @@
-import { RouterAdminVote } from "@/app/lib/router_admin/router_admin_vote";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { admin_funVotingCheckStatus } from "../fun/get/fun_voting_check_status";

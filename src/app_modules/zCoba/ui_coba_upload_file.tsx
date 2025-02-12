@@ -1,5 +1,5 @@
-import { DIRECTORY_ID } from "@/app/lib";
-import { TokenStorage } from "@/app/lib/token";
+import { DIRECTORY_ID } from "@/lib";
+import { TokenStorage } from "@/lib/token";
 import {
   Button,
   Center,
