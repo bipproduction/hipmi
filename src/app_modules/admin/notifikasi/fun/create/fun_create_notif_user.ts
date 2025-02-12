@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 

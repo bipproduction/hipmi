@@ -1,7 +1,7 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import { DIRECTORY_ID } from "@/lib";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {

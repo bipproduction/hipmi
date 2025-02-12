@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_PROFILE_OLD } from "@/app_modules/home/model/user_profile";
 
 export default async function funEditProfile(data: MODEL_PROFILE_OLD) {

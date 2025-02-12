@@ -1,4 +1,4 @@
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Paper, Grid, Stack, Center, Loader, Text } from "@mantine/core";

@@ -1,7 +1,7 @@
 "use client";
 
-import { pathAssetImage, RouterImagePreview } from "@/app/lib";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { pathAssetImage, RouterImagePreview } from "@/lib";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   ComponentGlobal_CardStyles,
   ComponentGlobal_LoaderAvatar,

@@ -1,4 +1,4 @@
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 
 export async function funGetDirectoryNameByValue({
   value,

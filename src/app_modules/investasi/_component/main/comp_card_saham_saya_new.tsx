@@ -1,4 +1,4 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanAngkaRatusan, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { Box, Progress, SimpleGrid, Stack, Text } from "@mantine/core";

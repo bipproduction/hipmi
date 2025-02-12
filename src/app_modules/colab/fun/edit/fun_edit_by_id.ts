@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_COLLABORATION } from "../../model/interface";
 import { revalidatePath } from "next/cache";
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 
 export default async function colab_funEditById(value: MODEL_COLLABORATION) {
   console.log(value);

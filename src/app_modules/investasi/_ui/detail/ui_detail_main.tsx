@@ -14,7 +14,7 @@ import { useState } from "react";
 import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
-} from "@/app/lib/router_hipmi/router_investasi";
+} from "@/lib/router_hipmi/router_investasi";
 import { IconDeviceIpadPlus } from "@tabler/icons-react";
 import { MainColor } from "@/app_modules/_global/color";
 

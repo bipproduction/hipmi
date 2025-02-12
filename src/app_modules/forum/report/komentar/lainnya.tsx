@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { Button, Group, Stack, Textarea } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

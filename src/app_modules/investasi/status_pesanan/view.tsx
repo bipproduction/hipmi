@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MODEL_Transaksi_Investasi } from "../_lib/interface";
 import { Button, Group, Paper, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,

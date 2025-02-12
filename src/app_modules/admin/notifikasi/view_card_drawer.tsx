@@ -4,7 +4,7 @@ import {
   gs_adminJob_triggerReview,
   gs_adminVoting_triggerReview,
   ITypeStatusNotifikasi,
-} from "@/app/lib/global_state";
+} from "@/lib/global_state";
 import { AccentColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";

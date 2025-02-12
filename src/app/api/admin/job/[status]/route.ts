@@ -1,5 +1,5 @@
 import { Job_Status } from '@/app_modules/job';
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import _, { take } from "lodash";
 import { NextResponse } from "next/server";
 import backendLogger from '@/util/backendLogger';

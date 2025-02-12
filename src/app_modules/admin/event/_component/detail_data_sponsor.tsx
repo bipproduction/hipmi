@@ -1,4 +1,4 @@
-import { RouterAdminEvent } from '@/app/lib/router_admin/router_admin_event';
+import { RouterAdminEvent } from '@/lib/router_admin/router_admin_event';
 import { Button, Center, Pagination, Paper, ScrollArea, Stack, Table, Title } from '@mantine/core';
 import { IconDeviceDesktop, IconDownload, IconImageInPicture } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';

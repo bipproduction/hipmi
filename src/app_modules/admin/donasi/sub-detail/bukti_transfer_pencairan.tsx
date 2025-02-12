@@ -2,8 +2,8 @@
 
 import { AspectRatio, Box, Image, Paper, Stack } from "@mantine/core";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 
 export default function AdminDonasi_BuktiTransferPencairan({
   imageId,

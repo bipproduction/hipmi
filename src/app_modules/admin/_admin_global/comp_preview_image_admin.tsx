@@ -2,7 +2,7 @@
 
 import { Box, Center, Image, ScrollArea, Skeleton, Stack, Text } from "@mantine/core";
 import AdminGlobal_ComponentBackButton from "./back_button";
-import { APIs, pathAssetImage } from "@/app/lib";
+import { APIs, pathAssetImage } from "@/lib";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 

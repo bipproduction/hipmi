@@ -1,8 +1,8 @@
 import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
-} from "@/app/lib/router_hipmi/router_investasi";
-import { Warna } from "@/app/lib/warna";
+} from "@/lib/router_hipmi/router_investasi";
+import { Warna } from "@/lib/warna";
 import {
   AccentColor,
   MainColor,

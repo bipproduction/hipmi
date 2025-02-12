@@ -4,7 +4,7 @@ import { Button, Stack } from "@mantine/core";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { MODEL_JOB } from "../../model/interface";
 import { useRouter } from "next/navigation";
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { useAtom } from "jotai";

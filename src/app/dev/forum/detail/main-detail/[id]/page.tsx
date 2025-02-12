@@ -1,4 +1,4 @@
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import Forum_MainDetail from "@/app_modules/forum/detail/main_detail";
 import { forum_countTotalKomenById } from "@/app_modules/forum/fun/count/count_total_komentar_by_id";

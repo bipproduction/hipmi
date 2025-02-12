@@ -1,8 +1,8 @@
-import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDashboard } from "@/lib/router_hipmi/router_admin";
 import {
   RouterPortofolio,
   RouterProfile,
-} from "@/app/lib/router_hipmi/router_katalog";
+} from "@/lib/router_hipmi/router_katalog";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import Component_ButtonLogout from "@/app_modules/auth/logout/view";

@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_INVESTASI } from "../_lib/interface";
 import { revalidatePath } from "next/cache";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 
 export default async function funUpdateInvestasi(
   dataLembarSaham: MODEL_INVESTASI,

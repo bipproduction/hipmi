@@ -1,6 +1,6 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import {
   AccentColor,
   MainColor,

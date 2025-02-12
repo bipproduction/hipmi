@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";

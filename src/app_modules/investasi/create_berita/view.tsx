@@ -1,6 +1,6 @@
 "use client";
 
-import { Warna } from "@/app/lib/warna";
+import { Warna } from "@/lib/warna";
 import {
   AspectRatio,
   Button,

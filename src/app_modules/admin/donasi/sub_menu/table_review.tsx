@@ -1,7 +1,7 @@
 "use client";
 
-import { gs_adminDonasi_triggerReview } from "@/app/lib/global_state";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { gs_adminDonasi_triggerReview } from "@/lib/global_state";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";

@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import prisma from "@/lib/prisma";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { toNumber } from "lodash";
 import { revalidatePath } from "next/cache";
 

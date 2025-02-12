@@ -1,4 +1,4 @@
-import { ITypeStatusNotifikasi } from "@/app/lib/global_state";
+import { ITypeStatusNotifikasi } from "@/lib/global_state";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 import adminNotifikasi_countNotifikasi from "../fun/count/count_is_read";
@@ -6,7 +6,7 @@ import { admin_funInvestasiCheckStatus } from "../fun/get/fun_investasi_check_st
 import adminNotifikasi_getByUserId from "../fun/get/get_notifikasi_by_user_id";
 import adminNotifikasi_funUpdateIsReadById from "../fun/update/fun_update_is_read_by_id";
 import { IAdmin_ActiveChildId, IAdmin_ActivePage } from "./type_of_select_page";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 
 export default async function adminNotifikasi_findRouterInvestasi({
   appId,

@@ -1,4 +1,4 @@
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";

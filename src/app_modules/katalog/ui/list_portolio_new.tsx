@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 import { IconCaretRight } from "@tabler/icons-react";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 

@@ -8,7 +8,7 @@ import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_palle
 import { useState } from "react";
 import { clientLogger } from "@/util/clientLogger";
 import { apiGetVoteRiwayatCount, apiGetVoteStatusCountDashboard } from "../lib/api_fetch_admin_voting";
-import global_limit from "@/app/lib/limit";
+import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 

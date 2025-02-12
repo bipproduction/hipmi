@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { ActionIcon } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useAtom } from "jotai";

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 import { revalidatePath } from "next/cache";
 

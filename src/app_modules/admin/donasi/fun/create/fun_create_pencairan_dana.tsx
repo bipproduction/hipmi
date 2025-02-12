@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_DONASI_PENCAIRAN_DANA } from "@/app_modules/donasi/model/interface";
 import _ from "lodash";
 import { v4 } from "uuid";

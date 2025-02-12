@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 
 export async function AdminDonasi_AkumulasiPencairanById(

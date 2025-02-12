@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import UIGlobal_SplashScreen from "@/app_modules/_global/ui/ui_splash";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconMap2 } from "@tabler/icons-react";

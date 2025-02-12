@@ -9,7 +9,7 @@ import { IconAlertTriangle, IconArchive, IconBookmark, IconUpload } from "@table
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import global_limit from "@/app/lib/limit";
+import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetJobArsipCount, apiGetJobStatusCountDashboard } from "../lib/api_fetch_admin_job";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import _, { ceil } from "lodash";
 
 export default async function adminUserAccess_getListUser({

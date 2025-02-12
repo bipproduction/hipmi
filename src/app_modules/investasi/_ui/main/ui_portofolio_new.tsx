@@ -1,5 +1,5 @@
 "use client";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { Stack, Tabs } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";

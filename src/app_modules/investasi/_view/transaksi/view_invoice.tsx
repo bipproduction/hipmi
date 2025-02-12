@@ -1,6 +1,6 @@
 "use client";
 
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,
@@ -26,9 +26,9 @@ import { investasi_funUploadBuktiTransferById } from "../../_fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
 import { WibuRealtime } from "wibu-pkg";
 import { clientLogger } from "@/util/clientLogger";

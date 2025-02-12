@@ -1,7 +1,7 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { DIRECTORY_ID } from "@/lib";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { MainColor } from "@/app_modules/_global/color";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {
@@ -17,7 +17,7 @@ import { useState } from "react";
 import { investasi_funCreateNewInvestasi } from "../../_fun";
 import { gs_investas_menu, gs_investasi_status } from "../../g_state";
 import { clientLogger } from "@/util/clientLogger";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
 
 export function Investasi_ComponentButtonCreateNewInvestasi({

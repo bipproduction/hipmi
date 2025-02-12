@@ -1,5 +1,5 @@
-import { APIs } from "@/app/lib";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { APIs } from "@/lib";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

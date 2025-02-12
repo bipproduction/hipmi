@@ -1,6 +1,6 @@
 "use server"
 
-import prisma from "@/app/lib/prisma"
+import prisma from "@/lib/prisma"
 
 export async function vote_getAllListRiwayat({ page }: { page: number }) {
   const takeData = 5;

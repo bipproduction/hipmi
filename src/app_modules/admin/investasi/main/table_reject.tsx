@@ -1,5 +1,5 @@
 "use client";
-import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   Badge,
@@ -27,7 +27,7 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 import { adminInvestasi_funGetAllReject } from "../fun/get/get_all_reject";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
 import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";

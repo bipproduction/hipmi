@@ -17,7 +17,7 @@ import {
   IconFileTypePdf
 } from "@tabler/icons-react";
 
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,

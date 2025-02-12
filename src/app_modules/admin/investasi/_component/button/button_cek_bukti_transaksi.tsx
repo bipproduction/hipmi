@@ -1,4 +1,4 @@
-import { RouterAdminGlobal } from "@/app/lib";
+import { RouterAdminGlobal } from "@/lib";
 import { Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

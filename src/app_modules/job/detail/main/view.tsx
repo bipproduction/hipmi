@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { Button, Center, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandWhatsapp } from "@tabler/icons-react";

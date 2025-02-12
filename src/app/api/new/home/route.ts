@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";

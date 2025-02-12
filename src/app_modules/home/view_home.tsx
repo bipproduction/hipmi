@@ -1,5 +1,5 @@
 "use client";
-import { gs_count_ntf, gs_user_ntf } from "@/app/lib/global_state";
+import { gs_count_ntf, gs_user_ntf } from "@/lib/global_state";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useState } from "react";

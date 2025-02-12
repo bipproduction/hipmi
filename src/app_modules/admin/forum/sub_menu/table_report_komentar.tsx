@@ -1,7 +1,7 @@
 "use client";
 
 
-import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

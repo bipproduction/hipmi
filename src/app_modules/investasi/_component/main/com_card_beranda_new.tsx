@@ -1,5 +1,5 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
-import { Warna } from "@/app/lib/warna";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
+import { Warna } from "@/lib/warna";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_CardStyles, ComponentGlobal_LoadImageCustom } from "@/app_modules/_global/component";
 import { Box, Grid, Group, Progress, Stack, Text } from "@mantine/core";
