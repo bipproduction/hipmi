@@ -5,13 +5,14 @@ import { NextResponse } from "next/server";
 export  async function GET(req: Request,
     { params }: { params: { id: string } }) {
 
-    console.log("Ini ID", params.id);
+    
 
     try {
         const { id } = params;
+        const investasiId = id;
         const data = await prisma.investasi.findUnique({
             where: {
-                id: id,
+                id: investasiId,
             },
             select: {
                 imageId: true,
