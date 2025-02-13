@@ -1,10 +1,11 @@
 export {
     apiGetAdminForumPublishCountDasboard,
-    apiGetAdminCountForumReportPosting ,
+    apiGetAdminCountForumReportPosting,
     apiGetAdminCountForumReportKomentar,
     apiGetAdminForumReportPosting,
     apiGetAdminForumReportKomentar,
-    apiGetAdminForumPublish
+    apiGetAdminForumPublish,
+    apiGetAdminHasilReportPosting
 }
 
 const apiGetAdminForumPublishCountDasboard = async () => {
@@ -38,7 +39,7 @@ const apiGetAdminCountForumReportPosting = async () => {
         },
     })
 
-   
+
     return await response.json().catch(() => null);
 }
 
@@ -58,7 +59,7 @@ const apiGetAdminCountForumReportKomentar = async () => {
 
     return await response.json().catch(() => null);
 }
-const apiGetAdminForumReportPosting = async ({page} : { page?: string}) => {
+const apiGetAdminForumReportPosting = async ({ page }: { page?: string }) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
@@ -75,10 +76,10 @@ const apiGetAdminForumReportPosting = async ({page} : { page?: string}) => {
 
     return await response.json().catch(() => null);
 }
-const apiGetAdminForumReportKomentar = async({ page } : { page?: string}) => {
+const apiGetAdminForumReportKomentar = async ({ page }: { page?: string }) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
-    
+
     const isPage = page ? `?page=${page}` : "";
     const response = await fetch(`/api/admin/forum/komentar${isPage}`, {
         method: "GET",
@@ -92,12 +93,13 @@ const apiGetAdminForumReportKomentar = async({ page } : { page?: string}) => {
 
     return await response.json().catch(() => null);
 }
-const  apiGetAdminForumPublish = async ({ page }: { page?: string }) => {
+const apiGetAdminForumPublish = async (
+    { page }: { page?: string }) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
     const isPage = page ? `?page=${page}` : "";
-    const response = await fetch(`/api/admin/forum/publish${isPage}`, {
+    const response = await fetch(`/api/admin/forum/publish/${isPage}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -106,15 +108,26 @@ const  apiGetAdminForumPublish = async ({ page }: { page?: string }) => {
             Authorization: `Bearer ${token}`,
         },
     })
-    
+
 
     return await response.json().catch(() => null);
 }
 
-const apiGetAdminHasilReportPosting = async ({id} : {id: string}) => {
+const apiGetAdminHasilReportPosting = async ({ page, id }: { page?: string, id: string }) => {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) return await token.json().catch(() => null);
 
-    
+    const isPage = page ? `?page=${page}` : "";
+    const response = await fetch(`/api/admin/forum/${id}/report_posting${isPage}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        }
+    })
+
+    return await response.json().catch(() => null);
 
 }

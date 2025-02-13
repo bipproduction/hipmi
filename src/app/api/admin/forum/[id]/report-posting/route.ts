@@ -4,112 +4,115 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request,
-    { params }: { params: { id: string } }) {
-    
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search');
-    const page = searchParams.get('page');
-    const takeData = 10;
-    const skipData = Number(page) * takeData - takeData;
+  { params }: { params: { id: string } }) {
 
-    try {
-        let fixData;
-        const { id } = params;
-        const postingId = id
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get('search');
+  const page = searchParams.get('page');
+  const takeData = 10;
+  const skipData = Number(page) * takeData - takeData;
 
-        if (!page) {
-            fixData = await prisma.forum_ReportPosting.findMany({
-                
-                orderBy: {
-                    createdAt: "desc",
-                },
-                where: {
-                    forum_PostingId: postingId,
-                },
+  try {
+    let fixData;
+    const { id } = params;
+    const postingId = id
+
+    if (!page) {
+      fixData = await prisma.forum_ReportPosting.findMany({
+
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          forum_PostingId: postingId,
+          
+
+        },
+        select: {
+          id: true,
+          deskripsi: true,
+          createdAt: true,
+          User: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
                 select: {
-                    id: true,
-                    deskripsi: true,
-                    createdAt: true,
-                    User: {
-                      select: {
-                        id: true,
-                        username: true,
-                        Profile: {
-                          select: {
-                            name: true,
-                          },
-                        },
-                      },
-                    },
-                    ForumMaster_KategoriReport: {
-                      select: {
-                        id: true,
-                        title: true,
-                        deskripsi: true,
-                      },
-                    },
-                  },
-            });
-        } else {
-            const data = await prisma.forum_ReportPosting.findMany({
-                take: takeData,
-                skip: skipData,
-                orderBy: {
-                  createdAt: "desc",
+                  name: true,
                 },
-                where: {
-                  forum_PostingId: postingId,
-                },
+              },
+            },
+          },
+          ForumMaster_KategoriReport: {
+            select: {
+              id: true,
+              title: true,
+              deskripsi: true,
+            },
+          },
+          
+        },
+      });
+    } else {
+      const data = await prisma.forum_ReportPosting.findMany({
+        take: takeData,
+        skip: skipData,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          forum_PostingId: postingId,
+        },
+        select: {
+          id: true,
+          deskripsi: true,
+          createdAt: true,
+          User: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
                 select: {
-                  id: true,
-                  deskripsi: true,
-                  createdAt: true,
-                  User: {
-                    select: {
-                      id: true,
-                      username: true,
-                      Profile: {
-                        select: {
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                  ForumMaster_KategoriReport: {
-                    select: {
-                      id: true,
-                      title: true,
-                      deskripsi: true,
-                    },
-                  },
+                  name: true,
                 },
-              });
-            const nCount = await prisma.forum_ReportPosting.count({
-                where: {
-                    isActive: true,
-                }
-            })
-
-
-            fixData = {
-                data: data,
-                nCount: _.ceil(nCount / takeData)
-            }
+              },
+            },
+          },
+          ForumMaster_KategoriReport: {
+            select: {
+              id: true,
+              title: true,
+              deskripsi: true,
+            },
+          },
+        },
+      });
+      const nCount = await prisma.forum_ReportPosting.count({
+        where: {
+          isActive: true,
         }
-        return NextResponse.json({
-            success: true,
-            message: "Success get data forum posting",
-            data: fixData
-        },
-            { status: 200 }
-        )
-    } catch (error) {
-        backendLogger.error("Error get data forum posting >>", error);
-        return NextResponse.json({
-            success: false,
-            message: "Error get data forum posting",
-        },
-            { status: 500 }
-        )
-    } 
+      })
+
+
+      fixData = {
+        data: data,
+        nPage: _.ceil(nCount / takeData)
+      }
+    }
+    return NextResponse.json({
+      success: true,
+      message: "Success get data forum report posting",
+      data: fixData
+    },
+      { status: 200 }
+    )
+  } catch (error) {
+    backendLogger.error("Error get data forum report  posting >>", error);
+    return NextResponse.json({
+      success: false,
+      message: "Error get data forum report posting",
+    },
+      { status: 500 }
+    )
+  }
 }
