@@ -1,7 +1,7 @@
 "use client";
-import { APIs } from "@/lib";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { APIs } from "@/lib";
 import { Avatar, Loader, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -64,7 +64,7 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
                      }}
                      attributionControl={false}
                   >
-                     {data.map((e, i) => (
+                     {data?.map((e, i) => (
                         <Stack key={i}>
                            <Marker
                               style={{
