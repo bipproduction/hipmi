@@ -52,7 +52,7 @@ export function AdminInvestasi_DetailReject({ data }: { data: MODEL_INVESTASI })
           ]}
         >
           {/* Data Author */}
-          <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
+          <ComponentAdminInvestasi_DetailDataAuthor data={data.author as any} />
 
           {/* Data Foto */}
           <ComponentAdminInvestasi_DetailGambar imagesId={data.imageId}  />
