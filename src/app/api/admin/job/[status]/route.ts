@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: {
         const fixStatus = _.startCase(status);
 
         if (!page) {
-           const data = await prisma.job.findMany({
+           fixData = await prisma.job.findMany({
                 orderBy: {
                     updatedAt: "desc"
                 },
@@ -79,6 +79,9 @@ export async function GET(request: Request, { params }: {
                 where: {
                     isActive: true,
                     isArsip: false,
+                    MasterStatus: {
+                        name: fixStatus
+                    },
                     title: {
                         contains: search ? search : "",
                         mode: "insensitive"

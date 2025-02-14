@@ -38,7 +38,7 @@ const apiGetAdminInvestasiByStatus = async ({ status, page, search }: {
 
     const isPage = page ? `?page=${page}` : "";
     const isSearch = search ? `&search=${search}` : "";
-    const response = await fetch(`/api/admin/investasi/${status}${isPage}${isSearch}`, {
+    const response = await fetch(`/api/admin/investasi/status/${status}${isPage}${isSearch}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +56,7 @@ const apiGetAdminInvestasiById = async ({id} : {id: string}) => {
     if (!token) return await token.json().catch(() => null);
 
     
-    const response = await fetch(`/api/admin/investasi/detail/${id}`, {
+    const response = await fetch(`/api/admin/investasi/${id}/detail`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -66,6 +66,5 @@ const apiGetAdminInvestasiById = async ({id} : {id: string}) => {
         }
     })
 
-    console.log("Ini data Response", await response.json())
     return await response.json().catch(() => null);
 }

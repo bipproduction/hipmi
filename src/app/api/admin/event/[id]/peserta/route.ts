@@ -25,6 +25,7 @@ export async function GET(request: Request,
                     User: {
                         username: {
                             contains: search ? search : "",
+                            mode: "insensitive",
                         }
                     }
 
@@ -47,6 +48,7 @@ export async function GET(request: Request,
                     User: {
                         username: {
                             contains: search ? search : "",
+                            mode: "insensitive",
                         }
                     }
                 },
@@ -63,6 +65,12 @@ export async function GET(request: Request,
             const nCount = await prisma.event_Peserta.count({
                 where: {
                     eventId: eventId,
+                    User: {
+                        username: {
+                            contains: search ? search : "",
+                            mode: "insensitive",
+                        }
+                    }
                 },
             });
 
