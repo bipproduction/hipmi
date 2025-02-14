@@ -88,9 +88,6 @@ export function AdminInvestasi_DetailPublish({
         ) : null}
         {selectPage == "2" ? (
           <AdminInvestasi_ViewDaftarTransaksi
-            dataTransaksi={dataTransaksi}
-            statusTransaksi={statusTransaksi}
-            investasiId={params.id}
           />
         ) : null}
       </Stack>
