@@ -82,25 +82,25 @@ export function AdminInvestasi_ViewDaftarTransaksi({
   const tableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e?.Author.username}</Center>
+        <Center c={AdminColor.white}>{e?.Author.username}</Center>
       </td>
       <td>
-        <Center>{e?.MasterBank.namaBank}</Center>
+        <Center c={AdminColor.white}>{e?.MasterBank.namaBank}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <ComponentAdminGlobal_TampilanRupiah nominal={+e?.nominal} />
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           {new Intl.NumberFormat("id-ID", { maximumFractionDigits: 10 }).format(
             +e?.lembarTerbeli
           )}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
             e?.createdAt
           )}
@@ -149,6 +149,7 @@ export function AdminInvestasi_ViewDaftarTransaksi({
           {e.statusInvoiceId === "3" && "-"}
           {e.statusInvoiceId === "4" && (
             <AdminInvestasi_ComponentButtonBandingTransaksi
+              
               invoiceId={e.id}
               investasiId={investasiId}
               lembarTerbeli={e.lembarTerbeli}
@@ -240,8 +241,6 @@ export function AdminInvestasi_ViewDaftarTransaksi({
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
             >
               <thead>
                 <tr>

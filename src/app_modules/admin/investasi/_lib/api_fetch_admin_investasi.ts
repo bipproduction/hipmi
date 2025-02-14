@@ -68,3 +68,7 @@ const apiGetAdminInvestasiById = async ({id} : {id: string}) => {
 
     return await response.json().catch(() => null);
 }
+
+const apiGetAdminAllTransaksiById = async () => {
+    
+}
