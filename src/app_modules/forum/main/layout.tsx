@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function LayoutForum_Main({
   userLoginId,
@@ -50,25 +51,7 @@ export default function LayoutForum_Main({
             title="Forum"
             iconRight={
               !data ? (
-                <ActionIcon
-                  radius={"xl"}
-                  variant="transparent"
-                  onClick={() => {
-                    return null;
-                  }}
-                >
-                  <Avatar
-                    size={30}
-                    radius={"100%"}
-                    style={{
-                      borderColor: "white",
-                      borderStyle: "solid",
-                      borderWidth: "1px",
-                    }}
-                  >
-                    <ComponentGlobal_Loader variant="dots" />
-                  </Avatar>
-                </ActionIcon>
+                <CustomSkeleton height={30} width={30} circle/>
               ) : (
                 <ActionIcon
                   radius={"xl"}
