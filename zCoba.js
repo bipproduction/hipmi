@@ -22,4 +22,7 @@ const data = [
   },
 ];
 
-console.log(new Set(data.map((d) => d.authorId)));
+// console.log(new Set(data.map((d) => d.authorId)));
+
+// contoh error
+console.error("errornya disini klik aja",import.meta.url);
