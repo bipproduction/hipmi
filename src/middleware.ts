@@ -36,7 +36,6 @@ const middlewareConfig: MiddlewareConfig = {
     // >> buat dibawah sini <<
     "/api/user",
     
- 
 
     // Akses awal
     "/api/get-cookie",
