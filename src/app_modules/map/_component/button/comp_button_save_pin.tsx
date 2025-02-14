@@ -65,8 +65,6 @@ export function ComponentMap_ButtonSavePin({
       data: newData,
     });
 
-    console.log("respone >", respone);
-
     if (respone && respone.success) {
       ComponentGlobal_NotifikasiBerhasil(respone.message);
       router.back();

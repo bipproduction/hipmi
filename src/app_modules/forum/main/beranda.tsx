@@ -23,35 +23,42 @@ import { useState } from "react";
 import ComponentForum_BerandaCardView from "../component/main_component/card_view";
 import { forum_new_getAllPosting } from "../fun/get/new_get_all_posting";
 import { MODEL_FORUM_POSTING } from "../model/interface";
+import { apiGetAllForum } from "../component/api_fetch_forum";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Forum_Beranda({
-  listForum,
   userLoginId,
 }: {
-  listForum: any;
   userLoginId: string;
 }) {
   const router = useRouter();
   const [scroll, scrollTo] = useWindowScroll();
 
-  const [data, setData] = useState<MODEL_FORUM_POSTING[]>(listForum);
+  const [data, setData] = useState<MODEL_FORUM_POSTING[] | null>(null);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setIsSearch] = useState("");
   const [isNewPost, setIsNewPost] = useState(false);
   const [countNewPost, setCountNewPost] = useState(0);
 
   useShallowEffect(() => {
-    onLoadAllData({
-      onLoad(val) {
-        setData(val);
-      },
-    });
-  }, [setData]);
+    handleLoadData(isSearch);
+  }, [isSearch]);
 
-  async function onLoadAllData({ onLoad }: { onLoad: (val: any) => void }) {
-    const loadData = await forum_new_getAllPosting({ page: 1 });
-    onLoad(loadData);
-  }
+  const handleLoadData = async (isSearch: string) => {
+    try {
+      const response = await apiGetAllForum({
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data forum", error);
+    }
+  };
 
   useShallowEffect(() => {
     mqtt_client.subscribe("Forum_create_new");
@@ -83,7 +90,7 @@ export default function Forum_Beranda({
       if (topic === "Forum_detail_ganti_status") {
         const newData = JSON.parse(message.toString());
 
-        const updateOneData = cloneData.map((val) => ({
+        const updateOneData = cloneData?.map((val) => ({
           ...val,
           ForumMaster_StatusPosting: {
             id:
@@ -104,12 +111,8 @@ export default function Forum_Beranda({
 
   async function onSearch(text: string) {
     setIsSearch(text);
-    const loadSearch = await forum_new_getAllPosting({
-      page: activePage,
-      search: text,
-    });
-    setData(loadSearch as any);
     setActivePage(1);
+
   }
 
   return (
@@ -133,6 +136,7 @@ export default function Forum_Beranda({
 
       <Stack spacing={"xl"}>
         <TextInput
+          disabled={!data}
           radius={"xl"}
           placeholder="Topik forum apa yang anda cari hari ini ?"
           onChange={(val) => {
@@ -140,7 +144,12 @@ export default function Forum_Beranda({
           }}
         />
 
-        {_.isEmpty(data) ? (
+        {!data ? (
+          <Stack>
+            <CustomSkeleton height={230} width={"100%"} />
+            <CustomSkeleton height={230} width={"100%"} />
+          </Stack>
+        ) : _.isEmpty(data) ? (
           <Stack align="center" justify="center" h={"80vh"}>
             <IconSearchOff size={80} color="white" />
             <Stack spacing={0} align="center">
@@ -159,15 +168,22 @@ export default function Forum_Beranda({
               </Center>
             )}
             data={data}
-            setData={setData}
+            setData={setData as any}
             moreData={async () => {
-              const loadData = await forum_new_getAllPosting({
-                page: activePage + 1,
-                search: isSearch,
-              });
-              setActivePage((val) => val + 1);
+              try {
+                const nextPage = activePage + 1;
+                const response = await apiGetAllForum({
+                  page: `${nextPage}`,
+                  search: isSearch,
+                });
 
-              return loadData;
+                if (response) {
+                  setActivePage((val) => val + 1);
+                  return response.data;
+                }
+              } catch (error) {
+                clientLogger.error("Error get data forum", error);
+              }
             }}
           >
             {(item) => (

@@ -9,16 +9,38 @@ import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { ActionIcon, Avatar } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function LayoutForum_Main({
+  userLoginId,
   children,
-  dataAuthor,
 }: {
+  userLoginId: string;
   children: React.ReactNode;
-  dataAuthor: MODEL_USER;
 }) {
   const router = useRouter();
+  const [data, setData] = useState<MODEL_USER | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetUserById({
+        id: userLoginId,
+      });
+
+      if (response) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get user", error);
+    }
+  };
 
   return (
     <>
@@ -27,15 +49,14 @@ export default function LayoutForum_Main({
           <UIGlobal_LayoutHeaderTamplate
             title="Forum"
             iconRight={
-              <ActionIcon
-                radius={"xl"}
-                variant="transparent"
-                onClick={() => {
-                  setIsLoading(true);
-                  router.push(RouterForum.forumku + dataAuthor?.id);
-                }}
-              >
-                {isLoading ? (
+              !data ? (
+                <ActionIcon
+                  radius={"xl"}
+                  variant="transparent"
+                  onClick={() => {
+                    return null;
+                  }}
+                >
                   <Avatar
                     size={30}
                     radius={"100%"}
@@ -47,13 +68,36 @@ export default function LayoutForum_Main({
                   >
                     <ComponentGlobal_Loader variant="dots" />
                   </Avatar>
-                ) : (
-                  <ComponentGlobal_LoaderAvatar
-                    fileId={dataAuthor.Profile.imageId as any}
-                    sizeAvatar={30}
-                  />
-                )}
-              </ActionIcon>
+                </ActionIcon>
+              ) : (
+                <ActionIcon
+                  radius={"xl"}
+                  variant="transparent"
+                  onClick={() => {
+                    setIsLoading(true);
+                    router.push(RouterForum.forumku + data?.id);
+                  }}
+                >
+                  {isLoading ? (
+                    <Avatar
+                      size={30}
+                      radius={"100%"}
+                      style={{
+                        borderColor: "white",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                      }}
+                    >
+                      <ComponentGlobal_Loader variant="dots" />
+                    </Avatar>
+                  ) : (
+                    <ComponentGlobal_LoaderAvatar
+                      fileId={data.Profile.imageId as any}
+                      sizeAvatar={30}
+                    />
+                  )}
+                </ActionIcon>
+              )
             }
           />
         }
