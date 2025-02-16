@@ -62,7 +62,7 @@ function TableView() {
     const loadInitialData = async () => {
       try {
         const response = await apiGetAdminInvestasiByStatus({
-          status: "Publish",
+          name: "Publish",
           page: `${activePage}`,
           search: isSearch,
         });

@@ -68,7 +68,7 @@ function TableStatus() {
   const loadInitialData = async () => {
     try {
       const response = await apiGetAdminDonasiByStatus({
-        status: "Review",
+        name: "Review",
         page: `${isActivePage}`,
         search: isSearch
       })

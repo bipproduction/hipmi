@@ -76,7 +76,7 @@ export default function AdminJob_ViewTavleReview() {
   const loadInitialData = async () => {
     try {
       const response = await apiGetAdminJobByStatus({
-        status: "Review",
+        name: "Review",
         page: `${activePage}`,
         search: isSearch
       })
