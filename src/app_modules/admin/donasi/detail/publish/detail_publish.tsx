@@ -120,25 +120,25 @@ function TampilanDetailDonasi({
               { maxWidth: "36rem", cols: 1, spacing: "sm" },
             ]}
           >
-            <Paper p={"xs"}>
+            <Paper p={"xs"} bg={AdminColor.softBlue}>
               <Stack>
-                <Title align="center" order={4}>
+                <Title c={AdminColor.white} align="center" order={4}>
                   Gambar Donasi
                 </Title>
                 <Admin_ComponentLoadImageLandscape fileId={donasi.imageId} />
               </Stack>
             </Paper>
 
-            <Paper p={"sm"}>
+            <Paper p={"sm"} bg={AdminColor.softBlue}>
               <Stack spacing={5}>
-                <Title order={4}>Detail Donasi</Title>
+                <Title c={AdminColor.white} order={4}>Detail Donasi</Title>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Judul</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Judul</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {donasi?.title}
                     </Title>
                   </Grid.Col>
@@ -146,11 +146,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Penggalang Dana</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Penggalang Dana</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {donasi?.Author.username}
                     </Title>
                   </Grid.Col>
@@ -158,11 +158,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Durasi</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Durasi</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title c={AdminColor.white} order={5}>
                       {donasi?.DonasiMaster_Durasi.name} hari
                     </Title>
                   </Grid.Col>
@@ -170,24 +170,24 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Dana dibutuhkan</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Dana dibutuhkan</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
                     <ComponentGlobal_TampilanRupiah
                       nominal={+donasi?.target}
-                      color="darkblue"
+                      color={AdminColor.yellow}
                     />
                   </Grid.Col>
                 </Grid>
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Kategori</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Kategori</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title c={AdminColor.white} order={5}>
                       {donasi?.DonasiMaster_Ketegori?.name}
                     </Title>
                   </Grid.Col>
@@ -195,11 +195,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Total donatur</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Total donatur</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {countDonatur}
                     </Title>
                   </Grid.Col>
@@ -207,11 +207,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={12}>Progres</Text>
+                    <Text c={AdminColor.white} fz={12}>Progres</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {toNumber(donasi.progres).toFixed(2)} %
                     </Title>
                   </Grid.Col>
@@ -219,13 +219,13 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={12}>Dana terkumpul</Text>
+                    <Text c={AdminColor.white} fz={12}>Dana terkumpul</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
                     <ComponentGlobal_TampilanRupiah
                       nominal={+donasi?.terkumpul}
-                      color="darkblue"
+                      color={AdminColor.yellow}
                     />
                   </Grid.Col>
                 </Grid>
@@ -233,25 +233,25 @@ function TampilanDetailDonasi({
             </Paper>
 
             {/* Pencairan Dana */}
-            <Paper withBorder p={"sm"}>
+            <Paper bg={AdminColor.softBlue} p={"sm"}>
               <Stack spacing={"xl"}>
                 <Center>
-                  <Title order={4}>Pencairan Dana</Title>
+                  <Title c={AdminColor.white} order={4}>Pencairan Dana</Title>
                 </Center>
                 <Grid>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Total Dana Dicairkan</Text>
+                      <Text c={AdminColor.white} fz={"xs"}>Total Dana Dicairkan</Text>
                       <ComponentGlobal_TampilanRupiah
                         nominal={donasi?.totalPencairan}
-                        color="darkblue"
+                        color={AdminColor.yellow}
                       />
                     </Stack>
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Bank Tujuan</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text c={AdminColor.white} fz={"xs"}>Bank Tujuan</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.namaBank}
                       </Title>
                     </Stack>
@@ -260,16 +260,16 @@ function TampilanDetailDonasi({
                 <Grid>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Akumulasi Pencairan</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text c={AdminColor.white} fz={"xs"}>Akumulasi Pencairan</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.akumulasiPencairan} Kali
                       </Title>
                     </Stack>
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Nomor Rekening</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text fz={"xs"} c={AdminColor.white}>Nomor Rekening</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.rekening}
                       </Title>
                     </Stack>
@@ -277,13 +277,13 @@ function TampilanDetailDonasi({
                 </Grid>
 
                 <Stack align="center" spacing={0}>
-                  <Text fz={"xs"}>Sisa Dana</Text>
+                  <Text c={AdminColor.white} fz={"xs"}>Sisa Dana</Text>
                   <ComponentGlobal_TampilanRupiah
                     nominal={
                       toNumber(donasi.terkumpul) -
                       toNumber(donasi.totalPencairan)
                     }
-                    color="darkblue"
+                    color={AdminColor.yellow}
                   />
                 </Stack>
 
