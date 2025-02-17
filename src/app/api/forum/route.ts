@@ -9,8 +9,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page");
     const search = searchParams.get("search");
-    const takeData = 4
+    const takeData = 5;
     const skipData = Number(page) * takeData - takeData;
+
 
     if (!page) {
       fixData = await prisma.forum_Posting.findMany({
