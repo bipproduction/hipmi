@@ -4,7 +4,7 @@ import moment from "moment";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: {
-    params: { status: string }
+    params: { name: string }
 }
 ) {
     const method = request.method;
@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: {
         )
     }
 
-    const { status } = params;
+    const { name } = params;
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
     const page = searchParams.get("page");
@@ -26,7 +26,7 @@ export async function GET(request: Request, { params }: {
 
     try {
         let fixData;
-        const fixStatus = _.startCase(status);
+        const fixStatus = _.startCase(name);
 
 
         if (!page) {

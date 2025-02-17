@@ -25,8 +25,8 @@ const apiGetAdminCollaborationStatusCountDashboard = async ({
     // console.log("Ini Response", await response.json());
     return await response.json().catch(() => null);
 }
-const apiGetAdminCollaborationStatusById = async ({ status, page}: {
-    status: "Publish" | "Reject",
+const apiGetAdminCollaborationStatusById = async ({ name, page}: {
+    name: "Publish" | "Reject",
     page: string,
     
 }) => {
@@ -35,7 +35,7 @@ const apiGetAdminCollaborationStatusById = async ({ status, page}: {
     if (!token) return await token.json().catch(() => null);
     
     const isPage = page ? `?page=${page}` : "";
-    const response = await fetch(`/api/admin/collaboration/${status}${isPage}`, {
+    const response = await fetch(`/api/admin/collaboration/${name}${isPage}`, {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",

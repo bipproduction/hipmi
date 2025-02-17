@@ -4,11 +4,11 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }:
-    { params: { status: string } }
+    { params: { name: string } }
 ) {
 
 
-    const { status } = params;
+    const { name } = params;
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page");
     const takeData = 10;
@@ -16,7 +16,7 @@ export async function GET(request: Request, { params }:
 
     try {
         let fixData;
-        const fixStatus = _.startCase(status);
+        const fixStatus = _.startCase(name);
 
         if (!page) {
             fixData = await prisma.projectCollaboration.findMany({

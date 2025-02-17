@@ -38,10 +38,10 @@ const apiGetAdminDonasiKategoriCountDashboard = async () => {
 }
 
 const apiGetAdminDonasiByStatus = async ({
-    status,
+    name,
     page,
     search }: {
-        status: "Publish" | "Review" | "Reject",
+        name: "Publish" | "Review" | "Reject",
         page: string;
         search: string;
     }) => {
@@ -52,7 +52,7 @@ const apiGetAdminDonasiByStatus = async ({
     const isPage = page ? `?page=${page}` : "";
     const isSearch = search ? `&search=${search}` : "";
     const response = await fetch(
-        `/api/admin/donasi/${status}${isPage}${isSearch}`,
+        `/api/admin/donasi/status/${name}${isPage}${isSearch}`,
         {
             headers: {
                 "Content-Type": "application/json",

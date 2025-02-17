@@ -241,6 +241,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
               data={listStatus?.map(status => ({
                 value: status.id,
                 label: status.name,
+                
               })) || []}
               onChange={(val: any) => {
                 console.log(val)

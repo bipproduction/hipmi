@@ -6,7 +6,7 @@ import backendLogger from '@/util/backendLogger';
 import moment from 'moment';
 
 export async function GET(request: Request, { params }: {
-    params: { status: string }
+    params: { name: string }
 }
 ) {
     const method = request.method;
@@ -18,7 +18,7 @@ export async function GET(request: Request, { params }: {
             { status: 405 }
         )
     }
-    const { status } = params;
+    const { name } = params;
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
     const page = searchParams.get("page");
@@ -28,7 +28,7 @@ export async function GET(request: Request, { params }: {
 
     try {
         let fixData;
-        const fixStatus = _.startCase(status);
+        const fixStatus = _.startCase(name);
 
         if (!page) {
            fixData = await prisma.job.findMany({

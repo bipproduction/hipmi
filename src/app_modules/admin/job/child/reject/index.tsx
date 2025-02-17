@@ -64,7 +64,7 @@ function TableStatus() {
   const loadInitialData = async () => {
     try {
       const response = await apiGetAdminJobByStatus({
-        status: "Reject",
+        name: "Reject",
         page: `${activePage}`,
         search: isSearch
       });

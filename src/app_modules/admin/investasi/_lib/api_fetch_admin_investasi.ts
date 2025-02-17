@@ -27,8 +27,8 @@ const apiGetAdminInvestasiCountDashboard = async ({ name }:
     return await response.json().catch(() => null);
 };
 
-const apiGetAdminInvestasiByStatus = async ({ status, page, search }: {
-    status: "Publish" | "Review" | "Reject",
+const apiGetAdminInvestasiByStatus = async ({ name, page, search }: {
+    name: "Publish" | "Review" | "Reject",
     page: string,
     search: string
 }) => {
@@ -40,7 +40,7 @@ const apiGetAdminInvestasiByStatus = async ({ status, page, search }: {
 
     const isPage = page ? `?page=${page}` : "";
     const isSearch = search ? `&search=${search}` : "";
-    const response = await fetch(`/api/admin/investasi/status/${status}${isPage}${isSearch}`, {
+    const response = await fetch(`/api/admin/investasi/status/${name}${isPage}${isSearch}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
