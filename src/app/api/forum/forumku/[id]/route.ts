@@ -1,17 +1,18 @@
-import { prisma } from "@/lib";
 import { NextResponse } from "next/server";
-export const dynamic = "force-dynamic";
 
-// GET  ALL DATA PORTOFOLIO BY PROFILE ID
-export async function GET(request: Request) {
+export { GET };
+
+async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     let fixData;
+    const { id } = params;
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page");
-    const search = searchParams.get("search");
     const takeData = 5;
     const skipData = Number(page) * takeData - takeData;
 
+    console.log("id", id)
+    console.log("page >", page)
 
     if (!page) {
       fixData = await prisma.forum_Posting.findMany({
@@ -19,11 +20,8 @@ export async function GET(request: Request) {
           createdAt: "desc",
         },
         where: {
+          authorId: id,
           isActive: true,
-          diskusi: {
-            mode: "insensitive",
-            contains: search == undefined || search == "null" ? "" : search,
-          },
         },
         select: {
           id: true,
@@ -66,11 +64,8 @@ export async function GET(request: Request) {
           createdAt: "desc",
         },
         where: {
+          authorId: id,
           isActive: true,
-          diskusi: {
-            mode: "insensitive",
-            contains: search == undefined || search == "null" ? "" : search,
-          },
         },
         select: {
           id: true,
@@ -107,19 +102,21 @@ export async function GET(request: Request) {
       });
     }
 
-    return NextResponse.json(
-      { success: true, message: "Berhasil mendapatkan data", data: fixData },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      message: "Berhasil mendapatkan data",
+      data: fixData,
+    });
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       {
         success: false,
-        message: "Gagal mendapatkan data, coba lagi nanti ",
-        reason: (error as Error).message,
+        message: "Gagal mendapatkan data",
+        error: (error as Error).message,
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }

@@ -1,63 +1,90 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
-import mqtt_client from "@/util/mqtt_client";
-import {
-  Affix,
-  Button,
-  Center,
-  Loader,
-  Stack,
-  Text,
-  TextInput,
-  rem,
-} from "@mantine/core";
-import { useShallowEffect, useWindowScroll } from "@mantine/hooks";
-import { IconSearchOff } from "@tabler/icons-react";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
+import { Affix, Center, Loader, Stack, TextInput, rem } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentForum_BerandaCardView from "../component/main_component/card_view";
-import { forum_new_getAllPosting } from "../fun/get/new_get_all_posting";
-import { MODEL_FORUM_POSTING } from "../model/interface";
 import { apiGetAllForum } from "../component/api_fetch_forum";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { ButtonUpdateBeranda } from "../component/button/button_update_beranda";
+import ComponentForum_BerandaCardView from "../component/main_component/card_view";
+import { Forum_ComponentIsDataEmpty } from "../component/other_component";
+import { Forum_SkeletonCard } from "../component/skeleton_view";
+import { MODEL_FORUM_POSTING } from "../model/interface";
+import mqtt_client from "@/util/mqtt_client";
 
 export default function Forum_Beranda({
   userLoginId,
 }: {
   userLoginId: string;
 }) {
-  const router = useRouter();
-  const [scroll, scrollTo] = useWindowScroll();
-
-  const [data, setData] = useState<MODEL_FORUM_POSTING[] | null>(null);
+  const [data, setData] = useState<MODEL_FORUM_POSTING[]>([]);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setIsSearch] = useState("");
   const [isNewPost, setIsNewPost] = useState(false);
   const [countNewPost, setCountNewPost] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useShallowEffect(() => {
     handleLoadData(isSearch);
   }, [isSearch]);
 
   const handleLoadData = async (isSearch: string) => {
+    setIsLoading(true);
     try {
       const response = await apiGetAllForum({
-        page: `${activePage}`,
+        page: "1",
         search: isSearch,
       });
 
       if (response) {
         setData(response.data);
+        setActivePage(1);
+        setHasMore(response.data.length > 0);
       }
     } catch (error) {
       clientLogger.error("Error get data forum", error);
+      setData([]);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleMoreData = async () => {
+    if (!hasMore || isLoading) return null;
+
+    try {
+      const nextPage = activePage + 1;
+
+      const response = await apiGetAllForum({
+        page: `${nextPage}`,
+        search: isSearch,
+      });
+
+      if (response?.data && response.data.length > 0) {
+        setActivePage(nextPage);
+        setHasMore(response.data.length > 0);
+        return response.data;
+      } else {
+        setHasMore(false);
+        return null;
+      }
+    } catch (error) {
+      clientLogger.error("Error get data forum", error);
+      setHasMore(false);
+      return null;
+    }
+  };
+
+  const hanldeSearch = async (text: string) => {
+    setIsSearch(text);
+    setActivePage(1);
+    setHasMore(true);
   };
 
   useShallowEffect(() => {
@@ -109,12 +136,6 @@ export default function Forum_Beranda({
     });
   }, [countNewPost, data]);
 
-  async function onSearch(text: string) {
-    setIsSearch(text);
-    setActivePage(1);
-
-  }
-
   return (
     <>
       {isNewPost && (
@@ -140,24 +161,14 @@ export default function Forum_Beranda({
           radius={"xl"}
           placeholder="Topik forum apa yang anda cari hari ini ?"
           onChange={(val) => {
-            onSearch(val.currentTarget.value);
+            hanldeSearch(val.currentTarget.value);
           }}
         />
 
-        {!data ? (
-          <Stack>
-            <CustomSkeleton height={230} width={"100%"} />
-            <CustomSkeleton height={230} width={"100%"} />
-          </Stack>
+        {!data.length && isLoading ? (
+          <Forum_SkeletonCard />
         ) : _.isEmpty(data) ? (
-          <Stack align="center" justify="center" h={"80vh"}>
-            <IconSearchOff size={80} color="white" />
-            <Stack spacing={0} align="center">
-              <Text color="white" fw={"bold"} fz={"xs"}>
-                Tidak ada data
-              </Text>
-            </Stack>
-          </Stack>
+          <Forum_ComponentIsDataEmpty />
         ) : (
           // --- Main component --- //
           <ScrollOnly
@@ -169,22 +180,7 @@ export default function Forum_Beranda({
             )}
             data={data}
             setData={setData as any}
-            moreData={async () => {
-              try {
-                const nextPage = activePage + 1;
-                const response = await apiGetAllForum({
-                  page: `${nextPage}`,
-                  search: isSearch,
-                });
-
-                if (response) {
-                  setActivePage((val) => val + 1);
-                  return response.data;
-                }
-              } catch (error) {
-                clientLogger.error("Error get data forum", error);
-              }
-            }}
+            moreData={handleMoreData}
           >
             {(item) => (
               <ComponentForum_BerandaCardView
@@ -199,54 +195,6 @@ export default function Forum_Beranda({
           </ScrollOnly>
         )}
       </Stack>
-    </>
-  );
-}
-
-function ButtonUpdateBeranda({
-  countNewPost,
-  onSetData,
-  onSetIsNewPost,
-  onSetCountNewPosting,
-}: {
-  countNewPost: number;
-  onSetData: (val: any) => void;
-  onSetIsNewPost: (val: any) => void;
-  onSetCountNewPosting: (val: any) => void;
-}) {
-  const [scroll, scrollTo] = useWindowScroll();
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function onLoadData() {
-    setIsLoading(true);
-    const loadData = await forum_new_getAllPosting({ page: 1 });
-
-    if (loadData) {
-      onSetData(loadData);
-      onSetIsNewPost(false);
-      setIsLoading(false);
-      onSetCountNewPosting(0);
-    }
-  }
-
-  return (
-    <>
-      <Center>
-        <Button
-          style={{
-            transition: "0.5s",
-            border: `1px solid ${AccentColor.skyblue}`,
-          }}
-          bg={AccentColor.blue}
-          loaderPosition="center"
-          loading={isLoading ? true : false}
-          radius={"xl"}
-          opacity={scroll.y > 0 ? 0.5 : 0.8}
-          onClick={() => onLoadData()}
-        >
-          Update beranda + {countNewPost}
-        </Button>
-      </Center>
     </>
   );
 }

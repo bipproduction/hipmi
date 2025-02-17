@@ -1,35 +1,23 @@
 "use client";
 
-import {
-  ActionIcon,
-  Button,
-  Center,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-} from "@mantine/core";
-import "react-quill/dist/quill.snow.css";
-import "react-quill/dist/quill.bubble.css";
-import { IconPhotoUp } from "@tabler/icons-react";
+import { Button, Group, Paper, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
+import { useParams, useRouter } from "next/navigation";
+import "react-quill/dist/quill.bubble.css";
+import "react-quill/dist/quill.snow.css";
 
-import dynamic from "next/dynamic";
-import React, { useState } from "react";
-import { useAtom } from "jotai";
-import { gs_forum_loading_edit_posting } from "../../global_state";
-import { MODEL_FORUM_POSTING } from "../../model/interface";
-import { forum_funEditPostingById } from "../../fun/edit/fun_edit_posting_by_id";
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
-import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { apiGetOneForumById } from "../../component/api_fetch_forum";
+import { forum_funEditPostingById } from "../../fun/edit/fun_edit_posting_by_id";
+import { MODEL_FORUM_POSTING } from "../../model/interface";
 const ReactQuill = dynamic(
   () => {
     return import("react-quill");
@@ -37,23 +25,35 @@ const ReactQuill = dynamic(
   { ssr: false }
 );
 
-export default function Forum_EditPosting({
-  dataPosting,
-}: {
-  dataPosting: MODEL_FORUM_POSTING;
-}) {
-  const [value, setValue] = useState(dataPosting);
+const maxLength = 500;
+
+export default function Forum_EditPosting() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_FORUM_POSTING | null>(null);
   const [reload, setReload] = useState(false);
   useShallowEffect(() => {
     if (window && window.document) setReload(true);
   }, []);
 
-  if (!reload)
-    return (
-      <>
-        <ComponentGlobal_V2_LoadingPage />
-      </>
-    );
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneForumById({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data forum", error);
+    }
+  };
+
+  if (!reload || !data) return <CustomSkeleton height={200} />;
 
   return (
     <>
@@ -63,10 +63,21 @@ export default function Forum_EditPosting({
             theme="bubble"
             placeholder="Apa yang sedang ingin dibahas ?"
             style={{ height: 150 }}
-            value={value.diskusi}
+            value={data.diskusi}
             onChange={(val) => {
-              setValue({
-                ...value,
+              const input = val;
+              const text = input.replace(/<[^>]+>/g, "").trim(); // Remove HTML tags and trim whitespace
+
+              if (text.length === 0) {
+                setData({
+                  ...data,
+                  diskusi: "",
+                });
+
+                return;
+              }
+              setData({
+                ...data,
                 diskusi: val,
               });
             }}
@@ -74,15 +85,12 @@ export default function Forum_EditPosting({
         </Paper>
         <Group position="right">
           <ComponentGlobal_InputCountDown
-            maxInput={500}
-            lengthInput={value.diskusi.length}
+            maxInput={maxLength}
+            lengthInput={data.diskusi.length}
           />
         </Group>
         <Group position="right">
-          {/* <ActionIcon>
-            <IconPhotoUp />
-          </ActionIcon> */}
-          <ButtonAction diskusi={value.diskusi as any} postingId={value.id} />
+          <ButtonAction diskusi={data.diskusi as any} postingId={data.id} />
         </Group>
       </Stack>
       {/* <div dangerouslySetInnerHTML={{ __html: value.diskusi }} /> */}
@@ -104,15 +112,21 @@ function ButtonAction({
     if (diskusi === "<p><br></p>" || diskusi === "")
       return ComponentGlobal_NotifikasiPeringatan("Masukan postingan anda");
 
-    await forum_funEditPostingById(postingId, diskusi).then((res) => {
-      if (res.status === 200) {
-        setLoading(true);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setTimeout(() => router.back(), 1000);
+    try {
+      setLoading(true);
+      const update = await forum_funEditPostingById(postingId, diskusi);
+
+      if (update.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil(update.message);
+        router.back();
       } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+        ComponentGlobal_NotifikasiGagal(update.message);
       }
-    });
+    } catch (error) {
+      clientLogger.error("Error update forum", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -120,23 +134,24 @@ function ButtonAction({
       <Button
         style={{
           transition: "0.5s",
-          border:
-            diskusi === "<p><br></p>" || diskusi === "" || diskusi.length > 500
-              ? ""
-              : `1px solid ${AccentColor.yellow}`,
           backgroundColor:
-            diskusi === "<p><br></p>" || diskusi === "" || diskusi.length > 500
+            diskusi === "<p><br></p>" ||
+            diskusi === "" ||
+            diskusi.length >= maxLength
               ? ""
               : MainColor.yellow,
         }}
         disabled={
-          diskusi === "<p><br></p>" || diskusi === "" || diskusi.length > 500
+          diskusi === "<p><br></p>" ||
+          diskusi === "" ||
+          diskusi.length >= maxLength
             ? true
             : false
         }
         loaderPosition="center"
-        loading={loading ? true : false}
+        loading={loading}
         radius={"xl"}
+        c={"black"}
         onClick={() => {
           onUpdate();
         }}

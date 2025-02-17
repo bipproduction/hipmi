@@ -34,8 +34,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <Forum_Forumku
-        auhtorSelectedData={auhtorSelectedData as any}
-        dataPosting={dataPosting as any}
         totalPosting={totalPosting}
         userLoginId={userLoginId as any}
       />

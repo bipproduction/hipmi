@@ -1,6 +1,5 @@
 "use client";
 
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
 import { Button, Group, Paper, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -21,11 +20,10 @@ const ReactQuill = dynamic(
 );
 
 import {
-  AccentColor,
-  MainColor,
+  MainColor
 } from "@/app_modules/_global/color/color_pallet";
-import mqtt_client from "@/util/mqtt_client";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import mqtt_client from "@/util/mqtt_client";
 
 const maxLength = 500;
 export default function Forum_Create() {
