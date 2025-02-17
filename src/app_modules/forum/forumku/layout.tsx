@@ -7,10 +7,8 @@ import React from "react";
 
 export default function LayoutForum_Forumku({
   children,
-  username,
 }: {
   children: React.ReactNode;
-  username: string;
 }) {
   return (
     <>
