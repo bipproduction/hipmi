@@ -10,21 +10,19 @@ export default async function Page({ params }: { params: { id: string } }) {
   let postingId = params.id;
   const userLoginId = await funGetUserIdByToken();
 
-  const dataPosting = await forum_getOnePostingById(postingId);
+  // const dataPosting = await forum_getOnePostingById(postingId);
   const listKomentar = await forum_funGetAllKomentarById({
     postingId: postingId,
     page: 1,
   });
-
-  // dataPosting?.isActive === false && redirect(RouterForum.beranda);
 
   const countKomentar = await forum_countTotalKomenById(postingId);
 
   return (
     <>
       <Forum_MainDetail
-        dataPosting={dataPosting as any}
-        listKomentar={listKomentar as any}
+        // dataPosting={dataPosting as any}
+        // listKomentar={listKomentar as any}
         userLoginId={userLoginId as string}
         countKomentar={countKomentar}
       />

@@ -19,16 +19,20 @@ import { MODEL_FORUM_POSTING } from "../../model/interface";
 import { useRouter } from "next/navigation";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import mqtt_client from "@/util/mqtt_client";
+import backendLogger from "@/util/backendLogger";
+import { clientLogger } from "@/util/clientLogger";
 export default function ComponentForum_DetailCreateKomentar({
   postingId,
   onSetKomentar,
   data,
   userLoginId,
+  onSetNewKomentar,
 }: {
   postingId: string;
   onSetKomentar: (val: any) => void;
   data: MODEL_FORUM_POSTING;
   userLoginId: string;
+  onSetNewKomentar: (val: boolean) => void;
 }) {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -40,45 +44,52 @@ export default function ComponentForum_DetailCreateKomentar({
       return null;
     }
 
-    const createComment = await forum_funCreateKomentar(postingId, value);
-    if (createComment.status === 201) {
-      // const loadKomentar = await forum_funGetAllKomentarById(data.id);
+    try {
+      setLoading(true);
+      const createComment = await forum_funCreateKomentar(postingId, value);
+      if (createComment.status === 201) {
+        // const loadData = await forum_funGetAllKomentarById({
+        //   postingId: data.id,
+        //   page: 1,
+        // });
+        // onSetKomentar(loadData);
 
-      const loadData = await forum_funGetAllKomentarById({
-        postingId: data.id,
-        page: 1,
-      });
-      onSetKomentar(loadData);
+        onSetNewKomentar(true);
+        setValue("");
+        setIsEmpty(true);
+        ComponentGlobal_NotifikasiBerhasil(createComment.message, 2000);
 
-      setValue("");
-      setIsEmpty(true);
-      ComponentGlobal_NotifikasiBerhasil(createComment.message, 2000);
+        if (userLoginId !== data.Author.id) {
+          const dataNotif = {
+            appId: data.id,
+            userId: data.authorId,
+            pesan: value,
+            kategoriApp: "FORUM",
+            title: "Komentar baru",
+          };
 
-      if (userLoginId !== data.Author.id) {
-        const dataNotif = {
-          appId: data.id,
-          userId: data.authorId,
-          pesan: value,
-          kategoriApp: "FORUM",
-          title: "Komentar baru",
-        };
+          const createNotifikasi = await notifikasiToUser_funCreate({
+            data: dataNotif as any,
+          });
 
-        const createNotifikasi = await notifikasiToUser_funCreate({
-          data: dataNotif as any,
-        });
-
-        if (createNotifikasi.status === 201) {
-          mqtt_client.publish(
-            "USER",
-            JSON.stringify({
-              userId: dataNotif.userId,
-              count: 1,
-            })
-          );
+          if (createNotifikasi.status === 201) {
+            mqtt_client.publish(
+              "USER",
+              JSON.stringify({
+                userId: dataNotif.userId,
+                count: 1,
+              })
+            );
+          }
         }
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(createComment.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(createComment.message);
+    } catch (error) {
+      setLoading(false);
+
+      clientLogger.error("Error create komentar forum", error);
     }
   }
 
@@ -117,8 +128,9 @@ export default function ComponentForum_DetailCreateKomentar({
             }
             bg={MainColor.yellow}
             color={"yellow"}
+            c="black"
             loaderPosition="center"
-            loading={loading ? true : false}
+            loading={loading}
             radius={"xl"}
             onClick={() => onComment()}
           >
