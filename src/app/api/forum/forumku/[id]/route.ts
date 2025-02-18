@@ -11,9 +11,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
     const takeData = 5;
     const skipData = Number(page) * takeData - takeData;
 
-    console.log("id", id)
-    console.log("page >", page)
-
     if (!page) {
       fixData = await prisma.forum_Posting.findMany({
         orderBy: {
