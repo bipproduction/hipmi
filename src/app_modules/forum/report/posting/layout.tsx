@@ -13,7 +13,7 @@ export default function LayoutForum_ReportPosting({
     <>
       <UIGlobal_LayoutTamplate
         header={
-          <UIGlobal_LayoutHeaderTamplate title="Mengumpulkan Informasi Posting" />
+          <UIGlobal_LayoutHeaderTamplate title="Informasi Report Posting" />
         }
       >
         {children}
