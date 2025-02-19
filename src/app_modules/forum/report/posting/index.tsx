@@ -28,7 +28,7 @@ export default function Forum_ReportPosting({
 }) {
   const param = useParams<{ id: string }>();
   const postingId = param.id;
-  const [listReport, setListReport] = useState<MODEL_FORUM_MASTER_REPORT[]>();
+  const [listReport, setListReport] = useState<MODEL_FORUM_MASTER_REPORT[] | null>(null);
   const [reportValue, setReportValue] = useState("1");
 
   useShallowEffect(() => {
