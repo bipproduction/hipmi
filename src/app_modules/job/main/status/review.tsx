@@ -8,43 +8,58 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import ComponentJob_CardStatus from "../../component/card/card_view";
 import job_getAllStatusReview from "../../fun/get/status/get_list_review";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetJobByStatus } from "../../component/api_fetch_job";
 
-export default function Job_Review({ listReview }: { listReview: any[] }) {
-  const [data, setData] = useState(listReview);
+export default function Job_Review({ nameStatus }: { nameStatus: string }) {
+  const [data, setData] = useState<any[] | null>(null);
   const [activePage, setActivePage] = useState(1);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      // const response = await apiGetJobByStatus({ status: nameStatus });
+      // if (response.success) {
+      //   console.log(response.data);
+      // }
+    } catch (error) {}
+  };
 
   return (
     <>
       {_.isEmpty(data) ? (
         <ComponentGlobal_IsEmptyData />
       ) : (
-        // --- Main component --- //
-        <ScrollOnly
-          height="75vh"
-          renderLoading={() => (
-            <Center mt={"lg"}>
-              <Loader color={"yellow"} />
-            </Center>
-          )}
-          data={data}
-          setData={setData}
-          moreData={async () => {
-            const loadData = await job_getAllStatusReview({
-              page: activePage + 1,
-            });
+        "Review"
+        // <ScrollOnly
+        //   height="75vh"
+        //   renderLoading={() => (
+        //     <Center mt={"lg"}>
+        //       <Loader color={"yellow"} />
+        //     </Center>
+        //   )}
+        //   data={data}
+        //   setData={setData}
+        //   moreData={async () => {
+        //     const loadData = await job_getAllStatusReview({
+        //       page: activePage + 1,
+        //     });
 
-            setActivePage((val) => val + 1);
+        //     setActivePage((val) => val + 1);
 
-            return loadData;
-          }}
-        >
-          {(item) => (
-            <ComponentJob_CardStatus
-              data={item}
-              path={RouterJob.detail_review}
-            />
-          )}
-        </ScrollOnly>
+        //     return loadData;
+        //   }}
+        // >
+        //   {(item) => (
+        //     <ComponentJob_CardStatus
+        //       data={item}
+        //       path={RouterJob.detail_review}
+        //     />
+        //   )}
+        // </ScrollOnly>
       )}
     </>
   );

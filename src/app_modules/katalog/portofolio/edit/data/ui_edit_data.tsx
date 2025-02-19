@@ -3,7 +3,7 @@
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
-import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_master";
+import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_fetch_master";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
