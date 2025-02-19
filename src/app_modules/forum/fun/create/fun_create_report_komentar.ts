@@ -12,6 +12,9 @@ export async function forum_funCreateReportKomentar({
 }) {
   const userLoginId = await funGetUserIdByToken();
 
+  if (!userLoginId)
+    return { status: 400, message: "Gagal menambahkan report komentar !" };
+
   try {
     const createReport = await prisma.forum_ReportKomentar.create({
       data: {
@@ -23,9 +26,15 @@ export async function forum_funCreateReportKomentar({
 
     if (!createReport)
       return { status: 400, message: "Gagal menambahkan report komentar !" };
+
+    return { status: 201, message: "Berhasil me-report komentar !" };
   } catch (error) {
     console.log(error);
+    return {
+      status: 500,
+      message: "Error API",
+      error: (error as Error).message,
+    };
   }
 
-  return { status: 201, message: "Berhasil me-report komentar !" };
 }

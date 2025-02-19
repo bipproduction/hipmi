@@ -1,3 +1,4 @@
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export { GET };
@@ -12,89 +13,63 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
     const skipData = Number(page) * takeData - takeData;
 
     if (!page) {
-      fixData = await prisma.forum_Posting.findMany({
+      fixData = await prisma.forum_Komentar.findMany({
         orderBy: {
           createdAt: "desc",
         },
         where: {
-          authorId: id,
+          forum_PostingId: id,
           isActive: true,
         },
         select: {
           id: true,
-          diskusi: true,
-          createdAt: true,
           isActive: true,
-          authorId: true,
+          komentar: true,
+          createdAt: true,
           Author: {
             select: {
               id: true,
               username: true,
               Profile: {
                 select: {
-                  id: true,
                   name: true,
                   imageId: true,
                 },
               },
             },
           },
-          Forum_Komentar: {
-            where: {
-              isActive: true,
-            },
-          },
-          ForumMaster_StatusPosting: {
-            select: {
-              id: true,
-              status: true,
-            },
-          },
-          forumMaster_StatusPostingId: true,
+          authorId: true,
         },
       });
     } else {
-      fixData = await prisma.forum_Posting.findMany({
+      fixData = await prisma.forum_Komentar.findMany({
         take: takeData,
         skip: skipData,
         orderBy: {
           createdAt: "desc",
         },
         where: {
-          authorId: id,
+          forum_PostingId: id,
           isActive: true,
         },
         select: {
           id: true,
-          diskusi: true,
-          createdAt: true,
           isActive: true,
-          authorId: true,
+          komentar: true,
+          createdAt: true,
           Author: {
             select: {
               id: true,
               username: true,
               Profile: {
                 select: {
-                  id: true,
                   name: true,
                   imageId: true,
                 },
               },
             },
           },
-          Forum_Komentar: {
-            where: {
-              isActive: true,
-            },
-          },
-          ForumMaster_StatusPosting: {
-            select: {
-              id: true,
-              status: true,
-            },
-          },
-          forumMaster_StatusPostingId: true,
+          authorId: true,
         },
       });
     }
@@ -105,15 +80,14 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       data: fixData,
     });
   } catch (error) {
+    backendLogger.error("Error Get Forum Komentar >>", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Gagal mendapatkan data",
-        error: (error as Error).message,
+        message: "API Error Get Data",
+        reason: (error as Error).message,
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

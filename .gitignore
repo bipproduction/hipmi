@@ -38,11 +38,11 @@ yarn-error.log*
 
 # logs
 logs/
-**/logs/
-*.log
-**/*.log
-log/
-**/log/
+# **/logs/
+# *.log
+# **/*.log
+# log/
+# **/log/
 
 # typescript
 *.tsbuildinfo

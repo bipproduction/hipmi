@@ -24,7 +24,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             Profile: true,
           },
         },
-
         _count: {
           select: {
             Forum_Komentar: true,
@@ -35,10 +34,15 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    const fixData = {
+      ...data,
+      count: data?._count.Forum_Komentar,
+    }
+
     return NextResponse.json({
       success: true,
       message: "Success get data",
-      data: data,
+      data: fixData,
     });
   } catch (error) {
     backendLogger.error("Error get data forum", error);

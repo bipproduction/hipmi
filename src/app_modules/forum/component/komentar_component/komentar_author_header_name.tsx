@@ -12,6 +12,7 @@ import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { data } from "autoprefixer";
 import { MODEL_PROFILE } from "@/app_modules/katalog/profile/model/interface";
+import moment from "moment";
 
 export default function ComponentForum_KomentarAuthorNameOnHeader({
   userId,
@@ -84,10 +85,11 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
               <Group spacing={3}>
                 <Text c={"white"} fz={"sm"}>
                   {tglPublish
-                    ? tglPublish.toLocaleDateString(["id-ID"], {
+                    ? new Intl.DateTimeFormat("id-ID", {
                         day: "numeric",
                         month: "short",
-                      })
+                        year: "numeric",
+                      }).format(new Date(tglPublish))
                     : new Date().toLocaleDateString(["id-ID"], {
                         day: "numeric",
                         month: "short",

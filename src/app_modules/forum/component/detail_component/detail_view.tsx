@@ -1,14 +1,10 @@
 "use client";
 
-import { Card, Stack, Group, Text, Box } from "@mantine/core";
+import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconMessageCircle, IconMessageCircleX } from "@tabler/icons-react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_DetailHeader from "./detail_header";
-import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 
 export default function ComponentForum_DetailForumView({
   data,

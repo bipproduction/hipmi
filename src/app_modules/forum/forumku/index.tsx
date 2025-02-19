@@ -1,44 +1,33 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  ActionIcon,
-  Affix,
   Center,
   Loader,
-  Stack,
-  Text,
-  rem,
+  Stack
 } from "@mantine/core";
-import { useShallowEffect, useWindowScroll } from "@mantine/hooks";
-import { IconPencilPlus, IconSearchOff } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentForum_ForumkuMainCardView from "../component/forumku_component/forumku_view";
-import { forum_getAllPostingByAuhtorId } from "../fun/get/get_list_posting_by_author_id";
-import { MODEL_FORUM_POSTING } from "../model/interface";
-import ComponentForum_ViewForumProfile from "./forum_profile";
-import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
-import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
-import backendLogger from "@/util/backendLogger";
-import { clientLogger } from "@/util/clientLogger";
 import { apiGetForumkuById } from "../component/api_fetch_forum";
+import ComponentForum_ForumkuMainCardView from "../component/forumku_component/forumku_view";
+import { Forum_ComponentIsDataEmpty } from "../component/other_component";
 import {
   Forum_SkeletonCard,
   Forum_SkeletonForumku,
 } from "../component/skeleton_view";
-import { data } from "autoprefixer";
-import { Forum_ComponentIsDataEmpty } from "../component/other_component";
+import { MODEL_FORUM_POSTING } from "../model/interface";
+import ComponentForum_ViewForumProfile from "./forum_profile";
 
 export default function Forum_Forumku({
-  totalPosting,
   userLoginId,
 }: {
-  totalPosting: number;
   userLoginId: string;
 }) {
   const router = useRouter();
@@ -56,7 +45,6 @@ export default function Forum_Forumku({
         });
 
         if (response) {
-          console.log("response", response);
           setDataUser(response.data);
         }
       } catch (error) {
@@ -117,7 +105,7 @@ export default function Forum_Forumku({
         ) : (
           <ComponentForum_ViewForumProfile
             auhtorSelectedData={dataUser}
-            totalPosting={totalPosting}
+            totalPosting={dataPosting.length}
           />
         )}
 
