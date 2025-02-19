@@ -31,12 +31,10 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
-    "/api/forum/*",
 
     // ADMIN API
-    // >> buat dibawah sini <<
-    "/api/admin/vote/*",
-
+    // >> buat dibawah sini << 
+    
 
     // Akses awal
     "/api/get-cookie",
