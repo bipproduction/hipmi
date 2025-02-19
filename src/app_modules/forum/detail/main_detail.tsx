@@ -27,16 +27,17 @@ import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empt
 
 export default function Forum_MainDetail({
   userLoginId,
-  countKomentar,
 }: {
   userLoginId: string;
-  countKomentar: number;
 }) {
   const param = useParams<{ id: string }>();
-  const [data, setData] = useState<MODEL_FORUM_POSTING | null>(null);
-  const [lsKomentar, setLsKomentar] = useState<MODEL_FORUM_KOMENTAR[]>([]);
+  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING | null>(
+    null
+  );
+  const [listKomentar, setListKomentar] = useState<MODEL_FORUM_KOMENTAR[]>([]);
   const [activePage, setActivePage] = useState(1);
   const [newKomentar, setNewKomentar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useShallowEffect(() => {
     handleLoadData();
@@ -44,16 +45,21 @@ export default function Forum_MainDetail({
 
   const handleLoadData = async () => {
     try {
+      setIsLoading(true);
       const response = await apiGetOneForumById({
         id: param.id,
       });
 
       if (response) {
-        setData(response.data);
+        setDataPosting(response.data);
+      } else {
+        setDataPosting(null);
       }
     } catch (error) {
       clientLogger.error("Error get data forum", error);
-      setData(null);
+      setDataPosting(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,13 +75,13 @@ export default function Forum_MainDetail({
       });
 
       if (response.success) {
-        setLsKomentar(response.data);
+        setListKomentar(response.data);
       } else {
-        setLsKomentar([]);
+        setListKomentar([]);
       }
     } catch (error) {
       clientLogger.error("Error get data komentar forum", error);
-      setLsKomentar([]);
+      setListKomentar([]);
     }
   };
 
@@ -104,8 +110,8 @@ export default function Forum_MainDetail({
 
     mqtt_client.on("message", (topic: any, message: any) => {
       const newData = JSON.parse(message.toString());
-      if (newData.id === data?.id) {
-        const cloneData = _.clone(data);
+      if (newData.id === dataPosting?.id) {
+        const cloneData = _.clone(dataPosting);
 
         // console.log(newData.data);
         const updateData = {
@@ -116,37 +122,34 @@ export default function Forum_MainDetail({
           },
         };
 
-        setData(updateData as any);
+        setDataPosting(updateData as any);
       }
     });
-  }, [data]);
+  }, [dataPosting]);
 
   return (
     <>
       <Stack>
-        {!data ? (
+        {!dataPosting || !listKomentar ? (
           <CustomSkeleton height={200} width={"100%"} />
         ) : (
           <ComponentForum_DetailForumView
-            data={data}
-            totalKomentar={countKomentar}
+            data={dataPosting}
+            totalKomentar={dataPosting.count}
             userLoginId={userLoginId}
             onLoadData={(val) => {
-              setData(val);
+              setDataPosting(val);
             }}
           />
         )}
 
-        {!data ? (
+        {!dataPosting ? (
           <Forum_SkeletonKomentar />
         ) : (
-          (data?.ForumMaster_StatusPosting?.id as any) === 1 && (
+          (dataPosting?.ForumMaster_StatusPosting?.id as any) === 1 && (
             <ComponentForum_DetailCreateKomentar
-              postingId={data?.id}
-              onSetKomentar={(val) => {
-                setLsKomentar(val);
-              }}
-              data={data}
+              postingId={dataPosting?.id}
+              data={dataPosting}
               userLoginId={userLoginId}
               onSetNewKomentar={(val) => {
                 setNewKomentar(val);
@@ -155,12 +158,12 @@ export default function Forum_MainDetail({
           )
         )}
 
-        {!lsKomentar.length ? (
+        {!listKomentar.length && isLoading ? (
           <Forum_SkeletonListKomentar />
-        ) : _.isEmpty(lsKomentar) ? (
-          <ComponentGlobal_IsEmptyData />
+        ) : _.isEmpty(listKomentar) ? (
+          <ComponentGlobal_IsEmptyData text="Tidak ada komentar" />
         ) : (
-          <Box >
+          <Box>
             <ScrollOnly
               height={"60vh"}
               renderLoading={() => (
@@ -168,15 +171,15 @@ export default function Forum_MainDetail({
                   <Loader color={"yellow"} />
                 </Center>
               )}
-              data={lsKomentar}
-              setData={setLsKomentar}
+              data={listKomentar}
+              setData={setListKomentar}
               moreData={handleMoreDataKomentar}
             >
               {(item) => (
                 <ComponentForum_KomentarView
                   data={item}
-                  setKomentar={setLsKomentar}
-                  postingId={data?.id as any}
+                  setKomentar={setListKomentar}
+                  postingId={dataPosting?.id as any}
                   userLoginId={userLoginId}
                 />
               )}

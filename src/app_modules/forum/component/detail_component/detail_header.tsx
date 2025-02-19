@@ -50,6 +50,8 @@ import {
 } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { clientLogger } from "@/util/clientLogger";
+import _ from "lodash";
 
 export default function ComponentForum_DetailHeader({
   data,
@@ -123,7 +125,8 @@ export default function ComponentForum_DetailHeader({
               postingId={data?.id}
               authorId={data?.Author.id}
               userLoginId={userLoginId}
-              statusId={data?.forumMaster_StatusPostingId}
+              statusId={data?.ForumMaster_StatusPosting.id}
+              dataPosting={data}
               onLoadData={(val) => {
                 onLoadData(val);
               }}
@@ -141,12 +144,14 @@ function ComponentForum_DetailButtonMore_V2({
   postingId,
   statusId,
   userLoginId,
+  dataPosting,
   onLoadData,
 }: {
   authorId: any;
   postingId?: any;
   statusId: any;
   userLoginId: any;
+  dataPosting: any;
   onLoadData: (val: any) => void;
 }) {
   const router = useRouter();
@@ -312,6 +317,7 @@ function ComponentForum_DetailButtonMore_V2({
           postingId={postingId}
           setOpenStatus={setOpenStatusClose}
           statusId={statusId}
+          dataPosting={dataPosting}
           onLoadData={(val) => {
             onLoadData(val);
           }}
@@ -338,12 +344,14 @@ function ButtonDelete({
   if (loading) return <ComponentGlobal_V2_LoadingPage />;
 
   async function onDelete() {
-    setOpenDel(false);
-    await forum_funDeletePostingById(postingId as any).then((res) => {
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil(`Postingan Terhapus`, 2000);
-        setLoading(true);
+    try {
+      setLoading(true);
+      const responseDelete = await forum_funDeletePostingById(postingId as any);
+      if (responseDelete.status === 200) {
+        setOpenDel(false);
         router.back();
+
+        ComponentGlobal_NotifikasiBerhasil(`Postingan Terhapus`, 2000);
 
         // mqtt_client.publish(
         //   "Forum_detail_hapus_data",
@@ -352,9 +360,13 @@ function ButtonDelete({
         //   })
         // );
       } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(responseDelete.message);
       }
-    });
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error get data forum", error);
+    }
   }
   return (
     <>
@@ -387,38 +399,40 @@ function ButtonStatus({
   postingId,
   setOpenStatus,
   statusId,
+  dataPosting,
   onLoadData,
 }: {
   postingId?: string;
   setOpenStatus: any;
   statusId?: any;
+  dataPosting: any;
   onLoadData: (val: any) => void;
 }) {
   const [loading, setLoading] = useState(false);
 
   async function onTutupForum() {
-    setOpenStatus(false);
-
-    const closeForum = await forum_funEditStatusPostingById(
-      postingId as any,
-      2
-    );
-    if (closeForum.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(`Forum Ditutup`, 2000);
+    try {
       setLoading(true);
+      const closeForum = await forum_funEditStatusPostingById(
+        postingId as any,
+        2
+      );
 
-      const loadData = await forum_getOnePostingById(postingId as any);
-      onLoadData(loadData);
+      if (closeForum.status === 200) {
+        setOpenStatus(false);
+        ComponentGlobal_NotifikasiBerhasil(`Forum Ditutup`, 2000);
 
-      if (loadData) {
+        const cloneData = _.clone(dataPosting);
         const updateData = {
-          ...loadData,
+          ...cloneData,
           ForumMaster_StatusPosting: {
             id: 2,
             status: "Close",
           },
         };
 
+        onLoadData(updateData);
+
         mqtt_client.publish(
           "Forum_detail_ganti_status",
           JSON.stringify({
@@ -426,32 +440,39 @@ function ButtonStatus({
             data: updateData.ForumMaster_StatusPosting,
           })
         );
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(closeForum.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(closeForum.message);
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error get data forum", error);
     }
   }
 
   async function onBukaForum() {
-    setOpenStatus(false);
+    setLoading(true);
 
-    const openForum = await forum_funEditStatusPostingById(postingId as any, 1);
-    if (openForum.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(`Forum Dibuka`, 2000);
-      setLoading(true);
+    try {
+      const openForum = await forum_funEditStatusPostingById(
+        postingId as any,
+        1
+      );
+      if (openForum.status === 200) {
+        setOpenStatus(false);
+        ComponentGlobal_NotifikasiBerhasil(`Forum Dibuka`, 2000);
 
-      const loadData = await forum_getOnePostingById(postingId as any);
-      onLoadData(loadData);
-
-      if (loadData) {
+        const cloneData = _.clone(dataPosting);
         const updateData = {
-          ...loadData,
+          ...cloneData,
           ForumMaster_StatusPosting: {
             id: 1,
             status: "Open",
           },
         };
 
+        onLoadData(updateData);
+
         mqtt_client.publish(
           "Forum_detail_ganti_status",
           JSON.stringify({
@@ -459,9 +480,13 @@ function ButtonStatus({
             data: updateData.ForumMaster_StatusPosting,
           })
         );
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(openForum.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(openForum.message);
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error get data forum", error);
     }
   }
 

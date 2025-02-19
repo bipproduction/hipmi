@@ -23,13 +23,11 @@ import backendLogger from "@/util/backendLogger";
 import { clientLogger } from "@/util/clientLogger";
 export default function ComponentForum_DetailCreateKomentar({
   postingId,
-  onSetKomentar,
   data,
   userLoginId,
   onSetNewKomentar,
 }: {
   postingId: string;
-  onSetKomentar: (val: any) => void;
   data: MODEL_FORUM_POSTING;
   userLoginId: string;
   onSetNewKomentar: (val: boolean) => void;
@@ -48,11 +46,6 @@ export default function ComponentForum_DetailCreateKomentar({
       setLoading(true);
       const createComment = await forum_funCreateKomentar(postingId, value);
       if (createComment.status === 201) {
-        // const loadData = await forum_funGetAllKomentarById({
-        //   postingId: data.id,
-        //   page: 1,
-        // });
-        // onSetKomentar(loadData);
 
         onSetNewKomentar(true);
         setValue("");
@@ -88,7 +81,6 @@ export default function ComponentForum_DetailCreateKomentar({
       }
     } catch (error) {
       setLoading(false);
-
       clientLogger.error("Error create komentar forum", error);
     }
   }
