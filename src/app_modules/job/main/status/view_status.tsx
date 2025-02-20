@@ -31,7 +31,6 @@ export default function Job_NewViewStatus() {
         page: `${activePage}`,
       });
       if (response.success) {
-        console.log(response.data);
         setData(response.data);
       }
     } catch (error) {

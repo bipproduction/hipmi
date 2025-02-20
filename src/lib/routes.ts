@@ -414,7 +414,6 @@ export const apies = {
     `/api/portofolio/logo/${id}`,
   "/api/map/pin/[id]": ({ id }: { id: string }) => `/api/map/pin/${id}`,
   "/api/map/foto/[id]": ({ id }: { id: string }) => `/api/map/foto/${id}`,
-  "/api/job/gambar/[id]": ({ id }: { id: string }) => `/api/job/gambar/${id}`,
   "/api/investasi/prospektus/[id]": ({ id }: { id: string }) =>
     `/api/investasi/prospektus/${id}`,
   "/api/investasi/midtrans/[id]": ({ id }: { id: string }) =>

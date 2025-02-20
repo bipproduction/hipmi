@@ -12,8 +12,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const takeData = 10;
         const skipData = Number(page) * takeData - takeData;
 
-        console.log("status >", status)
-
         if (!page) {
 
             fixData = await prisma.investasi_Invoice.findMany({

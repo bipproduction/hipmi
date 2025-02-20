@@ -27,7 +27,6 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/collaboration/*",
     "/api/notifikasi/*",
     "/api/logs/*",
-    "/api/job/*",
     "/api/auth/*",
     "/api/origin-url",
     "/api/event/*",
