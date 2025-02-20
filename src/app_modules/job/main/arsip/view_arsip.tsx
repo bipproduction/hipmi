@@ -1,21 +1,18 @@
 "use client";
 
-import { Box, Center, Stack } from "@mantine/core";
-import { MODEL_JOB } from "../../model/interface";
-import { Job_UI_Arsip } from "./ui_arsip";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { RouterJob } from "@/lib/router_hipmi/router_job";
+import { clientLogger } from "@/util/clientLogger";
+import { Box, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
-import ComponentJob_CardStatus from "../../component/card/card_view";
-import { job_getAllArsipById } from "../../fun/get/get_all_arsip";
-import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import { clientLogger } from "@/util/clientLogger";
-import { useShallowEffect } from "@mantine/hooks";
 import { apiGetJob, apiGetJobArsip } from "../../component/api_fetch_job";
-import { Job_ComponentSkeletonBeranda } from "../../component";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import ComponentJob_CardStatus from "../../component/card/card_view";
+import { MODEL_JOB } from "../../model/interface";
 
 export default function Job_ViewArsip() {
   const [data, setData] = useState<MODEL_JOB[]>([]);

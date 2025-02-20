@@ -16,7 +16,15 @@ export default function Voting_ComponentSkeletonViewPuh() {
         header={<UIGlobal_LayoutHeaderTamplate title="Skeleton Maker" />}
       >
         <Stack>
-          <Grid align="center">
+          <CustomSkeleton height={300} width={"100%"} />
+          <Center>
+            <CustomSkeleton height={40} radius={"xl"} width={"50%"} />
+          </Center>
+          <CustomSkeleton height={500} width={"100%"} />
+          <CustomSkeleton height={40} radius={"xl"} width={"100%"} />
+        </Stack>
+
+        {/* <Grid align="center">
             <Grid.Col span={2}>
               <CustomSkeleton height={40} width={40} circle />
             </Grid.Col>
@@ -33,8 +41,7 @@ export default function Voting_ComponentSkeletonViewPuh() {
           <Stack>
             <CustomSkeleton height={20} width={"100%"} radius={"xl"} />
             <CustomSkeleton height={20} width={"100%"} radius={"xl"} />
-          </Stack>
-        </Stack>
+          </Stack> */}
 
         {/* <Stack spacing={"xl"} p={"sm"}>
           {Array.from({ length: 4 }).map((_, i) => (
