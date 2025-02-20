@@ -32,7 +32,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { apiGetAdminAllTransaksiById, apiGetAdminStatusTransaksi } from "../../_lib/api_fetch_admin_investasi";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_master";
+import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_fetch_master";
 
 export function AdminInvestasi_ViewDaftarTransaksi() {
   const params = useParams<{ id: string }>();

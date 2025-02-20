@@ -1,94 +1,95 @@
-import { prisma } from "@/lib";
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
-export const dynamic = "force-dynamic";
+import { prisma } from "@/lib";
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 
-export async function GET(request: Request) {
+export { GET };
+
+async function GET(request: Request) {
   try {
+    let fixData;
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search");
     const page = searchParams.get("page");
-    const dataTake = 10;
+    const dataTake = 10
     const dataSkip = Number(page) * dataTake - dataTake;
 
-    if (search != "") {
-      const data = await prisma.job.findMany({
-        take: dataTake,
-        skip: dataSkip,
-        orderBy: {
-          updatedAt: "desc",
-        },
-        where: {
-          masterStatusId: "1",
-          isActive: true,
-          isArsip: false,
-          title: {
-            mode: "insensitive",
-            contains: search as string,
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: true,
-            },
-          },
-        },
-      });
-
+    const userLoginId = await funGetUserIdByToken();
+    if (!userLoginId) {
       return NextResponse.json(
         {
-          success: true,
-          message: "Berhasil ambil data",
-          data: data,
+          success: false,
+          message: "Gagal mendapatkan data",
+          reason: "Unauthorized",
         },
-        { status: 200 }
-      );
-    } else {
-      const data = await prisma.job.findMany({
-        take: dataTake,
-        skip: dataSkip,
-        orderBy: {
-          updatedAt: "desc",
-        },
-        where: {
-          masterStatusId: "1",
-          isActive: true,
-          isArsip: false,
-          title: {
-            mode: "insensitive",
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: true,
-            },
-          },
-        },
-      });
-
-      return NextResponse.json(
         {
-          success: true,
-          message: "Berhasil ambil data",
-          data: data,
-        },
-        { status: 200 }
+          status: 401,
+        }
       );
     }
+
+    if (!page) {
+      fixData = await prisma.job.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          masterStatusId: "1",
+          isActive: true,
+          isArsip: true,
+          authorId: userLoginId,
+        },
+        select: {
+          id: true,
+          title: true,
+          isArsip: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: true,
+            },
+          },
+        },
+      });
+    } else {
+      fixData = await prisma.job.findMany({
+        take: dataTake,
+        skip: dataSkip,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          masterStatusId: "1",
+          isActive: true,
+          isArsip: true,
+          authorId: userLoginId,
+        },
+        select: {
+          id: true,
+          title: true,
+          isArsip: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: true,
+            },
+          },
+        },
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Berhasil mendapatkan data",
+      data: fixData,
+    });
   } catch (error) {
-    console.error(error);
+    backendLogger.error("Error get data job");
     return NextResponse.json({
       success: false,
-      message: "Gagal ambil data",
+      message: "Error get data job",
+      error: (error as Error).message,
     });
   }
 }

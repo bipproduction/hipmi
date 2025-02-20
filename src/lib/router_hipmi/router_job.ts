@@ -1,6 +1,4 @@
 export const RouterJob = {
-  //api
-  api_gambar: "/api/job/gambar/",
 
   //spalsh
   spalsh: "/dev/job/splash",
