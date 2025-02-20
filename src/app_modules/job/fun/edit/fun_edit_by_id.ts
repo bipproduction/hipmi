@@ -11,42 +11,46 @@ export async function job_EditById({
   data: MODEL_JOB;
   fileId?: string;
 }) {
-  if (fileId == undefined) {
-    const updt = await prisma.job.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        title: data.title,
-        content: data.content,
-        deskripsi: data.deskripsi,
-      },
-    });
-    if (!updt) return { status: 400, message: "Gagal Update" };
-    revalidatePath("/dev/job/detail/draft");
+  try {
+    if (fileId == undefined) {
+      const updt = await prisma.job.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          title: data.title,
+          content: data.content,
+          deskripsi: data.deskripsi,
+        },
+      });
+      if (!updt) return { status: 400, message: "Gagal Update" };
+      revalidatePath("/dev/job/detail/draft");
 
-    return {
-      status: 200,
-      message: "Berhasil Update",
-    };
-  } else {
-    const updtWithFile = await prisma.job.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        title: data.title,
-        content: data.content,
-        deskripsi: data.deskripsi,
-        imageId: fileId,
-      },
-    });
-    if (!updtWithFile) return { status: 400, message: "Gagal Update" };
-    revalidatePath("/dev/job/detail/draft");
+      return {
+        status: 200,
+        message: "Berhasil Update",
+      };
+    } else {
+      const updtWithFile = await prisma.job.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          title: data.title,
+          content: data.content,
+          deskripsi: data.deskripsi,
+          imageId: fileId,
+        },
+      });
+      if (!updtWithFile) return { status: 400, message: "Gagal Update" };
+      revalidatePath("/dev/job/detail/draft");
 
-    return {
-      status: 200,
-      message: "Berhasil Update",
-    };
+      return {
+        status: 200,
+        message: "Berhasil Update",
+      };
+    }
+  } catch (error) {
+    return { status: 500, message: "Error Update" };
   }
 }

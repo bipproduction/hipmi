@@ -1,8 +1,14 @@
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { Box, Center, Group, Skeleton, Stack } from "@mantine/core";
+import { Box, Center, Group, Stack } from "@mantine/core";
 
-export default function Job_ComponentSkeletonBeranda() {
+export {
+  Job_ComponentSkeletonBeranda,
+  Job_SkeletonDetailJob,
+  Job_SkeletonEdit
+};
+
+function Job_ComponentSkeletonBeranda() {
   return (
     <>
       <Box>
@@ -21,6 +27,46 @@ export default function Job_ComponentSkeletonBeranda() {
           </ComponentGlobal_CardStyles>
         ))}
       </Box>
+    </>
+  );
+}
+
+function Job_SkeletonDetailJob() {
+  return (
+    <>
+      <ComponentGlobal_CardStyles>
+        <Stack spacing={"xl"}>
+          <Stack align="center">
+            <CustomSkeleton h={250} w={200} radius="md" />
+            <CustomSkeleton h={10} w={200} />
+          </Stack>
+
+          {Array.from(new Array(2)).map((e, i) => (
+            <Stack key={i}>
+              <CustomSkeleton h={10} w={100} />
+
+              {Array.from({ length: 3 }).map((_, ii) => (
+                <CustomSkeleton h={10} key={ii} />
+              ))}
+            </Stack>
+          ))}
+        </Stack>
+      </ComponentGlobal_CardStyles>
+    </>
+  );
+}
+
+function Job_SkeletonEdit() {
+  return (
+    <>
+      <Stack>
+        <CustomSkeleton height={300} width={"100%"} />
+        <Center>
+          <CustomSkeleton height={40} radius={"xl"} width={"50%"} />
+        </Center>
+        <CustomSkeleton height={500} width={"100%"} />
+        <CustomSkeleton height={40} radius={"xl"} width={"100%"} />
+      </Stack>
     </>
   );
 }
