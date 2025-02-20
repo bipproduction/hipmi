@@ -10,7 +10,7 @@ export const apiGetUserSearch = async ({
 
   const isPage = page ? `?page=${page}` : "";
   const isSearch = search ? `&search=${search}` : "";
-  console.log("page", page);
+
   const response = await fetch(`/api/user${isPage}${isSearch}`, {
     method: "GET",
     headers: {
