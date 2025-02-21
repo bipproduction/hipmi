@@ -39,7 +39,7 @@ export default function ComponentEvent_BoxListStatus({
             <Text c={MainColor.white} align="right" fz={"sm"} lineClamp={1}>
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "medium",
-              }).format(data.tanggal)}
+              }).format(new Date(data.tanggal))}
             </Text>
           </Group>
 
