@@ -1,10 +1,10 @@
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+export const dynamic = "force-dynamic";
 
-export { GET };
 
-async function GET(request: Request) {
+export async function GET(request: Request) {
   try {
     let fixData;
     const { searchParams } = new URL(request.url);

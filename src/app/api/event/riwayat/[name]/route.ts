@@ -1,6 +1,7 @@
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export { GET };
 

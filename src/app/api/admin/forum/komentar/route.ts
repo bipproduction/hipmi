@@ -1,8 +1,7 @@
-import { count } from 'console';
 import { prisma } from "@/lib";
 import backendLogger from "@/util/backendLogger";
-import { NextResponse } from "next/server";
 import _ from 'lodash';
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
 

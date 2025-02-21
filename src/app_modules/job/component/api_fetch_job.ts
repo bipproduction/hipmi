@@ -1,4 +1,4 @@
-export { apiGetJobByStatus, apiGetJob, apiGetJobArsip, apiGetJobById };
+export { apiGetJob, apiGetJobArsip, apiGetJobById, apiGetJobByStatus };
 
 const apiGetJobByStatus = async ({
   status,
@@ -30,7 +30,7 @@ const apiGetJobByStatus = async ({
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       console.error(
-        "Error updating portfolio logo:",
+        "Error respone data job:",
         errorData?.message || "Unknown error"
       );
 
@@ -39,12 +39,18 @@ const apiGetJobByStatus = async ({
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating portfolio medsos:", error);
+    console.error("Error get data job:", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
 
-const apiGetJob = async ({ page, search }: { page: string, search?: string }) => {
+const apiGetJob = async ({
+  page,
+  search,
+}: {
+  page: string;
+  search?: string;
+}) => {
   try {
     // Fetch token from cookie
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -69,7 +75,7 @@ const apiGetJob = async ({ page, search }: { page: string, search?: string }) =>
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       console.error(
-        "Error updating portfolio logo:",
+        "Error respone data job:",
         errorData?.message || "Unknown error"
       );
 
@@ -78,16 +84,12 @@ const apiGetJob = async ({ page, search }: { page: string, search?: string }) =>
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating portfolio logo:", error);
+    console.error("Error get data job:", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
 
-const apiGetJobArsip = async ({
-  page,
-}: {
-  page: string;
-}) => {
+const apiGetJobArsip = async ({ page }: { page: string }) => {
   try {
     // Fetch token from cookie
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -107,20 +109,23 @@ const apiGetJobArsip = async ({
       },
     });
 
+
     // Check if the response is OK
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       console.error(
-        "Error updating portfolio logo:",
+        "Error respone data arsip job:",
         errorData?.message || "Unknown error"
       );
 
       return null;
     }
 
-    return await response.json();
+    const result = await response.json();
+
+    return result;
   } catch (error) {
-    console.error("Error updating portfolio logo:", error);
+    console.error("Error get data arsip job:", (error as Error).message);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
@@ -148,16 +153,16 @@ const apiGetJobById = async ({ id }: { id: string }) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       console.error(
-        "Error updating portfolio logo:",
+        "Error get data job:",
         errorData?.message || "Unknown error"
       );
 
       return null;
-    } 
+    }
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating portfolio logo:", error);
+    console.error("Error get data job:", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };

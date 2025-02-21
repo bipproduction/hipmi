@@ -19,14 +19,11 @@ export async function GET(request: Request,
 
     if (!page) {
       fixData = await prisma.forum_ReportPosting.findMany({
-
         orderBy: {
           createdAt: "desc",
         },
         where: {
           forum_PostingId: postingId,
-          
-
         },
         select: {
           id: true,
@@ -50,7 +47,6 @@ export async function GET(request: Request,
               deskripsi: true,
             },
           },
-          
         },
       });
     } else {
@@ -90,14 +86,13 @@ export async function GET(request: Request,
       const nCount = await prisma.forum_ReportPosting.count({
         where: {
           isActive: true,
-        }
-      })
-
+        },
+      });
 
       fixData = {
         data: data,
-        nPage: _.ceil(nCount / takeData)
-      }
+        nPage: _.ceil(nCount / takeData),
+      };
     }
     return NextResponse.json({
       success: true,

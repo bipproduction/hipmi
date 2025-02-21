@@ -1,6 +1,5 @@
 import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import { prisma } from "@/lib";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
