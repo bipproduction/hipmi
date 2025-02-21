@@ -4,10 +4,10 @@ import { IRealtimeData } from "@/lib/global_state";
 import { MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
-import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
+import { Button, Group, SimpleGrid, Stack, Loader } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Admin_ComponentModalReport } from "../../_admin_global/_component";
@@ -23,33 +23,49 @@ import { ComponentAdminInvestasi_DetailGambar } from "../_component/detail_gamba
 import { ComponentAdminInvestasi_UIDetailFile } from "../_component/ui_detail_file";
 import { adminInvestasi_funEditStatusPublishById } from "../fun/edit/fun_status_publish_by_id";
 import Admin_funRejectInvestasi from "../fun/fun_reject_investasi";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
+import SkeletonAdminInvestasi from "../_component/skeleton_admin_investasi";
 
-export default function AdminInvestasi_DetailReview({
-  dataInvestasi,
-}: {
-  dataInvestasi: MODEL_INVESTASI;
-}) {
+export default function AdminInvestasi_DetailReview() {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [data, setData] = useState(dataInvestasi);
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
   const [publish, setPublish] = useState(true);
   const [openModalPublish, setOpenModalPublish] = useState(false);
   const [openModalReject, setOpenModalReject] = useState(false);
   const [isLoadingPublish, setIsLoadingPublish] = useState(false);
   const [isLoadingReject, setIsLoadingReject] = useState(false);
   const [report, setReport] = useState("");
+  const investasiId = params;
 
   useShallowEffect(() => {
     cekStatusPublish();
-    // omload()
+    loadInitialData();
   }, []);
 
+  const loadInitialData = async () => {
+  try {
+    const response = await apiGetAdminInvestasiById({
+      id: params.id,
+    })
+
+    if (response?.success && response?.data) { 
+      setData(response.data);
+    }
+  } catch (error) {
+    clientLogger.error("Invalid data format recieved:", error);
+    setData(null);
+  }
+}
+
   async function cekStatusPublish() {
-    if (data.MasterStatusInvestasi.id === "3") setPublish(false);
+    if (data?.MasterStatusInvestasi.id === "3") setPublish(false);
   }
 
   async function onReject() {
     const body = {
-      id: data.id,
+      id: data?.id,
       catatan: report,
       status: "4",
     };
@@ -81,8 +97,8 @@ export default function AdminInvestasi_DetailReview({
         });
       }
 
-      const loadData = await getOneInvestasiById(data.id);
-      setData(loadData as any);
+      // const loadData = await getOneInvestasiById(data?.id);
+      // setData(loadData as any);
 
       ComponentAdminGlobal_NotifikasiBerhasil(res.message);
       router.back();
@@ -96,7 +112,7 @@ export default function AdminInvestasi_DetailReview({
 
   async function onPublish() {
     const res = await adminInvestasi_funEditStatusPublishById({
-      investasiId: data.id,
+      investasiId: data?.id as any,
       statusId: "1",
       progesInvestasiId: "1",
     });
@@ -128,7 +144,7 @@ export default function AdminInvestasi_DetailReview({
           dataMessage: dataNotifikasi,
         });
 
-        const loadData = await getOneInvestasiById(data.id);
+        const loadData = await getOneInvestasiById(data?.id as any);
         setData(loadData as any);
 
         ComponentAdminGlobal_NotifikasiBerhasil("Proyek Investasi Di Publish");
@@ -143,6 +159,9 @@ export default function AdminInvestasi_DetailReview({
     }
   }
 
+  if (!data) {
+    return <SkeletonAdminInvestasi/>
+  }
 
 
   return (
@@ -151,7 +170,7 @@ export default function AdminInvestasi_DetailReview({
         <Group position="apart">
           <AdminGlobal_ComponentBackButton />
 
-          {data.masterStatusInvestasiId === "2" ? (
+          {data?.masterStatusInvestasiId === "2" ? (
             <Group>
               <Button
                 loaderPosition="center"
@@ -185,23 +204,20 @@ export default function AdminInvestasi_DetailReview({
           ]}
         >
           {/* Data Author */}
-          if(!data.author){
-            
-          }
-          <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
+          <ComponentAdminInvestasi_DetailDataAuthor data={data?.author as any} />
 
           {/* Data Foto */}
-          <ComponentAdminInvestasi_DetailGambar imagesId={data.imageId} />
+          <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId} />
 
           {/* Data Detail */}
           <ComponentAdminInvestasi_DetailData data={data} />
         </SimpleGrid>
 
         <ComponentAdminInvestasi_UIDetailFile
-          title={data.title}
-          dataProspektus={data.ProspektusInvestasi}
-          listDokumen={data.DokumenInvestasi}
-          prospektusFileId={data.prospektusFileId}
+          title={data?.title}
+          dataProspektus={data?.ProspektusInvestasi}
+          listDokumen={data?.DokumenInvestasi}
+          prospektusFileId={data?.prospektusFileId}
         />
       </Stack>
 

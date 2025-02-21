@@ -37,7 +37,7 @@ import "react-international-phone/style.css";
 import { Portofolio_ComponentButtonSelanjutnya } from "../component";
 import { useParams } from "next/navigation";
 import { useShallowEffect } from "@mantine/hooks";
-import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_master";
+import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_fetch_master";
 import { MODEL_PORTOFOLIO_BIDANG_BISNIS } from "../model/interface";
 import { clientLogger } from "@/util/clientLogger";
 

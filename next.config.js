@@ -4,7 +4,10 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  output: "standalone"
+  output: "standalone",
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
 };
 
 module.exports = nextConfig;

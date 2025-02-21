@@ -39,11 +39,11 @@ const apiGetAdminJobArsipCount = async () => {
 
 };
 const apiGetAdminJobByStatus = async ({
-    status,
+    name,
     page,
     search
 }: {
-    status: "Publish" | "Review" | "Reject";
+    name: "Publish" | "Review" | "Reject";
     page: string;
     search: string;
 }) => {
@@ -53,7 +53,7 @@ const apiGetAdminJobByStatus = async ({
     const isPage = page ? `?page=${page}` : "";
     const isSearch = search ? `&search=${search}` : "";
     const response = await fetch(
-        `/api/admin/job/${status}${isPage}${isSearch}`,
+        `/api/admin/job/status/${name}${isPage}${isSearch}`,
         {
             headers: {
                 "Content-Type": "application/json",

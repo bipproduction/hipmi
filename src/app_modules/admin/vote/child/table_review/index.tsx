@@ -129,7 +129,7 @@ function TableStatus({ listData }: { listData: any }) {
         <Center c={AccentColor.white}>{e.title}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           <Spoiler
             hideLabel="sembunyikan"
             maw={400}

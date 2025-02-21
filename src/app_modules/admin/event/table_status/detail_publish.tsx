@@ -53,7 +53,7 @@ function AdminEvent_DetailPublish() {
           <AdminEvent_ViewDetailData />
         ) : null}
         {selectPage == "2" ? (
-          <AdminEvent_ViewDetailPeserta dataPeserta={{}} eventId={""}/>
+          <AdminEvent_ViewDetailPeserta />
         ) : null}
         {selectPage == "3" ? (
           <AdminEvent_DetailDataSponsor />

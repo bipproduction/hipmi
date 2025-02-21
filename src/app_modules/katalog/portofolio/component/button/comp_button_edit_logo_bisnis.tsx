@@ -8,15 +8,15 @@ import {
 } from "@/app_modules/_global/notif_global";
 import { Box, Button } from "@mantine/core";
 
-import { DIRECTORY_ID } from "@/lib";
 import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,
 } from "@/app_modules/_global/fun";
+import { DIRECTORY_ID } from "@/lib";
 import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { portofolio_funEditLogoBisnisById } from "../../fun";
+import { apiUpdateLogoPortofolioById } from "../api_fetch_portofolio";
 
 export function ComponentPortofolio_ButtonEditLogoBisnis({
   file,
@@ -29,6 +29,7 @@ export function ComponentPortofolio_ButtonEditLogoBisnis({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
   async function onUpdate() {
     try {
       setLoading(true);
@@ -55,18 +56,20 @@ export function ComponentPortofolio_ButtonEditLogoBisnis({
       }
 
       const logoId = uploadFileToStorage.data.id;
-      const res = await portofolio_funEditLogoBisnisById({
-        portofolioId: portofolioId,
-        logoId: logoId,
+
+      const response = await apiUpdateLogoPortofolioById({
+        id: portofolioId,
+        data: logoId,
       });
 
-      if (res.status === 200) {
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        router.back();
-      } else {
+      if (!response) {
         setLoading(false);
-        ComponentGlobal_NotifikasiGagal(res.message);
+        ComponentGlobal_NotifikasiGagal("Gagal update logo");
+        return;
       }
+
+      ComponentGlobal_NotifikasiBerhasil("Berhasil mengubah Logo Bisnis!");
+      router.back();
     } catch (error) {
       setLoading(false);
       clientLogger.error("Error update logo", error);

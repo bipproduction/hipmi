@@ -14,6 +14,7 @@ export interface MODEL_FORUM_POSTING {
   Forum_ReportPosting: MODEL_FORUM_MASTER_REPORT[];
   ForumMaster_StatusPosting: MODEL_FORUM_MASTER_STATUS;
   forumMaster_StatusPostingId: number;
+  count: number
 }
 
 export interface MODEL_FORUM_KOMENTAR {

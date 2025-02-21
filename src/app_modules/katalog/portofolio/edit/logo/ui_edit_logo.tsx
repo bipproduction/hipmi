@@ -60,7 +60,9 @@ export default function Portofolio_EditLogoBisnis() {
             }}
           >
             {img ? (
-              <Image maw={250} alt="Image" src={img} />
+              <Center>
+                <Image maw={250} alt="Image" src={img} />
+              </Center>
             ) : (
               <ComponentGlobal_LoadImage fileId={data.logoId} />
             )}

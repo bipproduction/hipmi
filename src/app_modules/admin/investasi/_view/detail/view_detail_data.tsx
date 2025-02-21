@@ -4,6 +4,7 @@ import { ComponentAdminInvestasi_DetailDataAuthor } from "../../_component/detai
 import { ComponentAdminInvestasi_DetailData } from "../../_component/detail_data_investasi";
 import { ComponentAdminInvestasi_DetailGambar } from "../../_component/detail_gambar_investasi";
 import { ComponentAdminInvestasi_UIDetailFile } from "../../_component/ui_detail_file";
+import SkeletonAdminInvestasi from "../../_component/skeleton_admin_investasi";
 
 export function AdminInvestasi_ViewDetailData({
   data,
@@ -12,6 +13,7 @@ export function AdminInvestasi_ViewDetailData({
 }) {
   return (
     <>
+     {!data ? (<SkeletonAdminInvestasi/>) : ( <>
       <SimpleGrid
         cols={3}
         spacing="lg"
@@ -22,20 +24,21 @@ export function AdminInvestasi_ViewDetailData({
         ]}
       >
         {/* Data Author */}
-        <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
+        <ComponentAdminInvestasi_DetailDataAuthor data={data?.author as any} />
 
         {/* Data Foto */}
-        <ComponentAdminInvestasi_DetailGambar imagesId={data.imageId} />
+        <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId } />
 
         {/* Data Detail */}
-        <ComponentAdminInvestasi_DetailData data={data} />
+        <ComponentAdminInvestasi_DetailData data={data as any} />
       </SimpleGrid>
       <ComponentAdminInvestasi_UIDetailFile
-        title={data.title}
-        dataProspektus={data.ProspektusInvestasi}
-        listDokumen={data.DokumenInvestasi}
-        prospektusFileId={data.prospektusFileId}
+        title={data?.title}
+        dataProspektus={data?.ProspektusInvestasi}
+        listDokumen={data?.DokumenInvestasi}
+        prospektusFileId={data?.prospektusFileId}
       />
+      </>)}
     </>
   );
 }

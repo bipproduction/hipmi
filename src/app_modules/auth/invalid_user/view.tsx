@@ -2,11 +2,13 @@
 
 import { MainColor } from "@/app_modules/_global/color";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import { Button, Stack, Text, Title } from "@mantine/core";
+import { Button, Stack, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function InvalidUser() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const deleteCookie = async () => {
     const sessionKey = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
     if (!sessionKey) {
@@ -14,12 +16,15 @@ export default function InvalidUser() {
     }
 
     try {
+      setIsLoading(true);
       await fetch("/api/auth/logout", {
         method: "GET",
       });
       router.push("/login");
     } catch (error) {
       console.error("Gagal menghapus cookie:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,6 +37,8 @@ export default function InvalidUser() {
             Invalid User
           </Title>
           <Button
+            loading={isLoading}
+            loaderPosition="center"
             radius={"xl"}
             onClick={() => {
               deleteCookie();

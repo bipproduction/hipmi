@@ -1,55 +1,28 @@
 "use client";
 
-import { Stack, Tabs } from "@mantine/core";
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import {
-  AccentColor,
-  MainColor,
+  MainColor
 } from "@/app_modules/_global/color/color_pallet";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { MODEL_EVENT } from "../../_lib/interface";
-import Event_RiwayatSaya from "./saya";
-import Event_SemuaRiwayat from "./semua";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { Stack, Tabs } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
+import { listTabsRiwayatEvent } from "../../component/list_tab_riwayat";
+import Event_ViewRiwayat from "./view_riwayat";
 
-export default function Event_Riwayat({
-  statusId,
-  dataSemuaRiwayat,
-  dataRiwayatSaya,
-}: {
-  statusId: string;
-  dataSemuaRiwayat?: MODEL_EVENT[];
-  dataRiwayatSaya?: MODEL_EVENT[];
-}) {
+export default function Event_Riwayat() {
   const router = useRouter();
-  const [changeStatus, setChangeStatus] = useState(statusId);
-
-  const listTabs = [
-    {
-      id: "1",
-      label: "Semua Riwayat",
-      value: "Semua",
-    },
-    {
-      id: "2",
-      label: "Riwayat Saya",
-      value: "Saya",
-    },
-  ];
-
-  async function onChangeStatus({ statusId }: { statusId: string }) {
-    router.push(RouterEvent.riwayat({ id: statusId }));
-  }
+  const param = useParams<{ id: string }>();
+  const statusId = param.id;
 
   return (
     <>
       <Tabs
         variant="pills"
         radius={"xl"}
-        value={changeStatus}
+        defaultValue={statusId}
+        value={statusId}
         onTabChange={(val: any) => {
-          setChangeStatus(val);
-          onChangeStatus({ statusId: val });
+          router.replace(RouterEvent.riwayat({ id: val }));
         }}
         styles={{
           tabsList: {
@@ -62,32 +35,24 @@ export default function Event_Riwayat({
       >
         <Stack>
           <Tabs.List grow>
-            {listTabs.map((e) => (
+            {listTabsRiwayatEvent.map((e) => (
               <Tabs.Tab
                 key={e.id}
                 value={e.id}
                 fw={"bold"}
-                c={"black"}
                 style={{
                   transition: "0.5s",
                   backgroundColor:
-                    changeStatus === e.id ? MainColor.yellow : MainColor.white,
-                  border:
-                    changeStatus === e.id
-                      ? `1px solid ${AccentColor.yellow}`
-                      : `1px solid ${MainColor.white}`,
+                    statusId === e.id ? MainColor.yellow : MainColor.white,
+                  color: MainColor.darkblue,
                 }}
               >
                 {e.label}
               </Tabs.Tab>
             ))}
           </Tabs.List>
-          {statusId == "1" && (
-            <Event_SemuaRiwayat listData={dataSemuaRiwayat as any} />
-          )}
-          {statusId == "2" && (
-            <Event_RiwayatSaya listData={dataRiwayatSaya as any} />
-          )}
+
+          <Event_ViewRiwayat />
         </Stack>
       </Tabs>
     </>

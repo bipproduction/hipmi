@@ -7,10 +7,11 @@ import { IconAlertTriangle, IconBookmark, IconHistory, IconUpload } from "@table
 import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { useState } from "react";
 import { clientLogger } from "@/util/clientLogger";
-import { apiGetVoteRiwayatCount, apiGetVoteStatusCountDashboard } from "../lib/api_fetch_admin_voting";
+
 import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { apiGetAdminVoteRiwayatCount, apiGetAdminVoteStatusCountDashboard } from "../lib/api_fetch_admin_voting";
 
 export default function AdminVote_Main() {
   const [countPublish, setCountPublish] = useState<number | null>(null);
@@ -36,7 +37,7 @@ export default function AdminVote_Main() {
   }
   async function onLoadCountPublish() {
     try {
-      const response = await apiGetVoteStatusCountDashboard({
+      const response = await apiGetAdminVoteStatusCountDashboard({
         name: "Publish",
       })
       if (response) {
@@ -48,7 +49,7 @@ export default function AdminVote_Main() {
   }
   async function onLoadCountReview() {
     try {
-      const response = await apiGetVoteStatusCountDashboard({
+      const response = await apiGetAdminVoteStatusCountDashboard({
         name: "Review",
       })
 
@@ -61,7 +62,7 @@ export default function AdminVote_Main() {
   }
   async function onLoadCountReject() {
     try {
-      const response = await apiGetVoteStatusCountDashboard({
+      const response = await apiGetAdminVoteStatusCountDashboard({
         name: "Reject",
       })
       if (response) {
@@ -73,7 +74,7 @@ export default function AdminVote_Main() {
   }
   async function onLoadCountRiwayat() {
     try {
-      const response = await apiGetVoteRiwayatCount()
+      const response = await apiGetAdminVoteRiwayatCount()
       if (response) {
         setCountRiwayat(response.data);
       }

@@ -12,18 +12,20 @@ import {
 } from "../_view";
 import { useAtom } from "jotai";
 import { gs_admin_invetasi_menu_publish } from "../_lib/global_state";
+import { useParams } from "next/navigation";
+import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
 
 export function AdminInvestasi_DetailPublish({
-  data,
   dataTransaksi,
   statusTransaksi,
-  investasiId,
 }: {
-  data: MODEL_INVESTASI;
   dataTransaksi: any[];
   statusTransaksi: any[];
-  investasiId: string;
-}) {
+  }) {
+  const params = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
   const [selectPage, setSelectPage] = useAtom(gs_admin_invetasi_menu_publish);
   const listPage = [
     {
@@ -43,6 +45,23 @@ export function AdminInvestasi_DetailPublish({
     // },
   ];
 
+  useShallowEffect(() => {
+    loadInitialData()
+  }, []);
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminInvestasiById({
+        id: params.id
+      })
+
+      if (response?.success && response?.data) {
+        setData(response.data)
+      }
+    } catch (error) {
+      clientLogger.error("Invalid data format recieved:", error)
+      setData(null);
+    }
+  }
   return (
     <>
       <Stack >
@@ -65,13 +84,10 @@ export function AdminInvestasi_DetailPublish({
         </Group>
 
         {selectPage == "1" ? (
-          <AdminInvestasi_ViewDetailData data={data} />
+          <AdminInvestasi_ViewDetailData data={data as any} />
         ) : null}
         {selectPage == "2" ? (
           <AdminInvestasi_ViewDaftarTransaksi
-            dataTransaksi={dataTransaksi}
-            statusTransaksi={statusTransaksi}
-            investasiId={investasiId}
           />
         ) : null}
       </Stack>

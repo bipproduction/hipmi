@@ -22,6 +22,11 @@ import { IconPhoto } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { Job_ComponentButtonUpdate } from "../component";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { apiGetJobById } from "../component/api_fetch_job";
+import { Job_SkeletonEdit } from "../component/skeleton/comp_skeleton_beranda";
 const ReactQuill = dynamic(
   () => {
     return import("react-quill");
@@ -29,14 +34,35 @@ const ReactQuill = dynamic(
   { ssr: false }
 );
 
-export default function Job_Edit({ dataJob }: { dataJob: MODEL_JOB }) {
-  const [data, setData] = useState(dataJob);
+export default function Job_Edit() {
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
 
-  // useShallowEffect(() => {
-  //   if (window && window.document) setReload(true);
-  // }, []);
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_JOB | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetJobById({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data job", error);
+      setData(null);
+    }
+  };
+
+  if (!data) return <Job_SkeletonEdit />;
 
   return (
     <>

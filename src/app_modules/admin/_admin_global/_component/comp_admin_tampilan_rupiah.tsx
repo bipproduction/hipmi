@@ -1,4 +1,4 @@
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import { Text } from "@mantine/core";
 
 export  function ComponentAdminGlobal_TampilanRupiah({
@@ -15,7 +15,7 @@ export  function ComponentAdminGlobal_TampilanRupiah({
       <Text
         fz={fontSize ? fontSize : "md"}
         style={{
-          color: color ? color : "black",
+          color: color ? color : AdminColor.white,
         }}
       >
         Rp.{" "}
