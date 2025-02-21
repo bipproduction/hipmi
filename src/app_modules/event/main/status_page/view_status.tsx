@@ -1,21 +1,18 @@
 "use client";
 
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { globalStatusApp } from "@/app_modules/_global/lib";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Center, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import ComponentEvent_BoxListStatus from "../../component/box_list_status";
-import { event_getAllByStatusId } from "../../fun";
-import { MODEL_EVENT } from "../../_lib/interface";
-import { useParams } from "next/navigation";
-import { globalStatusApp } from "@/app_modules/_global/lib";
-import { apiGetJobByStatus } from "@/app_modules/job/component/api_fetch_job";
-import { clientLogger } from "@/util/clientLogger";
-import { useShallowEffect } from "@mantine/hooks";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { apiGetEventByStatus } from "../../component/button/api_fetch_event";
 
 export default function Event_ViewStatus() {

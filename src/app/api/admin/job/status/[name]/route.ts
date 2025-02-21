@@ -1,9 +1,7 @@
-import { Job_Status } from '@/app_modules/job';
 import { prisma } from "@/lib";
-import _, { take } from "lodash";
-import { NextResponse } from "next/server";
 import backendLogger from '@/util/backendLogger';
-import moment from 'moment';
+import _ from "lodash";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: {
     params: { name: string }

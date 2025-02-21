@@ -2,6 +2,7 @@ import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function GET(
   request: Request,
