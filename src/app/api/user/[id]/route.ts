@@ -1,5 +1,6 @@
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
 
 export async function GET(
   request: Request,
@@ -7,6 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = params;
+
     const data = await prisma.user.findUnique({
       where: {
         id: id,
@@ -25,7 +27,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        message: "Gagal mendapatkan data, coba lagi nanti ",
+        message: "Error get data from API ",
         reason: (error as Error).message,
       },
       { status: 500 }

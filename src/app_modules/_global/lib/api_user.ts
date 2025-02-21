@@ -12,8 +12,6 @@ export const apiGetUserId = async () => {
     },
   });
 
-  console.log("Ini di pemanggilan API", await response.json());
-
   if (!response.ok) return null;
   const data: Record<string, any> = await response.json();
   return data;

@@ -2,6 +2,7 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
+export const dynamic = "force-dynamic";
 
 export { GET };
 
@@ -84,6 +85,7 @@ async function GET(request: Request) {
       message: "Berhasil mendapatkan data",
       data: fixData,
     });
+
   } catch (error) {
     backendLogger.error("Error get data job");
     return NextResponse.json({

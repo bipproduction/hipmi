@@ -1,8 +1,8 @@
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
 export async function GET(
   request: Request,
   { params }: { params: { name: string } }

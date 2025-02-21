@@ -1,6 +1,5 @@
 import { prisma } from "@/lib";
 import _ from "lodash";
-import moment from "moment";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: {
