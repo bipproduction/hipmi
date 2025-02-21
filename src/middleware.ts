@@ -120,6 +120,33 @@ export const middleware = async (req: NextRequest) => {
     return setCorsHeaders(response);
   }
 
+  // Handle API requests
+  if (pathname.startsWith(apiPath)) {
+
+    if (!token) {
+      return setCorsHeaders(unauthorizedResponse());
+    }
+
+    try {
+      const validationResponse = await fetch(
+        new URL(validationApiRoute, req.url),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!validationResponse.ok) {
+        throw new Error("Failed to validate API request");
+      }
+    } catch (error) {
+      console.error("Error validating API request:", error);
+      return setCorsHeaders(unauthorizedResponse());
+    }
+  }
+
   // Handle /dev routes that require active status
   if (pathname.startsWith("/dev")) {
     try {
@@ -149,32 +176,6 @@ export const middleware = async (req: NextRequest) => {
       }
     } catch (error) {
       console.error("Error validating user:", error);
-      return setCorsHeaders(unauthorizedResponse());
-    }
-  }
-
-  // Handle API requests
-  if (pathname.startsWith(apiPath)) {
-    if (!token) {
-      return setCorsHeaders(unauthorizedResponse());
-    }
-
-    try {
-      const validationResponse = await fetch(
-        new URL(validationApiRoute, req.url),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!validationResponse.ok) {
-        throw new Error("Failed to validate API request");
-      }
-    } catch (error) {
-      console.error("Error validating API request:", error);
       return setCorsHeaders(unauthorizedResponse());
     }
   }

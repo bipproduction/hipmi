@@ -19,13 +19,6 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
     <>
       <ComponentGlobal_CardStyles marginBottom={"15px"}>
         <Stack>
-          {/* <ComponentGlobal_AuthorNameOnHeader
-            profileId={data.Author?.Profile?.id}
-            imagesId={data.Author?.Profile?.imagesId}
-            authorName={data.Author?.Profile?.name}
-            isPembatas={true}
-          /> */}
-
           <ComponentGlobal_AvatarAndUsername
             profile={data.Author?.Profile as any}
           />
@@ -45,7 +38,7 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
               <Text align="right" fz={"sm"} lineClamp={1}>
                 {new Intl.DateTimeFormat("id-ID", {
                   dateStyle: "medium",
-                }).format(data.tanggal)}
+                }).format(new Date(data.tanggal))}
               </Text>
             </Group>
 
