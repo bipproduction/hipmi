@@ -7,13 +7,7 @@ import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_glo
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
-import {
-  Button,
-  Select,
-  Stack,
-  TextInput,
-  Textarea
-} from "@mantine/core";
+import { Button, Select, Stack, TextInput, Textarea } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -50,7 +44,6 @@ export default function Colab_Create() {
       clientLogger.error("Error get master collaboration", error);
     }
   }
-
 
   if (listIndustri == null) {
     return (
@@ -194,34 +187,32 @@ function ButtonAction({ value }: { value: any }) {
     if (value.projectCollaborationMaster_IndustriId === 0)
       return ComponentGlobal_NotifikasiPeringatan("Pilih Industri");
 
-    const res = await colab_funCreateProyek(value);
     try {
-      setLoading(true)
+      setLoading(true);
+
+      const res = await colab_funCreateProyek(value);
       if (res.status === 201) {
-        setLoading(true);
         router.back();
         ComponentGlobal_NotifikasiBerhasil(res.message);
       } else {
-        setLoading(false)
+        setLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       clientLogger.error("Error create proyek", error);
     }
-    
   }
-
 
   return (
     <>
       <Button
         disabled={
           !value.title ||
-            !value.lokasi ||
-            !value.purpose ||
-            !value.benefit ||
-            value.projectCollaborationMaster_IndustriId === 0
+          !value.lokasi ||
+          !value.purpose ||
+          !value.benefit ||
+          value.projectCollaborationMaster_IndustriId === 0
             ? true
             : false
         }
