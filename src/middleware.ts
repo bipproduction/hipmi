@@ -29,6 +29,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/logs/*",
     "/api/auth/*",
     "/api/origin-url",
+    "/api/job*",
     // "/api/event/*",
 
     // ADMIN API
