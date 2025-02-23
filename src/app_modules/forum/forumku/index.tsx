@@ -35,6 +35,7 @@ export default function Forum_Forumku({
   const userId = params.id;
   const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
   const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
 
   useShallowEffect(() => {
@@ -61,6 +62,7 @@ export default function Forum_Forumku({
 
   const handleLoadDataForum = async () => {
     try {
+      setIsLoading(true);
       const response = await apiGetForumkuById({
         id: userId,
         page: "1",
@@ -69,9 +71,14 @@ export default function Forum_Forumku({
       if (response.success) {
         setDataPosting(response.data);
         setActivePage(1);
+        setIsLoading(false);
+      } else {
+        setDataPosting([]);
+        setIsLoading(false);
       }
     } catch (error) {
       clientLogger.error("Error get data forum");
+      setIsLoading(false);
       setDataPosting([]);
     }
   };
@@ -109,7 +116,7 @@ export default function Forum_Forumku({
           />
         )}
 
-        {!dataPosting.length ? (
+        {!dataPosting.length && isLoading ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(dataPosting) ? (
           <Forum_ComponentIsDataEmpty />
