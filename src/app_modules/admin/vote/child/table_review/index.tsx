@@ -120,13 +120,6 @@ function TableStatus() {
     }
   };
 
-  async function onLoadData() {
-    handleLoadData();
-    setIsLoading(false);
-    setIsShowReload(false);
-    setIsAdminVoting_TriggerReview(false);
-  }
-
   async function onSearch(s: string) {
     setSearch(s);
   }
@@ -134,6 +127,14 @@ function TableStatus() {
   async function onPageClick(p: any) {
     setActivePage(p);
   }
+  
+  async function onLoadData() {
+    handleLoadData();
+    setIsLoading(false);
+    setIsShowReload(false);
+    setIsAdminVoting_TriggerReview(false);
+  }
+
 
   async function onReject() {
     const data = {
