@@ -24,15 +24,50 @@ import { WibuRealtime } from "wibu-pkg";
 import { gs_access_user, IRealtimeData } from "@/lib/global_state";
 import { useAtom } from "jotai";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetUserAccess } from "../_lib/api_fetch_user_access";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
-  const [data, setData] = useState<MODEL_USER[]>(listUser.data);
+export default function AdminUserAccess_View() {
+  const [data, setData] = useState<MODEL_USER[]>([]);
+  const [nPage, setNPage] = useState(1);
   const [isActivePage, setActivePage] = useState(1);
-  const [isNPage, setNPage] = useState(listUser.nPage);
   const [isSearch, setSearch] = useState("");
+
   const [isLoadingAccess, setIsLoadingAccess] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [userId, setUserId] = useState("");
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, [isActivePage, isSearch]);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetUserAccess({
+        page: `${isActivePage}`,
+        search: isSearch,
+      });
+
+      if (response.success) {
+        setData(response.data.data);
+        setNPage(response.data.nPage);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
+      console.error("Error get user access", error);
+      setData([]);
+    }
+  };
+
+  async function onSearch(s: any) {
+    setSearch(s);
+  }
+
+  async function onPageClick(p: any) {
+    setActivePage(p);
+  }
 
   async function onAccess(id: string, nomor: string) {
     try {
@@ -40,12 +75,7 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
       setIsLoadingAccess(true);
       await adminUserAccess_funEditAccess(id, true, nomor).then(async (res) => {
         if (res.status === 200) {
-          const value = await adminUserAccess_getListUser({
-            page: 1,
-            search: isSearch,
-          });
-          setData(value.data as any);
-          setNPage(value.nPage);
+          handleLoadData();
 
           const dataNotifikasi: IRealtimeData = {
             status: true as any,
@@ -78,12 +108,8 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
       setIsLoadingDelete(true);
       await adminUserAccess_funEditAccess(id, false).then(async (res) => {
         if (res.status === 200) {
-          const value = await adminUserAccess_getListUser({
-            page: 1,
-            search: isSearch,
-          });
-          setData(value.data as any);
-          setNPage(value.nPage);
+          handleLoadData();
+
           ComponentGlobal_NotifikasiBerhasil(res.message);
         } else {
           ComponentGlobal_NotifikasiGagal(res.message);
@@ -95,27 +121,6 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
       setIsLoadingDelete(false);
       setUserId("");
     }
-  }
-
-  async function onSearch(s: any) {
-    setSearch(s);
-    setActivePage(1);
-    const loadData = await adminUserAccess_getListUser({
-      search: s,
-      page: 1,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
-
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminUserAccess_getListUser({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
   const tableBody = data.map((e, i) => (
@@ -181,40 +186,39 @@ export default function AdminUserAccess_View({ listUser }: { listUser: any }) {
           />
         </Group>
 
-        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"xs"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center c={AdminColor.white}>Username</Center>
-                  </th>
-                  <th>
-                    <Center c={AdminColor.white}>Nomor</Center>
-                  </th>
-                  <th>
-                    <Center c={AdminColor.white}>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{tableBody}</tbody>
-            </Table>
-          </ScrollArea>
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
-              onChange={(val) => {
-                onPageClick(val);
-              }}
-            />
-          </Center>
-        </Paper>
+        {!data.length ? (
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Username</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Nomor</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{tableBody}</tbody>
+              </Table>
+            </ScrollArea>
+            <Center mt={"xl"}>
+              <Pagination
+                value={isActivePage}
+                total={nPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+            </Center>
+          </Paper>
+        )}
       </Stack>
     </>
   );
