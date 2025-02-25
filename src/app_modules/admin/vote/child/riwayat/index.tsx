@@ -14,130 +14,161 @@ import {
   Stack,
   Table,
   Text,
-  TextInput
+  TextInput,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconReportAnalytics, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
-import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
-import { useState } from "react";
-import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
-import { adminVote_funGetListRiwayat } from "../../fun";
-import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
-import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
+import _ from "lodash";
+import { useState } from "react";
+import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
+import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
+import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
+import { apiGetAdminVotingRiwayat } from "../../lib/api_fetch_admin_voting";
 
-export default function AdminVote_Riwayat({
-  dataVote,
-}: {
-  dataVote: MODEL_VOTING[];
-}) {
+export default function AdminVote_Riwayat() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Voting" />
-        <TableStatus listPublish={dataVote} />
+        <TableStatus />
       </Stack>
     </>
   );
 }
 
-function TableStatus({ listPublish }: { listPublish: any }) {
+function TableStatus() {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-  const [data, setData] = useState<MODEL_VOTING[]>(listPublish.data);
   const [hasil, setHasil] = useState<any[]>();
   const [kontributor, setKontributor] = useState<any[]>();
   const [voteId, setVoteId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [isNPage, setNPage] = useState(listPublish.nPage);
+  const [data, setData] = useState<MODEL_VOTING[] | null>(null);
+  const [isNPage, setNPage] = useState(1);
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
+  useShallowEffect(() => {
+    handleLoadData();
+  }, [isActivePage, isSearch]);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetAdminVotingRiwayat({
+        page: `${isActivePage}`,
+        search: isSearch,
+      });
+
+      if (response?.success && response?.data?.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invalid data format received:", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data table publish", error);
+      setData([]);
+    }
+  };
+
   async function onSearch(s: string) {
     setSearch(s);
-    const loadData = await adminVote_funGetListRiwayat({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
   async function onPageClick(p: any) {
     setActivePage(p);
-    const loadData = await adminVote_funGetListRiwayat({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
-  const TableRows = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center>
-          <Button
-            loading={
-              e?.id === voteId ? (loading === true ? true : false) : false
-            }
-            radius={"xl"}
-            color="green"
-            leftIcon={<IconReportAnalytics />}
-            onClick={async () => {
-              setVoteId(e?.id);
-              setLoading(true);
-              await new Promise((r) => setTimeout(r, 500));
-              onList(e?.id, setHasil, setKontributor, setLoading, open);
-            }}
-          >
-            Lihat Hasil
-          </Button>
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white}>{e?.Author?.username}</Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white}>{e?.title}</Center>
-      </td>
-      <td>
-        <Center>
-          <Spoiler
-            hideLabel="sembunyikan"
-            maw={400}
-            maxHeight={50}
-            showLabel="tampilkan"
-          >
-            {e?.deskripsi}
-          </Spoiler>
-        </Center>
-      </td>
-      <th>
-        <Stack>
-          {e?.Voting_DaftarNamaVote.map((v) => (
-            <Box key={v?.id}>
-              <Text c={AccentColor.white}>- {v?.value}</Text>
-            </Box>
-          ))}
-        </Stack>
-      </th>
-      <td>
-        <Center c={AccentColor.white}>
-          {e?.awalVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
-        </Center>
-      </td>
-      <td>
-        <Center c={AccentColor.white}>
-          {e?.akhirVote.toLocaleDateString("id-ID", { dateStyle: "long" })}
-        </Center>
-      </td>
-    </tr>
-  ));
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center>
+            <Button
+              loading={
+                e?.id === voteId ? (loading === true ? true : false) : false
+              }
+              radius={"xl"}
+              color="green"
+              leftIcon={<IconReportAnalytics />}
+              onClick={async () => {
+                setVoteId(e?.id);
+                setLoading(true);
+                await new Promise((r) => setTimeout(r, 500));
+                onList(e?.id, setHasil, setKontributor, setLoading, open);
+              }}
+            >
+              Lihat Hasil
+            </Button>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white}>{e?.title}</Center>
+        </td>
+        <td>
+          <Center c="white">
+            <Spoiler
+              hideLabel="sembunyikan"
+              maw={400}
+              maxHeight={50}
+              showLabel="tampilkan"
+            >
+              {e?.deskripsi}
+            </Spoiler>
+          </Center>
+        </td>
+        <td>
+          <Stack>
+            {e?.Voting_DaftarNamaVote.map((v) => (
+              <Box key={v?.id}>
+                <Text c={AccentColor.white}>- {v?.value}</Text>
+              </Box>
+            ))}
+          </Stack>
+        </td>
+
+        <td>
+          <Center c={AccentColor.white}>
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "long",
+            }).format(new Date(e?.awalVote))}
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white}>
+            {new Intl.DateTimeFormat("id-ID", {
+              dateStyle: "long",
+            }).format(new Date(e?.akhirVote))}
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
@@ -148,80 +179,69 @@ function TableStatus({ listPublish }: { listPublish: any }) {
           color={AdminColor.softBlue}
           component={
             <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-          }
-        />
-        {/* <Group
-          position="apart"
-          bg={"gray.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Riwayat</Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group> */}
-
-        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={1500}
-              
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center c={AccentColor.white}>Aksi</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Username</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Judul</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Deskripsi</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Pilihan</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Mulai Vote</Center>
-                  </th>
-                  <th>
-                    <Center c={AccentColor.white}>Selesai Vote</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{TableRows}</tbody>
-            </Table>
-          </ScrollArea>
-
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
               onChange={(val) => {
-                onPageClick(val);
+                onSearch(val.currentTarget.value);
               }}
             />
-          </Center>
-        </Paper>
+          }
+        />
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : _.isEmpty(data) ? (
+          <ComponentAdminGlobal_IsEmptyData />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={1500}
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AccentColor.white}>Aksi</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Username</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Judul</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Deskripsi</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Pilihan</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Mulai Vote</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Selesai Vote</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+
+            <Center mt={"xl"}>
+              <Pagination
+                value={isActivePage}
+                total={isNPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+            </Center>
+          </Paper>
+        )}
       </Stack>
 
       <Modal
