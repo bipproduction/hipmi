@@ -118,15 +118,18 @@ export default function ComponentPortofolio_ButtonMoreNew({
 
   return (
     <>
-      {userLoginId === authorId ? (
-        <ActionIcon variant="transparent" onClick={() => setOpenDrawer(true)}>
-          <IconDotsVertical color={MainColor.white} />
-        </ActionIcon>
-      ) : (
-        <ActionIcon disabled variant="transparent">
-          <CustomSkeleton h={20} w={20} radius={"100%"} />
-        </ActionIcon>
-      )}
+      {
+        userLoginId === authorId && (
+          <ActionIcon variant="transparent" onClick={() => setOpenDrawer(true)}>
+            <IconDotsVertical color={MainColor.white} />
+          </ActionIcon>
+        )
+        // : (
+        //   <ActionIcon disabled variant="transparent">
+        //     <CustomSkeleton h={20} w={20} radius={"100%"} />
+        //   </ActionIcon>
+        // )
+      }
 
       <UIGlobal_Drawer
         opened={openDrawer}

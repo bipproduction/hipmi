@@ -36,13 +36,15 @@ yarn-error.log*
 # vercel
 .vercel
 
-# logs
-logs/
-# **/logs/
-# *.log
-# **/*.log
-# log/
-# **/log/
+# logs - mengabaikan isi logs tetapi menyimpan struktur folder
+logs/*
+!logs/.gitkeep
+!logs/backend/
+!logs/frontend/
+logs/backend/*
+!logs/backend/.gitkeep
+logs/frontend/*
+!logs/frontend/.gitkeep
 
 # typescript
 *.tsbuildinfo
