@@ -38,34 +38,40 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconReload } from "@tabler/icons-react";
 import _, { toNumber } from "lodash";
 import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { adminDonasi_getListDonatur } from "../../fun/get/get_list_donatur_by_id";
 import { AdminDonasi_getOneById } from "../../fun/get/get_one_by_id";
 import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
+import { apiGetAdminDonasiById } from "../../lib/api_fetch_admin_donasi";
+import { clientLogger } from "@/util/clientLogger";
+import SkeletonAdminDetailDonasiReject from "../../component/skeleton_detail donasi_reject";
+import SkeletonAdminDetailDonasiPublish from "../../component/skeleton_detail_donasi_publish";
 
 export default function AdminDonasi_DetailPublish({
-  dataPublish,
+
   listDonatur,
   countDonatur,
   listPencairan,
   listMasterStatus,
 }: {
-  dataPublish: MODEL_DONASI;
+
   listDonatur: any[];
   countDonatur: number;
   listPencairan: MODEL_DONASI_PENCAIRAN_DANA[];
   listMasterStatus: MODEL_NEW_DEFAULT_MASTER[];
 }) {
-  const [dataDonasi, setDataDonasi] = useState(dataPublish);
+  const params = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
   const [pencairan, setPencairan] = useState(listPencairan);
-  const selectedData = _.omit(dataDonasi, [
+  const selectedData = _.omit(data, [
     "Author",
     "imageDonasi",
     "CeritaDonasi",
@@ -74,23 +80,50 @@ export default function AdminDonasi_DetailPublish({
     "DonasiMaster_Status",
   ]);
 
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminDonasiById({
+          id: params.id,
+        })
+
+        if (response?.success && response?.data) {
+          setTimeout(() => {
+            setData(response.data)
+          }, 3000);
+        } else {
+          console.log("Invalid data format recieved:", response);
+          setData(null)
+        }
+      } catch (error) {
+        clientLogger.error("Invalid data format recieved:", error);
+        setData(null);
+      }
+    }
+    loadInitialData();
+  })
   return (
     <>
       {/* <pre>{JSON.stringify(pencairan, null, 2)}</pre> */}
       <Stack>
-        <AdminGlobal_ComponentBackButton
-          path={RouterAdminDonasi.table_publish}
-        />
-        <TampilanDetailDonasi donasi={dataDonasi} countDonatur={countDonatur} />
-        <TampilanListDonatur
-          donatur={listDonatur}
-          listMasterStatus={listMasterStatus}
-          dataDonasi={selectedData as any}
-          onSuccessDonasi={(val) => {
-            setDataDonasi(val);
-          }}
-        />
-        <TampilanListPencairan pencairan={pencairan} />
+        {!data ?
+          (<SkeletonAdminDetailDonasiPublish />) : (
+            <>
+              <AdminGlobal_ComponentBackButton
+                path={RouterAdminDonasi.table_publish}
+              />
+              <TampilanDetailDonasi donasi={data} countDonatur={countDonatur} />
+              <TampilanListDonatur
+                donatur={listDonatur}
+                listMasterStatus={listMasterStatus}
+                dataDonasi={selectedData as any}
+                onSuccessDonasi={(val) => {
+                  setData(val);
+                }}
+              />
+              <TampilanListPencairan pencairan={pencairan} />
+            </>
+          )}
       </Stack>
     </>
   );
@@ -387,7 +420,7 @@ function TampilanListDonatur({
       </td>
       <td>
         <Center c={AccentColor.white}>
-          <ComponentGlobal_TampilanRupiah  nominal={+e?.nominal} />
+          <ComponentGlobal_TampilanRupiah nominal={+e?.nominal} />
         </Center>
       </td>
       <td>
@@ -757,17 +790,17 @@ function TampilanListPencairan({
           color={AdminColor.softBlue}
           component={
             <Group>
-            <ActionIcon
-              size={"lg"}
-              radius={"xl"}
-              variant="light"
-              onClick={() => {
-                // onRelaod();
-              }}
-            >
-              <IconReload />
-            </ActionIcon>
-            {/* <Select
+              <ActionIcon
+                size={"lg"}
+                radius={"xl"}
+                variant="light"
+                onClick={() => {
+                  // onRelaod();
+                }}
+              >
+                <IconReload />
+              </ActionIcon>
+              {/* <Select
               placeholder="Pilih status"
               value={isSelect}
               data={listMasterStatus.map((e) => ({
@@ -778,10 +811,10 @@ function TampilanListPencairan({
                 onSelect(val);
               }}
             /> */}
-          </Group>
+            </Group>
           }
         />
-      
+
         <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
@@ -789,7 +822,7 @@ function TampilanListPencairan({
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              
+
             >
               <thead>
                 <tr>
@@ -802,7 +835,7 @@ function TampilanListPencairan({
                   <th>
                     <Center c={AccentColor.white}>Judul</Center>
                   </th>
-                  <th style={{ color: AccentColor.white}}>Deskripsi</th>
+                  <th style={{ color: AccentColor.white }}>Deskripsi</th>
                   <th>
                     <Center c={AccentColor.white}>Bukti Transfer</Center>
                   </th>

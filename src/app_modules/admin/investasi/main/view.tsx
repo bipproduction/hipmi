@@ -93,8 +93,6 @@ export default function Admin_Investasi({
         name: "Publish",
       });
 
-      console.log("Response Publish", response);
-
       if (response) {
         setCountPublish(response.data);
       }
