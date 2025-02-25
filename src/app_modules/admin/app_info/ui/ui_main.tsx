@@ -12,11 +12,9 @@ import {
 import { AccentColor, AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminAppInformation_UiMain({
-  nomorAdmin,
   listBank,
   dataBidangBisnis,
 }: {
-  nomorAdmin: any;
   listBank: any[];
   dataBidangBisnis: any[];
 }) {
@@ -61,7 +59,7 @@ export default function AdminAppInformation_UiMain({
         </Group>
 
         {selectPage === "1" && (
-          <AdminAppInformation_ViewInformasiWhatApps nomorAdmin={nomorAdmin} />
+          <AdminAppInformation_ViewInformasiWhatApps />
         )}
 
         {selectPage === "2" && (
