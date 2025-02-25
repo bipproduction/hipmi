@@ -2,6 +2,7 @@ export {
   apiGetAdminVoteStatusCountDashboard,
   apiGetAdminVoteRiwayatCount,
   apiGetAdminVotingByStatus,
+  apiGetAdminVotingRiwayat,
 };
 const apiGetAdminVoteStatusCountDashboard = async ({
   name,
@@ -85,3 +86,50 @@ const apiGetAdminVotingByStatus = async ({
     throw error;
   }
 };
+
+
+const apiGetAdminVotingRiwayat = async ({
+  page,
+  search,
+}: {
+  page: string;
+  search: string;
+}) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const isPage = page ? `?page=${page}` : "";
+    const isSearch = search ? `&search=${search}` : "";
+    const response = await fetch(
+      `/api/admin/vote/status/riwayat${isPage}${isSearch}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Error get data voting admin",
+        errorData?.message || "Unknown error"
+      );
+      return null;
+    }
+
+    return response.json();
+  } catch (error) {
+    console.log("Error get data voting admin", error);
+    throw error;
+  }
+};
+

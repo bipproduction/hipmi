@@ -8,15 +8,16 @@ export async function GET(
   request: Request,
   { params }: { params: { name: string } }
 ) {
-  const { name } = params;
-  const { searchParams } = new URL(request.url);
-  const search = searchParams.get("search");
-  const page = searchParams.get("page");
-  const takeData = 2;
-  const skipData = Number(page) * takeData - takeData;
-
+  
   try {
     let fixData;
+    const { name } = params;
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
+    const page = searchParams.get("page");
+    const takeData = 10
+    const skipData = Number(page) * takeData - takeData;
+    
     const fixStatus = _.startCase(name);
 
     if (!page) {

@@ -33,7 +33,6 @@ import { IconBan, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { adminVote_funGetListReject } from "../../fun";
 import { AdminVote_funEditCatatanRejectById } from "../../fun/edit/fun_edit_catatan_reject_by_id";
 import { apiGetAdminVotingByStatus } from "../../lib/api_fetch_admin_voting";
 

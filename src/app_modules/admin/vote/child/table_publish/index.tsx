@@ -152,7 +152,7 @@ function TableStatus() {
             </Spoiler>
           </Center>
         </td>
-        <th>
+        <td>
           <Stack>
             {e?.Voting_DaftarNamaVote.map((v) => (
               <Box key={v?.id}>
@@ -160,7 +160,8 @@ function TableStatus() {
               </Box>
             ))}
           </Stack>
-        </th>
+        </td>
+
         <td>
           <Center c={AccentColor.white}>
             {new Intl.DateTimeFormat("id-ID", {
@@ -175,6 +176,7 @@ function TableStatus() {
             }).format(new Date(e?.akhirVote))}
           </Center>
         </td>
+        
       </tr>
     ));
   };
