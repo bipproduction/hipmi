@@ -42,8 +42,13 @@ export async function GET(request: Request,
                     imageDonasi: true,
                     DonasiMaster_Ketegori: true,
                     DonasiMaster_Durasi: true,
-                    imageId: true,
-                },
+                    Author: {
+                      select: {
+                        id: true,
+                        username: true,
+                      },
+                    },
+                  },
             })
         } else {
             const data = await prisma.donasi.findMany({
@@ -71,9 +76,13 @@ export async function GET(request: Request,
                     imageDonasi: true,
                     DonasiMaster_Ketegori: true,
                     DonasiMaster_Durasi: true,
-                    imageId: true,
-
-                },
+                    Author: {
+                      select: {
+                        id: true,
+                        username: true,
+                      },
+                    },
+                  },
             })
 
             const nCount = await prisma.donasi.count({
