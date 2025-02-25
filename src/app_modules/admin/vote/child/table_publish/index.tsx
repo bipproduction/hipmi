@@ -1,12 +1,19 @@
 "use client";
 
+import {
+  AccentColor,
+  AdminColor,
+} from "@/app_modules/_global/color/color_pallet";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Box,
   Button,
   Center,
-  Group,
   Modal,
   Pagination,
   Paper,
@@ -15,32 +22,20 @@ import {
   Stack,
   Table,
   Text,
-  TextInput,
-  Title,
+  TextInput
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import {
   IconCircleCheckFilled,
-  IconEyeCheck,
-  IconSearch,
+  IconSearch
 } from "@tabler/icons-react";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
-import { adminVote_funGetListPublish } from "../../fun/get/status/get_list_publish";
-import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
-import { MainColor } from "@/app_modules/_global/color";
-import {
-  AccentColor,
-  AdminColor,
-} from "@/app_modules/_global/color/color_pallet";
-import { clientLogger } from "@/util/clientLogger";
 import { apiGetAdminVotingByStatus } from "../../lib/api_fetch_admin_voting";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import _ from "lodash";
-import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
 
 export default function AdminVote_TablePublish() {
   return (
