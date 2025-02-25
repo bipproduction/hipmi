@@ -10,41 +10,50 @@ export default async function adminUserAccess_funEditAccess(
   value: boolean,
   nomor?: string
 ) {
-  const updt = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      active: value,
-    },
-  });
+  try {
+    const updt = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        active: value,
+      },
+    });
 
-  const headersList = headers();
-  const host = headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") || "http";
-  const path = headersList.get("x-invoke-path");
-  const baseUrl = `${protocol}://${host}`;
-  // const fullUrl = `${protocol}://${host}${path}`;
+    const headersList = headers();
+    const host = headersList.get("host");
+    const protocol = headersList.get("x-forwarded-proto") || "http";
+    const path = headersList.get("x-invoke-path");
+    const baseUrl = `${protocol}://${host}`;
+    // const fullUrl = `${protocol}://${host}${path}`;
 
-  if (value === true) {
-    const message = `Hallo rekan HIPMI, Anda telah diberikan akses ke HIPMI Apps. Silakan mulai jelajahi fitur-fitur yang tersedia melalui link berikut: ${baseUrl}`;
-    const encodedMessage = encodeURIComponent(message);
+    if (value === true) {
+      const message = `Hallo rekan HIPMI, Anda telah diberikan akses ke HIPMI Apps. Silakan mulai jelajahi fitur-fitur yang tersedia melalui link berikut: ${baseUrl}`;
+      const encodedMessage = encodeURIComponent(message);
 
-    const res = await fetch(
-      `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMessage}
+      const res = await fetch(
+        `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMessage}
       `
-    );
+      );
 
-    if (!res.ok) {
-      backendLogger.error("Error send message", res);
+      if (!res.ok) {
+        backendLogger.error("Error send message", res);
+      }
+
+      const result = await res.json();
+
+      backendLogger.info("Success send message", result);
     }
 
-    const result = await res.json();
-
-    backendLogger.info("Success send message", result);
+    if (!updt) return { status: 400, message: "Update gagal" };
+    revalidatePath("/dev/admin/user-access");
+    return { status: 200, message: "Update berhasil" };
+  } catch (error) {
+    backendLogger.error("Error update user", error);
+    return {
+      status: 500,
+      message: "Error udpate user",
+      error: (error as Error).message,
+    };
   }
-
-  if (!updt) return { status: 400, message: "Update gagal" };
-  revalidatePath("/dev/admin/user-access");
-  return { status: 200, message: "Update berhasil" };
 }
