@@ -81,7 +81,7 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              !dataUser && !countNtf ? (
+              !dataUser || !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconUserSearch color={MainColor.white} />
                 </ActionIcon>
@@ -108,7 +108,7 @@ export default function HomeViewNew() {
               )
             }
             customButtonRight={
-              !dataUser && !countNtf ? (
+              !dataUser || !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconBell color={MainColor.white} />
                 </ActionIcon>
