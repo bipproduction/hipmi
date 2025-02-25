@@ -52,25 +52,14 @@ import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetAdminInvestasiCountDashboard } from "../_lib/api_fetch_admin_investasi";
 
-
-export default function Admin_Investasi({
-  listInvestasi,
-  totalInvestasiByUser,
-  publishProgres,
-}: {
-  listInvestasi: MODEL_INVESTASI[];
-  totalInvestasiByUser: any[];
-  publishProgres: any[];
-}) {
-  const [investasi, setInvestasi] = useState(listInvestasi);
-  const router = useRouter();
+export default function Admin_Investasi() {
   const [countPublish, setCountPublish] = useState<number | null>(null);
   const [countReview, setCountReview] = useState<number | null>(null);
   const [countReject, setCountReject] = useState<number | null>(null);
 
   useShallowEffect(() => {
     handlerLoadData();
-  }, [])
+  }, []);
   async function handlerLoadData() {
     try {
       const listLoadData = [
@@ -79,7 +68,6 @@ export default function Admin_Investasi({
         global_limit(() => onLoadCountReject()),
       ];
 
-      
       const result = await Promise.all(listLoadData);
     } catch (error) {
       clientLogger.error("Error handler load data", error);
@@ -88,12 +76,9 @@ export default function Admin_Investasi({
 
   async function onLoadCountPublish() {
     try {
-
       const response = await apiGetAdminInvestasiCountDashboard({
         name: "Publish",
       });
-
-      console.log("Response Publish", response);
 
       if (response) {
         setCountPublish(response.data);
@@ -148,31 +133,32 @@ export default function Admin_Investasi({
     {
       id: 2,
       name: "Review",
-      jumlah: countReview == null ? (
-        <CustomSkeleton height={40} width={40} />
-      ) : countReview ? (
-        countReview
-      ) : (
-        "-"
-      ),
+      jumlah:
+        countReview == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countReview ? (
+          countReview
+        ) : (
+          "-"
+        ),
       path: RouterAdminInvestasi_OLD.table_status_review,
       color: MainColor.orange,
-      icon: <IconBookmark size={18} color="#FF7043" />
+      icon: <IconBookmark size={18} color="#FF7043" />,
     },
     {
       id: 3,
       name: "Reject",
-      jumlah: countReject == null ? (
-        <CustomSkeleton height={40} width={40} />
-      ) : countReject ? (
-        countReject
-      ) : (
-        "-"
-      ),
+      jumlah:
+        countReject == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countReject ? (
+          countReject
+        ) : (
+          "-"
+        ),
       path: RouterAdminInvestasi_OLD.table_status_reject,
       color: MainColor.red,
-      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
-
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />,
     },
   ];
 
@@ -197,19 +183,23 @@ export default function Admin_Investasi({
               shadow="md"
               radius="md"
               p="md"
-            // sx={{ borderColor: e.color, borderStyle: "solid" }}
+              // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-
               <Stack spacing={0}>
-                <Text fw={"bold"} color={AccentColor.white}>{e.name}</Text>
+                <Text fw={"bold"} color={AccentColor.white}>
+                  {e.name}
+                </Text>
                 <Flex align={"center"} justify={"space-between"}>
                   <Title c={AccentColor.white}>{e.jumlah}</Title>
-                  <ThemeIcon radius={"xl"} size={"md"} color={AccentColor.white}>
+                  <ThemeIcon
+                    radius={"xl"}
+                    size={"md"}
+                    color={AccentColor.white}
+                  >
                     {e.icon}
                   </ThemeIcon>
                 </Flex>
               </Stack>
-
             </Paper>
           ))}
         </SimpleGrid>

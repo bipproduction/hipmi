@@ -37,7 +37,9 @@ yarn-error.log*
 .vercel
 
 # logs
-logs/
+logs/*
+!logs/backend/
+!logs/frontend/
 # **/logs/
 # *.log
 # **/*.log
