@@ -269,11 +269,11 @@ function TableView() {
 
           <Grid.Col span={4}>
             {isCreate ? (
-              <Paper p={"md"} withBorder>
+              <Paper p={"md"} bg={AdminColor.softBlue}>
                 <Stack>
                   <TextInput
                     value={create}
-                    label={<Title order={6}>Tambah Kategori</Title>}
+                    label={<Title c={AdminColor.white} order={6}>Tambah Kategori</Title>}
                     placeholder="Masukan kategori baru"
                     onChange={(val) => {
                       setCreate(val.currentTarget.value);
@@ -313,11 +313,11 @@ function TableView() {
             )}
 
             {isUpdate ? (
-              <Paper p={"md"} withBorder style={{ transition: "1s" }}>
+              <Paper p={"md"} bg={AdminColor.softBlue} style={{ transition: "1s" }}>
                 <Stack>
                   <TextInput
                     value={updateKategori.name}
-                    label={<Title order={6}>Update Kategori</Title>}
+                    label={<Title c={AdminColor.white} order={6}>Update Kategori</Title>}
                     placeholder="Update kategori"
                     onChange={(val) => {
                       const data = _.clone(updateKategori);
