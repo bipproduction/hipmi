@@ -414,14 +414,16 @@ function TableStatus() {
       </Stack>
 
       <Modal
+        styles={{ body: { backgroundColor: AdminColor.softBlue}}}
         opened={openedReject}
         onClose={closeReject}
         centered
         withCloseButton={false}
         size={"md"}
       >
-        <Stack>
+        <Stack >
           <Textarea
+            styles={{ label: { color: AdminColor.white } }}
             minRows={2}
             maxRows={5}
             maxLength={300}
@@ -453,6 +455,7 @@ function TableStatus() {
         </Stack>
       </Modal>
       <Modal
+        styles={{ body: { backgroundColor: AdminColor.softBlue}}}
         opened={openedPublish}
         onClose={closePublish}
         centered
@@ -460,7 +463,7 @@ function TableStatus() {
         size={"md"}
       >
         <Stack align="center">
-          <Title order={5}>Apakah anda yakin ingin mempublish vote ini?</Title>
+          <Title c={AdminColor.white} order={5}>Apakah anda yakin ingin mempublish vote ini?</Title>
           <Group position="center">
             <Button radius={"xl"} onClick={() => closePublish()}>
               Batal

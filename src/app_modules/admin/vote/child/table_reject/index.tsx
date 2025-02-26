@@ -281,6 +281,7 @@ function TableStatus() {
       </Stack>
 
       <Modal
+        styles={{ body: { backgroundColor: AdminColor.softBlue } }}
         opened={opened}
         onClose={close}
         centered
@@ -289,6 +290,7 @@ function TableStatus() {
       >
         <Stack>
           <Textarea
+            styles={{ label: { color: AdminColor.white } }}
             minRows={2}
             maxRows={5}
             maxLength={300}

@@ -2,7 +2,8 @@ export {
     apiGetAdminDonasiStatusCountDashboard,
     apiGetAdminDonasiKategoriCountDashboard,
     apiGetAdminDonasiByStatus,
-    apiGetAdminDonasiKategori
+    apiGetAdminDonasiKategori,
+    apiGetAdminDonasiById,
 };
 const apiGetAdminDonasiStatusCountDashboard = async ({ name }:
     { name: "Publish" | "Review" | "Reject" }) => {
@@ -81,4 +82,19 @@ const apiGetAdminDonasiKategori = async () => {
         }
     })
     return await response.json().catch(() => null);
+}
+const apiGetAdminDonasiById = async ({id} : {id: string}) => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/donasi/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return await response.json().catch(() => null);    
 }

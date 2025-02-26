@@ -1,8 +1,16 @@
-import { ComponentAdminGlobal_TampilanRupiah, ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_fetch_master";
+import { globalStatusTransaksi } from "@/app_modules/_global/lib/master_list_app";
+import {
+  ComponentAdminGlobal_TampilanRupiah,
+  ComponentAdminGlobal_TitlePage,
+} from "@/app_modules/admin/_admin_global/_component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   MODEL_INVOICE_INVESTASI,
   MODEL_STATUS_INVOICE_INVESTASI,
 } from "@/app_modules/investasi/_lib/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Badge,
@@ -15,32 +23,24 @@ import {
   Stack,
   Table,
   Text,
-  Title,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconReload } from "@tabler/icons-react";
-import { isEmpty } from "lodash";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import {
   AdminInvestasi_ComponentButtonBandingTransaksi,
   AdminInvestasi_ComponentButtonKonfirmasiTransaksi,
   AdminInvestasi_ComponentCekBuktiTransfer,
 } from "../../_component";
-import { adminInvestasi_funGetAllTransaksiById } from "../../fun";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetAdminAllTransaksiById, apiGetAdminStatusTransaksi } from "../../_lib/api_fetch_admin_investasi";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_fetch_master";
+import { apiGetAdminAllTransaksiById } from "../../_lib/api_fetch_admin_investasi";
 
 export function AdminInvestasi_ViewDaftarTransaksi() {
   const params = useParams<{ id: string }>();
   const investasiId = params.id;
-  const router = useRouter();
-  const [isLoading, setLoading] = useState(false);
-  const [idData, setIdData] = useState("");
-  const [listStatus, setListStatus] = useState<MODEL_STATUS_INVOICE_INVESTASI[] | null>(null);
+  const [listStatus, setListStatus] = useState<
+    MODEL_STATUS_INVOICE_INVESTASI[] | null
+  >(null);
 
   const [data, setData] = useState<MODEL_INVOICE_INVESTASI[] | null>(null);
   const [isNPage, setNPage] = useState<number>(1);
@@ -48,25 +48,25 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
   const [selectedStatus, setSelectedStatus] = useState("");
 
   useShallowEffect(() => {
-    loadInitialData();
-  }, [isActivePage, selectedStatus])
+    handleLoadData();
+  }, [isActivePage, selectedStatus]);
 
   useShallowEffect(() => {
-    loadStatus();
-  }, [])
+    handleLoadStatus();
+  }, []);
 
-  const loadInitialData = async () => {
+  const handleLoadData = async () => {
     try {
+      const cek = globalStatusTransaksi.find((e) => e.id === selectedStatus);
       const response = await apiGetAdminAllTransaksiById({
         id: investasiId,
-        page: `${isNPage}`,
-        status: selectedStatus,
-      })
+        page: `${isActivePage}`,
+        status: cek?.name,
+      });
 
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
-        setNPage(response.nPage || 1);
-        setListStatus(response.data.data);
+        setNPage(response.data.nPage || 1);
       } else {
         console.error("Invalid data format received:", response);
         setData([]);
@@ -75,16 +75,14 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
       clientLogger.error("Error get data daftar tramnsaksi", error);
       setData([]);
     }
-  }
+  };
 
-
-  const loadStatus = async () => {
+  const handleLoadStatus = async () => {
     try {
-      const response = await apiGetMasterStatusTransaksi()
+      const response = await apiGetMasterStatusTransaksi();
 
       if (response?.success && response?.data) {
         setListStatus(response.data);
-        console.log("status", response.data)
       } else {
         console.error("Invalid data format received:", response);
         setListStatus(null);
@@ -93,33 +91,19 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
       clientLogger.error("Error get status transaksi", error);
       setListStatus(null);
     }
-  }
+  };
 
   const onPageClick = async (page: number) => {
-   const loadData = await apiGetAdminAllTransaksiById({
-     id: investasiId,
-     page: `${isNPage}`
-    })
     setActivePage(page);
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-    
-  }
+  };
 
   async function onSelected(selectStatus: any) {
     setSelectedStatus(selectStatus);
-    // const loadData = await apiGetAdminStatusTransaksi();
-    // setData(loadData.data as any);
-    // setNPage(loadData.nPage);
   }
 
   async function onReload() {
-    const loadData = await apiGetAdminAllTransaksiById({
-      id: investasiId,
-      page: '1'
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+    setSelectedStatus("");
+    handleLoadData();
   }
 
   const renderTableBody = () => {
@@ -149,14 +133,16 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
         </td>
         <td>
           <Center c={AdminColor.white}>
-            {new Intl.NumberFormat("id-ID", { maximumFractionDigits: 10 }).format(
-              +e?.lembarTerbeli
-            )}
+            {new Intl.NumberFormat("id-ID", {
+              maximumFractionDigits: 10,
+            }).format(+e?.lembarTerbeli)}
           </Center>
         </td>
         <td>
           <Center c={AdminColor.white}>
-            {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(new Date(e?.createdAt))}
+            {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
+              new Date(e?.createdAt)
+            )}
           </Center>
         </td>
         <td>
@@ -202,7 +188,6 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
             {e.statusInvoiceId === "3" && "-"}
             {e.statusInvoiceId === "4" && (
               <AdminInvestasi_ComponentButtonBandingTransaksi
-
                 invoiceId={e.id}
                 investasiId={investasiId}
                 lembarTerbeli={e.lembarTerbeli}
@@ -216,7 +201,9 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
         </td>
       </tr>
     ));
-  }
+  };
+
+  if (!data && !listStatus) return <CustomSkeleton height={"80vh"} />;
 
   return (
     <>
@@ -224,69 +211,38 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
         <ComponentAdminGlobal_TitlePage
           name="Transkasi"
           color={AdminColor.softBlue}
-          component={<Group>
-            <ActionIcon
-              size={"lg"}
-              radius={"xl"}
-              variant="light"
-              onClick={() => {
-                onReload();
-              }}
-            >
-              <IconReload />
-            </ActionIcon>
-            <Select
-              placeholder="Pilih status"
-              value={selectedStatus}
-              data={listStatus?.map(status => ({
-                value: status.id,
-                label: status.name,
-                
-              })) || []}
-              onChange={(val: any) => {
-                console.log(val)
-                onSelected(val);
-              }}
-            />
-          </Group>}
+          component={
+            <Group>
+              <ActionIcon
+                size={"lg"}
+                radius={"xl"}
+                variant="light"
+                onClick={() => {
+                  onReload();
+                }}
+              >
+                <IconReload />
+              </ActionIcon>
+              <Select
+                placeholder="Pilih status"
+                value={selectedStatus}
+                data={
+                  listStatus?.map((e, i) => ({
+                    value: e.id,
+                    label: e.name,
+                  })) || []
+                }
+                onChange={(val: any) => {
+                  onSelected(val);
+                }}
+              />
+            </Group>
+          }
         />
-        {/* <Group
-          position="apart"
-          bg={"gray.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Transaksi</Title>
-          <Group>
-            <ActionIcon
-              size={"lg"}
-              radius={"xl"}
-              variant="light"
-              onClick={() => {
-                onReload();
-              }}
-            >
-              <IconReload />
-            </ActionIcon>
-            <Select
-              placeholder="Pilih status"
-              value={selectedStatus}
-              data={
-                isEmpty(listStatsus)
-                  ? []
-                  : listStatsus.map((e) => ({
-                      value: e.id,
-                      label: e.name,
-                    }))
-              }
-              onChange={(val: any) => {
-                onSelected(val);
-              }}
-            />
-          </Group>
-        </Group> */}
 
-        {!data ? (<CustomSkeleton height={"80vh"} width={"100%"} />) : (
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
           <Paper bg={AdminColor.softBlue} p={"md"} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
               <Table
@@ -342,4 +298,3 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
     </>
   );
 }
-

@@ -15,7 +15,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconDetails, IconEye, IconEyeCheck, IconInfoCircle, IconSearch } from "@tabler/icons-react";
+import {
+  IconDetails,
+  IconEye,
+  IconEyeCheck,
+  IconInfoCircle,
+  IconSearch,
+} from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,7 +30,10 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { adminInvestasi_funGetAllPublish } from "../fun/get/get_all_publish";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
-import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  AccentColor,
+  AdminColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi";
 import { useShallowEffect } from "@mantine/hooks";
 import { clientLogger } from "@/util/clientLogger";
@@ -35,7 +44,7 @@ export default function Admin_TablePublishInvestasi() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Investasi" />
-        <TableView  />
+        <TableView />
         {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
       </Stack>
     </>
@@ -56,7 +65,7 @@ function TableView() {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
-  }, [])
+  }, []);
 
   useShallowEffect(() => {
     const loadInitialData = async () => {
@@ -84,15 +93,14 @@ function TableView() {
   }, [activePage, isSearch]);
   const onSearch = async (searchTerm: string) => {
     setSearch(searchTerm);
-    setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
-    setActivePage(page)
-  }
+    setActivePage(page);
+  };
 
   const renderTableBody = () => {
-    if(!Array.isArray(data) || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
       return (
         <tr>
           <td colSpan={12}>
@@ -107,16 +115,22 @@ function TableView() {
       <tr key={i}>
         <td>
           <Center w={200}>
-            <Text c={AccentColor.white} lineClamp={1}>{e.author.username}</Text>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.author.username}
+            </Text>
           </Center>
         </td>
         <td>
           <Center w={400}>
-            <Text c={AccentColor.white} lineClamp={1}>{e.title}</Text>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.title}
+            </Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>{_.toNumber(e.progress).toFixed(2)} %</Center>
+          <Center c={AccentColor.white} w={200}>
+            {_.toNumber(e.progress).toFixed(2)} %
+          </Center>
         </td>
         <td>
           <Center c={AccentColor.white} w={200}>
@@ -134,7 +148,9 @@ function TableView() {
         </td>
         <td>
           <Center w={200}>
-            <Text c={AccentColor.white} lineClamp={1}>{e.Investasi_Invoice.length}</Text>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.Investasi_Invoice.length}
+            </Text>
           </Center>
         </td>
         <td>
@@ -158,8 +174,7 @@ function TableView() {
         </td>
       </tr>
     ));
-  }
-  
+  };
 
   return (
     <>
@@ -208,31 +223,43 @@ function TableView() {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-
-
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Username</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Username
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} w={400}>
+                        Nama Proyek
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Progres</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Progres
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Sisa Saham</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Sisa Saham
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Total Saham</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Total Saham
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Validasi</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Validasi
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Aksi
+                      </Center>
                     </th>
                   </tr>
                 </thead>

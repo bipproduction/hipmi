@@ -1,58 +1,83 @@
 "use client";
 
-import { IRealtimeData } from "@/lib/global_state";
+import { MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { donasi_checkStatus } from "@/app_modules/donasi/fun";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { IRealtimeData } from "@/lib/global_state";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Admin_ComponentModalReport } from "../../_admin_global/_component";
+import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_admin_modal_publish";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import adminNotifikasi_funCreateToAllUser from "../../notifikasi/fun/create/fun_create_notif_to_all_user";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
+
 import ComponentAdminDonasi_CeritaPenggalangDana from "../component/tampilan_detail_cerita";
 import ComponentAdminDonasi_TampilanDetailDonasi from "../component/tampilan_detail_donasi";
 import { AdminDonasi_getOneById } from "../fun/get/get_one_by_id";
 import { AdminDonasi_funUpdateStatusPublish } from "../fun/update/fun_status_publish";
 import { AdminDonasi_funUpdateStatusReject } from "../fun/update/fun_status_reject";
-import { donasi_checkStatus } from "@/app_modules/donasi/fun";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import adminNotifikasi_funCreateToAllUser from "../../notifikasi/fun/create/fun_create_notif_to_all_user";
-import { clientLogger } from "@/util/clientLogger";
-import { apiGetAllUserWithExceptId } from "@/app_modules/_global/lib/api_user";
-import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_admin_modal_publish";
-import { MainColor } from "@/app_modules/_global/color";
+import { apiGetAdminDonasiById } from "../lib/api_fetch_admin_donasi";
+import SkeletonAdminDetailDonasiReview from "../component/skeleton_detail_donasi_review";
 
-export default function AdminDonasi_DetailReview({
-  dataReview,
-}: {
-  dataReview: MODEL_DONASI;
-}) {
-  const [data, setData] = useState(dataReview);
+export default function AdminDonasi_DetailReview() {
+  const params = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
 
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminDonasiById({
+          id: params.id,
+        })
+
+        if (response?.success && response?.data) {
+          setData(response.data);
+        } else {
+          console.error("Invalid data format recieved:", response);
+          setData(null);
+        }
+      } catch (error) {
+        clientLogger.error("Invalid data format recieved:", error);
+        setData(null);
+      }
+    }
+    loadInitialData();
+  })
   return (
     <>
       <Stack>
-        <ButtonOnHeader donasi={data} setData={setData} />
-        <SimpleGrid
-          cols={2}
-          spacing="lg"
-          breakpoints={[
-            { maxWidth: "md", cols: 2, spacing: "md" },
-            { maxWidth: "sm", cols: 1, spacing: "sm" },
-            { maxWidth: "xs", cols: 1, spacing: "xs" },
-          ]}
-        >
-          <ComponentAdminDonasi_TampilanDetailDonasi donasi={data} />
-          <ComponentAdminDonasi_CeritaPenggalangDana
-            cerita={data.CeritaDonasi}
-          />
-        </SimpleGrid>
-      </Stack>
+        {!data ? (
+          <SkeletonAdminDetailDonasiReview  />
+        ) : (
+          <>
+            <ButtonOnHeader donasi={data} setData={setData} />
+            <SimpleGrid
+              cols={2}
+              spacing="lg"
+              breakpoints={[
+                { maxWidth: "md", cols: 2, spacing: "md" },
+                { maxWidth: "sm", cols: 1, spacing: "sm" },
+                { maxWidth: "xs", cols: 1, spacing: "xs" },
+              ]}
+            >
+              <ComponentAdminDonasi_TampilanDetailDonasi donasi={data} />
+              <ComponentAdminDonasi_CeritaPenggalangDana
+                cerita={data.CeritaDonasi}
+              />
+            </SimpleGrid>
+          </>
+        )}
+      </Stack >
     </>
   );
 }
@@ -138,6 +163,7 @@ function ButtonOnHeader({
 
           const newData = await AdminDonasi_getOneById(donasi?.id);
           setData(newData);
+          // router.back()
           ComponentAdminGlobal_NotifikasiBerhasil(
             "Berhasil Mengubah Status Donasi"
           );
@@ -273,36 +299,36 @@ function ButtonOnHeader({
         }
       />
       <Admin_ComponentModalPublish
-       opened={openedPublish}
-       onClose={closePublish}
-       title={"Anda yakin ingin publish donasi ini?"}
-       buttonKiri={
-         <>
-           <Button
-             radius={"xl"}
-             onClick={() => {
-               closePublish();
-             }}
-           >
-             Batal
-           </Button>
-         </>
-       }
-       buttonKanan={
-         <>
-           <Button
-             bg={MainColor.green}
-             loaderPosition="center"
-             loading={isLoadingPublish ? true : false}
-             radius={"xl"}
-             onClick={() => {
-               onPublish();
-             }}
-           >
-             Simpan
-           </Button>
-         </>
-       }
+        opened={openedPublish}
+        onClose={closePublish}
+        title={"Anda yakin ingin publish donasi ini?"}
+        buttonKiri={
+          <>
+            <Button
+              radius={"xl"}
+              onClick={() => {
+                closePublish();
+              }}
+            >
+              Batal
+            </Button>
+          </>
+        }
+        buttonKanan={
+          <>
+            <Button
+              bg={MainColor.green}
+              loaderPosition="center"
+              loading={isLoadingPublish ? true : false}
+              radius={"xl"}
+              onClick={() => {
+                onPublish();
+              }}
+            >
+              Simpan
+            </Button>
+          </>
+        }
       />
 
 
