@@ -1,3 +1,5 @@
+import statusTransaksi from "../../../../src/bin/seeder/master/master_status_transaksi.json"
+
 export const globalStatusApp = [
   {
     id: "1",
@@ -16,3 +18,5 @@ export const globalStatusApp = [
     name: "Reject",
   },
 ];
+
+export const globalStatusTransaksi = statusTransaksi;
