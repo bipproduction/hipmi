@@ -1,5 +1,6 @@
-import { APIs } from "@/app/lib";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { APIs } from "@/lib";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_INVESTASI_DOKUMEN } from "@/app_modules/investasi/_lib/interface";
 import {
   SimpleGrid,
@@ -37,8 +38,8 @@ export function ComponentAdminInvestasi_UIDetailFile({
           { maxWidth: "36rem", cols: 1, spacing: "sm" },
         ]}
       >
-        <Paper withBorder p={"lg"}>
-          <Stack>
+        <Paper bg={AdminColor.softBlue} p={"lg"}>
+          <Stack c={AdminColor.white}>
             <Title order={3}>File & Dokumen</Title>
 
             <Stack spacing={50}>

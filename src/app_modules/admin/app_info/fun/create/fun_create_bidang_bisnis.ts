@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminAppInformation } from "@/app/lib/router_admin/router_app_information";
+import prisma from "@/lib/prisma";
+import { RouterAdminAppInformation } from "@/lib/router_admin/router_app_information";
 import { revalidatePath } from "next/cache";
 
 export async function adminAppInformation_funCreateBidangBisnis({

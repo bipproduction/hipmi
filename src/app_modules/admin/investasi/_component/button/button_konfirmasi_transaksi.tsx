@@ -11,7 +11,7 @@ import {
   adminInvestasi_funRejectInvoiceById,
 } from "../../fun";
 import { clientLogger } from "@/util/clientLogger";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import {
   notifikasiToAdmin_funCreate,
   notifikasiToUser_funCreate,

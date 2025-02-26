@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { IEventSponsor } from "@/app_modules/event/_lib/interface";
 import backendLogger from "@/util/backendLogger";
@@ -37,7 +37,7 @@ export async function POST(
         fileName: req.fileName as string,
         fileExt: req.fileExt as string,
         fileId: req.fileId as string,
-        authorId: userLoginId,
+        // authorId: userLoginId,
       },
     });
 
@@ -85,7 +85,6 @@ export async function GET(
       },
     });
 
-    await prisma.$disconnect();
     return NextResponse.json({
       success: true,
       message: "Success create sponsor",
@@ -93,7 +92,6 @@ export async function GET(
     });
   } catch (error) {
     backendLogger.error("Error get sponsor event", error);
-    await prisma.$disconnect();
     return NextResponse.json(
       {
         success: false,
@@ -102,5 +100,7 @@ export async function GET(
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }

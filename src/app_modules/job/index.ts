@@ -1,7 +1,7 @@
 import Job_ViewBeranda from "./main/beranda/view_beranda";
 import LayoutJob_Main from "./main/layout";
 import Job_ViewSplash from "./splash/view_splash";
-import Job_ViewStatus from "./main/status/view_status";
+import Job_UiStatus from "./main/status/ui_status";
 import Job_ViewArsip from "./main/arsip/view_arsip";
 import Job_Create from "./create/view";
 import LayoutJob_Create from "./create/layout";
@@ -26,7 +26,7 @@ export {
   Job_ViewBeranda,
   LayoutJob_Main,
   Job_ViewSplash,
-  Job_ViewStatus as Job_Status,
+  Job_UiStatus as Job_Status,
   Job_ViewArsip as Job_Arsip,
   Job_Create,
   LayoutJob_Create,

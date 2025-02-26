@@ -1,8 +1,7 @@
 "use client";
 
-import { API_RouteJob } from "@/app/lib/api_user_router/route_api_job";
-import { gs_jobTiggerBeranda } from "@/app/lib/global_state";
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { gs_jobTiggerBeranda } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { Center, Loader, Stack, TextInput } from "@mantine/core";
@@ -18,11 +17,15 @@ import {
 } from "../../component";
 import ComponentJob_BerandaCardView from "../../component/beranda/card_view";
 import { MODEL_JOB } from "../../model/interface";
+import { apiGetJob } from "../../component/api_fetch_job";
+import { clientLogger } from "@/util/clientLogger";
 
 export default function Job_ViewBeranda() {
-  const [data, setData] = useState<MODEL_JOB[] | null>(null);
+  const [data, setData] = useState<MODEL_JOB[]>([]);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setIsSearch] = useState("");
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Notifikasi
   const [isShowUpdate, setIsShowUpdate] = useState(false);
@@ -38,25 +41,64 @@ export default function Job_ViewBeranda() {
     setIsTriggerJob(false);
     setIsShowUpdate(false);
     onLoadNewData();
-  }, []);
+  }, [isSearch]);
 
   async function onSearch(text: string) {
     setIsSearch(text);
-    const loadData = await fetch(
-      API_RouteJob.get_all({ page: activePage, search: text })
-    );
-    const res = await loadData.json();
-
-    setData(res.data as any);
     setActivePage(1);
+    setHasMore(true);
   }
 
   async function onLoadNewData() {
-    const loadData = await fetch(API_RouteJob.get_all({ page: activePage }));
-    const res = await loadData.json();
-    // console.log(res.data);
-    setData(res.data);
+    try {
+      setIsLoading(true);
+      const response = await apiGetJob({
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response.success) {
+        setData(response.data);
+        setActivePage(1);
+        setHasMore(response.data.length > 0);
+      } else {
+        setData([]);
+        setHasMore(false);
+      }
+    } catch (error) {
+      clientLogger.error("Error get job", error);
+      setData([]);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
+  const handleMoreData = async () => {
+    if (!hasMore || isLoading) return null;
+
+    try {
+      const nextPage = activePage + 1;
+
+      const response = await apiGetJob({
+        page: `${nextPage}`,
+        search: isSearch,
+      });
+
+      if (response?.data && response.data.length > 0) {
+        setActivePage(nextPage);
+        setHasMore(response.data.length > 0);
+        return response.data;
+      } else {
+        setHasMore(false);
+        return null;
+      }
+    } catch (error) {
+      clientLogger.error("Error get job", error);
+      setHasMore(false);
+      return null;
+    }
+  };
 
   return (
     <>
@@ -89,7 +131,7 @@ export default function Job_ViewBeranda() {
           }}
         />
 
-        {_.isNull(data) ? (
+        {!data?.length && isLoading ? (
           <Job_ComponentSkeletonBeranda />
         ) : _.isEmpty(data) ? (
           <ComponentGlobal_IsEmptyData />
@@ -104,16 +146,7 @@ export default function Job_ViewBeranda() {
             )}
             data={data}
             setData={setData as any}
-            moreData={async () => {
-              const loadData = await fetch(
-                API_RouteJob.get_all({ page: activePage, search: isSearch })
-              );
-
-              const res = await loadData.json();
-              setActivePage((val) => val + 1);
-
-              return res.data;
-            }}
+            moreData={handleMoreData}
           >
             {(item) => <ComponentJob_BerandaCardView data={item} />}
           </ScrollOnly>

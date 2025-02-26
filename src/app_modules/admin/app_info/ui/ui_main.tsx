@@ -9,13 +9,12 @@ import {
   AdminAppInformation_ViewInformasiWhatApps,
   AdminAppInformation_ViewKategoriPortofolio,
 } from "../view";
+import { AccentColor, AdminColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminAppInformation_UiMain({
-  nomorAdmin,
   listBank,
   dataBidangBisnis,
 }: {
-  nomorAdmin: any;
   listBank: any[];
   dataBidangBisnis: any[];
 }) {
@@ -45,8 +44,8 @@ export default function AdminAppInformation_UiMain({
             <Button
               key={i}
               radius={"xl"}
-              c={"white"}
-              bg={selectPage === e.id ? "blue" : "gray.3"}
+              c={selectPage === e.id ? AdminColor.white : "gray"}
+              bg={selectPage === e.id ? AccentColor.blue : AccentColor.darkblue}
               onClick={() => {
                 setSelectPage(e.id);
               }}
@@ -60,7 +59,7 @@ export default function AdminAppInformation_UiMain({
         </Group>
 
         {selectPage === "1" && (
-          <AdminAppInformation_ViewInformasiWhatApps nomorAdmin={nomorAdmin} />
+          <AdminAppInformation_ViewInformasiWhatApps />
         )}
 
         {selectPage === "2" && (

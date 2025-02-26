@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import {
   Stack,
   Title,
@@ -19,51 +19,150 @@ import { IconAlertTriangle, IconBookmark, IconCategory, IconChevronsRight, IconU
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { useState } from "react";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import global_limit from "@/lib/limit";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetAdminDonasiKategoriCountDashboard, apiGetAdminDonasiStatusCountDashboard } from "../lib/api_fetch_admin_donasi";
+
 
 export default function AdminDonasi_Main({
-  countPublish,
-  countReview,
-  
-  countReject,
+  // countPublish,
+  // countReview,
+
+  // countReject,
 }: {
-  countPublish: number;
-  countReview: number;
+    // countPublish: number;
+    // countReview: number;
+
+    // countReject: number;
+  }) {
+
+  const [countPublish, setCountPublish] = useState<number | null>(null);
+  const [countReview, setCountReview] = useState<number | null>(null);
+  const [countReject, setCountReject] = useState<number | null>(null);
+  const [countKategori, setCountKategori] = useState<number | null>(null);
   
-  countReject: number;
-}) {
+  useShallowEffect(() => {
+    handlerLoadData();
+  }, []);
+  async function handlerLoadData() {
+    try {
+      const listLoadData = [
+        global_limit(() => onLoadCountPublish()),
+        global_limit(() => onLoadCountReview()),
+        global_limit(() => onLoadCountReject()),
+        global_limit(() => onLoadCountKategori()),
+      ];
+      const result = await Promise.all(listLoadData);
+    } catch (error) {
+      clientLogger.error("Error handler load data", error);
+    }
+  }
+  async function onLoadCountPublish() {
+    try {
+      const response = await apiGetAdminDonasiStatusCountDashboard({
+        name: "Publish",
+      })
+
+      if (response) {
+        setCountPublish(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count publish", error);
+    }
+  }
+  async function onLoadCountReview() {
+    try {
+      const response = await apiGetAdminDonasiStatusCountDashboard({
+        name: "Review",
+      })
+      if (response) {
+        setCountReview(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count review", error);
+    }
+  }
+  async function onLoadCountReject() {
+    try {
+      const response = await apiGetAdminDonasiStatusCountDashboard({
+        name: "Reject",
+      })
+      if (response) {
+        setCountReject(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count reject", error);
+    }
+  }
+  async function onLoadCountKategori() {
+    try {
+      const response = await apiGetAdminDonasiKategoriCountDashboard()
+      if (response) {
+        setCountKategori(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get count kategori", error);
+    }
+  }
+
+
   const router = useRouter();
   const listBox = [
     {
       id: 1,
       name: "Publish",
-      jumlah: countPublish,
-      link: RouterAdminDonasi_OLD.table_publish,
+      jumlah: countPublish == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countPublish ? (
+        countPublish
+      ) : (
+        "-"
+      ),
       color: MainColor.green,
-      icon: <IconUpload size={18} color="#4CAF4F"/>,
+      icon: <IconUpload size={18} color="#4CAF4F" />,
     },
     {
       id: 2,
       name: "Review",
-      jumlah: countReview,
-      link: RouterAdminDonasi_OLD.table_review,
+      jumlah: countReview == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countReview ? (
+        countReview
+      ) : (
+        "-"
+      ),
       color: MainColor.orange,
-      icon: <IconBookmark size={18}  color="#FF7043"/>
+      icon: <IconBookmark size={18} color="#FF7043" />
     },
     {
       id: 3,
       name: "Reject",
-      jumlah: countReject,
-      link: RouterAdminDonasi_OLD.table_reject,
+      jumlah: countReject == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countReject ? (
+        countReject
+      ) : (
+        "-"
+      ),
       color: MainColor.red,
       icon: <IconAlertTriangle size={18} color="#FF4B4C" />
     },
     {
       id: 4,
       name: "Kategori",
-      jumlah: 5,
-      link: RouterAdminDonasi_OLD.table_kategori,
+      jumlah: countKategori == null ? (
+        <CustomSkeleton height={40} width={40} />
+      ) : countKategori ? (
+        countKategori
+      ) : (
+        "-"
+      ),
       color: AccentColor.softblue,
-      icon: <IconCategory size={18} color="#007CBA"/>
+      icon: <IconCategory size={18} color="#007CBA" />
 
     }
   ];
@@ -84,13 +183,13 @@ export default function AdminDonasi_Main({
           {listBox.map((e, i) => (
             <Paper
               key={i}
-              bg={e.color}
+              bg={AdminColor.softBlue}
               shadow="md"
               radius="md"
               p="md"
-              // sx={{ borderColor: e.color, borderStyle: "solid" }}
+            // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-                <Stack spacing={0}>
+              <Stack spacing={0}>
                 <Text c={AccentColor.white} fw={"bold"}>{e.name}</Text>
                 <Flex align={"center"} justify={"space-between"}>
                   <Title c={AccentColor.white} fw={"bold"}>{e.jumlah ? e.jumlah : 0}</Title>
@@ -98,8 +197,8 @@ export default function AdminDonasi_Main({
                     {e.icon}
                   </ThemeIcon>
                 </Flex>
-                </Stack>
-              
+              </Stack>
+
             </Paper>
           ))}
         </SimpleGrid>

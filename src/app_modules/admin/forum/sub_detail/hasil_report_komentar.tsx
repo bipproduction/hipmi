@@ -152,7 +152,7 @@ function ButtonDeleteKomentar({
         </Stack>
       </Modal>
 
-      {data.isActive ? (
+      {data?.isActive ? (
         <Button
           loaderPosition="center"
           radius={"xl"}
@@ -184,7 +184,7 @@ function HasilReportPosting({
   );
   const [nPage, setNPage] = useState(listReport.nPage);
   const [activePage, setActivePage] = useState(1);
-  const [isSearch, setSearch] = useState("");
+
 
   async function onPageClick(p: any) {
     setActivePage(p);
@@ -234,6 +234,7 @@ function HasilReportPosting({
       </td>
     </tr>
   ));
+  console.log("Ini data", data);
 
   return (
     <>

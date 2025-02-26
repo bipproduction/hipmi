@@ -1,5 +1,5 @@
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { UIGlobal_Drawer } from "@/app_modules/_global/ui";
 import { ActionIcon } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -118,15 +118,18 @@ export default function ComponentPortofolio_ButtonMoreNew({
 
   return (
     <>
-      {userLoginId === authorId ? (
-        <ActionIcon variant="transparent" onClick={() => setOpenDrawer(true)}>
-          <IconDotsVertical color={MainColor.white} />
-        </ActionIcon>
-      ) : (
-        <ActionIcon disabled variant="transparent">
-          <CustomSkeleton h={20} w={20} radius={"100%"} />
-        </ActionIcon>
-      )}
+      {
+        userLoginId === authorId && (
+          <ActionIcon variant="transparent" onClick={() => setOpenDrawer(true)}>
+            <IconDotsVertical color={MainColor.white} />
+          </ActionIcon>
+        )
+        // : (
+        //   <ActionIcon disabled variant="transparent">
+        //     <CustomSkeleton h={20} w={20} radius={"100%"} />
+        //   </ActionIcon>
+        // )
+      }
 
       <UIGlobal_Drawer
         opened={openDrawer}

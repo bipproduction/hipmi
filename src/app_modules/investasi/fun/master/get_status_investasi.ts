@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function getStatusInvestasi() {
   const data = await prisma.masterStatusInvestasi.findMany({

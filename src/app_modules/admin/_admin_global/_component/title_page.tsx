@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { Group, Title, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import React from "react";
@@ -17,11 +18,11 @@ export function ComponentAdminGlobal_TitlePage({
     <>
       <Group
         position="apart"
-        bg={color ? color : "gray.4"}
+        bg={color ? color : AdminColor.softBlue}
         p={"xs"}
         style={{ borderRadius: "6px" }}
       >
-        <Title order={4}>{name}</Title>
+        <Title c={"white"} order={4}>{name}</Title>
         {component ? component : ""}
       </Group>
     </>

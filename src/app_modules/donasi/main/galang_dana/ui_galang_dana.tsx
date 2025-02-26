@@ -14,7 +14,7 @@ import {
 } from "@/app_modules/_global/color/color_pallet";
 import { useState } from "react";
 import { MODEL_NEW_DEFAULT_MASTER } from "@/app_modules/model_global/interface";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 
 export default function GalangDanaDonasi({
   statusId,

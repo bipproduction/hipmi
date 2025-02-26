@@ -1,8 +1,8 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,

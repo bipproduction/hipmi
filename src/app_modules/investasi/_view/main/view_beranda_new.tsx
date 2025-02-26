@@ -1,5 +1,5 @@
 "use client";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
@@ -15,7 +15,7 @@ import { apiGetAllInvestasi } from "../../_lib/api_interface";
 import { IDataInvestasiBursa } from "../../_lib/type_investasi";
 import SkeletonInvestasiBursa from "./skeleton_beranda";
 import { useAtom } from "jotai";
-import { gs_investasiTriggerBeranda } from "@/app/lib/global_state";
+import { gs_investasiTriggerBeranda } from "@/lib/global_state";
 
 export function Investasi_ViewBerandaNew() {
   const [data, setData] = useState<IDataInvestasiBursa[]>([]);

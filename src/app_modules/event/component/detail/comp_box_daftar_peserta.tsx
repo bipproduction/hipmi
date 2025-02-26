@@ -1,4 +1,4 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ActionIcon, Flex, Loader, Paper, Text } from "@mantine/core";
 import { IconUsersGroup } from "@tabler/icons-react";

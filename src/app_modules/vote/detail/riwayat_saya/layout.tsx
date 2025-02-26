@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { UIGlobal_Drawer } from "@/app_modules/_global/ui";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";

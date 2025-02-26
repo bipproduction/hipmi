@@ -13,6 +13,7 @@ import { ComponentAdminInvestasi_DetailDataAuthor } from "../_component/detail_d
 import { ComponentAdminInvestasi_DetailData } from "../_component/detail_data_investasi";
 import { ComponentAdminInvestasi_DetailGambar } from "../_component/detail_gambar_investasi";
 import { ComponentAdminInvestasi_UIDetailFile } from "../_component/ui_detail_file";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export function AdminInvestasi_DetailReject({ data }: { data: MODEL_INVESTASI }) {
   return (
@@ -28,15 +29,15 @@ export function AdminInvestasi_DetailReject({ data }: { data: MODEL_INVESTASI })
             { maxWidth: "36rem", cols: 1, spacing: "sm" },
           ]}
         >
-          <Paper withBorder p={"lg"}>
+          <Paper bg={AdminColor.softBlue} p={"lg"}>
             <Stack>
               <Title order={3} c={"red"}>
                 #{" "}
-                <Text span inherit c={"black"}>
+                <Text span inherit c={AdminColor.white}>
                   Alasan penolakan
                 </Text>
               </Title>
-              <Text>{data.catatan}</Text>
+              <Text c={AdminColor.white}>{data.catatan}</Text>
             </Stack>
           </Paper>
         </SimpleGrid>
@@ -51,7 +52,7 @@ export function AdminInvestasi_DetailReject({ data }: { data: MODEL_INVESTASI })
           ]}
         >
           {/* Data Author */}
-          <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
+          <ComponentAdminInvestasi_DetailDataAuthor data={data.author as any} />
 
           {/* Data Foto */}
           <ComponentAdminInvestasi_DetailGambar imagesId={data.imageId}  />

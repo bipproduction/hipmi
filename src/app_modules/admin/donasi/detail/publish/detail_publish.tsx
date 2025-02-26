@@ -1,8 +1,8 @@
 "use client";
 
-import { RouterAdminGlobal } from "@/app/lib";
-import { RouterAdminDonasi } from "@/app/lib/router_admin/router_admin_donasi";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminGlobal } from "@/lib";
+import { RouterAdminDonasi } from "@/lib/router_admin/router_admin_donasi";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { Admin_ComponentLoadImageLandscape } from "@/app_modules/admin/_admin_global";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
@@ -38,33 +38,40 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconReload } from "@tabler/icons-react";
 import _, { toNumber } from "lodash";
 import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { adminDonasi_getListDonatur } from "../../fun/get/get_list_donatur_by_id";
 import { AdminDonasi_getOneById } from "../../fun/get/get_one_by_id";
 import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
+import { apiGetAdminDonasiById } from "../../lib/api_fetch_admin_donasi";
+import { clientLogger } from "@/util/clientLogger";
+import SkeletonAdminDetailDonasiReject from "../../component/skeleton_detail donasi_reject";
+import SkeletonAdminDetailDonasiPublish from "../../component/skeleton_detail_donasi_publish";
 
 export default function AdminDonasi_DetailPublish({
-  dataPublish,
+
   listDonatur,
   countDonatur,
   listPencairan,
   listMasterStatus,
 }: {
-  dataPublish: MODEL_DONASI;
+
   listDonatur: any[];
   countDonatur: number;
   listPencairan: MODEL_DONASI_PENCAIRAN_DANA[];
   listMasterStatus: MODEL_NEW_DEFAULT_MASTER[];
 }) {
-  const [dataDonasi, setDataDonasi] = useState(dataPublish);
+  const params = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
   const [pencairan, setPencairan] = useState(listPencairan);
-  const selectedData = _.omit(dataDonasi, [
+  const selectedData = _.omit(data, [
     "Author",
     "imageDonasi",
     "CeritaDonasi",
@@ -73,23 +80,50 @@ export default function AdminDonasi_DetailPublish({
     "DonasiMaster_Status",
   ]);
 
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminDonasiById({
+          id: params.id,
+        })
+
+        if (response?.success && response?.data) {
+          setTimeout(() => {
+            setData(response.data)
+          }, 3000);
+        } else {
+          console.log("Invalid data format recieved:", response);
+          setData(null)
+        }
+      } catch (error) {
+        clientLogger.error("Invalid data format recieved:", error);
+        setData(null);
+      }
+    }
+    loadInitialData();
+  })
   return (
     <>
       {/* <pre>{JSON.stringify(pencairan, null, 2)}</pre> */}
       <Stack>
-        <AdminGlobal_ComponentBackButton
-          path={RouterAdminDonasi.table_publish}
-        />
-        <TampilanDetailDonasi donasi={dataDonasi} countDonatur={countDonatur} />
-        <TampilanListDonatur
-          donatur={listDonatur}
-          listMasterStatus={listMasterStatus}
-          dataDonasi={selectedData as any}
-          onSuccessDonasi={(val) => {
-            setDataDonasi(val);
-          }}
-        />
-        <TampilanListPencairan pencairan={pencairan} />
+        {!data ?
+          (<SkeletonAdminDetailDonasiPublish />) : (
+            <>
+              <AdminGlobal_ComponentBackButton
+                path={RouterAdminDonasi.table_publish}
+              />
+              <TampilanDetailDonasi donasi={data} countDonatur={countDonatur} />
+              <TampilanListDonatur
+                donatur={listDonatur}
+                listMasterStatus={listMasterStatus}
+                dataDonasi={selectedData as any}
+                onSuccessDonasi={(val) => {
+                  setData(val);
+                }}
+              />
+              <TampilanListPencairan pencairan={pencairan} />
+            </>
+          )}
       </Stack>
     </>
   );
@@ -108,7 +142,7 @@ function TampilanDetailDonasi({
 
   return (
     <>
-      <Paper radius={"md"} p={"md"}>
+      <Paper bg={AdminColor.softBlue} radius={"md"} p={"md"}>
         <Stack>
           <SimpleGrid
             cols={3}
@@ -119,25 +153,25 @@ function TampilanDetailDonasi({
               { maxWidth: "36rem", cols: 1, spacing: "sm" },
             ]}
           >
-            <Paper withBorder p={"xs"}>
+            <Paper p={"xs"} bg={AdminColor.softBlue}>
               <Stack>
-                <Title align="center" order={4}>
+                <Title c={AdminColor.white} align="center" order={4}>
                   Gambar Donasi
                 </Title>
                 <Admin_ComponentLoadImageLandscape fileId={donasi.imageId} />
               </Stack>
             </Paper>
 
-            <Paper withBorder p={"sm"}>
+            <Paper p={"sm"} bg={AdminColor.softBlue}>
               <Stack spacing={5}>
-                <Title order={4}>Detail Donasi</Title>
+                <Title c={AdminColor.white} order={4}>Detail Donasi</Title>
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Judul</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Judul</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {donasi?.title}
                     </Title>
                   </Grid.Col>
@@ -145,11 +179,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Penggalang Dana</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Penggalang Dana</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {donasi?.Author.username}
                     </Title>
                   </Grid.Col>
@@ -157,11 +191,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Durasi</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Durasi</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title c={AdminColor.white} order={5}>
                       {donasi?.DonasiMaster_Durasi.name} hari
                     </Title>
                   </Grid.Col>
@@ -169,24 +203,24 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Dana dibutuhkan</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Dana dibutuhkan</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
                     <ComponentGlobal_TampilanRupiah
                       nominal={+donasi?.target}
-                      color="darkblue"
+                      color={AdminColor.yellow}
                     />
                   </Grid.Col>
                 </Grid>
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Kategori</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Kategori</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title c={AdminColor.white} order={5}>
                       {donasi?.DonasiMaster_Ketegori?.name}
                     </Title>
                   </Grid.Col>
@@ -194,11 +228,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={"xs"}>Total donatur</Text>
+                    <Text c={AdminColor.white} fz={"xs"}>Total donatur</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {countDonatur}
                     </Title>
                   </Grid.Col>
@@ -206,11 +240,11 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={12}>Progres</Text>
+                    <Text c={AdminColor.white} fz={12}>Progres</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
-                    <Title order={5} c="blue">
+                    <Title order={5} c={AdminColor.white}>
                       {toNumber(donasi.progres).toFixed(2)} %
                     </Title>
                   </Grid.Col>
@@ -218,13 +252,13 @@ function TampilanDetailDonasi({
 
                 <Grid>
                   <Grid.Col span={4}>
-                    <Text fz={12}>Dana terkumpul</Text>
+                    <Text c={AdminColor.white} fz={12}>Dana terkumpul</Text>
                   </Grid.Col>
-                  <Grid.Col span={"content"}>:</Grid.Col>
+                  <Grid.Col c={AdminColor.white} span={"content"}>:</Grid.Col>
                   <Grid.Col span={"auto"}>
                     <ComponentGlobal_TampilanRupiah
                       nominal={+donasi?.terkumpul}
-                      color="darkblue"
+                      color={AdminColor.yellow}
                     />
                   </Grid.Col>
                 </Grid>
@@ -232,25 +266,25 @@ function TampilanDetailDonasi({
             </Paper>
 
             {/* Pencairan Dana */}
-            <Paper withBorder p={"sm"}>
+            <Paper bg={AdminColor.softBlue} p={"sm"}>
               <Stack spacing={"xl"}>
                 <Center>
-                  <Title order={4}>Pencairan Dana</Title>
+                  <Title c={AdminColor.white} order={4}>Pencairan Dana</Title>
                 </Center>
                 <Grid>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Total Dana Dicairkan</Text>
+                      <Text c={AdminColor.white} fz={"xs"}>Total Dana Dicairkan</Text>
                       <ComponentGlobal_TampilanRupiah
                         nominal={donasi?.totalPencairan}
-                        color="darkblue"
+                        color={AdminColor.yellow}
                       />
                     </Stack>
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Bank Tujuan</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text c={AdminColor.white} fz={"xs"}>Bank Tujuan</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.namaBank}
                       </Title>
                     </Stack>
@@ -259,16 +293,16 @@ function TampilanDetailDonasi({
                 <Grid>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Akumulasi Pencairan</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text c={AdminColor.white} fz={"xs"}>Akumulasi Pencairan</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.akumulasiPencairan} Kali
                       </Title>
                     </Stack>
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
                     <Stack spacing={0}>
-                      <Text fz={"xs"}>Nomor Rekening</Text>
-                      <Title order={6} c={"blue"}>
+                      <Text fz={"xs"} c={AdminColor.white}>Nomor Rekening</Text>
+                      <Title order={6} c={AdminColor.white}>
                         {donasi?.rekening}
                       </Title>
                     </Stack>
@@ -276,13 +310,13 @@ function TampilanDetailDonasi({
                 </Grid>
 
                 <Stack align="center" spacing={0}>
-                  <Text fz={"xs"}>Sisa Dana</Text>
+                  <Text c={AdminColor.white} fz={"xs"}>Sisa Dana</Text>
                   <ComponentGlobal_TampilanRupiah
                     nominal={
                       toNumber(donasi.terkumpul) -
                       toNumber(donasi.totalPencairan)
                     }
-                    color="darkblue"
+                    color={AdminColor.yellow}
                   />
                 </Stack>
 
@@ -379,25 +413,25 @@ function TampilanListDonatur({
   const tableRows = lisDonatur.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center>{e?.Author.username}</Center>
+        <Center c={AccentColor.white}>{e?.Author.username}</Center>
       </td>
       <td>
-        <Center>{e?.DonasiMaster_Bank?.name}</Center>
+        <Center c={AccentColor.white}>{e?.DonasiMaster_Bank?.name}</Center>
       </td>
       <td>
-        <Center>
-          <ComponentGlobal_TampilanRupiah color="black" nominal={+e?.nominal} />
+        <Center c={AccentColor.white}>
+          <ComponentGlobal_TampilanRupiah nominal={+e?.nominal} />
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
             e?.createdAt
           )}
         </Center>
       </td>
       <td>
-        <Center>
+        <Center c={AccentColor.white}>
           <Badge w={150} variant="dot">
             {e?.DonasiMaster_StatusInvoice?.name}
           </Badge>
@@ -458,7 +492,7 @@ function TampilanListDonatur({
         {/* <pre>{JSON.stringify(dataDonasi, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Daftar Donatur"
-          color="gray.4"
+          color={AdminColor.softBlue}
           component={
             <Group>
               <ActionIcon
@@ -486,38 +520,36 @@ function TampilanListDonatur({
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Nama Donatur</Center>
+                    <Center c={AccentColor.white}>Nama Donatur</Center>
                   </th>
                   <th>
-                    <Center>Nama Bank</Center>
+                    <Center c={AccentColor.white}>Nama Bank</Center>
                   </th>
                   <th>
-                    <Center>Jumlah Donasi</Center>
+                    <Center c={AccentColor.white}>Jumlah Donasi</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center c={AccentColor.white}>Tanggal</Center>
                   </th>
                   <th>
-                    <Center>Status</Center>
+                    <Center c={AccentColor.white}>Status</Center>
                   </th>
                   <th>
-                    <Center>Bukti Transfer</Center>
+                    <Center c={AccentColor.white}>Bukti Transfer</Center>
                   </th>
                   <th>
-                    <Center>Aksi</Center>
+                    <Center c={AccentColor.white}>Aksi</Center>
                   </th>
                 </tr>
               </thead>
@@ -697,15 +729,15 @@ function TampilanListPencairan({
   const rowTable = data.map((e) => (
     <tr key={e.id}>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <TampilanRupiahDonasi nominal={e.nominalCair} />
         </Center>
       </td>
       <td>
-        <Center>{moment(e.createdAt).format("ll")}</Center>
+        <Center c={AdminColor.white}>{moment(e.createdAt).format("ll")}</Center>
       </td>
       <td>
-        <Center>
+        <Center c={AdminColor.white}>
           <Text>{e.title}</Text>
         </Center>
       </td>
@@ -755,20 +787,20 @@ function TampilanListPencairan({
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Rincian Pencairan Dana"
-          color="gray.4"
+          color={AdminColor.softBlue}
           component={
             <Group>
-            <ActionIcon
-              size={"lg"}
-              radius={"xl"}
-              variant="light"
-              onClick={() => {
-                // onRelaod();
-              }}
-            >
-              <IconReload />
-            </ActionIcon>
-            {/* <Select
+              <ActionIcon
+                size={"lg"}
+                radius={"xl"}
+                variant="light"
+                onClick={() => {
+                  // onRelaod();
+                }}
+              >
+                <IconReload />
+              </ActionIcon>
+              {/* <Select
               placeholder="Pilih status"
               value={isSelect}
               data={listMasterStatus.map((e) => ({
@@ -779,34 +811,33 @@ function TampilanListPencairan({
                 onSelect(val);
               }}
             /> */}
-          </Group>
+            </Group>
           }
         />
-      
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
           <ScrollArea w={"100%"} h={"90%"}>
             <Table
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
               w={1500}
-              striped
-              highlightOnHover
+
             >
               <thead>
                 <tr>
                   <th>
-                    <Center>Nominal</Center>
+                    <Center c={AccentColor.white}>Nominal</Center>
                   </th>
                   <th>
-                    <Center>Tanggal</Center>
+                    <Center c={AccentColor.white}>Tanggal</Center>
                   </th>
                   <th>
-                    <Center>Judul</Center>
+                    <Center c={AccentColor.white}>Judul</Center>
                   </th>
-                  <th>Deskripsi</th>
+                  <th style={{ color: AccentColor.white }}>Deskripsi</th>
                   <th>
-                    <Center>Bukti Transfer</Center>
+                    <Center c={AccentColor.white}>Bukti Transfer</Center>
                   </th>
                 </tr>
               </thead>

@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -32,21 +32,17 @@ export async function GET(
       },
     });
 
-    await prisma.$disconnect();
-
     return NextResponse.json({
       success: true,
       message: "Berhasil mendapatkan data",
       data: fixData,
     });
   } catch (error) {
-    await prisma.$disconnect();
-
     return NextResponse.json(
       { success: false, message: "Gagal mendapatkan data" },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
-
-

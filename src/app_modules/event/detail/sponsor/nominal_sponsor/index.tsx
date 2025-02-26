@@ -1,5 +1,7 @@
 "use client";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { gs_nominal_sponsor } from "@/app_modules/event/global_state";
 import {
   Box,
   Button,
@@ -9,6 +11,7 @@ import {
   Text,
   TextInput,
   Title,
+  Loader,
 } from "@mantine/core";
 import {
   IconChevronRight,
@@ -17,35 +20,42 @@ import {
   IconMoodSmileDizzy,
   IconMoodXd,
 } from "@tabler/icons-react";
+import { useAtom } from "jotai";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 
 const listNominal = [
   {
     id: 1,
-    jumlah: " 25.000",
+    value: 25000,
     icon: <IconMoodSmile />,
   },
   {
     id: 2,
-    jumlah: " 50.000",
+    value: 50000,
     icon: <IconMoodSmileBeam />,
   },
   {
     id: 3,
-    jumlah: " 75.000",
+    value: 75000,
     icon: <IconMoodSmileDizzy />,
   },
   {
     id: 4,
-    jumlah: " 100.000",
+    value: 100000,
     icon: <IconMoodXd />,
   },
 ];
 function Event_PilihNominalSponsor() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  
+  const [inputNominal, setInputNominal] = useState("");
+  const [valueNominal, setValueNominal] = useState(0);
+  const [fixNominal, setFixNominal] = useAtom(gs_nominal_sponsor);
+  const [isLoading, setLoading] = useState(false);
+  const [isLoadingPaper, setLoadingPaper] = useState(false);
+  const [chooseId, setChooseId] = useState(0);
+
   return (
     <>
       <Stack>
@@ -54,6 +64,7 @@ function Event_PilihNominalSponsor() {
             <Paper
               key={e.id}
               style={{
+                transition: "all 0.3s ease-in-out",
                 backgroundColor: AccentColor.blue,
                 border: `2px solid ${AccentColor.darkblue}`,
                 padding: "15px",
@@ -62,13 +73,32 @@ function Event_PilihNominalSponsor() {
                 color: "white",
                 marginBottom: "15px",
               }}
+              onClick={() => {
+                try {
+                  setChooseId(e.id);
+                  setLoadingPaper(true);
+                  setFixNominal(e.value);
+                  router.push(RouterEvent.metode_pembayaran({ id: params.id }));
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
             >
               <Group position="apart">
                 <Group>
                   {e.icon}
-                  <Title order={4}>Rp.{e.jumlah}</Title>
+                  <Title order={4}>
+                    Rp.
+                    {new Intl.NumberFormat("id-ID", { currency: "IDR" }).format(
+                      e.value
+                    )}
+                  </Title>
                 </Group>
-                <IconChevronRight />
+                {isLoadingPaper && e.id === chooseId ? (
+                  <Loader size={20} color="yellow" />
+                ) : (
+                  <IconChevronRight />
+                )}
               </Group>
             </Paper>
           ))}
@@ -89,21 +119,41 @@ function Event_PilihNominalSponsor() {
               icon={<Text fw={"bold"}>Rp.</Text>}
               placeholder="0"
               min={0}
+              value={inputNominal}
+              onChange={(val) => {
+                const match = val.currentTarget.value
+                  .replace(/\./g, "")
+                  .match(/^[0-9]+$/);
+
+                if (val.currentTarget.value === "")
+                  return setInputNominal(0 + "");
+
+                if (!match?.[0]) return null;
+
+                const nilai = val.currentTarget.value.replace(/\./g, "");
+                const target = Intl.NumberFormat("id-ID").format(+nilai);
+
+                setValueNominal(+nilai);
+                setInputNominal(target);
+              }}
             />
-            <Text c={"gray"} fz={"xs"}>
-              Minimal Donasi Rp. 10.000
-            </Text>
+           
           </Stack>
         </Paper>
         <Button
-          style={{ transition: "0.5s" }}
+          disabled={valueNominal <= 0}
+          loaderPosition="center"
+          loading={isLoading}
+          style={{ transition: " all 0.3s ease-in-out" }}
           radius={"xl"}
           bg={MainColor.yellow}
           color="yellow"
           c={"black"}
-          onClick={() =>
-            router.push("/dev/event/detail/sponsor/metode_pembayaran")
-          }
+          onClick={() => {
+            setLoading(true);
+            setFixNominal(valueNominal);
+            router.push(RouterEvent.metode_pembayaran({ id: params.id }));
+          }}
         >
           Lanjutan Pembayaran
         </Button>

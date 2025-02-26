@@ -18,7 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { investasi_funDeleteBerita } from "../../_fun";
 import { Investasi_ViewDetailBerita } from "../../_view";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetBeritaInvestasiById } from "../../_lib/api_interface";

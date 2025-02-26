@@ -1,5 +1,5 @@
 "use client";
-import { gs_realtimeData, IRealtimeData } from "@/app/lib/global_state";
+import { gs_realtimeData, IRealtimeData } from "@/lib/global_state";
 import { Button, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";

@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import prisma from "@/lib/prisma";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import backendLogger from "@/util/backendLogger";
 import { Prisma } from "@prisma/client";

@@ -30,25 +30,25 @@ import adminDonasi_funDeleteKategori from "../fun/delete/fun_delete_by_id";
 import adminDonasi_funUpdatekategoriById from "../fun/update/fun_update_kategori_by_id";
 import _ from "lodash";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetAdminDonasiKategori } from "../lib/api_fetch_admin_donasi";
+import { clientLogger } from "@/util/clientLogger";
 
-export default function AdminDonasi_TableKategori({
-  listKategori,
-}: {
-  listKategori: MODEL_NEW_DEFAULT_MASTER[];
-}) {
+export default function AdminDonasi_TableKategori() {
   return (
     <>
       <Stack h={"100%"}>
         <ComponentAdminGlobal_HeaderTamplate name="Donasi" />
-        <TableView list={listKategori} />
+        <TableView />
       </Stack>
     </>
   );
 }
 
-function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
-  const [data, setData] = useState(list);
-
+function TableView() {
+  const [data, setData] = useState<MODEL_NEW_DEFAULT_MASTER[] | null>(null);
   const [create, setCreate] = useState("");
   const [isCreate, setIsCreate] = useState(false);
 
@@ -65,6 +65,22 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
   });
   const [isChangeStatus, setIsChangeStatus] = useState(false);
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+  try {
+    const response = await apiGetAdminDonasiKategori();
+    if (response) {
+
+      setData(response.data)
+    }
+  } catch (error) {
+    clientLogger.error("Error get kategori" , error)
+  }
+}
+
   async function onCreateNewKategori() {
     const tambahData = await adminDonasi_funCreateKategori({
       newKategori: create,
@@ -80,7 +96,7 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
   }
 
   async function onChangeStatus() {
-    // console.log(updateStatus.kategoriId, updateStatus.isActive);
+    
     const del = await adminDonasi_funDeleteKategori({
       kategoriId: updateStatus.kategoriId,
       isActive: updateStatus.isActive as any,
@@ -112,49 +128,63 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
     }
   }
 
-  const rowTable = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center>
-          <Text>{e?.name}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center>
-          <Switch
-            color="orange"
-            onLabel="ON"
-            offLabel="OFF"
-            checked={e?.active}
-            onChange={(val) => {
-              const status = val.currentTarget.checked;
-              setIsChangeStatus(true);
-              setUpdateStatus({
-                kategoriId: e?.id,
-                isActive: status as any,
-              });
-            }}
-          />
-        </Center>
-      </td>
-      <td>
-        <Group position="center">
-          <ActionIcon
-            onClick={() => {
-              setIsUpdate(true);
-              setIsCreate(false);
-              setUpdateKategori({
-                kategoriId: e?.id,
-                name: e?.name,
-              });
-            }}
-          >
-            <IconEdit color="green" />
-          </ActionIcon>
-        </Group>
-      </td>
-    </tr>
-  ));
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      )
+    }
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center c={AccentColor.white}>
+            <Text>{e?.name}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Switch
+              color="orange"
+              onLabel="ON"
+              offLabel="OFF"
+              checked={e?.active}
+              onChange={(val) => {
+                const status = val.currentTarget.checked;
+                setIsChangeStatus(true);
+                setUpdateStatus({
+                  kategoriId: e?.id,
+                  isActive: status as any,
+                });
+              }}
+            />
+          </Center>
+        </td>
+        <td>
+          <Group position="center">
+            <ActionIcon
+              onClick={() => {
+                setIsUpdate(true);
+                setIsCreate(false);
+                setUpdateKategori({
+                  kategoriId: e?.id,
+                  name: e?.name,
+                });
+              }}
+            >
+              <IconEdit color={AdminColor.green} />
+            </ActionIcon>
+          </Group>
+        </td>
+      </tr>
+    ));
+  }
+
 
   return (
     <>
@@ -162,19 +192,19 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
         {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Kategori"
-          color="gray.4"
+          color={AdminColor.softBlue}
           component={
             <Button
-            w={120}
-            leftIcon={<IconCirclePlus />}
-            radius={"xl"}
-            onClick={() => {
-              setIsCreate(true);
-              setIsUpdate(false);
-            }}
-          >
-            Tambah
-          </Button>
+              w={120}
+              leftIcon={<IconCirclePlus />}
+              radius={"xl"}
+              onClick={() => {
+                setIsCreate(true);
+                setIsUpdate(false);
+              }}
+            >
+              Tambah
+            </Button>
           }
         />
         {/* <Group
@@ -199,30 +229,29 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
 
         <Grid>
           <Grid.Col span={"auto"}>
-            <Paper p={"md"} withBorder shadow="lg" h={"70vh"}>
+            <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"70vh"}>
               <ScrollArea w={"100%"} h={"90%"}>
                 <Table
                   verticalSpacing={"xs"}
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
-                  striped
-                  highlightOnHover
+
                 >
                   <thead>
                     <tr>
                       <th>
-                        <Center>Kategori</Center>
+                        <Center c={AccentColor.white}>Kategori</Center>
                       </th>
                       <th>
-                        <Center>Status</Center>
+                        <Center c={AccentColor.white}>Status</Center>
                       </th>
                       <th>
-                        <Center>Aksi</Center>
+                        <Center c={AccentColor.white}>Aksi</Center>
                       </th>
                     </tr>
                   </thead>
-                  <tbody>{rowTable}</tbody>
+                  <tbody>{renderTableBody()}</tbody>
                 </Table>
               </ScrollArea>
               {/* <Center mt={"xl"}>
@@ -240,11 +269,11 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
 
           <Grid.Col span={4}>
             {isCreate ? (
-              <Paper p={"md"} withBorder>
+              <Paper p={"md"} bg={AdminColor.softBlue}>
                 <Stack>
                   <TextInput
                     value={create}
-                    label={<Title order={6}>Tambah Kategori</Title>}
+                    label={<Title c={AdminColor.white} order={6}>Tambah Kategori</Title>}
                     placeholder="Masukan kategori baru"
                     onChange={(val) => {
                       setCreate(val.currentTarget.value);
@@ -284,11 +313,11 @@ function TableView({ list }: { list: MODEL_NEW_DEFAULT_MASTER[] }) {
             )}
 
             {isUpdate ? (
-              <Paper p={"md"} withBorder style={{ transition: "1s" }}>
+              <Paper p={"md"} bg={AdminColor.softBlue} style={{ transition: "1s" }}>
                 <Stack>
                   <TextInput
                     value={updateKategori.name}
-                    label={<Title order={6}>Update Kategori</Title>}
+                    label={<Title c={AdminColor.white} order={6}>Update Kategori</Title>}
                     placeholder="Update kategori"
                     onChange={(val) => {
                       const data = _.clone(updateKategori);

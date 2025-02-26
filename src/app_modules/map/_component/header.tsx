@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import UIGlobal_Drawer from "@/app_modules/_global/ui/ui_drawer";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import { ActionIcon } from "@mantine/core";

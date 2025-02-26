@@ -1,4 +1,4 @@
-import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 

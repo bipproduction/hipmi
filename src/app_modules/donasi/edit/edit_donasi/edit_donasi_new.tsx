@@ -1,5 +1,5 @@
 "use client";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,

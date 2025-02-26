@@ -1,7 +1,7 @@
 "use client";
 
-import { gs_votingTiggerBeranda } from "@/app/lib/global_state";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { gs_votingTiggerBeranda } from "@/lib/global_state";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";

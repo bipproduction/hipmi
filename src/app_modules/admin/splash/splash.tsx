@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminDashboard } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDashboard } from "@/lib/router_hipmi/router_admin";
 import { AspectRatio, Center, Image, Stack, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";

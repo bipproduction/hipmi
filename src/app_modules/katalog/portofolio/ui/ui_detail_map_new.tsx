@@ -1,4 +1,4 @@
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";

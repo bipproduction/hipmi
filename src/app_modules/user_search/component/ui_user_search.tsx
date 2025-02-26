@@ -1,10 +1,11 @@
 "use client";
 
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Box,
@@ -16,26 +17,84 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconChevronRight, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { userSearch_getAllUser } from "../fun/get/get_all_user";
+import { apiGetUserSearch } from "./api_fetch_user_search";
+import { UserSearch_SkeletonView } from "./skeleton_view";
 
-export function UserSearch_UiView({ listUser }: { listUser: MODEL_USER[] }) {
-  const [data, setData] = useState(listUser);
+export function UserSearch_UiView() {
+  const [data, setData] = useState<MODEL_USER[]>([]);
   const [activePage, setActivePage] = useState(1);
-  const [isSearch, setIsSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  async function onSearch(name: string) {
-    setIsSearch(name);
-    const loadData = await userSearch_getAllUser({
-      page: activePage,
-      search: name,
-    });
-    setData(loadData as any);
+  useShallowEffect(() => {
+    const initializeData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await apiGetUserSearch({
+          page: "1", // Selalu mulai dari page 1 untuk search baru
+          search: searchQuery,
+        });
+
+        if (response?.data) {
+          // Reset allData dan mulai dengan data baru
+          setData(response.data);
+          setActivePage(1);
+          // Jika data yang diterima kosong atau kurang dari yang diharapkan,
+          // berarti tidak ada data lagi
+          setHasMore(response.data.length > 0);
+        }
+      } catch (error) {
+        clientLogger.error("Error initializing data", error);
+        setData([]);
+        setHasMore(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeData();
+  }, [searchQuery]); // Dependency hanya pada searchQuery
+
+  function handleSearch(value: string) {
+    setSearchQuery(value);
+    // Reset state pagination
     setActivePage(1);
+    setHasMore(true);
+  }
+
+  // Function untuk load more data (infinite scroll)
+  async function loadMoreData() {
+    if (!hasMore || isLoading) return null;
+
+    try {
+      const nextPage = activePage + 1;
+      const response = await apiGetUserSearch({
+        page: `${nextPage}`,
+        search: searchQuery,
+      });
+
+      if (response?.data && response.data.length > 0) {
+        setActivePage(nextPage);
+        // Update hasMore berdasarkan apakah ada data yang diterima
+        setHasMore(response.data.length > 0);
+        return response.data;
+      } else {
+        setHasMore(false);
+        return null;
+      }
+    } catch (error) {
+      clientLogger.error("Error loading more data", error);
+      setHasMore(false);
+      return null;
+    }
   }
 
   return (
@@ -46,35 +105,32 @@ export function UserSearch_UiView({ listUser }: { listUser: MODEL_USER[] }) {
           style={{ zIndex: 99 }}
           icon={<IconSearch size={20} />}
           placeholder="Masukan nama pengguna "
-          onChange={(val) => onSearch(val.target.value)}
+          onChange={(val) => handleSearch(val.target.value)}
+          // disabled={isLoading}
         />
-        <Box>
-          {_.isEmpty(data) ? (
-            <ComponentGlobal_IsEmptyData text="Pengguna tidak ditemukan" />
-          ) : (
-            <ScrollOnly
-              height="84vh"
-              renderLoading={() => (
-                <Center mt={"lg"}>
-                  <Loader color={"yellow"} />
-                </Center>
-              )}
-              data={data}
-              setData={setData}
-              moreData={async () => {
-                const loadData = await userSearch_getAllUser({
-                  page: activePage + 1,
-                  search: isSearch,
-                });
-                setActivePage((val) => val + 1);
-
-                return loadData;
-              }}
-            >
-              {(item) => <CardView data={item} />}
-            </ScrollOnly>
-          )}
-        </Box>
+        {!data.length && isLoading ? (
+          <UserSearch_SkeletonView />
+        ) : (
+          <Box>
+            {_.isEmpty(data) ? (
+              <ComponentGlobal_IsEmptyData text="Pengguna tidak ditemukan" />
+            ) : (
+              <ScrollOnly
+                height="84vh"
+                renderLoading={() => (
+                  <Center mt={"lg"}>
+                    <Loader color={"yellow"} />
+                  </Center>
+                )}
+                data={data}
+                setData={setData as any}
+                moreData={loadMoreData}
+              >
+                {(item) => <CardView data={item} />}
+              </ScrollOnly>
+            )}
+          </Box>
+        )}
       </Stack>
     </>
   );
@@ -115,61 +171,12 @@ function CardView({ data }: { data: MODEL_USER }) {
           <Group position="right" align="center" h={"100%"}>
             <Center>
               <ActionIcon variant="transparent">
-                {/* PAKE LOADING */}
-                {/* {loading ? (
-                  <ComponentGlobal_Loader />
-                ) : (
-                  <IconChevronRight color="white" />
-                )} */}
-
-                {/* GA PAKE LOADING */}
                 <IconChevronRight color="white" />
               </ActionIcon>
             </Center>
           </Group>
         </Grid.Col>
       </Grid>
-
-      {/* <Stack
-        spacing={"xs"}
-        c="white"
-        py={"xs"}
-        onClick={() => {
-          setLoading(true);
-          router.push(RouterProfile.katalogOLD + `${data?.Profile?.id}`);
-        }}
-      >
-
-        <Group position="apart" grow>
-          <Group position="left" bg={"blue"}>
-            <ComponentGlobal_LoaderAvatar
-              fileId={data.Profile.imageId as any}
-              imageSize="100"
-            />
-
-            <Stack spacing={0}>
-              <Text fw={"bold"} lineClamp={1}>
-                {data?.Profile.name}d sdasd sdas 
-              </Text>
-              <Text fz={"sm"} fs={"italic"}>
-                +{data?.nomor}
-              </Text>
-            </Stack>
-          </Group>
-
-          <Group position="right">
-            <Center>
-              <ActionIcon variant="transparent">
-                {loading ? (
-                  <ComponentGlobal_Loader />
-                ) : (
-                  <IconChevronRight color="white" />
-                )}
-              </ActionIcon>
-            </Center>
-          </Group>
-        </Group>
-      </Stack> */}
     </>
   );
 }

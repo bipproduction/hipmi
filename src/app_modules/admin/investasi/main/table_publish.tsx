@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
   Button,
@@ -15,7 +15,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconDetails, IconEye, IconEyeCheck, IconInfoCircle, IconSearch } from "@tabler/icons-react";
+import {
+  IconDetails,
+  IconEye,
+  IconEyeCheck,
+  IconInfoCircle,
+  IconSearch,
+} from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,125 +30,167 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { adminInvestasi_funGetAllPublish } from "../fun/get/get_all_publish";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  AccentColor,
+  AdminColor,
+} from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi";
+import { useShallowEffect } from "@mantine/hooks";
+import { clientLogger } from "@/util/clientLogger";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Admin_TablePublishInvestasi({
-  dataInvestsi,
-}: {
-  dataInvestsi: MODEL_INVESTASI[];
-}) {
+export default function Admin_TablePublishInvestasi() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Investasi" />
-        <TableView listData={dataInvestsi} />
+        <TableView />
         {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
       </Stack>
     </>
   );
 }
 
-function TableView({ listData }: { listData: any }) {
+function TableView() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_INVESTASI[]>(listData.data);
-  const [nPage, setNPage] = useState(listData.nPage);
+  const [data, setData] = useState<MODEL_INVESTASI[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [idData, setIdData] = useState("");
+  const [origin, setOrigin] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    setActivePage(1);
-    const loadData = await adminInvestasi_funGetAllPublish({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  useShallowEffect(() => {
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminInvestasi_funGetAllPublish({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminInvestasiByStatus({
+          name: "Publish",
+          page: `${activePage}`,
+          search: isSearch,
+        });
 
-  const tableBody = data.map((e) => (
-    <tr key={e.id}>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={1}>{e.author.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={400}>
-          <Text lineClamp={1}>{e.title}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>{_.toNumber(e.progress).toFixed(2)} %</Center>
-      </td>
-      <td>
-        <Center w={200}>
-          {new Intl.NumberFormat("id-ID", {
-            maximumFractionDigits: 10,
-          }).format(+e.sisaLembar)}
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          {new Intl.NumberFormat("id-ID", {
-            maximumFractionDigits: 10,
-          }).format(+e.totalLembar)}
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={1}>{e.Investasi_Invoice.length}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Button
-            loading={isLoading && idData === e.id}
-            loaderPosition="center"
-            bg={"green"}
-            color="green"
-            radius={"xl"}
-            leftIcon={<IconEyeCheck size={20} />}
-            onClick={() => {
-              setIdData(e.id);
-              setLoading(true);
-              router.push(RouterAdminInvestasi.detail_publish + `${e.id}`);
-            }}
-          >
-            Detail
-          </Button>
-        </Center>
-      </td>
-    </tr>
-  ));
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+    };
+
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+  };
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
+
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center w={200}>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.author.username}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={400}>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.title}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            {_.toNumber(e.progress).toFixed(2)} %
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            {new Intl.NumberFormat("id-ID", {
+              maximumFractionDigits: 10,
+            }).format(+e.sisaLembar)}
+          </Center>
+        </td>
+        <td>
+          <Center c={AccentColor.white} w={200}>
+            {new Intl.NumberFormat("id-ID", {
+              maximumFractionDigits: 10,
+            }).format(+e.totalLembar)}
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Text c={AccentColor.white} lineClamp={1}>
+              {e.Investasi_Invoice.length}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Center w={200}>
+            <Button
+              loading={isLoading && idData === e.id}
+              loaderPosition="center"
+              bg={"green"}
+              color="green"
+              radius={"xl"}
+              leftIcon={<IconEyeCheck size={20} />}
+              onClick={() => {
+                setIdData(e.id);
+                setLoading(true);
+                router.push(RouterAdminInvestasi.detail_publish + `${e.id}`);
+              }}
+            >
+              Detail
+            </Button>
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Publish"
-          color={AdminColor.green}
+          color={AdminColor.softBlue}
           component={
             <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari nama proyek"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder={"Cari nama proyek"}
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
           }
         />
         {/* <Group
@@ -164,10 +212,10 @@ function TableView({ listData }: { listData: any }) {
           />
         </Group> */}
 
-        {_.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper bg={AdminColor.softBlue} p={"md"} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -175,35 +223,47 @@ function TableView({ listData }: { listData: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Username
+                      </Center>
                     </th>
                     <th>
-                      <Center w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} w={400}>
+                        Nama Proyek
+                      </Center>
                     </th>
                     <th>
-                      <Center w={200}>Progres</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Progres
+                      </Center>
                     </th>
                     <th>
-                      <Center w={200}>Sisa Saham</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Sisa Saham
+                      </Center>
                     </th>
                     <th>
-                      <Center w={200}>Total Saham</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Total Saham
+                      </Center>
                     </th>
                     <th>
-                      <Center w={200}>Validasi</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Validasi
+                      </Center>
                     </th>
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} w={200}>
+                        Aksi
+                      </Center>
                     </th>
                   </tr>
                 </thead>
-                <tbody>{tableBody}</tbody>
+                <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>

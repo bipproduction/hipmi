@@ -1,6 +1,6 @@
 "use server"
 
-import prisma from "@/app/lib/prisma"
+import prisma from "@/lib/prisma"
 
 export default async function getMaster_NamaBank() {
     const data = await prisma.masterBank.findMany()

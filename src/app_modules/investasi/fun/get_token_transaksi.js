@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import MidTrans from "midtrans-client";
 
 const snap = new MidTrans.Snap({

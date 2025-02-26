@@ -1,7 +1,7 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   AccentColor,
   MainColor,

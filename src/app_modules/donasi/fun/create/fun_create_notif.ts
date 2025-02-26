@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import prisma from "@/lib/prisma";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import _ from "lodash";
 import { revalidatePath } from "next/cache";
 

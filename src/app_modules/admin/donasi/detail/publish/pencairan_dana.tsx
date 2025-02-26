@@ -31,7 +31,7 @@ import { AdminDonasi_funCreatePencairanDana } from "../../fun/create/fun_create_
 import { AdminDonasi_getOneById } from "../../fun/get/get_one_by_id";
 import { AdminDonasi_AkumulasiPencairanById } from "../../fun/update/fun_update_akumulasi_pencairan";
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 
 export default function AdminDonasi_PencairanDana({

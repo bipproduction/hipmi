@@ -1,8 +1,8 @@
 "use client";
 
-import { gs_user_ntf } from "@/app/lib/global_state";
-import { RouterNotifikasi } from "@/app/lib/router_hipmi/router_notifikasi";
-import { RouterUserSearch } from "@/app/lib/router_hipmi/router_user_search";
+import { gs_user_ntf } from "@/lib/global_state";
+import { RouterNotifikasi } from "@/lib/router_hipmi/router_notifikasi";
+import { RouterUserSearch } from "@/lib/router_hipmi/router_user_search";
 import {
   AccentColor,
   MainColor,

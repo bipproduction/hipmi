@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/app/lib";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { prisma } from "@/lib";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { revalidatePath } from "next/cache";
 
 type ICreateDocument = {

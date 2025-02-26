@@ -21,12 +21,14 @@
 
 # debug
 npm-debug.log*
-
-rn-debug.log*
+yarn-debug.log*
 yarn-error.log*
 
 # local env files
 .env*.local
+
+# build env files
+.env*.build
 
 # env here
 .env
@@ -34,11 +36,32 @@ yarn-error.log*
 # vercel
 .vercel
 
-# logs
-/logs
+# logs - mengabaikan isi logs tetapi menyimpan struktur folder
+logs/*
+!logs/.gitkeep
+!logs/backend/
+!logs/frontend/
+logs/backend/*
+!logs/backend/.gitkeep
+logs/frontend/*
+!logs/frontend/.gitkeep
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-certificates
+# certificates
+certificates/
+**/certificates/
+*.cert
+*.key
+*.pem
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+.DS_Store
+Thumbs.db

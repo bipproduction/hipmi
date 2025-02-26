@@ -14,7 +14,7 @@ import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Donasi_funDeleteKabar } from "../../fun/delete/fun_delete.kabar";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 
 export default function LayoutUpdateKabarDonasi({
   children,

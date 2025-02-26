@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function auth_getCodeOtpByNumber({kodeId}: {kodeId: string}) {
   const data = await prisma.kodeOtp.findFirst({

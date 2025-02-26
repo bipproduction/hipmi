@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import {
   AccentColor,
   MainColor,

@@ -1,9 +1,11 @@
 "use client";
-import { API_RouteNotifikasi } from "@/app/lib/api_user_router/route_api_notifikasi";
-import { gs_count_ntf, gs_user_ntf } from "@/app/lib/global_state";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
-import { RouterNotifikasi } from "@/app/lib/router_hipmi/router_notifikasi";
-import { RouterUserSearch } from "@/app/lib/router_hipmi/router_user_search";
+import { API_RouteNotifikasi } from "@/lib/api_user_router/route_api_notifikasi";
+import { gs_count_ntf, gs_user_ntf } from "@/lib/global_state";
+import global_limit from "@/lib/limit";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
+import { RouterNotifikasi } from "@/lib/router_hipmi/router_notifikasi";
+import { RouterUserSearch } from "@/lib/router_hipmi/router_user_search";
+import { clientLogger } from "@/util/clientLogger";
 import { ActionIcon, Indicator, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconBell, IconUserSearch } from "@tabler/icons-react";
@@ -17,8 +19,6 @@ import { gs_notifikasi_kategori_app } from "../notifikasi/lib";
 import BodyHome from "./component/body_home";
 import FooterHome from "./component/footer_home";
 import { apiGetDataHome } from "./fun/get/api_home";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "../components/CustomSkeleton";
 
 export default function HomeViewNew() {
   const [countNtf, setCountNtf] = useAtom(gs_count_ntf);
@@ -28,25 +28,38 @@ export default function HomeViewNew() {
   const router = useRouter();
 
   useShallowEffect(() => {
-    onLoadNotifikasi();
-  }, []);
-
-  useShallowEffect(() => {
     if (countNtf != null) {
       setCountNtf(countNtf + newUserNtf);
       setNewUserNtf(0);
     }
   }, [newUserNtf, countNtf]);
 
-  async function onLoadNotifikasi() {
-    const loadNotif = await fetch(API_RouteNotifikasi.get_count_by_id());
-    const data = await loadNotif.json().then((res) => res.data);
-    setCountNtf(data);
+  useShallowEffect(() => {
+    hanlderLoadData();
+  }, []);
+
+  async function hanlderLoadData() {
+    try {
+      const listLoadData = [
+        global_limit(() => onLoadNotifikasi()),
+        global_limit(() => cekUserLogin()),
+      ];
+
+      await Promise.all(listLoadData);
+    } catch (error) {
+      clientLogger.error("Error handler load data", error);
+    }
   }
 
-  useShallowEffect(() => {
-    cekUserLogin();
-  }, []);
+  async function onLoadNotifikasi() {
+    try {
+      const loadNotif = await fetch(API_RouteNotifikasi.get_count_by_id());
+      const data = await loadNotif.json().then((res) => res.data);
+      setCountNtf(data);
+    } catch (error) {
+      clientLogger.error("Error load notifikasi", error);
+    }
+  }
 
   async function cekUserLogin() {
     try {
@@ -68,22 +81,26 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              dataUser == null ? (
-                <CustomSkeleton width={20} height={20} circle />
+              !dataUser || !countNtf ? (
+                <ActionIcon radius={"xl"} variant={"transparent"}>
+                  <IconUserSearch color={MainColor.white} />
+                </ActionIcon>
+              ) : dataUser?.profile === undefined ? (
+                <ActionIcon
+                  radius={"xl"}
+                  variant={"transparent"}
+                  onClick={() => {
+                    router.push(RouterProfile.create, { scroll: false });
+                  }}
+                >
+                  <IconUserSearch color={MainColor.white} />
+                </ActionIcon>
               ) : (
                 <ActionIcon
                   radius={"xl"}
-                  disabled={countNtf == null}
                   variant={"transparent"}
                   onClick={() => {
-                    if (
-                      dataUser.profile != undefined ||
-                      dataUser?.profile != null
-                    ) {
-                      router.push(RouterUserSearch.main, { scroll: false });
-                    } else {
-                      router.push(RouterProfile.create, { scroll: false });
-                    }
+                    router.push(RouterUserSearch.main, { scroll: false });
                   }}
                 >
                   <IconUserSearch color={MainColor.white} />
@@ -91,27 +108,32 @@ export default function HomeViewNew() {
               )
             }
             customButtonRight={
-              dataUser == null ? (
-                <CustomSkeleton width={20} height={20} circle />
+              !dataUser || !countNtf ? (
+                <ActionIcon radius={"xl"} variant={"transparent"}>
+                  <IconBell color={MainColor.white} />
+                </ActionIcon>
+              ) : dataUser?.profile === undefined ? (
+                <ActionIcon
+                  radius={"xl"}
+                  variant={"transparent"}
+                  onClick={() => {
+                    router.push(RouterProfile.create, { scroll: false });
+                  }}
+                >
+                  <IconBell color={MainColor.white} />
+                </ActionIcon>
               ) : (
                 <ActionIcon
                   variant="transparent"
                   disabled={countNtf == null}
                   onClick={() => {
-                    if (
-                      dataUser.profile != undefined ||
-                      dataUser?.profile != null
-                    ) {
-                      setCategoryPage("Semua");
-                      router.push(
-                        RouterNotifikasi.categoryApp({ name: "semua" }),
-                        {
-                          scroll: false,
-                        }
-                      );
-                    } else {
-                      router.push(RouterProfile.create, { scroll: false });
-                    }
+                    setCategoryPage("Semua");
+                    router.push(
+                      RouterNotifikasi.categoryApp({ name: "semua" }),
+                      {
+                        scroll: false,
+                      }
+                    );
                   }}
                 >
                   {countNtf != null && countNtf > 0 ? (
@@ -134,9 +156,9 @@ export default function HomeViewNew() {
             }
           />
         }
-        footer={<FooterHome />}
+        footer={<FooterHome dataUser={dataUser} />}
       >
-        <BodyHome />
+        <BodyHome dataUser={dataUser} />
       </UIGlobal_LayoutTamplate>
     </>
   );

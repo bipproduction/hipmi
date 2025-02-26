@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { Image, Skeleton, Stack, Text } from "@mantine/core";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 
 GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.mjs";

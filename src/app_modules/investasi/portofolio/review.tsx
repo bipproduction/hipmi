@@ -1,4 +1,4 @@
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { Box } from "@mantine/core";
 import _ from "lodash";

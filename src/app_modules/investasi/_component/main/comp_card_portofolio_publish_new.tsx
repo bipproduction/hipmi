@@ -1,4 +1,4 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { ComponentGlobal_LoadImageCustom } from "@/app_modules/_global/component";
 import { Box, Grid, Group, Stack, Text } from "@mantine/core";
 import { IconChecklist, IconCircleCheck } from "@tabler/icons-react";

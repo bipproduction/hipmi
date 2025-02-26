@@ -2,15 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "binary"
+  provider      = "prisma-client-js"
+  engineType    = "binary"
+  binaryTargets = ["native"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model User {
   id                                   String                                 @id @default(cuid())
@@ -180,6 +180,15 @@ model MasterStatus {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Job       Job[]
+}
+
+model MasterStatusTransaksi {
+  id             String           @id @default(cuid())
+  name           String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  EventTransaksi EventTransaksi[]
 }
 
 // -------------------- INVESTASI --------------------- //
@@ -983,15 +992,16 @@ model EventSponsor {
 }
 
 model EventTransaksi {
-  id              String      @id @default(cuid())
-  isActive        Boolean     @default(true)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id              String   @id @default(cuid())
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   nominal         Int
-  MasterBank      MasterBank? @relation(fields: [masterBankId], references: [id])
-  masterBankId    String?
   status          String
   transferImageId String?
+
+  MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
+  masterBankId String?
 
   AuthorId User?   @relation(fields: [authorId], references: [id])
   authorId String?
@@ -1001,4 +1011,7 @@ model EventTransaksi {
 
   EventSponsor   EventSponsor? @relation(fields: [eventSponsorId], references: [id])
   eventSponsorId String?       @unique
+
+  MasterStatusTransaksi   MasterStatusTransaksi? @relation(fields: [masterStatusTransaksiId], references: [id])
+  masterStatusTransaksiId String?
 }

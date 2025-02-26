@@ -2,7 +2,7 @@ import { Button } from "@mantine/core";
 import { Donasi_funDeleteDonasiById } from "../../fun/delete/fin_delete_donasi_by_id";
 import { useState } from "react";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import {
   ComponentGlobal_NotifikasiPeringatan,

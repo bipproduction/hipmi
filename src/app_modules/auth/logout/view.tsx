@@ -1,6 +1,6 @@
 "use client";
 
-import { Warna } from "@/app/lib/warna";
+import { Warna } from "@/lib/warna";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
@@ -9,7 +9,7 @@ import { IconLogout } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { auth_Logout } from "../fun/fun_logout";
-import { RouterAuth } from "@/app/lib/router_hipmi/router_auth";
+import { RouterAuth } from "@/lib/router_hipmi/router_auth";
 import { MainColor } from "@/app_modules/_global/color";
 
 export default function Component_ButtonLogout({userId}: {userId: string}) {

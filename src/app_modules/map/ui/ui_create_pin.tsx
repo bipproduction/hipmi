@@ -1,6 +1,5 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
 import {
   AccentColor,
   MainColor,
@@ -11,24 +10,16 @@ import {
   ComponentGlobal_ButtonUploadFileImage,
 } from "@/app_modules/_global/component";
 import {
-  funGlobal_DeleteFileById,
-  funGlobal_UploadToStorage,
-} from "@/app_modules/_global/fun";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import {
   AspectRatio,
-  Button,
   Center,
-  FileButton,
   Image,
   Paper,
   Stack,
-  TextInput,
+  TextInput
 } from "@mantine/core";
-import { IconCamera, IconPhoto } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 import _ from "lodash";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import Map, {
   AttributionControl,
@@ -39,13 +30,9 @@ import Map, {
 import { ComponentMap_ButtonSavePin } from "../_component";
 import { defaultLatLong, defaultMapZoom } from "../lib/default_lat_long";
 
-export function UiMap_CreatePin({
-  mapboxToken,
-  portofolioId,
-}: {
-  mapboxToken: string;
-  portofolioId: string;
-}) {
+export function UiMap_CreatePin({ mapboxToken }: { mapboxToken: string }) {
+  const params = useParams<{ id: string }>();
+  const portofolioId = params.id;
   const [[lat, long], setLatLong] = useState([0, 0]);
   const [isPin, setIsPin] = useState(false);
   const [namePin, setNamePin] = useState("");

@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.63](https://github.com/bipproduction/hipmi/compare/v1.2.62...v1.2.63) (2025-02-26)
+
+## [1.2.62](https://github.com/bipproduction/hipmi/compare/v1.2.61...v1.2.62) (2025-02-25)
+
+## [1.2.61](https://github.com/bipproduction/hipmi/compare/v1.2.60...v1.2.61) (2025-02-25)
+
+## [1.2.60](https://github.com/bipproduction/hipmi/compare/v1.2.59...v1.2.60) (2025-02-25)
+
+## [1.2.59](https://github.com/bipproduction/hipmi/compare/v1.2.58...v1.2.59) (2025-02-25)
+
+## [1.2.58](https://github.com/bipproduction/hipmi/compare/v1.2.57...v1.2.58) (2025-02-25)
+
+## [1.2.57](https://github.com/bipproduction/hipmi/compare/v1.2.56...v1.2.57) (2025-02-20)
+
+## [1.2.56](https://github.com/bipproduction/hipmi/compare/v1.2.55...v1.2.56) (2025-02-19)
+
+## [1.2.55](https://github.com/bipproduction/hipmi/compare/v1.2.54...v1.2.55) (2025-02-12)
+
+## [1.2.54](https://github.com/bipproduction/hipmi/compare/v1.2.53...v1.2.54) (2025-02-12)
+
+## [1.2.53](https://github.com/bipproduction/hipmi/compare/v1.2.52...v1.2.53) (2025-02-11)
+
+## [1.2.52](https://github.com/bipproduction/hipmi/compare/v1.2.51...v1.2.52) (2025-02-10)
+
+## [1.2.51](https://github.com/bipproduction/hipmi/compare/v1.2.50...v1.2.51) (2025-02-10)
+
+## [1.2.50](https://github.com/bipproduction/hipmi/compare/v1.2.49...v1.2.50) (2025-02-10)
+
+## [1.2.49](https://github.com/bipproduction/hipmi/compare/v1.2.48...v1.2.49) (2025-02-07)
+
+## [1.2.48](https://github.com/bipproduction/hipmi/compare/v1.2.47...v1.2.48) (2025-02-07)
+
+## [1.2.47](https://github.com/bipproduction/hipmi/compare/v1.2.46...v1.2.47) (2025-02-03)
+
+## [1.2.46](https://github.com/bipproduction/hipmi/compare/v1.2.45...v1.2.46) (2025-02-03)
+
+## [1.2.45](https://github.com/bipproduction/hipmi/compare/v1.2.44...v1.2.45) (2025-02-03)
+
+## [1.2.44](https://github.com/bipproduction/hipmi/compare/v1.2.43...v1.2.44) (2025-02-03)
+
+## [1.2.43](https://github.com/bipproduction/hipmi/compare/v1.2.42...v1.2.43) (2025-02-03)
+
+## [1.2.42](https://github.com/bipproduction/hipmi/compare/v1.2.41...v1.2.42) (2025-01-30)
+
 ## [1.2.41](https://github.com/bipproduction/hipmi/compare/v1.2.40...v1.2.41) (2025-01-21)
 
 ## [1.2.40](https://github.com/bipproduction/hipmi/compare/v1.2.39...v1.2.40) (2025-01-16)

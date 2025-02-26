@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_AvatarAndUsername } from "@/app_modules/_global/component";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
@@ -35,10 +35,10 @@ export function ComponentMap_DetailData({
   const [openModal, setOpenModal] = useState(false);
 
   useShallowEffect(() => {
-    onLoadData(setData, setDataUser);
-  }, [setData, setDataUser]);
+    onLoadData();
+  }, []);
 
-  async function onLoadData(setData: any, setDataUser: any) {
+  async function onLoadData() {
     const res: any = await map_funGetOneById({ mapId: mapId });
     setData(res);
     setDataUser(res.Author);

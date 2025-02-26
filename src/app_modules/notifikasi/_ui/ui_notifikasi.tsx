@@ -1,6 +1,6 @@
 "use client";
 
-import { API_RouteNotifikasi } from "@/app/lib/api_user_router/route_api_notifikasi";
+import { API_RouteNotifikasi } from "@/lib/api_user_router/route_api_notifikasi";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { clientLogger } from "@/util/clientLogger";

@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { ComponentGlobal_LoaderAvatar } from "./comp_load_avatar";
 import ComponentGlobal_Loader from "./loader";
 import { funGlobal_CheckProfile } from "../fun/get";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
 import { MainColor } from "../color";
 

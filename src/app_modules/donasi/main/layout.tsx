@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterCrowd } from "@/app/lib/router_hipmi/router_crowd";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterCrowd } from "@/lib/router_hipmi/router_crowd";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";

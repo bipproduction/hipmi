@@ -1,12 +1,9 @@
-import {  Job_DetailArsip } from "@/app_modules/job";
-import { job_getOneById } from "@/app_modules/job/fun/get/get_one_by_id";
+import { Job_DetailArsip } from "@/app_modules/job";
 
-export default async function Page({params}:{params: {id: string}}) {
-  let jobId = params.id
-  const dataJob = await job_getOneById(jobId)
+export default async function Page() {
   return (
     <>
-      <Job_DetailArsip dataJob={dataJob as any} />
+      <Job_DetailArsip />
     </>
   );
 }

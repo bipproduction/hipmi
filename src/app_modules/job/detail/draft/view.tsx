@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { Button, Group, Stack } from "@mantine/core";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
@@ -9,7 +9,7 @@ import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
 import mqtt_client from "@/util/mqtt_client";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { Job_funDeleteById } from "../../fun/delete/fun_delete_by_id";
@@ -18,35 +18,43 @@ import { MODEL_JOB } from "../../model/interface";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { job_getOneById } from "../../fun/get/get_one_by_id";
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
 import { WibuRealtime } from "wibu-pkg";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetJobById } from "../../component/api_fetch_job";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Job_DetailDraft({
-  dataJob,
-  jobId,
-}: {
-  dataJob: MODEL_JOB;
-  jobId: string;
-}) {
-  const [data, setData] = useState<MODEL_JOB | null>(dataJob);
+export default function Job_DetailDraft() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_JOB | null>(null);
 
   useShallowEffect(() => {
-    onLoadData({
-      loadData(val) {
-        setData(val);
-      },
-    });
-  }, [setData]);
+    handleLoadData();
+  }, []);
 
-  async function onLoadData({ loadData }: { loadData: (val: any) => void }) {
-    const dataJob = await job_getOneById(jobId);
-    loadData(dataJob as any);
-  }
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetJobById({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data job", error);
+      setData(null);
+    }
+  };
 
   return (
     <>
       <Stack>
-        {data?.catatan ? (
+        {!data ? (
+          <CustomSkeleton height={50} />
+        ) : data?.catatan ? (
           <ComponentGlobal_BoxInformation
             informasi={data?.catatan}
             isReport={true}
@@ -55,7 +63,18 @@ export default function Job_DetailDraft({
           ""
         )}
         <ComponentJob_DetailData data={data as any} />
-        <ButtonAction jobId={data?.id as any} imageId={data?.imageId as any} />
+
+        {!data ? (
+          <Group grow>
+            <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
+            <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
+          </Group>
+        ) : (
+          <ButtonAction
+            jobId={param.id as any}
+            imageId={data?.imageId as any}
+          />
+        )}
       </Stack>
     </>
   );

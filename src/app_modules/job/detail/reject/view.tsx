@@ -1,34 +1,73 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { Button, Group, Stack } from "@mantine/core";
-
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
-import { useDisclosure } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { Job_funDeleteById } from "../../fun/delete/fun_delete_by_id";
 import { Job_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_status_id";
 import { MODEL_JOB } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetJobById } from "../../component/api_fetch_job";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Job_DetailReject({ dataJob }: { dataJob: MODEL_JOB }) {
-  const [data, setData] = useState(dataJob);
+export default function Job_DetailReject() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_JOB | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetJobById({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data job", error);
+      setData(null);
+    }
+  };
 
   return (
     <>
       <Stack>
-        <ComponentGlobal_BoxInformation
-          informasi={data.catatan}
-          isReport={true}
-        />
-        <ComponentJob_DetailData data={data} />
-        <ButtonAction jobId={data.id} imageId={data.imageId} />
+        {!data ? (
+          <CustomSkeleton height={50} />
+        ) : (
+          <ComponentGlobal_BoxInformation
+            informasi={data.catatan}
+            isReport={true}
+          />
+        )}
+        <ComponentJob_DetailData data={data as any} />
+
+        {!data ? (
+          <Group grow>
+            <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
+            <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
+          </Group>
+        ) : (
+          <ButtonAction
+            jobId={param.id as any}
+            imageId={data?.imageId as any}
+          />
+        )}
       </Stack>
     </>
   );

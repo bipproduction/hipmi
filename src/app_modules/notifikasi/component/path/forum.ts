@@ -1,4 +1,4 @@
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
 

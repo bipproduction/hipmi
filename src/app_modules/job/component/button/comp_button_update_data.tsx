@@ -1,4 +1,4 @@
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import {
   funGlobal_DeleteFileById,

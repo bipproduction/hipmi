@@ -12,7 +12,7 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { useRouter } from "next/navigation";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 
 export default function DetailDokumenInvestasi({
   dataInvestasi,

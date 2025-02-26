@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { ICategoryapp } from "@/app_modules/notifikasi/model/interface";
 import backendLogger from "@/util/backendLogger";

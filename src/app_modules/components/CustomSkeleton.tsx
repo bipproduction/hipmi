@@ -1,5 +1,4 @@
 import { Skeleton, SkeletonProps, createStyles } from '@mantine/core';
-import { AccentColor } from '../_global/color';
 
 interface CustomSkeletonProps extends SkeletonProps {
     isLoading?: boolean; 

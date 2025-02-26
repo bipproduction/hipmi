@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import prisma from "@/lib/prisma";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 import { revalidatePath } from "next/cache";
 import { MODEL_MAP } from "../../lib/interface";
 

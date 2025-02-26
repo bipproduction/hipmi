@@ -1,4 +1,4 @@
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { ComponentGlobal_CardStyles, ComponentGlobal_LoadImageCustom } from "@/app_modules/_global/component";
 import { Grid, Stack, Text } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";

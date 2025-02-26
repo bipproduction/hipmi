@@ -1,4 +1,4 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ActionIcon, Flex, Loader, Paper, Text } from "@mantine/core";
 import { IconBookDownload } from "@tabler/icons-react";

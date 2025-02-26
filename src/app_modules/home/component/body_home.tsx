@@ -1,12 +1,12 @@
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Box,
-  Flex,
   Grid,
   Group,
   Image,
@@ -22,40 +22,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiGetDataHome } from "../fun/get/api_home";
 import { listMenuHomeBody, menuHomeJob } from "./list_menu_home";
-import { clientLogger } from "@/util/clientLogger";
 
-export default function BodyHome() {
+export default function BodyHome({ dataUser }: { dataUser: any | null }) {
   const router = useRouter();
-  const [dataUser, setDataUser] = useState<any | null>(null);
   const [dataJob, setDataJob] = useState<any[] | null>(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useShallowEffect(() => {
-    cekUserLogin();
     getHomeJob();
   }, []);
-
-  async function cekUserLogin() {
-    try {
-      const response = await apiGetDataHome({
-        path: "?cat=cek_profile",
-      });
-
-      if (response) {
-        setDataUser(response.data);
-      }
-    } catch (error) {
-      clientLogger.error("Error get data profile", error);
-    } 
-  }
-
-
 
   async function getHomeJob() {
     try {
       setLoadingJob(true);
-
       const response = await apiGetDataHome({
         path: "?cat=job",
       });
@@ -101,21 +81,14 @@ export default function BodyHome() {
                 border: `2px solid ${AccentColor.blue}`,
               }}
               onClick={() => {
-                if (dataUser == null) {
+                if (!dataUser) {
                   return null;
-                } else if (
-                  Object.keys(dataUser).length == 0 ||
-                  dataJob?.length == null
-                ) {
+                } else if (dataUser.profile === undefined) {
                   router.push(RouterProfile.create, { scroll: false });
+                } else if (e.link == "") {
+                  ComponentGlobal_NotifikasiPeringatan("Cooming Soon");
                 } else {
-                  if (e.link == "") {
-                    return ComponentGlobal_NotifikasiPeringatan(
-                      "Cooming Soon !!"
-                    );
-                  } else {
-                    router.push(e.link, { scroll: false });
-                  }
+                  router.push(e.link, { scroll: false });
                 }
               }}
             >
@@ -147,21 +120,14 @@ export default function BodyHome() {
         >
           <Stack
             onClick={() => {
-              if (dataUser == null) {
+              if (!dataUser) {
                 return null;
-              } else if (
-                Object.keys(dataUser).length == 0 ||
-                dataJob?.length == null
-              ) {
+              } else if (dataUser.profile === undefined) {
                 router.push(RouterProfile.create, { scroll: false });
+              } else if (menuHomeJob.link == "") {
+                ComponentGlobal_NotifikasiPeringatan("Cooming Soon ");
               } else {
-                if (menuHomeJob.link == "") {
-                  return ComponentGlobal_NotifikasiPeringatan(
-                    "Cooming Soon !!"
-                  );
-                } else {
-                  return router.push(menuHomeJob.link, { scroll: false });
-                }
+                router.push(menuHomeJob.link, { scroll: false });
               }
             }}
           >

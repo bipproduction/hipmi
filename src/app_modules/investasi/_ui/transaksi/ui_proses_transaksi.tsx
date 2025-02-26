@@ -9,7 +9,7 @@ import { gs_donasi_hot_menu } from "@/app_modules/donasi/global_state";
 import { useAtom } from "jotai";
 import { gs_investas_menu } from "../../g_state";
 import { useRouter } from "next/navigation";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { useState } from "react";
 
 export function Investasi_UiProsesTransaksi({ nomorAdmin }: { nomorAdmin : any}) {

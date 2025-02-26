@@ -1,5 +1,6 @@
 "use client";
 
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { Group, Button, Loader } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -17,7 +18,7 @@ export default function AdminGlobal_ComponentBackButton({
     <>
       <Group>
         <Button
-          c={"gray"}
+          c={AccentColor.white}
           leftIcon={
             isLoading ? (
               <Loader size={"xs"} color={"gray"} />
@@ -25,7 +26,7 @@ export default function AdminGlobal_ComponentBackButton({
               <IconChevronLeft />
             )
           }
-          variant="white"
+          style={{ backgroundColor: AdminColor.softBlue}}
           onClick={() => {
             setLoading(true);
             // setTimeout(() => , 3000);

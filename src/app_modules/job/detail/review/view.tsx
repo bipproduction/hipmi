@@ -1,25 +1,58 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
 import mqtt_client from "@/util/mqtt_client";
-import { Button, Stack } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { Button, Center, Stack } from "@mantine/core";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { Job_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_status_id";
 import { MODEL_JOB } from "../../model/interface";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetJobById } from "../../component/api_fetch_job";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Job_DetailReview({ dataJob }: { dataJob: MODEL_JOB }) {
+export default function Job_DetailReview() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_JOB | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetJobById({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data job", error);
+      setData(null);
+    }
+  };
+
   return (
     <>
       <Stack>
-        <ComponentJob_DetailData data={dataJob} />
-        <ButtonAction jobId={dataJob.id} />
+        <ComponentJob_DetailData data={data as any} />
+        {!data ? (
+          <Center>
+            <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
+          </Center>
+        ) : (
+          <ButtonAction jobId={param.id} />
+        )}
       </Stack>
     </>
   );
@@ -92,16 +125,19 @@ function ButtonAction({ jobId }: { jobId: string }) {
         }
       />
 
-      <Button
-        radius={"xl"}
-        color="orange"
-        my={"xl"}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Batalkan Review
-      </Button>
+      <Center>
+        <Button
+          w="50%"
+          radius={"xl"}
+          color="orange"
+          my={"xl"}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Batalkan Review
+        </Button>
+      </Center>
     </>
   );
 }

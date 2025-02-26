@@ -1,4 +1,4 @@
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -9,12 +9,26 @@ import { MODEL_PORTOFOLIO_OLD } from "@/app_modules/model_global/portofolio";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import funCreatePortofolio from "../../fun/fun_create_portofolio";
+import { apiCreatePortofolio } from "../api_fetch_portofolio";
+
+interface ICreatePortofolio {
+  namaBisnis: string;
+  masterBidangBisnisId: string;
+  alamatKantor: string;
+  tlpn: string;
+  deskripsi: string;
+  fileId: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+}
 
 export function Portofolio_ComponentButtonSelanjutnya({
   profileId,
@@ -30,24 +44,51 @@ export function Portofolio_ComponentButtonSelanjutnya({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit() {
-    const porto = {
+  const validateData = () => {
+    if (_.includes(_.values(dataPortofolio), "")) {
+      ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
+      return false;
+    }
+
+    if (dataPortofolio.tlpn.length < 10) {
+      ComponentGlobal_NotifikasiPeringatan("Nomor telepon minimal 10 angka");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleCreatePortofolio = async (fileId: string) => {
+    const newData: ICreatePortofolio = {
       namaBisnis: dataPortofolio.namaBisnis,
       masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
       alamatKantor: dataPortofolio.alamatKantor,
       tlpn: dataPortofolio.tlpn,
       deskripsi: dataPortofolio.deskripsi,
+      facebook: dataMedsos.facebook,
+      twitter: dataMedsos.twitter,
+      instagram: dataMedsos.instagram,
+      tiktok: dataMedsos.tiktok,
+      youtube: dataMedsos.youtube,
+      fileId: fileId,
     };
 
-    if (_.values(porto).includes("")) {
-      ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-      return;
-    }
+    const response = await apiCreatePortofolio({
+      profileId: profileId,
+      data: newData,
+    });
 
-    if (dataPortofolio.tlpn.length < 10) {
-      ComponentGlobal_NotifikasiPeringatan("Nomor telepon minimal 10 angka");
-      return;
+    if (response.success) {
+      ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
+      router.replace(RouterMap.create + response.data.id, { scroll: false });
+    } else {
+      setLoading(false);
+      throw new Error("Failed to create portfolio");
     }
+  };
+
+  const onSubmit = async () => {
+    if (!validateData()) return;
 
     try {
       setLoading(true);
@@ -58,35 +99,22 @@ export function Portofolio_ComponentButtonSelanjutnya({
       });
 
       if (!uploadFile.success) {
-        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
         return;
       }
 
-      const fileId = uploadFile.data.id;
-
-      const res = await funCreatePortofolio({
-        profileId: profileId,
-        data: dataPortofolio as any,
-        medsos: dataMedsos,
-        fileId: fileId,
-      });
-      if (res.status === 201) {
-        ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
-        router.replace(RouterMap.create + res.id, { scroll: false });
-      } else {
-        setLoading(false);
-        ComponentGlobal_NotifikasiGagal("Gagal disimpan");
-      }
+      await handleCreatePortofolio(uploadFile.data.id);
     } catch (error) {
       setLoading(false);
+      ComponentGlobal_NotifikasiGagal("Gagal disimpan");
       clientLogger.error("Error create portofolio", error);
     }
-  }
+  };
+
   return (
     <>
       <Button
-        disabled={_.values(dataPortofolio).includes("") || file === null}
+        disabled={_.values(dataPortofolio).includes("") || !file}
         mt={"md"}
         radius={50}
         loading={loading}

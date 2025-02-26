@@ -1,6 +1,6 @@
 "use client";
-import { DIRECTORY_ID } from "@/app/lib";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { DIRECTORY_ID } from "@/lib";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,

@@ -1,6 +1,6 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,
@@ -35,14 +35,16 @@ import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Portofolio_ComponentButtonSelanjutnya } from "../component";
+import { useParams } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetMasterBidangBisnis } from "@/app_modules/_global/lib/api_fetch_master";
+import { MODEL_PORTOFOLIO_BIDANG_BISNIS } from "../model/interface";
+import { clientLogger } from "@/util/clientLogger";
 
-export default function CreatePortofolio({
-  bidangBisnis,
-  profileId,
-}: {
-  bidangBisnis: BIDANG_BISNIS_OLD;
-  profileId: any;
-}) {
+export default function CreatePortofolio() {
+  const params = useParams<{ id: string }>();
+  const profileId = params.id;
+
   const [dataPortofolio, setDataPortofolio] = useState({
     namaBisnis: "",
     masterBidangBisnisId: "",
@@ -62,6 +64,25 @@ export default function CreatePortofolio({
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>(null);
   const [imageId, setImageId] = useState("");
+  const [listBidangBisnis, setListBidangBisnis] = useState<
+    MODEL_PORTOFOLIO_BIDANG_BISNIS[] | null
+  >(null);
+
+  useShallowEffect(() => {
+    onLoadMaster();
+  }, []);
+
+  async function onLoadMaster() {
+    try {
+      const respone = await apiGetMasterBidangBisnis();
+
+      if (respone.success) {
+        setListBidangBisnis(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error on load master bidang bisnis", error);
+    }
+  }
 
   return (
     <>
@@ -91,6 +112,7 @@ export default function CreatePortofolio({
               });
             }}
           />
+
           <Select
             styles={{
               label: {
@@ -108,8 +130,10 @@ export default function CreatePortofolio({
             }}
             withAsterisk
             label="Bidang Bisnis"
-            placeholder="Pilih salah satu bidang bisnis"
-            data={_.map(bidangBisnis as any).map((e: any) => ({
+            placeholder={
+              listBidangBisnis ? "Pilih bidang bisnis" : "Loading..."
+            }
+            data={_.map(listBidangBisnis as any).map((e: any) => ({
               value: e.id,
               label: e.name,
             }))}
@@ -160,12 +184,13 @@ export default function CreatePortofolio({
                   backgroundColor: MainColor.login,
                 },
               }}
-              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
+              inputStyle={{ width: "100%", backgroundColor: MainColor.white }}
               defaultCountry="id"
               onChange={(val) => {
                 const valPhone = val.substring(1);
                 setDataPortofolio({
                   ...dataPortofolio,
+                  
                   tlpn: valPhone,
                 });
               }}
@@ -420,7 +445,7 @@ export default function CreatePortofolio({
           dataPortofolio={dataPortofolio as any}
           dataMedsos={dataMedsos}
           profileId={profileId}
-          // 
+          //
           file={file as File}
         />
       </Stack>

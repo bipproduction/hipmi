@@ -1,7 +1,7 @@
 "use client";
 
-import { APIs, pathAssetImage } from "@/app/lib";
-import { RouterImagePreview } from "@/app/lib/router_hipmi/router_image_preview";
+import { APIs, pathAssetImage } from "@/lib";
+import { RouterImagePreview } from "@/lib/router_hipmi/router_image_preview";
 import { Box, Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";

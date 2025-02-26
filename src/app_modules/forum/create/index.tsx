@@ -1,12 +1,6 @@
 "use client";
 
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
-import {
-  Button,
-  Group,
-  Paper,
-  Stack
-} from "@mantine/core";
+import { Button, Group, Paper, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import "react-quill/dist/quill.bubble.css";
@@ -26,11 +20,12 @@ const ReactQuill = dynamic(
 );
 
 import {
-  AccentColor,
-  MainColor,
+  MainColor
 } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import mqtt_client from "@/util/mqtt_client";
 
+const maxLength = 500;
 export default function Forum_Create() {
   const [value, setValue] = useState("");
   const [totalLength, setTotalLength] = useState(0);
@@ -40,12 +35,7 @@ export default function Forum_Create() {
     if (window && window.document) setReload(true);
   }, []);
 
-  if (!reload)
-    return (
-      <>
-        <ComponentGlobal_V2_LoadingPage />
-      </>
-    );
+  if (!reload) return <CustomSkeleton height={200} />;
 
   return (
     <>
@@ -56,13 +46,19 @@ export default function Forum_Create() {
             placeholder="Apa yang sedang ingin dibahas ?"
             style={{ height: 150 }}
             onChange={(val) => {
+              const input = val;
+              const text = input.replace(/<[^>]+>/g, "").trim(); // Remove HTML tags and trim whitespace
+              if (text.length === 0) {
+                setValue(""); // Set value to an empty string
+                return;
+              }
               setValue(val);
             }}
           />
         </Paper>
         <Group position="right">
           <ComponentGlobal_InputCountDown
-            maxInput={500}
+            maxInput={maxLength}
             lengthInput={value.length}
           />
         </Group>
@@ -79,7 +75,7 @@ function ButtonAction({ value }: { value: string }) {
   const [loading, setLoading] = useState(false);
 
   async function onCreate() {
-    if (value.length > 500) {
+    if (value.length >= maxLength) {
       return null;
     }
 
@@ -87,7 +83,7 @@ function ButtonAction({ value }: { value: string }) {
     if (create.status === 201) {
       setLoading(true);
       ComponentGlobal_NotifikasiBerhasil(create.message);
-      setTimeout(() => router.back(), 1000);
+      setTimeout(() => router.back(), 200);
 
       mqtt_client.publish(
         "Forum_create_new",
@@ -102,16 +98,12 @@ function ButtonAction({ value }: { value: string }) {
       <Button
         style={{
           transition: "0.5s",
-          border:
-            value === "<p><br></p>" || value === "" || value.length > 500
-              ? ""
-              : `1px solid ${AccentColor.yellow}`,
         }}
         bg={MainColor.yellow}
+        color={"yellow"}
+        c="black"
         disabled={
-          value === "<p><br></p>" || value === "" || value.length > 500
-            ? true
-            : false
+          value === "<p><br></p>" || value === "" || value.length >= maxLength
         }
         radius={"xl"}
         loading={loading ? true : false}

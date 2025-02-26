@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { apiFetchLogin } from "../_lib/api_fetch_auth";
 
 export default function Login({ version }: { version: string }) {
   const router = useRouter();
@@ -30,33 +31,20 @@ export default function Login({ version }: { version: string }) {
 
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ nomor: nomor }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const respone = await apiFetchLogin({ nomor: nomor });
 
-      const result = await res.json();
-
-      if (res.status == 500) {
-        ComponentGlobal_NotifikasiGagal("Server Error");
-        return;
-      }
-
-      if (res.status === 200) {
-        localStorage.setItem("hipmi_auth_code_id", result.kodeId);
-        ComponentGlobal_NotifikasiBerhasil(result.message, 2000);
+      if (respone) {
+        localStorage.setItem("hipmi_auth_code_id", respone.kodeId);
+        ComponentGlobal_NotifikasiBerhasil(respone.message, 2000);
         router.push("/validasi", { scroll: false });
       } else {
-        ComponentGlobal_NotifikasiPeringatan(result.message);
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(respone.message);
       }
     } catch (error) {
+      setLoading(false);
       clientLogger.error("Error login:", error);
       ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
-    } finally {
-      setLoading(false);
     }
   }
 

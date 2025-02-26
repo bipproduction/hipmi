@@ -1,16 +1,13 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { Avatar, Badge, Grid, Group, Loader, Stack, Text } from "@mantine/core";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { Badge, Grid, Group, Stack, Text } from "@mantine/core";
 import { IconCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_ForumkuMoreButton from "./forumku_more_button";
-import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 
 export default function ComponentForum_ForumkuHeaderCard({
   data,
@@ -52,7 +49,7 @@ export default function ComponentForum_ForumkuHeaderCard({
                 <Grid.Col span={"auto"}>
                   <Text lineClamp={1} fz={"sm"} fw={"bold"} c={"white"}>
                     {data.Author.username
-                      ? data.Author.username
+                      ? data.Author.Profile.name
                       : "Nama author  "}
                   </Text>
                 </Grid.Col>
@@ -68,9 +65,7 @@ export default function ComponentForum_ForumkuHeaderCard({
                     : "red"
                 }
               >
-                <Text c={"white"} fz={10}>
-                  {data?.ForumMaster_StatusPosting.status}
-                </Text>
+                <Text fz={10}>{data?.ForumMaster_StatusPosting.status}</Text>
               </Badge>
             </Stack>
           </Grid.Col>
