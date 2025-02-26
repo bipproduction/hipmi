@@ -1,6 +1,4 @@
-export {
-    apiGetPdfToImage,
-}
+export { apiGetPdfToImage };
 
 export interface PageData {
   imageUrl: string;
@@ -11,7 +9,7 @@ interface PdfResponse {
   pages: PageData[];
   totalPages: number;
 }
-const apiGetPdfToImage = async ({id}: {id: string}) => {
+const apiGetPdfToImage = async ({ id }: { id: string }) => {
   try {
     // Fetch token from cookie
     // const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -22,7 +20,6 @@ const apiGetPdfToImage = async ({id}: {id: string}) => {
 
     const token =
       "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7ImlkIjoiY20wdXIxeXh3MDAwMDU2bnNqbHI2MTg3cCIsIm5hbWUiOiJiYWdhcyIsImVtYWlsIjoiYmFnYXNAZ21haWwuY29tIn0sImlhdCI6MTcyNTg3MTAzNiwiZXhwIjo0ODgxNjMxMDM2fQ.wFQLcrJj66wFeqIMYk2esMx3ULaHK6RFxkiToaLCuko";
-     
 
     // Anda bisa menggunakan prospektusId di URL jika diperlukan
     const pdfUrl = `https://wibu-storage.wibudev.com/api/pdf-to-image?url=https://wibu-storage.wibudev.com/api/files/${id}`;
