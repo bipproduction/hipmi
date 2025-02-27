@@ -51,7 +51,6 @@ export default function MainCrowd() {
               borderRadius: "10px",
               backgroundColor: MainColor.darkblue,
               color: MainColor.white,
-              // color: "gray",
             }}
             onClick={() => {
               router.push(RouterCrowd.investasi, { scroll: false });
