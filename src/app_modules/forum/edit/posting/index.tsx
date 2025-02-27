@@ -33,7 +33,7 @@ export default function Forum_EditPosting() {
   const [reload, setReload] = useState(false);
   useShallowEffect(() => {
     if (window && window.document) setReload(true);
-  }, []);
+  }, []); 
 
   useShallowEffect(() => {
     handleLoadData();
