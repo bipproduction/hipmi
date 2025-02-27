@@ -97,7 +97,7 @@ export function Investasi_ComponentCardRekapDocument({
             span={"auto"}
             onClick={() => {
               router.push(
-                NEW_RouterInvestasi.file_prospektus({ id: data.fileId }),
+                NEW_RouterInvestasi.file_dokumen({ id: data.fileId }),
                 { scroll: false }
               );
               setVisible(true);

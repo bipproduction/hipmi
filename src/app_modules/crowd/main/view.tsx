@@ -55,12 +55,8 @@ export default function MainCrowd() {
             }}
             onClick={() => {
               setLoadingInv(true);
-              router.push(RouterCrowd.investasi);
+              router.push(RouterCrowd.investasi, { scroll: false });
               setChangeColor(0);
-              // ComponentGlobal_NotifikasiPeringatan(
-              //   "Sedang Perbaikan",
-              //   3000
-              // );
             }}
           >
             <Grid>
@@ -99,7 +95,7 @@ export default function MainCrowd() {
             }}
             onClick={() => {
               setLoadingDon(true);
-              router.push(RouterCrowd.donasi);
+              router.push(RouterCrowd.donasi, { scroll: false });
               setDonasiHotMenu(0);
               // ComponentGlobal_NotifikasiPeringatan(
               //   "Sementara ini sedang maintenance",
