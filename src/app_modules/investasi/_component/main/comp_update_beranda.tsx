@@ -1,8 +1,6 @@
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import { Affix, Button, Center, rem } from "@mantine/core";
 import { useState } from "react";
-import { investasi_funGetAllPublish } from "../../fun/get_all_investasi";
-import { data } from "autoprefixer";
 import { apiGetAllInvestasi } from "../../_lib/api_interface";
 
 export function Investasi_ComponentButtonUpdateBeranda({
