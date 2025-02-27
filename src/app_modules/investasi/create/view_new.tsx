@@ -6,17 +6,11 @@ import {
   ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import {
   AspectRatio,
   Box,
-  Button,
   Center,
-  FileButton,
   Grid,
-  Group,
   Image,
   Loader,
   Select,
@@ -26,7 +20,6 @@ import {
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import {
-  IconCamera,
   IconCircleCheck,
   IconFileTypePdf,
   IconPhoto,
@@ -64,6 +57,7 @@ export default function InvestasiCreateNew() {
 
   const [isLoadingImg, setIsLoadingImg] = useState(false);
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
+  const [isMinimalTarget, setMinimalTarget] = useState(false);
 
   async function onTotalLembar({
     target,
@@ -162,48 +156,6 @@ export default function InvestasiCreateNew() {
               onSetImage={setImg}
             />
           </Center>
-          {/* <Group position="center">
-            <FileButton
-              onChange={async (files: any) => {
-                try {
-                  setIsLoadingImg(true);
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-
-                  if (files.size > MAX_SIZE) {
-                    ComponentGlobal_NotifikasiPeringatan(
-                      PemberitahuanMaksimalFile
-                    );
-                    setImg(null);
-
-                    return;
-                  }
-
-                  setImg(buffer);
-                  setFileImage(files);
-                } catch (error) {
-                  console.log(error);
-                } finally {
-                  setIsLoadingImg(false);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  leftIcon={<IconCamera color="black" />}
-                  radius={50}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload Gambar
-                </Button>
-              )}
-            </FileButton>
-          </Group> */}
         </Stack>
 
         {/* Upload File */}
@@ -244,48 +196,6 @@ export default function InvestasiCreateNew() {
               icon={<IconFileTypePdf size={20} />}
             />
           </Center>
-          {/* <Group position="center">
-            <FileButton
-              accept={"application/pdf"}
-              onChange={async (files: any) => {
-                try {
-                  setIsLoadingPdf(true);
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-
-                  if (files.size > MAX_SIZE) {
-                    ComponentGlobal_NotifikasiPeringatan(
-                      PemberitahuanMaksimalFile
-                    );
-                    setFilePdf(null);
-
-                    return;
-                  }
-
-                  setFPdf(buffer);
-                  setFilePdf(files);
-                } catch (error) {
-                  console.log(error);
-                } finally {
-                  setIsLoadingPdf(false);
-                }
-              }}
-            >
-              {(props) => (
-                <Button
-                  leftIcon={<IconFileTypePdf />}
-                  {...props}
-                  radius={"xl"}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload File
-                </Button>
-              )}
-            </FileButton>
-          </Group> */}
         </Stack>
 
         <Stack>
@@ -313,48 +223,62 @@ export default function InvestasiCreateNew() {
             }}
           />
 
-          <TextInput
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-            }}
-            icon={<Text fw={"bold"}>Rp.</Text>}
-            min={0}
-            withAsterisk
-            label="Dana Dibutuhkan"
-            placeholder="0"
-            value={target}
-            onChange={(val) => {
-              // console.log(typeof val)
-              const match = val.currentTarget.value
-                .replace(/\./g, "")
-                .match(/^[0-9]+$/);
+          <Stack>
+            <TextInput
+              styles={{
+                label: {
+                  color: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
+                },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+              }}
+              icon={<Text fw={"bold"}>Rp.</Text>}
+              min={0}
+              withAsterisk
+              label="Dana Dibutuhkan"
+              placeholder="0"
+              value={target}
+              error={isMinimalTarget ? "Minimal target 10.000.000" : ""}
+              onChange={(val) => {
+                // console.log(typeof val)
+                const match = val.currentTarget.value
+                  .replace(/\./g, "")
+                  .match(/^[0-9]+$/);
 
-              if (val.currentTarget.value === "") return setTarget(0 + "");
-              if (!match?.[0]) return null;
+                if (val.currentTarget.value === "") return setTarget(0 + "");
+                if (!match?.[0]) return null;
 
-              const nilai = val.currentTarget.value.replace(/\./g, "");
-              const targetNilai = Intl.NumberFormat("id-ID").format(+nilai);
+                const nilai = val.currentTarget.value.replace(/\./g, "");
+                const targetNilai = Intl.NumberFormat("id-ID").format(+nilai);
 
-              onTotalLembar({
-                target: +nilai,
-                harga: +value.hargaLembar,
-              });
+                // console.log("type nilai", typeof nilai);
+                // console.log("nilai", nilai);
+                // console.log("targetNilai", targetNilai);
+                // console.log("type targetNilai", typeof targetNilai);
 
-              setTarget(targetNilai);
-              setValue({
-                ...value,
-                targetDana: +nilai,
-              });
-            }}
-          />
+                if (+nilai < 10000000) {
+                  setMinimalTarget(true);
+                } else {
+                  setMinimalTarget(false);
+                }
+
+                onTotalLembar({
+                  target: +nilai,
+                  harga: +value.hargaLembar,
+                });
+
+                setTarget(targetNilai);
+                setValue({
+                  ...value,
+                  targetDana: +nilai,
+                });
+              }}
+            />
+          </Stack>
 
           <TextInput
             styles={{
@@ -551,6 +475,7 @@ export default function InvestasiCreateNew() {
           totalLembar={totalLembar}
           fileImage={fileImage as any}
           filePdf={filePdf as any}
+          isMinimalTarget={isMinimalTarget}
         />
       </Stack>
     </>

@@ -9,6 +9,5 @@ export async function Profile_getOneById(profileId: string) {
     },
   });
 
-  
   return data;
 }

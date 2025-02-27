@@ -8,7 +8,8 @@ export const NEW_RouterInvestasi = {
    * @param param status id | 1: Publish, 2: Review, 3: Draft, 4: Reject
    * @type string
    */
-  portofolio: ({ id }: { id: "1" | "2" | "3" | "4" }) => `/dev/investasi/main/portofolio/${id}`,
+  portofolio: ({ id }: { id: "1" | "2" | "3" | "4" }) =>
+    `/dev/investasi/main/portofolio/${id}`,
   // portofolio: ({ id }: { id?: string }) => `/dev/investasi/main/portofolio/${id}`,
 
   // TRANSAKSI
@@ -24,6 +25,8 @@ export const NEW_RouterInvestasi = {
   // FILE VIEW
   file_prospektus: ({ id }: { id: string }) =>
     `/dev/investasi/file-view/prospektus/${id}`,
+  file_dokumen: ({ id }: { id: string }) =>
+    `/dev/investasi/file-view/dokumen/${id}`,
 
   OLD_file_view_prospektus: "/dev/investasi/file-view/prospektus/",
   OLD_file_view_dokumen: "/dev/investasi/file-view/dokumen/",
