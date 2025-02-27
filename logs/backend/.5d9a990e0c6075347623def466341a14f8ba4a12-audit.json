@@ -64,6 +64,11 @@
             "date": 1740622202359,
             "name": "logs/backend/error-2025-02-27.log",
             "hash": "b4d252e040c87ce3972c2e5cd64a4f69ff2af10a75633d0ab2ae04a3491847b6"
+        },
+        {
+            "date": 1740595120075,
+            "name": "logs/backend/error-2025-02-27.log",
+            "hash": "50f75c53936bf2ca5beb3f48fb5de09dde49fea0792fc3532055fab75aae408f"
         }
     ],
     "hashType": "sha256"

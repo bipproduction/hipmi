@@ -1,5 +1,4 @@
 "use client";
-import { API_RouteNotifikasi } from "@/lib/api_user_router/route_api_notifikasi";
 import { gs_count_ntf, gs_user_ntf } from "@/lib/global_state";
 import global_limit from "@/lib/limit";
 import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
@@ -18,7 +17,7 @@ import UIGlobal_LayoutTamplate from "../_global/ui/ui_layout_tamplate";
 import { gs_notifikasi_kategori_app } from "../notifikasi/lib";
 import BodyHome from "./component/body_home";
 import FooterHome from "./component/footer_home";
-import { apiGetDataHome } from "./fun/get/api_home";
+import { apiGetDataHome, apiGetNotifikasiHome } from "./fun/get/api_home";
 
 export default function HomeViewNew() {
   const [countNtf, setCountNtf] = useAtom(gs_count_ntf);
@@ -53,9 +52,10 @@ export default function HomeViewNew() {
 
   async function onLoadNotifikasi() {
     try {
-      const loadNotif = await fetch(API_RouteNotifikasi.get_count_by_id());
-      const data = await loadNotif.json().then((res) => res.data);
-      setCountNtf(data);
+      const response = await apiGetNotifikasiHome();
+      if (response && response.success) {
+        setCountNtf(response.data);
+      }
     } catch (error) {
       clientLogger.error("Error load notifikasi", error);
     }
@@ -66,11 +66,14 @@ export default function HomeViewNew() {
       const response = await apiGetDataHome({
         path: "?cat=cek_profile",
       });
-      if (response) {
+      if (response && response.success) {
         setDataUser(response.data);
+      } else {
+        setDataUser(null);
       }
     } catch (error) {
       clientLogger.error("Error get data home", error);
+      setDataUser(null);
     }
   }
 
@@ -83,7 +86,7 @@ export default function HomeViewNew() {
             customButtonLeft={
               !dataUser || !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
-                  <IconUserSearch color={MainColor.white} />
+                  <IconUserSearch color={"gray"} />
                 </ActionIcon>
               ) : dataUser?.profile === undefined ? (
                 <ActionIcon
@@ -110,7 +113,7 @@ export default function HomeViewNew() {
             customButtonRight={
               !dataUser || !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
-                  <IconBell color={MainColor.white} />
+                  <IconBell color={"gray"} />
                 </ActionIcon>
               ) : dataUser?.profile === undefined ? (
                 <ActionIcon

@@ -22,10 +22,9 @@ export function Investasi_ComponentCardDaftarDocument({
         justify="center"
         h={"100%"}
         onClick={() => {
-          router.push(
-            NEW_RouterInvestasi.file_prospektus({ id: data.fileId }),
-            { scroll: false }
-          );
+          router.push(NEW_RouterInvestasi.file_dokumen({ id: data.fileId }), {
+            scroll: false,
+          });
           setVisible(true);
         }}
       >
