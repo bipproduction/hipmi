@@ -8,7 +8,7 @@ import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/cre
 import mqtt_client from "@/util/mqtt_client";
 import { Button, Stack } from "@mantine/core";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
@@ -18,17 +18,42 @@ import { WibuRealtime } from "wibu-pkg";
 import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetEventDetailById } from "../../_lib/api_event";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Event_DetailReview({
-  dataEvent,
-}: {
-  dataEvent: MODEL_EVENT;
-}) {
+export default function Event_DetailReview() {
+  const params = useParams<{ id: string }>();
+  const eventId = params.id as string;
+  const [data, setData] = useState<MODEL_EVENT | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
+  }
   return (
     <>
       <Stack spacing={"xl"}>
-        <ComponentEvent_DetailData data={dataEvent} />
-        <ButtonAction eventId={dataEvent?.id} />
+        <ComponentEvent_DetailData data={data} />
+        {!data ? (
+          <CustomSkeleton radius={"xl"} height={40} />
+        ) : (
+          <ButtonAction eventId={eventId} />
+        )}
       </Stack>
     </>
   );
@@ -40,7 +65,12 @@ function ButtonAction({ eventId }: { eventId: string }) {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <Button radius={"xl"} style={{ backgroundColor: MainColor.orange }} c={MainColor.darkblue} onClick={() => setOpenModal(true)}>
+      <Button
+        radius={"xl"}
+        style={{ backgroundColor: MainColor.orange }}
+        c={MainColor.darkblue}
+        onClick={() => setOpenModal(true)}
+      >
         Batalkan Review
       </Button>
 
@@ -49,13 +79,18 @@ function ButtonAction({ eventId }: { eventId: string }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModal(false)}
+          >
             Batal
           </Button>
         }
         buttonKanan={
           <Button
-          style={{ backgroundColor: AccentColor.yellow }}
+            style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoading}
             radius={"xl"}

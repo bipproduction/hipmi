@@ -4,7 +4,7 @@ import React from 'react';
 function LayoutEvent_Peserta({children}: {children: React.ReactNode}) {
   return (
     <>
-      <UIGlobal_LayoutTamplate header={<UIGlobal_LayoutHeaderTamplate title="DaftarPeserta" />}>
+      <UIGlobal_LayoutTamplate header={<UIGlobal_LayoutHeaderTamplate title="Daftar Peserta" />}>
       {children}
       </UIGlobal_LayoutTamplate>
     </>
