@@ -11,6 +11,7 @@ import {
   Group,
   Button,
   Text,
+  Box,
 } from "@mantine/core";
 import { IconFileTypePdf } from "@tabler/icons-react";
 import _ from "lodash";
@@ -73,7 +74,7 @@ export function ComponentAdminInvestasi_UIDetailFile({
                       <Text>-</Text>
                     ) : (
                       listDokumen.map((e: MODEL_INVESTASI_DOKUMEN) => (
-                        <Paper key={e.id}>
+                        <Box key={e.id}>
                           <Group>
                             <IconFileTypePdf />
                             <Text>{e.title}</Text>
@@ -84,7 +85,7 @@ export function ComponentAdminInvestasi_UIDetailFile({
                               <Button radius={50}>Lihat</Button>
                             </Link>
                           </Group>
-                        </Paper>
+                        </Box>
                       ))
                     )}
                   </Stack>

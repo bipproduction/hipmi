@@ -1,7 +1,5 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/lib";
-import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { MainColor } from "@/app_modules/_global/color";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {
@@ -10,26 +8,30 @@ import {
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
+import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { investasi_funCreateNewInvestasi } from "../../_fun";
 import { gs_investas_menu, gs_investasi_status } from "../../g_state";
-import { clientLogger } from "@/util/clientLogger";
-import { IRealtimeData } from "@/lib/global_state";
-import { WibuRealtime } from "wibu-pkg";
 
 export function Investasi_ComponentButtonCreateNewInvestasi({
   data,
   totalLembar,
   fileImage,
   filePdf,
+  isMinimalTarget,
 }: {
   data: any;
   totalLembar: number;
   fileImage: File;
   filePdf: File;
+  isMinimalTarget: boolean;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +116,7 @@ export function Investasi_ComponentButtonCreateNewInvestasi({
     } catch (error) {
       setIsLoading(false);
       clientLogger.error("Error create new investasi", error);
-    } 
+    }
   }
 
   return (
@@ -135,9 +137,8 @@ export function Investasi_ComponentButtonCreateNewInvestasi({
           data.periodeDevidenId === "" ||
           data.pembagianDevidenId === "" ||
           fileImage === null ||
-          filePdf === null
-            ? true
-            : false
+          filePdf === null ||
+          isMinimalTarget
         }
         radius={50}
         bg={MainColor.yellow}

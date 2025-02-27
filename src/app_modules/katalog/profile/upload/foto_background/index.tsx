@@ -9,15 +9,38 @@ import { AspectRatio, Center, Image, Stack } from "@mantine/core";
 import { useState } from "react";
 import { Profile_ComponentButtonUpdateBackgroundProfile } from "../../_component";
 import { MODEL_PROFILE } from "../../model/interface";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetOneProfileById } from "../../lib/api_fetch_profile";
+import { useParams } from "next/navigation";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Profile_UpdateFotoBackground({
-  dataProfile,
-}: {
-  dataProfile: MODEL_PROFILE;
-}) {
-  const [profile, setProfile] = useState(dataProfile);
+export default function Profile_UpdateFotoBackground() {
+  const param = useParams<{ id: string }>();
+  const profileId = param.id;
+  const [profile, setProfile] = useState<MODEL_PROFILE | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<any | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneProfileById({ id: profileId });
+      if (response && response.success) {
+        setProfile(response.data);
+      } else {
+        setProfile(null);
+      }
+    } catch (error) {
+      console.log("Error get profile", error);
+      setProfile(null);
+    }
+  };
+
+  if (!profile)
+    return <CustomSkeleton height={300} width={"100%"} radius={"md"} />;
 
   return (
     <>

@@ -20,10 +20,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
       <AdminDonasi_DetailPublish
         // dataPublish={dataPublish as any}
-        listDonatur={listDonatur as any}
+        // listDonatur={listDonatur as any}
         countDonatur={countDonatur}
         listPencairan={listPencairan as any}
-        listMasterStatus={listMasterStatus as any}
+        // listMasterStatus={listMasterStatus as any}
       />
     </>
   );

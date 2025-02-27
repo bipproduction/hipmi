@@ -1,11 +1,12 @@
 "use client";
-import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import mqtt_client from "@/util/mqtt_client";
+import { gs_investasiTriggerBeranda } from "@/lib/global_state";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { Box, Center } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { useAtom } from "jotai";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
@@ -14,8 +15,6 @@ import { Investasi_ComponentCardBerandaNew } from "../../_component/main/com_car
 import { apiGetAllInvestasi } from "../../_lib/api_interface";
 import { IDataInvestasiBursa } from "../../_lib/type_investasi";
 import SkeletonInvestasiBursa from "./skeleton_beranda";
-import { useAtom } from "jotai";
-import { gs_investasiTriggerBeranda } from "@/lib/global_state";
 
 export function Investasi_ViewBerandaNew() {
   const [data, setData] = useState<IDataInvestasiBursa[]>([]);
@@ -86,7 +85,7 @@ export function Investasi_ViewBerandaNew() {
               const loadData = await apiGetAllInvestasi(
                 `?cat=bursa&page=${pageNew}`
               );
-              setActivePage((val) => val + 1);
+              setActivePage(pageNew);
 
               return loadData.data as any;
             }}

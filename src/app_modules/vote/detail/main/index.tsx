@@ -1,6 +1,5 @@
 "use client";
 
-import { IRealtimeData } from "@/lib/global_state";
 import {
   AccentColor,
   MainColor,
@@ -14,6 +13,7 @@ import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_glo
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
+import { IRealtimeData } from "@/lib/global_state";
 import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
@@ -41,6 +41,7 @@ import ComponentVote_HasilVoting from "../../component/detail/detail_hasil_votin
 import { Voting_ComponentSkeletonDetail } from "../../component/skeleton_view";
 import { Vote_funCreateHasil } from "../../fun/create/create_hasil";
 import { MODEL_VOTING } from "../../model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Vote_MainDetail({
   userLoginId,
@@ -55,6 +56,8 @@ export default function Vote_MainDetail({
   const [pilihanKontributor, setPilihanKontributor] = useState<string | null>(
     null
   );
+
+  const [isLoading, setLoading] = useState(false);
 
   const [isKontributor, setIsKontributor] = useState<boolean | null>(null);
 
@@ -128,6 +131,7 @@ export default function Vote_MainDetail({
 
   async function onVote() {
     try {
+      setLoading(true);
       const res = await Vote_funCreateHasil({
         pilihanVotingId: pilihanVotingId,
         votingId: params.id,
@@ -183,10 +187,12 @@ export default function Vote_MainDetail({
           }
         }
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(res.message);
       }
     } catch (error) {
       clientLogger.error("Error vote", error);
+      setLoading(false);
       ComponentGlobal_NotifikasiGagal("Gagal melakukan voting");
     }
   }
@@ -247,6 +253,7 @@ export default function Vote_MainDetail({
                 </Stack>
               </Stack>
             </Stack>
+
             {isKontributor ? (
               <Stack
                 align="center"
@@ -258,7 +265,11 @@ export default function Vote_MainDetail({
                 <Text mb={"sm"} fw={"bold"} fz={"xs"}>
                   Pilihan anda:
                 </Text>
-                <Badge size="lg">{pilihanKontributor}</Badge>
+                {pilihanKontributor ? (
+                  <Badge size="lg">{pilihanKontributor}</Badge>
+                ) : (
+                  <CustomSkeleton height={30} width={70} radius="xl" />
+                )}
               </Stack>
             ) : (
               <Stack
@@ -308,6 +319,8 @@ export default function Vote_MainDetail({
 
                 <Center>
                   <Button
+                    loading={isLoading}
+                    loaderPosition="center"
                     style={{
                       transition: "all 0.3s ease-in-out",
                     }}
