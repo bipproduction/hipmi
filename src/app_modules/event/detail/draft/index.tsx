@@ -1,157 +1,166 @@
 "use client";
 
-import { IRealtimeData } from "@/lib/global_state";
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
-import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Group, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
-import { Event_ComponentSkeletonDetailData } from "../../component";
+import { apiGetEventDetailById } from "../../_lib/api_event";
+import { MODEL_EVENT } from "../../_lib/interface";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
-import { MODEL_EVENT } from "../../_lib/interface";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { clientLogger } from "@/util/clientLogger";
 
-export default function Event_DetailDraft({
-  dataEvent,
-  eventId,
-}: {
-  dataEvent: MODEL_EVENT;
-  eventId: string;
-}) {
-  const [data, setData] = useState<MODEL_EVENT | null>(dataEvent);
+export default function Event_DetailDraft() {
+   const params = useParams<{ id: string }>();
+   const eventId = params.id as string;
+   const [data, setData] = useState<MODEL_EVENT | null>(null);
 
-  if (!data) {
-    return (
-      <>
-        <Event_ComponentSkeletonDetailData />
-      </>
-    );
-  }
+   useShallowEffect(() => {
+     onLoadData();
+   }, []);
+
+   async function onLoadData() {
+     try {
+       const respone = await apiGetEventDetailById({
+         id: eventId,
+       });
+
+       if (respone) {
+         setData(respone.data);
+       }
+     } catch (error) {
+       clientLogger.error("Error get data detail event", error);
+     }
+   }
 
   return (
     <>
-      {/* <pre>{JSON.stringify(dataEvent.tanggal)}</pre> */}
       <Stack spacing={"lg"}>
-        {data?.catatan ? (
-          <ComponentGlobal_BoxInformation isReport informasi={data?.catatan} />
-        ) : (
-          ""
-        )}
-        <ComponentEvent_DetailData data={data} />
-        <ButtonAction eventId={data.id} tanggalSelesai={data.tanggalSelesai} />
+        <ComponentEvent_DetailData isReport data={data} />
+        <ButtonAction eventId={eventId} endDate={data?.tanggalSelesai} />
       </Stack>
     </>
   );
 }
 
-function ButtonAction({
-  eventId,
-  tanggalSelesai,
-}: {
-  eventId: string;
-  tanggalSelesai?: any;
-}) {
+function ButtonAction({ eventId, endDate }: { eventId: string; endDate: any }) {
   const router = useRouter();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
   const [isLoadingAjukan, setLoadingAjukan] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
 
+
   async function onDelete() {
-    const res = await Event_funDeleteById(eventId);
     try {
-      setLoadingDelete(true);
-      if (res.status === 200) {
-        router.back();
-        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
-      } else {
+      const res = await Event_funDeleteById(eventId);
+      try {
+        setLoadingDelete(true);
+        if (res.status === 200) {
+          router.back();
+          ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+        } else {
+          setLoadingDelete(false);
+          ComponentGlobal_NotifikasiGagal(res.message);
+        }
+      } catch (error) {
         setLoadingDelete(false);
-        ComponentGlobal_NotifikasiGagal(res.message);
+        clientLogger.error("Error delete event", error);
       }
     } catch (error) {
+      console.log("Error delete event", error);
       setLoadingDelete(false);
-      clientLogger.error("Error delete event", error);
     }
   }
 
   async function onAjukan() {
-    if (
-      moment(tanggalSelesai.toISOString().toString()).diff(
-        moment(),
-        "minutes"
-      ) < 0
-    )
+    if (moment(endDate.toISOString().toString()).diff(moment(), "minutes") < 0)
       return ComponentGlobal_NotifikasiPeringatan("Waktu acara telah lewat");
 
-    const res = await Event_funEditStatusById("2", eventId);
-    if (res.status === 200) {
-      const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.EventMaster_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "EVENT",
-        title: "Mengajukan review",
-      };
-
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
-        });
-
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "ADMIN",
-          dataMessage: dataNotifikasi,
-        });
-      }
-      ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+    try {
       setLoadingAjukan(true);
-      router.replace(RouterEvent.status({ id: "2" }));
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+      const res = await Event_funEditStatusById("2", eventId);
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.EventMaster_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "EVENT",
+          title: "Mengajukan review",
+        };
+
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
+        });
+
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
+
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "ADMIN",
+            dataMessage: dataNotifikasi,
+          });
+        }
+        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+        router.replace(RouterEvent.status({ id: "2" }));
+      } else {
+        setLoadingAjukan(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoadingAjukan(false);
+      clientLogger.error("Error ajukan event", error);
     }
   }
 
   return (
     <>
-      <Group grow>
-        <Button
-          radius={"xl"}
-          c={MainColor.darkblue}
-          style={{ backgroundColor: AccentColor.yellow }}
-          onClick={() => {
-            setOpenModal1(true);
-          }}
-        >
-          Ajukan Review
-        </Button>
-        <Button
-          radius={"xl"}
-          c={AccentColor.white}
-          style={{ backgroundColor: MainColor.red }}
-          onClick={() => {
-            setOpenModal2(true);
-          }}
-        >
-          Hapus
-        </Button>
-      </Group>
+      {!endDate ? (
+        <Group grow>
+          <CustomSkeleton height={40} radius="xl" />
+          <CustomSkeleton height={40} radius="xl" />
+        </Group>
+      ) : (
+        <Group grow>
+          <Button
+            radius={"xl"}
+            c={MainColor.darkblue}
+            style={{ backgroundColor: AccentColor.yellow }}
+            onClick={() => {
+              setOpenModal1(true);
+            }}
+          >
+            Ajukan Review
+          </Button>
+          <Button
+            radius={"xl"}
+            c={AccentColor.white}
+            style={{ backgroundColor: MainColor.red }}
+            onClick={() => {
+              setOpenModal2(true);
+            }}
+          >
+            Hapus
+          </Button>
+        </Group>
+      )}
 
       {/* MODAL AJUKAN */}
       <UIGlobal_Modal
@@ -159,7 +168,12 @@ function ButtonAction({
         opened={openModal1}
         close={() => setOpenModal1(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal1(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModal1(false)}
+          >
             Batal
           </Button>
         }
@@ -185,7 +199,12 @@ function ButtonAction({
         opened={openModal2}
         close={() => setOpenModal2(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal2(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModal2(false)}
+          >
             Batal
           </Button>
         }

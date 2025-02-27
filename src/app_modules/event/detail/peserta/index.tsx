@@ -1,24 +1,18 @@
 "use client";
 
-import { Stack, Loader, Center } from "@mantine/core";
-import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
-import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
-import { useParams } from "next/navigation";
-import ComponentEvent_ListPesertaNew from "../../component/detail/list_peserta_new";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetEventPesertaById } from "../../_lib/api_event";
-import { useState } from "react";
-import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
+import { Center, Loader, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { ScrollOnly } from "next-scroll-loader";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetEventPesertaById } from "../../_lib/api_event";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
 import ComponentEvent_AvatarAndUsername from "../../component/detail/comp_avatar_and_username_event";
-import { ComponentGlobal_AvatarAndUsername } from "@/app_modules/_global/component";
+import _ from "lodash";
+import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 
-// function Event_DaftarPeserta({ totalPeserta, eventId, isNewPeserta }: {
-//   totalPeserta?: number;
-//   eventId?: string;
-//   isNewPeserta?: boolean | null;
-// }) {
 function Event_DaftarPeserta() {
   const params = useParams<{ id: string }>();
 
@@ -44,6 +38,25 @@ function Event_DaftarPeserta() {
     }
   }
 
+  const handleMoreData = async () => {
+    try {
+      const nextPage = activePage + 1;
+
+      const response = await apiGetEventPesertaById({
+        id: params.id,
+        page: `${nextPage}`,
+      });
+
+      if (response) {
+        setActivePage(nextPage);
+
+        return response.data;
+      }
+    } catch (error) {
+      clientLogger.error("Error fetching more data:", error);
+    }
+  };
+
   if (!data) {
     return (
       <>
@@ -57,47 +70,34 @@ function Event_DaftarPeserta() {
 
   return (
     <>
-      <Stack>
-        <ScrollOnly
-          height="90vh"
-          renderLoading={() => (
-            <Center mt={"lg"}>
-              <Loader color={"yellow"} />
-            </Center>
-          )}
-          data={data}
-          setData={setData as any}
-          moreData={async () => {
-            try {
-              const respone = await apiGetEventPesertaById({
-                id: params.id,
-                page: `${activePage + 1}`,
-              });
-
-              if (respone) {
-                setActivePage((val) => val + 1);
-
-                return respone.data;
-              }
-            } catch (error) {
-              clientLogger.error("Error get data peserta:", error);
-            }
-          }}
-        >
-          {(item) => (
-            <ComponentEvent_AvatarAndUsername
-              profile={item?.User?.Profile as any}
-              sizeAvatar={30}
-              fontSize={"sm"}
-              tanggalMulai={item?.Event?.tanggal}
-              tanggalSelesai={item?.Event?.tanggalSelesai}
-              isPresent={item?.isPresent}
-            />
-          )}
-        </ScrollOnly>
-
-        {/* <ComponentEvent_ListPeserta eventId={params.id} total={totalPeserta as any} isNewPeserta={isNewPeserta} /> */}
-      </Stack>
+      {_.isEmpty(data) ? (
+        <ComponentGlobal_IsEmptyData />
+      ) : (
+        <Stack>
+          <ScrollOnly
+            height="90vh"
+            renderLoading={() => (
+              <Center mt={"lg"}>
+                <Loader color={"yellow"} />
+              </Center>
+            )}
+            data={data}
+            setData={setData as any}
+            moreData={handleMoreData}
+          >
+            {(item) => (
+              <ComponentEvent_AvatarAndUsername
+                profile={item?.User?.Profile as any}
+                sizeAvatar={30}
+                fontSize={"sm"}
+                tanggalMulai={item?.Event?.tanggal}
+                tanggalSelesai={item?.Event?.tanggalSelesai}
+                isPresent={item?.isPresent}
+              />
+            )}
+          </ScrollOnly>
+        </Stack>
+      )}
     </>
   );
 }

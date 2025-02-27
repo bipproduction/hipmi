@@ -8,33 +8,31 @@ import {
   Grid,
   Group,
   Loader,
-  Skeleton,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import _ from "lodash";
 
-import {
-  ComponentGlobal_AvatarAndUsername,
-  ComponentGlobal_CardStyles,
-  ComponentGlobal_LoaderAvatar,
-} from "@/app_modules/_global/component";
-import { useRouter } from "next/navigation";
-import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
-import { Prisma } from "@prisma/client";
-import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
-import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import { funGlobal_CheckProfile } from "@/app_modules/_global/fun/get";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import { useState } from "react";
-import moment from "moment";
-import { useShallowEffect } from "@mantine/hooks";
-import { API_RouteEvent } from "@/lib/api_user_router/route_api_event";
-import Event_ComponentSkeletonListPeserta from "../skeleton/comp_skeleton_list_peserta";
-import { ScrollOnly } from "next-scroll-loader";
-import { event_newGetListPesertaById } from "../../fun";
 import { MainColor } from "@/app_modules/_global/color";
+import {
+  ComponentGlobal_CardStyles,
+  ComponentGlobal_LoaderAvatar
+} from "@/app_modules/_global/component";
+import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { apiGetOneProfileById } from "@/app_modules/katalog/profile/lib/api_fetch_profile";
+import { API_RouteEvent } from "@/lib/api_user_router/route_api_event";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
+import { useShallowEffect } from "@mantine/hooks";
+import { Prisma } from "@prisma/client";
+import moment from "moment";
+import { ScrollOnly } from "next-scroll-loader";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { MODEL_EVENT_PESERTA } from "../../_lib/interface";
+import { event_newGetListPesertaById } from "../../fun";
+import Event_ComponentSkeletonListPeserta from "../skeleton/comp_skeleton_list_peserta";
 
 export default function ComponentEvent_ListPeserta({
   total,
@@ -75,7 +73,9 @@ export default function ComponentEvent_ListPeserta({
         <ComponentGlobal_CardStyles>
           <Stack spacing={"md"} px={"sm"}>
             <Center>
-              <Title color={MainColor.white} order={5}>Daftar Peserta ({total})</Title>
+              <Title color={MainColor.white} order={5}>
+                Daftar Peserta ({total})
+              </Title>
             </Center>
 
             {_.isEmpty(data) ? (
@@ -163,13 +163,17 @@ function ComponentEvent_AvatarAndUsername({
   const [visible, setVisible] = useState(false);
 
   async function onCheckProfile() {
-    const res = await funGlobal_CheckProfile({ profileId: profile.id as any });
+    try {
+      const res = await apiGetOneProfileById({ id: profile.id as any });
 
-    if (res !== null) {
-      setVisible(true);
-      router.push(RouterProfile.katalog({ id: profile.id as any }));
-    } else {
-      ComponentGlobal_NotifikasiPeringatan("Id tidak ditemukan");
+      if (res && res.success) {
+        setVisible(true);
+        router.push(RouterProfile.katalog({ id: profile.id as any }));
+      } else {
+        ComponentGlobal_NotifikasiPeringatan("Id tidak ditemukan");
+      }
+    } catch (error) {
+      console.log("Error >>r", error);
     }
   }
 

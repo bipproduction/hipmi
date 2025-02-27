@@ -24,10 +24,10 @@ export function Event_ComponentSkeletonDetailData() {
             </Grid>
           ))}
 
-          <Stack spacing={"xs"}>
+          {/* <Stack spacing={"xs"}>
             <Skeleton radius={"xl"} h={20} w={200} />
             <Skeleton radius={"xl"} h={20} />
-          </Stack>
+          </Stack> */}
         </Stack>
       </ComponentGlobal_CardStyles>
     </>
