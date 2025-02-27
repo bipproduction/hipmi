@@ -3,25 +3,23 @@ import {
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
+  Box,
   Center,
   Group,
-  Stack,
-  Text,
   Loader,
-  Paper,
-  Box,
+  Text
 } from "@mantine/core";
-import _ from "lodash";
-import { MODEL_VOTE_KONTRIBUTOR } from "../model/interface";
 import { useShallowEffect } from "@mantine/hooks";
-import { apiGetKontributorById } from "../_lib/api_voting";
+import _ from "lodash";
+import { ScrollOnly } from "next-scroll-loader";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { clientLogger } from "@/util/clientLogger";
+import { apiGetKontributorById } from "../_lib/api_voting";
 import { Voting_ComponentSkeletonDaftarKontributor } from "../component/skeleton_view";
-import { ScrollOnly } from "next-scroll-loader";
+import { MODEL_VOTE_KONTRIBUTOR } from "../model/interface";
 
 export function Voting_ViewDetailKontributorVoting() {
   const params = useParams<{ id: string }>();
@@ -47,6 +45,23 @@ export function Voting_ViewDetailKontributorVoting() {
     }
   }
 
+  const handleMoreData = async () => {
+    try {
+      const nextPage = activePage + 1;
+      const respone = await apiGetKontributorById({
+        id: params.id,
+        page: `${nextPage}`,
+      });
+
+      if (respone) {
+        setActivePage(nextPage);
+        return respone.data;
+      }
+    } catch (error) {
+      clientLogger.error("Error get data kontributor", error);
+    }
+  };
+
   if (_.isNull(data)) {
     return <Voting_ComponentSkeletonDaftarKontributor />;
   }
@@ -66,16 +81,7 @@ export function Voting_ViewDetailKontributorVoting() {
             )}
             data={data}
             setData={setData as any}
-            moreData={async () => {
-              const respone = await apiGetKontributorById({
-                id: params.id,
-                page: `${activePage + 1}`,
-              });
-
-              setActivePage((val) => val + 1);
-
-              return respone.data;
-            }}
+            moreData={handleMoreData}
           >
             {(item) => (
               <ComponentGlobal_CardStyles>
@@ -102,25 +108,6 @@ export function Voting_ViewDetailKontributorVoting() {
               </ComponentGlobal_CardStyles>
             )}
           </ScrollOnly>
-
-          {/* {data?.map((e, i) => (
-              <ComponentGlobal_AvatarAndUsername
-                key={e.id}
-                profile={e.Author.Profile as any}
-                component={
-                  <Group position="right">
-                    <Badge w={130}>
-                      <Text
-                        lineClamp={1}
-                        fz={e.Voting_DaftarNamaVote.value.length > 10 ? 8 : 10}
-                      >
-                        {e.Voting_DaftarNamaVote.value}
-                      </Text>
-                    </Badge>
-                  </Group>
-                }
-              />
-            ))} */}
         </Box>
       )}
     </>

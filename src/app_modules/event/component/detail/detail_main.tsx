@@ -6,13 +6,7 @@ import {
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import { clientLogger } from "@/util/clientLogger";
-import {
-  Grid,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title
-} from "@mantine/core";
+import { Grid, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import "moment/locale/id";

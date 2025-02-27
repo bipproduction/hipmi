@@ -8,8 +8,6 @@ export async function GET(
   request: Request,
   { params }: { params: { name: string } }
 ) {
-
-
   const { name } = params;
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
@@ -21,35 +19,7 @@ export async function GET(
     let fixData;
     const fixStatus = _.startCase(name);
 
-    if (!page && !search) {
-      fixData = await prisma.event.findMany({
-        orderBy: {
-          updatedAt: "desc",
-        },
-        where: {
-          active: true,
-          isArsip: false,
-          EventMaster_Status: {
-            name: fixStatus,
-          },
-        },
-        include: {
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-          EventMaster_Status: true,
-          EventMaster_TipeAcara: true,
-        },
-      });
-    } else if (!page && search) {
+    if (!page) {
       fixData = await prisma.event.findMany({
         orderBy: {
           updatedAt: "desc",
@@ -61,7 +31,7 @@ export async function GET(
             name: fixStatus,
           },
           title: {
-            contains: search,
+            contains: search ? search : "",
             mode: "insensitive",
           },
         },
@@ -81,7 +51,7 @@ export async function GET(
           EventMaster_TipeAcara: true,
         },
       });
-    } else if (page && !search) {
+    } else {
       if (fixStatus === "Publish") {
         const getAllData = await prisma.event.findMany({
           where: {
@@ -111,77 +81,7 @@ export async function GET(
         take: takeData,
         skip: skipData,
         orderBy: {
-          updatedAt: "desc",
-        },
-        where: {
-          active: true,
-          isArsip: false,
-          EventMaster_Status: {
-            name: fixStatus,
-          },
-        },
-        include: {
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-          EventMaster_Status: true,
-          EventMaster_TipeAcara: true,
-        },
-      });
-
-      const nCount = await prisma.event.count({
-        where: {
-          EventMaster_Status: {
-            name: fixStatus,
-          },
-          active: true,
-          isArsip: false,
-        },
-      });
-
-      fixData = {
-        data: data,
-        nPage: _.ceil(nCount / takeData),
-      };
-    } else if (page && search) {
-      if (fixStatus === "Publish") {
-        const getAllData = await prisma.event.findMany({
-          where: {
-            active: true,
-            EventMaster_Status: {
-              name: fixStatus,
-            },
-            isArsip: false,
-          },
-        });
-
-        for (let i of getAllData) {
-          if (moment(i.tanggalSelesai).diff(moment(), "minutes") < 0) {
-            await prisma.event.update({
-              where: {
-                id: i.id,
-              },
-              data: {
-                isArsip: true,
-              },
-            });
-          }
-        }
-      }
-
-      const data = await prisma.event.findMany({
-        take: takeData,
-        skip: skipData,
-        orderBy: {
-          updatedAt: "desc",
+          tanggal: "asc",
         },
         where: {
           active: true,
@@ -190,7 +90,7 @@ export async function GET(
             name: fixStatus,
           },
           title: {
-            contains: search,
+            contains: search ? search : "",
             mode: "insensitive",
           },
         },
@@ -215,8 +115,11 @@ export async function GET(
         where: {
           active: true,
           isArsip: false,
+          EventMaster_Status: {
+            name: fixStatus,
+          },
           title: {
-            contains: search,
+            contains: search ? search : "",
             mode: "insensitive",
           },
         },
@@ -228,11 +131,12 @@ export async function GET(
       };
     }
 
-    return NextResponse.json({
-      success: true,
-      message: `Success get data table event ${name}`,
-      data: fixData,
-    },
+    return NextResponse.json(
+      {
+        success: true,
+        message: `Success get data table event ${name}`,
+        data: fixData,
+      },
       { status: 200 }
     );
   } catch (error) {

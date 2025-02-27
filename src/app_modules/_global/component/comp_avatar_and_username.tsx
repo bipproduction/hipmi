@@ -1,15 +1,15 @@
 "use client";
 
+import { apiGetOneProfileById } from "@/app_modules/katalog/profile/lib/api_fetch_profile";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ActionIcon, Avatar, Grid, Stack, Text } from "@mantine/core";
 import { Prisma } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { MainColor } from "../color";
+import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
 import { ComponentGlobal_LoaderAvatar } from "./comp_load_avatar";
 import ComponentGlobal_Loader from "./loader";
-import { funGlobal_CheckProfile } from "../fun/get";
-import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
-import { ComponentGlobal_NotifikasiPeringatan } from "../notif_global";
-import { MainColor } from "../color";
 
 type IFontSize = "xs" | "sm" | "md" | "lg" | "xl";
 export function ComponentGlobal_AvatarAndUsername({
@@ -27,13 +27,17 @@ export function ComponentGlobal_AvatarAndUsername({
   const [visible, setVisible] = useState(false);
 
   async function onCheckProfile() {
-    const res = await funGlobal_CheckProfile({ profileId: profile.id as any });
+    try {
+      const res = await apiGetOneProfileById({ id: profile.id as any });
 
-    if (res !== null) {
-      setVisible(true);
-      router.push(RouterProfile.katalog({ id: profile.id as any }));
-    } else {
-      ComponentGlobal_NotifikasiPeringatan("Id tidak ditemukan");
+      if (res && res.success) {
+        setVisible(true);
+        router.push(RouterProfile.katalog({ id: profile.id as any }));
+      } else {
+        ComponentGlobal_NotifikasiPeringatan("Id tidak ditemukan");
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -47,7 +51,7 @@ export function ComponentGlobal_AvatarAndUsername({
             onClick={() => onCheckProfile()}
           >
             {visible ? (
-              <Avatar  radius={"xl"} size={40}>
+              <Avatar radius={"xl"} size={40}>
                 <ComponentGlobal_Loader />
               </Avatar>
             ) : (

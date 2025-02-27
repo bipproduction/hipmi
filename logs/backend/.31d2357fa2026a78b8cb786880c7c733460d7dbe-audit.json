@@ -56,6 +56,16 @@
             "hash": "1ab2165b4d456ebed03006c88d9ce4b4f7be61bd38246e306fecbc73f72f8fdd"
         },
         {
+            "date": 1740535931794,
+            "name": "logs/backend/combined-2025-02-26.log",
+            "hash": "adf2b80f1174eb4a6fa42c49aa8ebce4055aceca01eff39ab4696eaf132c5dab"
+        },
+        {
+            "date": 1740622202373,
+            "name": "logs/backend/combined-2025-02-27.log",
+            "hash": "1ab05eadad383906bbd15885c155c83f8baf324dd121b076f8e8b7c18ba13a4b"
+        },
+      {
             "date": 1740536165848,
             "name": "logs/backend/combined-2025-02-26.log",
             "hash": "428aedb3a3a248ad2c7069fcb8c6e0d669c23eae0dc3db08914886cce8d2cad9"

@@ -30,7 +30,7 @@ export function Event_ComponentSkeletonDetail() {
             <CustomSkeleton h={20} w={"100%"} />
             <CustomSkeleton h={20} w={"100%"} />
           </Stack>
-          <SimpleGrid
+          {/* <SimpleGrid
             cols={2}
             breakpoints={[
               { maxWidth: "48rem", cols: 2, spacing: "sm" },
@@ -39,7 +39,7 @@ export function Event_ComponentSkeletonDetail() {
           >
             <CustomSkeleton h={100} w={"100%"} />
             <CustomSkeleton h={100} w={"100%"} />
-          </SimpleGrid>
+          </SimpleGrid> */}
         </Stack>
       </ComponentGlobal_CardStyles>
     </>

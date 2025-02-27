@@ -56,9 +56,14 @@
             "hash": "189996570b83d8dbc20aac1eaf0583edf1472e1d1ac0dc83be0fb9b20a20ee07"
         },
         {
-            "date": 1740536165843,
+            "date": 1740535931788,
             "name": "logs/backend/error-2025-02-26.log",
-            "hash": "fc1b904017c0517b4aa4138d2edb5dd58474ef723a17cab177d0605026a23c11"
+            "hash": "dad87a4a096e720645fae8ca484966ef5ac60eccd16ce0b390879877f647802b"
+        },
+        {
+            "date": 1740622202359,
+            "name": "logs/backend/error-2025-02-27.log",
+            "hash": "b4d252e040c87ce3972c2e5cd64a4f69ff2af10a75633d0ab2ae04a3491847b6"
         },
         {
             "date": 1740595120075,
