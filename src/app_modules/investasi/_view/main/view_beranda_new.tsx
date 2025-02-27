@@ -15,6 +15,8 @@ import { Investasi_ComponentCardBerandaNew } from "../../_component/main/com_car
 import { apiGetAllInvestasi } from "../../_lib/api_interface";
 import { IDataInvestasiBursa } from "../../_lib/type_investasi";
 import SkeletonInvestasiBursa from "./skeleton_beranda";
+import frontendLogger from "@/util/frontendLogger";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Investasi_ViewBerandaNew() {
   const [data, setData] = useState<IDataInvestasiBursa[]>([]);
@@ -33,6 +35,12 @@ export function Investasi_ViewBerandaNew() {
     }
   }, [isTriggerReload]);
 
+  useShallowEffect(() => {
+    setIsTriggerReload(false);
+    setIsShowUpdate(false);
+    getDataInvestasi();
+  }, []);
+
   async function getDataInvestasi() {
     try {
       setLoading(true);
@@ -47,11 +55,21 @@ export function Investasi_ViewBerandaNew() {
     }
   }
 
-  useShallowEffect(() => {
-    setIsTriggerReload(false);
-    setIsShowUpdate(false);
-    getDataInvestasi();
-  }, []);
+  const handleMoreData = async () => {
+    try {
+      const pageNew = activePage + 1;
+      const loadData = await apiGetAllInvestasi(`?cat=bursa&page=${pageNew}`);
+      if (loadData.success) {
+        setActivePage(pageNew);
+        return loadData.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      clientLogger.error("Error ", error);
+      return [];
+    }
+  };
 
   return (
     <>
@@ -80,15 +98,7 @@ export function Investasi_ViewBerandaNew() {
             )}
             data={data}
             setData={setData}
-            moreData={async () => {
-              const pageNew = activePage + 1;
-              const loadData = await apiGetAllInvestasi(
-                `?cat=bursa&page=${pageNew}`
-              );
-              setActivePage(pageNew);
-
-              return loadData.data as any;
-            }}
+            moreData={handleMoreData}
           >
             {(item) => <Investasi_ComponentCardBerandaNew data={item as any} />}
           </ScrollOnly>
