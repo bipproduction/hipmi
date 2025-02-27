@@ -54,7 +54,6 @@ export default function MainCrowd() {
               // color: "gray",
             }}
             onClick={() => {
-              setLoadingInv(true);
               router.push(RouterCrowd.investasi, { scroll: false });
               setChangeColor(0);
             }}
@@ -94,13 +93,8 @@ export default function MainCrowd() {
               color: MainColor.white,
             }}
             onClick={() => {
-              setLoadingDon(true);
               router.push(RouterCrowd.donasi, { scroll: false });
               setDonasiHotMenu(0);
-              // ComponentGlobal_NotifikasiPeringatan(
-              //   "Sementara ini sedang maintenance",
-              //   3000
-              // );
             }}
           >
             <Grid>
