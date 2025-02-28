@@ -117,7 +117,6 @@ const apiGetAdminAllDaftarDonatur = async ({
         }
 
         const isStatus = status ? `&status=${status}` : "";
-        console.log("Ini status",isStatus);
         const isPage = page ? `?page=${page}` : "";
         const response = await fetch(
             `/api/admin/donasi/${id}/donatur${isPage}${isStatus}`,
