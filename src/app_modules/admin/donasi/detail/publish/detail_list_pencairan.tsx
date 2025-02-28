@@ -38,7 +38,7 @@ function TampilanListPencairan({
       </td>
       <td width={500}>
         <Box w={"100%"}>
-          <Spoiler hideLabel="Sembunyikan" maxHeight={70} showLabel="Lihat">
+          <Spoiler c={AdminColor.white} hideLabel="Sembunyikan" maxHeight={70} showLabel="Lihat">
             {e.deskripsi}
           </Spoiler>
         </Box>

@@ -198,12 +198,11 @@ function FormView({
       if (res2.status === 200) {
         const loadData = await apiGetAdminDonasiById({id: donasiId});
         onSuccess(loadData);
-        console.log("load Data", loadData);
 
         const dataNotif = {
-          appId: loadData?.data?.id,
-          userId: loadData?.data?.authorId,
-          pesan: loadData?.data?.title as any,
+          appId: loadData?.id,
+          userId: loadData?.authorId,
+          pesan: loadData?.title as any,
           status: "Pencairan Dana",
           kategoriApp: "DONASI",
           title: "Dana donasi berhasil dicairkan",
