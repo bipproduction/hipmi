@@ -1,7 +1,7 @@
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import { Affix, Button, Center, rem } from "@mantine/core";
 import { useState } from "react";
-import { apiGetAllInvestasi } from "../../_lib/api_interface";
+import { apiFetchGetAllInvestasi } from "../../_lib/api_fetch_new_investasi";
 
 export function Investasi_ComponentButtonUpdateBeranda({
   onLoadData,
@@ -13,7 +13,9 @@ export function Investasi_ComponentButtonUpdateBeranda({
   async function onLoaded() {
     try {
       setLoading(true);
-      const response = await apiGetAllInvestasi(`?cat=bursa&page=1`);
+      const response = await apiFetchGetAllInvestasi({
+        page: "1",
+      });
       if (response.success) {
         onLoadData(response.data);
       }
