@@ -38,13 +38,15 @@ export function Investasi_ViewBerandaNew() {
   useShallowEffect(() => {
     setIsTriggerReload(false);
     setIsShowUpdate(false);
-    getDataInvestasi();
+    handleLoadData();
   }, []);
 
-  async function getDataInvestasi() {
+  const handleLoadData = async () => {
     try {
       setLoading(true);
-      const response = await apiGetAllInvestasi(`?cat=bursa&page=1`);
+      const response = await apiFetchGetAllInvestasi({
+        page: `${activePage}`,
+      });
       if (response.success) {
         setData(response.data);
       }
@@ -53,14 +55,16 @@ export function Investasi_ViewBerandaNew() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleMoreData = async () => {
     try {
-      const pageNew = activePage + 1;
-      const loadData = await apiGetAllInvestasi(`?cat=bursa&page=${pageNew}`);
+      const nextPage = activePage + 1;
+      const loadData = await apiFetchGetAllInvestasi({
+        page: `${nextPage}`,
+      });
       if (loadData.success) {
-        setActivePage(pageNew);
+        setActivePage(nextPage);
         return loadData.data;
       } else {
         return [];

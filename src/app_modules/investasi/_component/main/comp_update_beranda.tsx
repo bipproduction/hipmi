@@ -13,7 +13,9 @@ export function Investasi_ComponentButtonUpdateBeranda({
   async function onLoaded() {
     try {
       setLoading(true);
-      const response = await apiGetAllInvestasi(`?cat=bursa&page=1`);
+      const response = await apiFetchGetAllInvestasi({
+        page: "1",
+      });
       if (response.success) {
         onLoadData(response.data);
       }
