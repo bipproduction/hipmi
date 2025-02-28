@@ -4,6 +4,7 @@ import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empt
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { gs_investasiTriggerBeranda } from "@/lib/global_state";
 import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Center } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
@@ -12,11 +13,9 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import { Investasi_ComponentButtonUpdateBeranda } from "../../_component";
 import { Investasi_ComponentCardBerandaNew } from "../../_component/main/com_card_beranda_new";
-import { apiGetAllInvestasi } from "../../_lib/api_interface";
+import { apiFetchGetAllInvestasi } from "../../_lib/api_fetch_new_investasi";
 import { IDataInvestasiBursa } from "../../_lib/type_investasi";
 import SkeletonInvestasiBursa from "./skeleton_beranda";
-import frontendLogger from "@/util/frontendLogger";
-import { clientLogger } from "@/util/clientLogger";
 
 export function Investasi_ViewBerandaNew() {
   const [data, setData] = useState<IDataInvestasiBursa[]>([]);

@@ -1,3 +1,5 @@
+export { apiFetchGetAllInvestasi };
+
 const apiFetchGetAllInvestasi = async ({ page }: { page: string }) => {
   try {
     // Fetch token from cookie
