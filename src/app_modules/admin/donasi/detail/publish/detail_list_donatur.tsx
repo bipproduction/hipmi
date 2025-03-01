@@ -12,8 +12,7 @@ import { clientLogger } from '@/util/clientLogger';
 import { Center, Badge, Button, Stack, Group, ActionIcon, Select, Paper, ScrollArea, Table, Pagination, Text, Modal, Title } from '@mantine/core';
 import { useDisclosure, useShallowEffect } from '@mantine/hooks';
 import { IconReload } from '@tabler/icons-react';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation'
 import React, { useState } from 'react';
 import { apiGetAdminAllDaftarDonatur } from '../../lib/api_fetch_admin_donasi';
 import { ComponentAdminGlobal_NotifikasiBerhasil } from '@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil';
@@ -45,7 +44,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
 
   const handleLoadData = async () => {
     try {
-      console.log("Ini active page", isActivePage);
+      
       const cek = globalStatusTransaksi.find((e) => e.id === selectStatus);
       const response = await apiGetAdminAllDaftarDonatur({
         id: donasiId,
@@ -54,7 +53,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
       });
 
       if (response?.success && response?.data?.data) {
-        console.log("data lis", response.data);
+    
         setListDonatur(response.data.data);
         setNPage(response.data.nPage || 1);
         setIsLoadingReload(false)
@@ -88,7 +87,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
     }
   }
   const onPageClick = async (page: number) => {
-    console.log("page", page);
+   
     setActivePage(page);
   }
   async function onSelect(selectStatus: any) {
@@ -326,14 +325,6 @@ function ButtonAccept({
     let jumlahTerkumpul = danaTerkumpul;
     setIsLoading(true);
     isReload
-
-    console.log({
-
-      jumlahTerkumpul: jumlahTerkumpul,
-      nominal: nominalDonasi,
-      statusInvoiceId: "1",
-      target: target,
-    });
 
     const updateStatus = await adminDonasi_funUpdateStatusDanTotal({
       invoiceId: invoiceId,

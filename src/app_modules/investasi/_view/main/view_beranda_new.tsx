@@ -4,6 +4,7 @@ import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empt
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { gs_investasiTriggerBeranda } from "@/lib/global_state";
 import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { clientLogger } from "@/util/clientLogger";
 import { Box, Center } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
@@ -12,7 +13,7 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import { Investasi_ComponentButtonUpdateBeranda } from "../../_component";
 import { Investasi_ComponentCardBerandaNew } from "../../_component/main/com_card_beranda_new";
-import { apiGetAllInvestasi } from "../../_lib/api_interface";
+import { apiFetchGetAllInvestasi } from "../../_lib/api_fetch_new_investasi";
 import { IDataInvestasiBursa } from "../../_lib/type_investasi";
 import SkeletonInvestasiBursa from "./skeleton_beranda";
 
@@ -33,10 +34,18 @@ export function Investasi_ViewBerandaNew() {
     }
   }, [isTriggerReload]);
 
-  async function getDataInvestasi() {
+  useShallowEffect(() => {
+    setIsTriggerReload(false);
+    setIsShowUpdate(false);
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
     try {
       setLoading(true);
-      const response = await apiGetAllInvestasi(`?cat=bursa&page=1`);
+      const response = await apiFetchGetAllInvestasi({
+        page: `${activePage}`,
+      });
       if (response.success) {
         setData(response.data);
       }
@@ -45,13 +54,25 @@ export function Investasi_ViewBerandaNew() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useShallowEffect(() => {
-    setIsTriggerReload(false);
-    setIsShowUpdate(false);
-    getDataInvestasi();
-  }, []);
+  const handleMoreData = async () => {
+    try {
+      const nextPage = activePage + 1;
+      const loadData = await apiFetchGetAllInvestasi({
+        page: `${nextPage}`,
+      });
+      if (loadData.success) {
+        setActivePage(nextPage);
+        return loadData.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      clientLogger.error("Error ", error);
+      return [];
+    }
+  };
 
   return (
     <>
@@ -80,15 +101,7 @@ export function Investasi_ViewBerandaNew() {
             )}
             data={data}
             setData={setData}
-            moreData={async () => {
-              const pageNew = activePage + 1;
-              const loadData = await apiGetAllInvestasi(
-                `?cat=bursa&page=${pageNew}`
-              );
-              setActivePage(pageNew);
-
-              return loadData.data as any;
-            }}
+            moreData={handleMoreData}
           >
             {(item) => <Investasi_ComponentCardBerandaNew data={item as any} />}
           </ScrollOnly>
