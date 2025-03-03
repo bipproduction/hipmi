@@ -8,33 +8,19 @@ import notifikasi_countUserNotifikasi from "../../fun/count/fun_count_by_id";
 export async function notifikasi_eventCheckStatus({
   appId,
   dataId,
-  categoryPage,
   router,
-  onLoadDataEvent,
   onSetEventMenuId,
   onSetVisible,
-  onLoadCountNtf,
 }: {
   appId: string;
   dataId: string;
-  categoryPage: string
   router: AppRouterInstance;
-  onLoadDataEvent: (val: any) => void;
   onSetEventMenuId(val: number): void;
   onSetVisible(val: boolean): void;
-  onLoadCountNtf(val: number): void;
 }) {
   const check = await notifikasi_funEventCheckStatus({ id: appId });
 
   if (check.status == 200) {
-    const loadListNotifikasi = await notifikasi_getByUserId({
-      page: 1,
-      kategoriApp: categoryPage as any,
-    });
-    onLoadDataEvent(loadListNotifikasi);
-
-    const loadCountNotifikasi = await notifikasi_countUserNotifikasi();
-    onLoadCountNtf(loadCountNotifikasi);
 
     const updateReadNotifikasi = await notifikasi_funUpdateIsReadById({
       notifId: dataId,

@@ -15,8 +15,8 @@ import {
   Notifikasi_ComponentSkeletonView,
 } from "../component";
 import { gs_notifikasi_kategori_app } from "../lib";
-import { apiGetAllNotifikasiByCategory } from "../lib/api_notifikasi";
 import { MODEL_NOTIFIKASI } from "../model/interface";
+import { apiGetAllNotifikasiByCategory } from "../lib/api_fetch_notifikasi";
 
 export default function Notifikasi_UiMain({
   userLoginId,
@@ -82,9 +82,6 @@ export default function Notifikasi_UiMain({
             {(item) => (
               <ComponentNotifiaksi_CardView
                 data={item}
-                onLoadData={setData}
-                categoryPage={categoryPage as any}
-                userLoginId={userLoginId}
               />
             )}
           </ScrollOnly>

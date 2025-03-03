@@ -1,6 +1,5 @@
 "use client";
 
-import { gs_count_ntf } from "@/lib/global_state";
 import {
   AccentColor,
   MainColor,
@@ -11,6 +10,8 @@ import { gs_event_hotMenu } from "@/app_modules/event/global_state";
 import { gs_investas_menu } from "@/app_modules/investasi/g_state";
 import { gs_job_hot_menu } from "@/app_modules/job/global_state";
 import { gs_vote_hotMenu } from "@/app_modules/vote/global_state";
+import { gs_count_ntf } from "@/lib/global_state";
+import { clientLogger } from "@/util/clientLogger";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconCheck, IconChecks } from "@tabler/icons-react";
 import { useAtom } from "jotai";
@@ -24,18 +25,12 @@ import { notifikasi_eventCheckStatus } from "./path/event";
 import { redirectInvestasiPage } from "./path/investasi";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { notifikasi_votingCheckStatus } from "./path/voting";
-import { clientLogger } from "@/util/clientLogger";
+import { redirectDetailForumPage } from "./path/forum";
 
 export function ComponentNotifiaksi_CardView({
   data,
-  onLoadData,
-  categoryPage,
-  userLoginId,
 }: {
   data: MODEL_NOTIFIKASI;
-  onLoadData: (val: any) => void;
-  categoryPage: string;
-  userLoginId?: string
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
@@ -65,24 +60,18 @@ export function ComponentNotifiaksi_CardView({
           try {
             setVisible(true);
 
+            console.log("data", data);
             // JOB
             if (data?.kategoriApp === "JOB") {
               await notifikasi_jobCheckStatus({
                 appId: data.appId,
                 dataId: data.id,
-                categoryPage: categoryPage,
                 router: router,
-                onLoadDataJob(val) {
-                  onLoadData(val);
-                },
                 onSetJobMenuId(val) {
                   setJobMenuId(val);
                 },
                 onSetVisible(val) {
                   setVisible(val);
-                },
-                onLoadCountNtf(val) {
-                  setLoadCountNtf(val);
                 },
               });
 
@@ -94,19 +83,12 @@ export function ComponentNotifiaksi_CardView({
               await notifikasi_eventCheckStatus({
                 appId: data.appId,
                 dataId: data.id,
-                categoryPage: categoryPage,
                 router: router,
-                onLoadDataEvent(val) {
-                  onLoadData(val);
-                },
                 onSetVisible(val) {
                   setVisible(val);
                 },
                 onSetEventMenuId(val) {
                   setEventMenuId(val);
-                },
-                onLoadCountNtf(val) {
-                  setLoadCountNtf(val);
                 },
               });
 
@@ -118,19 +100,12 @@ export function ComponentNotifiaksi_CardView({
               await notifikasi_votingCheckStatus({
                 appId: data.appId,
                 dataId: data.id,
-                categoryPage: categoryPage,
                 router: router,
-                onLoadDataEvent(val) {
-                  onLoadData(val);
-                },
                 onSetVisible(val) {
                   setVisible(val);
                 },
                 onSetMenuId(val) {
                   setVotingMenu(val);
-                },
-                onLoadCountNtf(val) {
-                  setLoadCountNtf(val);
                 },
               });
 
@@ -143,20 +118,12 @@ export function ComponentNotifiaksi_CardView({
                 appId: data.appId,
                 dataId: data.id,
                 userId: data.userId,
-                userLoginId: userLoginId as any,
-                categoryPage: categoryPage,
                 router: router,
-                onLoadDataEvent(val) {
-                  onLoadData(val);
-                },
                 onSetVisible(val) {
                   setVisible(val);
                 },
                 onSetMenuId(val) {
                   setDonasiMenu(val);
-                },
-                onLoadCountNtf(val) {
-                  setLoadCountNtf(val);
                 },
               });
 
@@ -168,30 +135,29 @@ export function ComponentNotifiaksi_CardView({
               redirectInvestasiPage({
                 appId: data.appId,
                 dataId: data.id,
-                categoryPage: categoryPage,
                 router: router,
-                onLoadDataEvent(val) {
-                  onLoadData(val);
-                },
                 onSetVisible(val) {
                   setVisible(val);
                 },
                 onSetMenuId(val) {
                   setInvestasiMenu(val);
                 },
-                onLoadCountNtf(val) {
-                  setLoadCountNtf(val);
-                },
               });
 
               return;
             }
 
-            // data?.kategoriApp === "FORUM" &&
-            //   redirectDetailForumPage({
-            //     data: data,
-            //     router: router,
-            //   });
+            if (data?.kategoriApp === "FORUM") {
+              redirectDetailForumPage({
+                data: data,
+                router: router,
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+              });
+
+              return;
+            }
 
             // data?.kategoriApp === "COLLABORATION" &&
             //   redirectDetailCollaborationPage({
