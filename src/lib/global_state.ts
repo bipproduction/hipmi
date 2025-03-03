@@ -17,7 +17,9 @@ export type ITypeStatusNotifikasi =
   | "Berhasil"
   | "Proses"
   | "Menunggu"
-  | "Gagal";
+  | "Gagal"
+  // Collaboration
+  | "Partisipan Project"
 
 /**
  * @param kategoriApp | "JOB", "VOTING", "EVENT", "DONASI", "INVESTASI", "COLLABORATION", "FORUM"

@@ -25,6 +25,7 @@ import { redirectDetailForumPage } from "./path/forum";
 import { redirectInvestasiPage } from "./path/investasi";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { notifikasi_votingCheckStatus } from "./path/voting";
+import { redirectDetailCollaborationPage } from "./path/collaboration";
 
 export function ComponentNotifiaksi_CardView({
   data,
@@ -157,11 +158,17 @@ export function ComponentNotifiaksi_CardView({
               return;
             }
 
-            // data?.kategoriApp === "COLLABORATION" &&
-            //   redirectDetailCollaborationPage({
-            //     data: data,
-            //     router: router,
-            //   });
+            if (data?.kategoriApp === "COLLABORATION") {
+              await redirectDetailCollaborationPage({
+                data: data,
+                router: router,
+                onSetVisible(val) {
+                  setVisible(val);
+                },
+              });
+
+              return;
+            }
           } catch (error) {
             setVisible(false);
             clientLogger.error("Error redirect notification page", error);

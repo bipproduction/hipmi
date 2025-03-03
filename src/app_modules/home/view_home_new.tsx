@@ -77,6 +77,9 @@ export default function HomeViewNew() {
     }
   }
 
+  console.log("count >", countNtf);
+  console.log("user >", dataUser);
+
   return (
     <>
       <UIGlobal_LayoutTamplate
@@ -84,7 +87,7 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              !dataUser || !countNtf ? (
+              !dataUser && !countNtf  ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconUserSearch color={"gray"} />
                 </ActionIcon>
@@ -111,7 +114,7 @@ export default function HomeViewNew() {
               )
             }
             customButtonRight={
-              !dataUser || !countNtf ? (
+              !dataUser && !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconBell color={"gray"} />
                 </ActionIcon>
