@@ -77,8 +77,6 @@ export default function HomeViewNew() {
     }
   }
 
-  console.log("count >", countNtf);
-  console.log("user >", dataUser);
 
   return (
     <>
