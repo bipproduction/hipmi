@@ -10,7 +10,6 @@ import { gs_event_hotMenu } from "@/app_modules/event/global_state";
 import { gs_investas_menu } from "@/app_modules/investasi/g_state";
 import { gs_job_hot_menu } from "@/app_modules/job/global_state";
 import { gs_vote_hotMenu } from "@/app_modules/vote/global_state";
-import { gs_count_ntf } from "@/lib/global_state";
 import { clientLogger } from "@/util/clientLogger";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconCheck, IconChecks } from "@tabler/icons-react";
@@ -22,10 +21,10 @@ import { useState } from "react";
 import { MODEL_NOTIFIKASI } from "../model/interface";
 import { redirectDonasiPage } from "./path/donasi";
 import { notifikasi_eventCheckStatus } from "./path/event";
+import { redirectDetailForumPage } from "./path/forum";
 import { redirectInvestasiPage } from "./path/investasi";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { notifikasi_votingCheckStatus } from "./path/voting";
-import { redirectDetailForumPage } from "./path/forum";
 
 export function ComponentNotifiaksi_CardView({
   data,
@@ -34,7 +33,6 @@ export function ComponentNotifiaksi_CardView({
 }) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [loadCountNtf, setLoadCountNtf] = useAtom(gs_count_ntf);
 
   const [jobMenuId, setJobMenuId] = useAtom(gs_job_hot_menu);
   const [eventMenuId, setEventMenuId] = useAtom(gs_event_hotMenu);
@@ -59,8 +57,8 @@ export function ComponentNotifiaksi_CardView({
         onClick={async () => {
           try {
             setVisible(true);
-
             console.log("data", data);
+
             // JOB
             if (data?.kategoriApp === "JOB") {
               await notifikasi_jobCheckStatus({
@@ -114,7 +112,7 @@ export function ComponentNotifiaksi_CardView({
 
             // DONASI
             if (data?.kategoriApp === "DONASI") {
-              redirectDonasiPage({
+              await redirectDonasiPage({
                 appId: data.appId,
                 dataId: data.id,
                 userId: data.userId,
@@ -132,7 +130,7 @@ export function ComponentNotifiaksi_CardView({
 
             // INVESTASI
             if (data?.kategoriApp === "INVESTASI") {
-              redirectInvestasiPage({
+              await redirectInvestasiPage({
                 appId: data.appId,
                 dataId: data.id,
                 router: router,
@@ -148,7 +146,7 @@ export function ComponentNotifiaksi_CardView({
             }
 
             if (data?.kategoriApp === "FORUM") {
-              redirectDetailForumPage({
+              await redirectDetailForumPage({
                 data: data,
                 router: router,
                 onSetVisible(val) {
