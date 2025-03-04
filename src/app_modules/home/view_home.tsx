@@ -1,5 +1,5 @@
 "use client";
-import { gs_count_ntf, gs_user_ntf } from "@/lib/global_state";
+import { gs_user_ntf } from "@/lib/global_state";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function HomeView({
 }) {
   const [countNtf, setCountNtf] = useState(countNotifikasi);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
-  const [countLoadNtf, setCountLoadNtf] = useAtom(gs_count_ntf);
+  // const [countLoadNtf, setCountLoadNtf] = useAtom(gs_count_ntf);
   const userRoleId = dataUser.masterUserRoleId;
 
   // useShallowEffect(() => {
@@ -33,15 +33,15 @@ export default function HomeView({
   //   }
   // }, [userRoleId]);
 
-  useShallowEffect(() => {
-    onLoadNotifikasi({
-      onLoad(val) {
-        setCountNtf(val);
-      },
-    });
+  // useShallowEffect(() => {
+  //   onLoadNotifikasi({
+  //     onLoad(val) {
+  //       setCountNtf(val);
+  //     },
+  //   });
 
-    setCountNtf(countLoadNtf as any);
-  }, [countLoadNtf, setCountNtf]);
+  //   setCountNtf(countLoadNtf as any);
+  // }, [countLoadNtf, setCountNtf]);
 
   useShallowEffect(() => {
     setCountNtf(countNtf + newUserNtf);
