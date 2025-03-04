@@ -246,6 +246,17 @@ export default function RealtimeProvider({
             }
 
             // ---------------------- INVESTASI ------------------------- //
+
+            // ---------------------- COLLABORATION ------------------------- //
+            if (
+              data.type == "trigger" &&
+              data.pushNotificationTo == "USER" &&
+              data.dataMessage?.kategoriApp == "COLLABORATION" &&
+              data.dataMessage?.status == "Partisipan Project"
+            ) {
+              setNewUserNtf((e) => e + 1);
+            }
+            // ---------------------- COLLABORATION ------------------------- //
           },
         });
 

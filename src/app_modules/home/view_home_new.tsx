@@ -1,5 +1,5 @@
 "use client";
-import { gs_count_ntf, gs_user_ntf } from "@/lib/global_state";
+import { gs_user_ntf } from "@/lib/global_state";
 import global_limit from "@/lib/limit";
 import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { RouterNotifikasi } from "@/lib/router_hipmi/router_notifikasi";
@@ -20,7 +20,7 @@ import FooterHome from "./component/footer_home";
 import { apiGetDataHome, apiGetNotifikasiHome } from "./fun/get/api_home";
 
 export default function HomeViewNew() {
-  const [countNtf, setCountNtf] = useAtom(gs_count_ntf);
+  const [countNtf, setCountNtf] = useState<number | null>(null);
   const [newUserNtf, setNewUserNtf] = useAtom(gs_user_ntf);
   const [dataUser, setDataUser] = useState<any | null>(null);
   const [categoryPage, setCategoryPage] = useAtom(gs_notifikasi_kategori_app);
@@ -31,7 +31,7 @@ export default function HomeViewNew() {
       setCountNtf(countNtf + newUserNtf);
       setNewUserNtf(0);
     }
-  }, [newUserNtf, countNtf]);
+  }, [newUserNtf]);
 
   useShallowEffect(() => {
     hanlderLoadData();
@@ -77,6 +77,7 @@ export default function HomeViewNew() {
     }
   }
 
+
   return (
     <>
       <UIGlobal_LayoutTamplate
@@ -84,7 +85,7 @@ export default function HomeViewNew() {
           <UIGlobal_LayoutHeaderTamplate
             title="HIPMI"
             customButtonLeft={
-              !dataUser || !countNtf ? (
+              !dataUser && !countNtf  ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconUserSearch color={"gray"} />
                 </ActionIcon>
@@ -111,7 +112,7 @@ export default function HomeViewNew() {
               )
             }
             customButtonRight={
-              !dataUser || !countNtf ? (
+              !dataUser && !countNtf ? (
                 <ActionIcon radius={"xl"} variant={"transparent"}>
                   <IconBell color={"gray"} />
                 </ActionIcon>

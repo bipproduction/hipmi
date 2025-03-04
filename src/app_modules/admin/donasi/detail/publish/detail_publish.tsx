@@ -65,6 +65,7 @@ export default function AdminDonasi_DetailPublish({
   const [isReload, setReload] = useState(false);
   const params = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_DONASI | null>(null);
+  console.log("Ini data", data)
   // 
 
   useShallowEffect(() => {
@@ -110,7 +111,7 @@ export default function AdminDonasi_DetailPublish({
               donasi={data}
               isReload={isReload}
             />)}
-          <TampilanListPencairan pencairan={pencairan} />
+          <TampilanListPencairan  pencairan={pencairan} />
         </>
       </Stack>
     </>

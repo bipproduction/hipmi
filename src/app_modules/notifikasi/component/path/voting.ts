@@ -10,34 +10,19 @@ import notifikasi_funUpdateIsReadById from "../../fun/update/fun_update_is_read_
 export async function notifikasi_votingCheckStatus({
   appId,
   dataId,
-  categoryPage,
   router,
-  onLoadDataEvent,
   onSetMenuId,
   onSetVisible,
-  onLoadCountNtf,
 }: {
   appId: string;
   dataId: string;
-  categoryPage: string;
   router: AppRouterInstance;
-  onLoadDataEvent: (val: any) => void;
   onSetMenuId(val: number): void;
   onSetVisible(val: boolean): void;
-  onLoadCountNtf(val: number): void;
 }) {
   const check = await notifikasi_funVotingCheckStatus({ id: appId });
 
   if (check.status == 200) {
-    const loadListNotifikasi = await notifikasi_getByUserId({
-      page: 1,
-      kategoriApp: categoryPage as any,
-    });
-    onLoadDataEvent(loadListNotifikasi);
-
-    const loadCountNotifikasi = await notifikasi_countUserNotifikasi();
-    onLoadCountNtf(loadCountNotifikasi);
-
     const updateReadNotifikasi = await notifikasi_funUpdateIsReadById({
       notifId: dataId,
     });
@@ -52,6 +37,4 @@ export async function notifikasi_votingCheckStatus({
   } else {
     ComponentGlobal_NotifikasiPeringatan("Status tidak ditemukan");
   }
-
-
 }
