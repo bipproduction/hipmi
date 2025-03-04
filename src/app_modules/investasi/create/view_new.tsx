@@ -27,8 +27,8 @@ import {
 import _ from "lodash";
 import { useState } from "react";
 import { Investasi_ComponentButtonCreateNewInvestasi } from "../_component";
-import { apiGetMasterInvestasi } from "../_lib/api_interface";
 import { Investasi_ComponentButtonUploadFile } from "../_component/button/comp_button_upload_file_prospektus";
+import { apiGetMasterInvestasi } from "../_lib/api_interface";
 
 export default function InvestasiCreateNew() {
   const [loadingMasterInvestor, setLoadingMasterInvestor] = useState(true);
@@ -172,14 +172,25 @@ export default function InvestasiCreateNew() {
                 <IconFileTypePdf size={50} color="gray" />
               </Stack>
             ) : (
-              <Grid align="center">
-                <Grid.Col span={2}></Grid.Col>
+              <Grid align="center" justify="center">
+                <Grid.Col span={1}></Grid.Col>
                 <Grid.Col span={"auto"}>
-                  <Text lineClamp={1} align="center">
-                    {filePdf.name}
-                  </Text>
+                  <Center>
+                    <Box p="xs" w={200}>
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          width: "100%",
+                        }}
+                        truncate
+                        align="center"
+                      >
+                        {filePdf.name}
+                      </Text>
+                    </Box>
+                  </Center>
                 </Grid.Col>
-                <Grid.Col span={2}>
+                <Grid.Col span={1}>
                   <Center>
                     <IconCircleCheck color="green" />
                   </Center>

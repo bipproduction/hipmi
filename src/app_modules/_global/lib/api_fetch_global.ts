@@ -36,7 +36,7 @@ const apiGetPdfToImage = async ({ id }: { id: string }) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       console.error(
-        "Error get admin contact:",
+        "Failed get file",
         errorData?.message || "Unknown error"
       );
 
@@ -46,7 +46,7 @@ const apiGetPdfToImage = async ({ id }: { id: string }) => {
     const jsonData: PdfResponse = await response.json();
     return jsonData;
   } catch (error) {
-    console.error("Error get admin contact:", error);
+    console.error("Error get file", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
