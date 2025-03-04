@@ -173,23 +173,23 @@ function TableView() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>{e.author.username}</Text>
           </Center>
         </td>
         <td>
-          <Center w={400}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center w={400}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>{e.catatan}</Text>
           </Center>
         </td>
   
         <td>
-          <Center w={200}>
+          <Center >
             <Button
               loading={isLoading && idData === e.id}
               loaderPosition="center"
@@ -264,16 +264,16 @@ function TableView() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Username</Center>
+                      <Center c={AccentColor.white} >Username</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} >Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>Catatan Penolakan</Center>
+                      <Center c={AccentColor.white} >Catatan Penolakan</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} >Aksi</Center>
                     </th>
                   </tr>
                 </thead>
