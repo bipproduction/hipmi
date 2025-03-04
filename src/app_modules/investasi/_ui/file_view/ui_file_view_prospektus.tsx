@@ -20,6 +20,8 @@ export function Investasi_UiFileViewProspektus() {
   const param = useParams<{ id: string }>();
   const prospektusId = param.id;
 
+  console.log(">>", prospektusId);
+
   const [pdfPages, setPdfPages] = useState<PageData[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,10 +38,13 @@ export function Investasi_UiFileViewProspektus() {
           setPdfPages(response.pages as any);
           setLoading(false);
         }
-      } catch (err) {
-        console.error("Error fetching PDF:", err);
-        setError(err instanceof Error ? err.message : "Unknown error occurred");
+      } catch (error) {
+        console.error("Error fetching PDF:", error);
+        setError(
+          error instanceof Error ? error.message : "Unknown error occurred"
+        );
         setLoading(false);
+        setPdfPages(null);
       }
     };
 
@@ -73,7 +78,9 @@ export function Investasi_UiFileViewProspektus() {
             title="Pratinjau Prospektus"
             iconLeft={<IconX />}
             customButtonRight={
-              error && error !== "" ? (
+              loading ? (
+                <CustomSkeleton circle height={30} width={30} />
+              ) : error && error !== "" ? (
                 <ActionIcon disabled />
               ) : (
                 <ActionIcon
