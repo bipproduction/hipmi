@@ -29,8 +29,6 @@ export function Investasi_ComponentButtonUploadFile({
             new Blob([new Uint8Array(await files.arrayBuffer())])
           );
 
-          console.log("files", files);
-
           if (files.size > 100 * 1024 * 1024) {
             setIsLoading(false);
             ComponentGlobal_NotifikasiPeringatan("File terlalu besar");
