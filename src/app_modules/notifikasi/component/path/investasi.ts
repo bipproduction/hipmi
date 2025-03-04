@@ -16,21 +16,15 @@ import {
 export async function redirectInvestasiPage({
   appId,
   dataId,
-  categoryPage,
   router,
-  onLoadDataEvent,
   onSetMenuId,
   onSetVisible,
-  onLoadCountNtf,
 }: {
   appId: string;
   dataId: string;
-  categoryPage: string;
   router: AppRouterInstance;
-  onLoadDataEvent: (val: any) => void;
   onSetMenuId(val: number): void;
   onSetVisible(val: boolean): void;
-  onLoadCountNtf(val: number): void;
 }) {
   const check = await notifikasi_funInvestasiCheckStatus({ id: appId });
   const checkInvestor = await notifikasi_funInvestasiChecInvestaorStatus({

@@ -23,33 +23,36 @@ import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
 
 export default function Event_DetailDraft() {
-   const params = useParams<{ id: string }>();
-   const eventId = params.id as string;
-   const [data, setData] = useState<MODEL_EVENT | null>(null);
+  const params = useParams<{ id: string }>();
+  const eventId = params.id as string;
+  const [data, setData] = useState<MODEL_EVENT | null>(null);
 
-   useShallowEffect(() => {
-     onLoadData();
-   }, []);
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
 
-   async function onLoadData() {
-     try {
-       const respone = await apiGetEventDetailById({
-         id: eventId,
-       });
+  async function onLoadData() {
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
 
-       if (respone) {
-         setData(respone.data);
-       }
-     } catch (error) {
-       clientLogger.error("Error get data detail event", error);
-     }
-   }
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
+  }
 
   return (
     <>
       <Stack spacing={"lg"}>
         <ComponentEvent_DetailData isReport data={data} />
-        <ButtonAction eventId={eventId} endDate={data?.tanggalSelesai} />
+        <ButtonAction
+          eventId={eventId}
+          endDate={data?.tanggalSelesai}
+        />
       </Stack>
     </>
   );
@@ -61,7 +64,6 @@ function ButtonAction({ eventId, endDate }: { eventId: string; endDate: any }) {
   const [isLoadingAjukan, setLoadingAjukan] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
-
 
   async function onDelete() {
     try {
@@ -86,7 +88,9 @@ function ButtonAction({ eventId, endDate }: { eventId: string; endDate: any }) {
   }
 
   async function onAjukan() {
-    if (moment(endDate.toISOString().toString()).diff(moment(), "minutes") < 0)
+    // console.log("end Date", endDate)
+
+    if (moment(endDate).diff(moment(), "minutes") < 0)
       return ComponentGlobal_NotifikasiPeringatan("Waktu acara telah lewat");
 
     try {

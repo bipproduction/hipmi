@@ -12,37 +12,46 @@ export default async function colab_funCreatePartisipan({
   id: string;
   deskripsi: string;
 }) {
-  const userLoginId = await funGetUserIdByToken();
+  try {
+    const userLoginId = await funGetUserIdByToken();
 
-  if (userLoginId == null) {
-    return {
-      status: 500,
-      message: "Gagal mendapatkan data, user id tidak ada",
-    };
-  }
+    if (!userLoginId) {
+      return {
+        status: 404,
+        message: "Gagal mendapatkan data, user id tidak ada",
+      };
+    }
 
-  const create = await prisma.projectCollaboration_Partisipasi.create({
-    data: {
-      projectCollaborationId: id,
-      userId: userLoginId,
-      deskripsi_diri: deskripsi,
-    },
-    select: {
-      ProjectCollaboration: {
-        select: {
-          id: true,
-          title: true,
-          userId: true,
+    const create = await prisma.projectCollaboration_Partisipasi.create({
+      data: {
+        projectCollaborationId: id,
+        userId: userLoginId,
+        deskripsi_diri: deskripsi,
+      },
+      select: {
+        ProjectCollaboration: {
+          select: {
+            id: true,
+            title: true,
+            userId: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!create) return { status: 400, message: "Gagal menambahkan partisipan" };
-  revalidatePath(RouterColab.main_detail + id);
-  return {
-    data: create,
-    status: 201,
-    message: "Berhasil menambahkan partisipan",
-  };
+    if (!create)
+      return { status: 400, message: "Gagal menambahkan partisipan" };
+    revalidatePath(RouterColab.main_detail + id);
+    return {
+      data: create,
+      status: 201,
+      message: "Berhasil menambahkan partisipan",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Error menambahkan partisipan",
+      error: (error as Error).message,
+    };
+  }
 }
