@@ -1,32 +1,23 @@
 "use client";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Box,
   Button,
-  Center,
   Divider,
-  Flex,
   Grid,
-  Image,
   SimpleGrid,
-  Stack,
-  Text,
-  Title,
+  Stack
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconBrandWhatsapp } from "@tabler/icons-react";
-import React, { useState } from "react";
-import { TfiFacebook } from "react-icons/tfi";
-import { apiGetOneSponsorEventById } from "../../_lib/api_event";
 import { useParams, useRouter } from "next/navigation";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useState } from "react";
+import { apiGetOneSponsorEventById } from "../../_lib/api_event";
 import { IEventSponsor } from "../../_lib/interface";
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
 
 function DetailSponsor_Event({ userLoginId }: { userLoginId: string }) {
   const params = useParams<{ id: string }>();
