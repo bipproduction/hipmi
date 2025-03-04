@@ -73,14 +73,18 @@ export function Investasi_UiFileViewProspektus() {
             title="Pratinjau Prospektus"
             iconLeft={<IconX />}
             customButtonRight={
-              <ActionIcon
-                variant="transparent"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <IconDotsVertical color="white" />
-              </ActionIcon>
+              error && error !== "" ? (
+                <ActionIcon disabled />
+              ) : (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  <IconDotsVertical color="white" />
+                </ActionIcon>
+              )
             }
           />
         }
@@ -88,10 +92,10 @@ export function Investasi_UiFileViewProspektus() {
         <Box mb="lg">
           {loading ? (
             <CustomSkeleton height={"80vh"} width={"100%"} />
-          ) : error ? (
+          ) : error && error !== "" ? (
             <Stack>
               <ComponentGlobal_IsEmptyData text="Maaf, PDF mengalami error" />
-              <ComponentGlobal_IsEmptyData text={error} />
+              {/* <ComponentGlobal_IsEmptyData text={error} /> */}
             </Stack>
           ) : (
             <div

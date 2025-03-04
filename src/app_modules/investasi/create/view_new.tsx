@@ -28,6 +28,7 @@ import _ from "lodash";
 import { useState } from "react";
 import { Investasi_ComponentButtonCreateNewInvestasi } from "../_component";
 import { apiGetMasterInvestasi } from "../_lib/api_interface";
+import { Investasi_ComponentButtonUploadFile } from "../_component/button/comp_button_upload_file_prospektus";
 
 export default function InvestasiCreateNew() {
   const [loadingMasterInvestor, setLoadingMasterInvestor] = useState(true);
@@ -188,10 +189,9 @@ export default function InvestasiCreateNew() {
           </ComponentGlobal_CardStyles>
 
           <Center>
-            <ComponentGlobal_ButtonUploadFileImage
+            <Investasi_ComponentButtonUploadFile
               onSetFile={setFilePdf}
               onSetImage={setFPdf}
-              accept={"application/pdf"}
               text="Upload File"
               icon={<IconFileTypePdf size={20} />}
             />
