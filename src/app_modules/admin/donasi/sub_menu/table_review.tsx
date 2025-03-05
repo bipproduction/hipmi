@@ -221,7 +221,7 @@ function TableStatus() {
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1500}
+                w={1120}
                 h={"100%"}
 
               >
