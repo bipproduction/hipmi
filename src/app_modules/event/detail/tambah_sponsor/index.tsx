@@ -77,8 +77,6 @@ function Event_TambahSponsor() {
         data: data,
       });
 
-      console.log("res >>", created);
-
       if (created) {
         router.replace(RouterEvent.nominal_sponsor({ id: params.id }));
         ComponentGlobal_NotifikasiBerhasil(created.message);
