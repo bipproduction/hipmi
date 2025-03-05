@@ -3,11 +3,11 @@ import { Investasi_UiDetailSahamSaya } from "@/app_modules/investasi/_ui";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const invoiceId = params.id;
-  const dataSaham = await investasi_funGetOneInvoiceById({ invoiceId });
+  // const dataSaham = await investasi_funGetOneInvoiceById({ invoiceId });
 
   return (
     <>
-      <Investasi_UiDetailSahamSaya dataSaham={dataSaham} />
+      <Investasi_UiDetailSahamSaya />
     </>
   );
 }
