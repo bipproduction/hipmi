@@ -1,23 +1,22 @@
 "use client";
 
-import {
-  NEW_RouterInvestasi,
-  RouterInvestasi_OLD,
-} from "@/lib/router_hipmi/router_investasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
   ComponentGlobal_LoadImageLandscape,
 } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   Investasi_ComponentBoxDaftarBerita,
   Investasi_ComponentBoxDaftarDokumen,
+  Investasi_ComponentBoxInvestor,
   Investasi_ComponentBoxProgress,
   Investasi_ComponentBoxProspektus,
   Investasi_ComponentTitleAndValueInDetail,
 } from "@/app_modules/investasi/_component";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   Box,
   Button,
@@ -28,25 +27,19 @@ import {
   Title,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import {
-  IconBookDownload,
-  IconFileDescription,
-  IconSpeakerphone,
-} from "@tabler/icons-react";
 import _ from "lodash";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Investasi_ViewDetailPublish({
-  dataInvestasi,
+  data,
   userLoginId,
 }: {
-  dataInvestasi: MODEL_INVESTASI;
+  data: MODEL_INVESTASI | null;
   userLoginId: string;
 }) {
   const router = useRouter();
-  const [data, setData] = useState(dataInvestasi);
   const [boxId, setBoxId] = useState(0);
   const [isLoadingBox, setLoadingBox] = useState(false);
   const [isLoadingButton, setLoadingButton] = useState(false);
@@ -62,26 +55,28 @@ export default function Investasi_ViewDetailPublish({
     setLoadingButton(true);
 
     //NEW
-    router.push(NEW_RouterInvestasi.pembelian + data.id, { scroll: false });
+    router.push(NEW_RouterInvestasi.pembelian + data?.id, { scroll: false });
     setTotal(0);
     setJumlah(0);
   }
 
+  if (!data) return <CustomSkeleton height={"80vh"} width={"100%"} />;
+
   return (
     <Stack>
-      <Investasi_ComponentBoxProgress progress={data.progress} />
+      <Investasi_ComponentBoxProgress progress={data?.progress} />
 
       <ComponentGlobal_CardStyles>
         <Stack spacing={"xl"}>
           <ComponentGlobal_AvatarAndUsername
-            profile={data.author.Profile as any}
+            profile={data?.author.Profile as any}
           />
-          <ComponentGlobal_LoadImageLandscape fileId={data.imageId} />
+          <ComponentGlobal_LoadImageLandscape fileId={data?.imageId} />
 
           {/* Title dan Persentase */}
           <Center>
             <Title color={MainColor.white} order={3} align="center">
-              {_.startCase(data.title)}
+              {_.startCase(data?.title)}
             </Title>
           </Center>
 
@@ -90,7 +85,11 @@ export default function Investasi_ViewDetailPublish({
           <Stack>
             <Investasi_ComponentTitleAndValueInDetail
               title="Investor"
-              value={<Text c={MainColor.white}>{data.Investasi_Invoice.length} </Text>}
+              value={
+                <Text c={MainColor.white}>
+                  {data?.Investasi_Invoice.length}{" "}
+                </Text>
+              }
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Target Dana"
@@ -99,7 +98,7 @@ export default function Investasi_ViewDetailPublish({
                   Rp.{" "}
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 20,
-                  }).format(+data.targetDana)}{" "}
+                  }).format(+data?.targetDana)}{" "}
                 </Text>
               }
             />
@@ -111,14 +110,18 @@ export default function Investasi_ViewDetailPublish({
                   Rp.{" "}
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
-                  }).format(+data.hargaLembar)}
+                  }).format(+data?.hargaLembar)}
                 </Text>
               }
             />
 
             <Investasi_ComponentTitleAndValueInDetail
-              title={<Text c={MainColor.white} fs={"italic"}>Return Of Invesment (RoI)</Text>}
-              value={<Text c={MainColor.white}>{data.roi} %</Text>}
+              title={
+                <Text c={MainColor.white} fs={"italic"}>
+                  Return Of Invesment (RoI)
+                </Text>
+              }
+              value={<Text c={MainColor.white}>{data?.roi} %</Text>}
             />
 
             <Investasi_ComponentTitleAndValueInDetail
@@ -127,7 +130,7 @@ export default function Investasi_ViewDetailPublish({
                 <Text c={MainColor.white}>
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
-                  }).format(+data.totalLembar)}{" "}
+                  }).format(+data?.totalLembar)}{" "}
                   lembar
                 </Text>
               }
@@ -139,7 +142,7 @@ export default function Investasi_ViewDetailPublish({
                 <Text c={MainColor.white}>
                   {new Intl.NumberFormat("id-ID", {
                     maximumSignificantDigits: 10,
-                  }).format(+data.sisaLembar)}{" "}
+                  }).format(+data?.sisaLembar)}{" "}
                   lembar
                 </Text>
               }
@@ -147,29 +150,42 @@ export default function Investasi_ViewDetailPublish({
 
             <Investasi_ComponentTitleAndValueInDetail
               title="Jadwal Pembagian"
-              value={<Text c={MainColor.white}>{data.MasterPembagianDeviden.name} Bulan </Text>}
+              value={
+                <Text c={MainColor.white}>
+                  {data?.MasterPembagianDeviden.name} Bulan{" "}
+                </Text>
+              }
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Pembagian Deviden"
-              value={<Text c={MainColor.white}>{data.MasterPeriodeDeviden.name}</Text>}
+              value={
+                <Text c={MainColor.white}>
+                  {data?.MasterPeriodeDeviden.name}
+                </Text>
+              }
             />
             <Investasi_ComponentTitleAndValueInDetail
               title="Pencarian Investor"
-              value={<Text c={MainColor.white}>{data.MasterPencarianInvestor.name} Hari </Text>}
+              value={
+                <Text c={MainColor.white}>
+                  {data?.MasterPencarianInvestor.name} Hari{" "}
+                </Text>
+              }
             />
           </Stack>
 
           {/* List Box */}
           <SimpleGrid
-            cols={3}
+            cols={4}
             breakpoints={[
               { maxWidth: "62rem", cols: 3, spacing: "md" },
               { maxWidth: "48rem", cols: 2, spacing: "sm" },
               { maxWidth: "36rem", cols: 1, spacing: "sm" },
             ]}
           >
+            <Investasi_ComponentBoxInvestor id={data?.id} />
             <Investasi_ComponentBoxProspektus
-              prospektusFileId={data.prospektusFileId}
+              prospektusFileId={data?.prospektusFileId}
             />
             <Investasi_ComponentBoxDaftarDokumen investasiId={data?.id} />
             <Investasi_ComponentBoxDaftarBerita investasiId={data?.id} />
@@ -178,9 +194,9 @@ export default function Investasi_ViewDetailPublish({
       </ComponentGlobal_CardStyles>
 
       <Box my={"md"}>
-        {data.sisaLembar === "0" ||
-        Number(data.MasterPencarianInvestor.name) -
-          moment(new Date()).diff(new Date(data.countDown), "days") <=
+        {data?.sisaLembar === "0" ||
+        Number(data?.MasterPencarianInvestor.name) -
+          moment(new Date()).diff(new Date(data?.countDown), "days") <=
           0 ? (
           <Center mb={"md"}>
             <Button disabled radius={50} variant="transparent">
@@ -189,7 +205,7 @@ export default function Investasi_ViewDetailPublish({
           </Center>
         ) : (
           <Box>
-            {userLoginId === data.authorId ? (
+            {userLoginId === data?.authorId ? (
               <Center mb={"md"}>
                 <Button disabled radius={50}>
                   Investasi Ini Milik Anda

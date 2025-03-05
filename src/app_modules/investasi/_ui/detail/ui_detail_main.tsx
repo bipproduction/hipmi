@@ -9,7 +9,7 @@ import { ActionIcon } from "@mantine/core";
 import { IconCategoryPlus, IconDotsVertical } from "@tabler/icons-react";
 import { MODEL_INVESTASI } from "../../_lib/interface";
 import { Investasi_ViewDetailPublish } from "../../_view";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   NEW_RouterInvestasi,
@@ -17,31 +17,54 @@ import {
 } from "@/lib/router_hipmi/router_investasi";
 import { IconDeviceIpadPlus } from "@tabler/icons-react";
 import { MainColor } from "@/app_modules/_global/color";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiNewGetOneInvestasiById } from "../../_lib/api_fetch_new_investasi";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export function Investasi_UiDetailMain({
-  dataInvestasi,
   userLoginId,
 }: {
-  dataInvestasi: MODEL_INVESTASI;
   userLoginId: string;
 }) {
+  const param = useParams<{ id: string }>();
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
 
   const listPage = [
     {
       id: "1",
       name: "Tambah & Edit Dokumen",
       icon: <IconCategoryPlus />,
-      path: NEW_RouterInvestasi.rekap_dokumen({ id: dataInvestasi.id }),
+      path: NEW_RouterInvestasi.rekap_dokumen({ id: data?.id as any }),
     },
     {
       id: "2",
       name: "Tambah & Edit Berita",
       icon: <IconDeviceIpadPlus />,
-      path: NEW_RouterInvestasi.rekap_berita({ id: dataInvestasi.id }),
+      path: NEW_RouterInvestasi.rekap_berita({ id: data?.id as any }),
     },
   ];
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiNewGetOneInvestasiById({ id: param.id });
+
+      if (response.success) {
+        console.log(response.data);
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+    }
+  };
 
   return (
     <>
@@ -50,7 +73,7 @@ export function Investasi_UiDetailMain({
           <UIGlobal_LayoutHeaderTamplate
             title="Detail "
             customButtonRight={
-              userLoginId === dataInvestasi.authorId ? (
+              userLoginId === data?.authorId ? (
                 <ActionIcon
                   variant="transparent"
                   onClick={() => setOpenDrawer(true)}
@@ -65,7 +88,7 @@ export function Investasi_UiDetailMain({
         }
       >
         <Investasi_ViewDetailPublish
-          dataInvestasi={dataInvestasi}
+          data={data as any}
           userLoginId={userLoginId}
         />
       </UIGlobal_LayoutTamplate>
