@@ -27,7 +27,7 @@ import {
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconEyeCheck, IconReload } from "@tabler/icons-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import {
   AdminInvestasi_ComponentButtonBandingTransaksi,
@@ -35,7 +35,6 @@ import {
   AdminInvestasi_ComponentCekBuktiTransfer,
 } from "../../_component";
 import { apiGetAdminAllTransaksiById } from "../../_lib/api_fetch_admin_investasi";
-import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 
 export function AdminInvestasi_ViewDaftarTransaksi() {
   const params = useParams<{ id: string }>();
@@ -50,7 +49,6 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [idData, setIdData] = useState("");
-  const router = useRouter();
 
   useShallowEffect(() => {
     handleLoadData();
@@ -201,7 +199,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
               onClick={() => {
                 setIdData(e.id);
                 setLoading(true);
-                router.push(RouterAdminInvestasi.detail_transaksi + e.id);
+
               }}
             >
               Detail
