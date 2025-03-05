@@ -55,7 +55,6 @@ export function Investasi_UiDetailMain({
       const response = await apiNewGetOneInvestasiById({ id: param.id });
 
       if (response.success) {
-        console.log(response.data);
         setData(response.data);
       } else {
         setData(null);

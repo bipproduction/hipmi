@@ -19,7 +19,11 @@ export async function GET(
             Profile: true,
           },
         },
-        Investasi_Invoice: true,
+        Investasi_Invoice: {
+          where: {
+            statusInvoiceId: "1"
+          }
+        },
         MasterStatusInvestasi: true,
         BeritaInvestasi: true,
         DokumenInvestasi: true,
