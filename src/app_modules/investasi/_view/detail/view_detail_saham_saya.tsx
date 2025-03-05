@@ -1,15 +1,17 @@
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import {
   Investasi_ComponentBoxDetailData,
   Investasi_ComponentBoxHargaDanLembarSaham,
   Investasi_ComponentBoxProgress,
 } from "../../_component";
-import { MODEL_INVESTASI, MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetOneSahamInvestasiById, apiNewGetOneInvestasiById } from "../../_lib/api_fetch_new_investasi";
-import { useParams } from "next/navigation";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import {
+  apiGetOneSahamInvestasiById
+} from "../../_lib/api_fetch_new_investasi";
+import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 
 export function Investasi_ViewDetailSahamSaya() {
   const param = useParams<{ id: string }>();
@@ -39,7 +41,9 @@ export function Investasi_ViewDetailSahamSaya() {
     <>
       <Stack mb={"lg"}>
         <Investasi_ComponentBoxHargaDanLembarSaham data={data as any} />
-        <Investasi_ComponentBoxProgress progress={data?.Investasi?.progress as any} />
+        <Investasi_ComponentBoxProgress
+          progress={data?.Investasi?.progress as any}
+        />
         <Investasi_ComponentBoxDetailData data={data as any} />
       </Stack>
     </>

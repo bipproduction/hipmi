@@ -6,16 +6,16 @@ import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate
 import { ActionIcon, Loader } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Investasi_ViewTransaksiBerhasil } from "../../_view";
 import { gs_investas_menu } from "../../g_state";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetOneSahamInvestasiById } from "../../_lib/api_fetch_new_investasi";
+import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_UiTransaksiBerhasil({
-  dataTransaksi,
-}: {
-  dataTransaksi: any;
-}) {
+export function Investasi_UiTransaksiBerhasil() {
   const router = useRouter();
   const [hotMenu, setHotMenu] = useAtom(gs_investas_menu);
   const [isLoading, setLoading] = useState(false);
@@ -40,7 +40,9 @@ export function Investasi_UiTransaksiBerhasil({
         />
       }
     >
-      <Investasi_ViewTransaksiBerhasil dataTransaksi={dataTransaksi} />
+
+
+        <Investasi_ViewTransaksiBerhasil  />
     </UIGlobal_LayoutTamplate>
   );
 }

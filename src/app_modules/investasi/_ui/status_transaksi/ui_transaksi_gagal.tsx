@@ -11,13 +11,7 @@ import { useState } from "react";
 import { Investasi_ViewTransaksiGagal } from "../../_view";
 import { gs_investas_menu } from "../../g_state";
 
-export function Investasi_UiTransaksiGagal({
-  dataTransaksi,
-  nomorAdmin,
-}: {
-  dataTransaksi: any;
-  nomorAdmin: any
-}) {
+export function Investasi_UiTransaksiGagal() {
   const router = useRouter();
   const [hotMenu, setHotMenu] = useAtom(gs_investas_menu);
   const [isLoading, setLoading] = useState(false);
@@ -42,7 +36,7 @@ export function Investasi_UiTransaksiGagal({
         />
       }
     >
-      <Investasi_ViewTransaksiGagal dataTransaksi={dataTransaksi} nomorAdmin={nomorAdmin} />
+      <Investasi_ViewTransaksiGagal />
     </UIGlobal_LayoutTamplate>
   );
 }
