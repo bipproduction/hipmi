@@ -12,4 +12,5 @@ export const RouterAdminInvestasi = {
   detail_review: "/dev/admin/investasi/detail/review/",
   detail_reject: "/dev/admin/investasi/detail/reject/",
   bukti_transfer: "/dev/admin/investasi/bukti-transfer/",
+  detail_transaksi: "/dev/admin/investasi/detail/transaksi/",
 };

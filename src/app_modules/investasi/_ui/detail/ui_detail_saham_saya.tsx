@@ -4,13 +4,13 @@ import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_ta
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import { Investasi_ViewDetailSahamSaya } from "../../_view";
 
-export function Investasi_UiDetailSahamSaya({ dataSaham }: { dataSaham: any }) {
+export function Investasi_UiDetailSahamSaya() {
   return (
     <>
       <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Detail Saham" />}
       >
-        <Investasi_ViewDetailSahamSaya dataSaham={dataSaham as any} />
+        <Investasi_ViewDetailSahamSaya />
       </UIGlobal_LayoutTamplate>
     </>
   );

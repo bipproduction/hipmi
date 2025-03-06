@@ -18,6 +18,7 @@ import { Investasi_ComponentDetailDataNonPublish } from "./detail/comp_detail_da
 import { Investasi_ComponentButtonUpdateDataInvestasi } from "./button/comp_button_update_investasi";
 import { Investasi_ComponentCardRekapDocument } from "./detail/comp_card_rekap_document";
 import { Investasi_ComponentCardDaftarDocument } from "./detail/comp_card_daftar_document";
+import { Investasi_ComponentBoxInvestor } from "./detail/comp_box_investor";
 
 export { Investasi_ComponentFooterMain };
 export { Investasi_ComponentCardBeranda };
@@ -39,3 +40,4 @@ export { Investasi_ComponentDetailDataNonPublish };
 export { Investasi_ComponentButtonUpdateDataInvestasi };
 export { Investasi_ComponentCardRekapDocument };
 export { Investasi_ComponentCardDaftarDocument };
+export { Investasi_ComponentBoxInvestor };

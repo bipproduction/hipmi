@@ -25,7 +25,6 @@ function Event_MetodePembayaran() {
   const [nominal, setNominal] = useAtom(gs_nominal_sponsor);
   const [bankId, setBankId] = useAtom(gs_event_bank_id);
   const [isLoading, setIsLoading] = useState(false);
-  console.log("nominal >>", nominal);
 
   const [data, setData] = useState<MODEL_MASTER_BANK[] | null>(null);
   useShallowEffect(() => {

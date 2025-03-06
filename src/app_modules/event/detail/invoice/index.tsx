@@ -15,8 +15,6 @@ function Event_Invoice({ userLoginId }: { userLoginId: string }) {
   const [nominal, setNominal] = useAtom(gs_nominal_sponsor);
   const [bankId, setBankId] = useAtom(gs_event_bank_id);
 
-  console.log("nominal >>", nominal);
-  console.log("bankId >>", bankId);
 
   return (
     <>

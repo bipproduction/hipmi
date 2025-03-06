@@ -121,6 +121,7 @@ export interface Model_Status_Transaksi_Investasi {
 }
 
 export interface MODEL_INVOICE_INVESTASI {
+  Profile: any;
   id: string;
   isActive: boolean;
   createdAt: Date;

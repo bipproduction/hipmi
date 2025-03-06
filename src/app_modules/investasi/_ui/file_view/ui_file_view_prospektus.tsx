@@ -20,8 +20,6 @@ export function Investasi_UiFileViewProspektus() {
   const param = useParams<{ id: string }>();
   const prospektusId = param.id;
 
-  console.log(">>", prospektusId);
-
   const [pdfPages, setPdfPages] = useState<PageData[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

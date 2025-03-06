@@ -147,7 +147,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
         </td>
         <td>
           <Center >
-            <Badge c={AccentColor.white} w={150} variant="dot">
+            <Badge c={AccentColor.white}  variant="dot">
               {e?.DonasiMaster_StatusInvoice?.name}
             </Badge>
           </Center>
@@ -251,7 +251,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
-              w={1500}
+              w={1120}
             >
               <thead>
                 <tr>

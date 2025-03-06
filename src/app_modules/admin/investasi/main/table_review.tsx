@@ -113,36 +113,36 @@ function TableView() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             <Text lineClamp={1}>{e.author.username}</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={400}>
+          <Center c={AccentColor.white} >
             <Text lineClamp={1}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             <Text lineClamp={1}>{e.roi} %</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             <ComponentAdminGlobal_TampilanRupiahDonasi
               nominal={_.toNumber(e.targetDana)}
             />
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             <ComponentAdminGlobal_TampilanRupiahDonasi
               nominal={_.toNumber(e.hargaLembar)}
             />
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center >
             <Button
               loading={isLoading && idData === e.id}
               loaderPosition="center"
@@ -238,23 +238,23 @@ function TableView() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Username</Center>
+                      <Center c={AccentColor.white} >Username</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white} >Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>ROI</Center>
+                      <Center c={AccentColor.white} >ROI</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Target Dana</Center>
+                      <Center c={AccentColor.white} >Target Dana</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Harga Perlembar</Center>
+                      <Center c={AccentColor.white} >Harga Perlembar</Center>
                     </th>
 
                     <th>
-                      <Center c={AccentColor.white} w={200}>Aksi</Center>
+                      <Center c={AccentColor.white} >Aksi</Center>
                     </th>
                   </tr>
                 </thead>

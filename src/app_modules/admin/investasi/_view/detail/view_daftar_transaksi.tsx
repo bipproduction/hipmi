@@ -14,6 +14,7 @@ import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Badge,
+  Button,
   Center,
   Group,
   Pagination,
@@ -25,8 +26,8 @@ import {
   Text,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconReload } from "@tabler/icons-react";
-import { useParams } from "next/navigation";
+import { IconEyeCheck, IconReload } from "@tabler/icons-react";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   AdminInvestasi_ComponentButtonBandingTransaksi,
@@ -34,6 +35,7 @@ import {
   AdminInvestasi_ComponentCekBuktiTransfer,
 } from "../../_component";
 import { apiGetAdminAllTransaksiById } from "../../_lib/api_fetch_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 
 export function AdminInvestasi_ViewDaftarTransaksi() {
   const params = useParams<{ id: string }>();
@@ -46,6 +48,9 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
   const [isNPage, setNPage] = useState<number>(1);
   const [isActivePage, setActivePage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const [idData, setIdData] = useState("");
+  const router = useRouter();
 
   useShallowEffect(() => {
     handleLoadData();
@@ -124,18 +129,8 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
           <Center c={AdminColor.white}>{e?.Author?.username}</Center>
         </td>
         <td>
-          <Center c={AdminColor.white}>{e?.MasterBank?.namaBank}</Center>
-        </td>
-        <td>
           <Center c={AdminColor.white}>
             <ComponentAdminGlobal_TampilanRupiah nominal={+e?.nominal} />
-          </Center>
-        </td>
-        <td>
-          <Center c={AdminColor.white}>
-            {new Intl.NumberFormat("id-ID", {
-              maximumFractionDigits: 10,
-            }).format(+e?.lembarTerbeli)}
           </Center>
         </td>
         <td>
@@ -173,7 +168,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
         </td>
         <td>
           <Center>
-            {e.statusInvoiceId === "1" && "-"}
+            {/* {e.statusInvoiceId === "1" && "-"}
             {e.statusInvoiceId === "2" && (
               <AdminInvestasi_ComponentButtonKonfirmasiTransaksi
                 invoiceId={e.id}
@@ -196,7 +191,21 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
                   setNPage(val.nPage);
                 }}
               />
-            )}
+            )} */}
+            <Button
+              loading={isLoading && idData == e.id}
+              loaderPosition="center"
+              color="green"
+              leftIcon={<IconEyeCheck size={20} />}
+              radius={"xl"}
+              onClick={() => {
+                setIdData(e.id);
+                setLoading(true);
+                router.push(RouterAdminInvestasi.detail_transaksi + e.id);
+              }}
+            >
+              Detail
+            </Button>
           </Center>
         </td>
       </tr>
@@ -249,7 +258,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
                 verticalSpacing={"xl"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1500}
+                w={1100}
               >
                 <thead>
                   <tr>
@@ -257,13 +266,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
                       <Center c={AdminColor.white}>Nama Investor</Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Nama Bank</Center>
-                    </th>
-                    <th>
                       <Center c={AdminColor.white}>Jumlah Investasi</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Lembar Terbeli</Center>
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Tanggal</Center>

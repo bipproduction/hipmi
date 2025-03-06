@@ -114,47 +114,47 @@ function TableView() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>
               {e.author.username}
             </Text>
           </Center>
         </td>
         <td>
-          <Center w={400}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>
               {e.title}
             </Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             {_.toNumber(e.progress).toFixed(2)} %
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+e.sisaLembar)}
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white} >
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+e.totalLembar)}
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center >
             <Text c={AccentColor.white} lineClamp={1}>
               {e.Investasi_Invoice.length}
             </Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center >
             <Button
               loading={isLoading && idData === e.id}
               loaderPosition="center"
@@ -227,37 +227,37 @@ function TableView() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Username
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>
+                      <Center c={AccentColor.white} >
                         Nama Proyek
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Progres
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Sisa Saham
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Total Saham
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Validasi
                       </Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>
+                      <Center c={AccentColor.white} >
                         Aksi
                       </Center>
                     </th>

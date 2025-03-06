@@ -4,14 +4,13 @@ import { Investasi_UiTransaksiGagal } from "@/app_modules/investasi/_ui/status_t
 
 export default async function Page({ params }: { params: { id: string } }) {
   const invoiceId = params.id;
-  const dataTransaksi = await investasi_funGetOneInvoiceById({ invoiceId });
-  const nomorAdmin = await funGlobal_getNomorAdmin();
+  // const dataTransaksi = await investasi_funGetOneInvoiceById({ invoiceId });
+  // const nomorAdmin = await funGlobal_getNomorAdmin();
 
   return (
     <>
       <Investasi_UiTransaksiGagal
-        dataTransaksi={dataTransaksi}
-        nomorAdmin={nomorAdmin as any}
+       
       />
     </>
   );
