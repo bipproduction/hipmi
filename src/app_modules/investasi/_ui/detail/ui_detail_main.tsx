@@ -1,25 +1,22 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import {
   UIGlobal_Drawer,
   UIGlobal_LayoutHeaderTamplate,
   UIGlobal_LayoutTamplate,
 } from "@/app_modules/_global/ui";
+import {
+  NEW_RouterInvestasi
+} from "@/lib/router_hipmi/router_investasi";
 import { ActionIcon } from "@mantine/core";
-import { IconCategoryPlus, IconDotsVertical } from "@tabler/icons-react";
-import { MODEL_INVESTASI } from "../../_lib/interface";
-import { Investasi_ViewDetailPublish } from "../../_view";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconCategoryPlus, IconDeviceIpadPlus, IconDotsVertical } from "@tabler/icons-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  NEW_RouterInvestasi,
-  RouterInvestasi_OLD,
-} from "@/lib/router_hipmi/router_investasi";
-import { IconDeviceIpadPlus } from "@tabler/icons-react";
-import { MainColor } from "@/app_modules/_global/color";
-import { useShallowEffect } from "@mantine/hooks";
 import { apiNewGetOneInvestasiById } from "../../_lib/api_fetch_new_investasi";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_INVESTASI } from "../../_lib/interface";
+import { Investasi_ViewDetailPublish } from "../../_view";
 
 export function Investasi_UiDetailMain({
   userLoginId,
@@ -30,6 +27,25 @@ export function Investasi_UiDetailMain({
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [data, setData] = useState<MODEL_INVESTASI | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiNewGetOneInvestasiById({ id: param.id });
+
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+    }
+  };
 
   const listPage = [
     {
@@ -45,26 +61,6 @@ export function Investasi_UiDetailMain({
       path: NEW_RouterInvestasi.rekap_berita({ id: data?.id as any }),
     },
   ];
-
-  useShallowEffect(() => {
-    handleLoadData();
-  }, []);
-
-  const handleLoadData = async () => {
-    try {
-      const response = await apiNewGetOneInvestasiById({ id: param.id });
-
-      if (response.success) {
-        console.log(response.data);
-        setData(response.data);
-      } else {
-        setData(null);
-      }
-    } catch (error) {
-      console.error("Error get investasi", error);
-      setData(null);
-    }
-  };
 
   return (
     <>

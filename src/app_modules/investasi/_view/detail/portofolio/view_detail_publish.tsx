@@ -40,8 +40,6 @@ export default function Investasi_ViewDetailPublish({
   userLoginId: string;
 }) {
   const router = useRouter();
-  const [boxId, setBoxId] = useState(0);
-  const [isLoadingBox, setLoadingBox] = useState(false);
   const [isLoadingButton, setLoadingButton] = useState(false);
   const [total, setTotal] = useLocalStorage({
     key: "total_investasi",

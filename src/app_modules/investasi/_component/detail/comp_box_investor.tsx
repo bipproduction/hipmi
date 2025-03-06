@@ -22,7 +22,9 @@ export function Investasi_ComponentBoxInvestor({ id }: { id: string }) {
         }}
         onClick={() => {
           setLoading(true);
-          router.push(NEW_RouterInvestasi.list_investor({id:id}))
+          router.push(NEW_RouterInvestasi.list_investor({ id: id }), {
+            scroll: false,
+          });
         }}
       >
         <Flex direction={"column"} align={"center"} justify={"center"}>

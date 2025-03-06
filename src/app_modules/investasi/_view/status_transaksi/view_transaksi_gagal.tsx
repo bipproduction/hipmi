@@ -2,7 +2,10 @@
 
 import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_LoadImage, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_LoadImage,
+  ComponentGlobal_TampilanRupiah,
+} from "@/app_modules/_global/component";
 import {
   ActionIcon,
   Box,
@@ -18,23 +21,58 @@ import {
   Title,
 } from "@mantine/core";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 import { Prisma } from "@prisma/client";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetOneSahamInvestasiById } from "../../_lib/api_fetch_new_investasi";
+import { apiGetAdminContact } from "@/app_modules/_global/lib/api_fetch_master";
 
-export function Investasi_ViewTransaksiGagal({
-  dataTransaksi,
-  nomorAdmin,
-}: {
-  dataTransaksi: any;
-  nomorAdmin: Prisma.NomorAdminCreateInput;
-}) {
-  const router = useRouter();
-  const [data, setData] = useState<MODEL_INVOICE_INVESTASI>(dataTransaksi);
-  const [isLoading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+export function Investasi_ViewTransaksiGagal() {
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
+
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_INVOICE_INVESTASI | null>(null);
+  const [nomorAdmin, setNomorAdmin] =
+    useState<Prisma.NomorAdminCreateInput | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+    handleLoadNomorAdmin();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneSahamInvestasiById({ id: param.id });
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+    }
+  };
+
+  const handleLoadNomorAdmin = async () => {
+    try {
+      const response = await apiGetAdminContact();
+      if (response.success) {
+        setNomorAdmin(response.data);
+      } else {
+        setNomorAdmin(null);
+      }
+    } catch (error) {
+      console.error("Error get nomor admin", error);
+    }
+  };
+
+  if (!data || !nomorAdmin)
+    return <CustomSkeleton height={"50vh"} width={"100%"} />;
 
   return (
     <>
@@ -58,7 +96,7 @@ export function Investasi_ViewTransaksiGagal({
           <Center>
             <ActionIcon radius={"100%"} size={70} variant="light" color="white">
               <a
-                href={`whatsapp://wa.me/${nomorAdmin.nomor}?text=Hallo admin ! Saya ada kendala pada transaksi Investasi`}
+                href={`whatsapp://wa.me/${nomorAdmin?.nomor}?text=Hallo admin ! Saya ada kendala pada transaksi Investasi`}
               >
                 <IconBrandWhatsapp size={50} color="green" />
               </a>
