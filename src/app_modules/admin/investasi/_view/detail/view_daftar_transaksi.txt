@@ -164,9 +164,9 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
             )}
           </Center>
         </td>
-        <td>
+       <td>
           <Center>
-            {/* {e.statusInvoiceId === "1" && "-"}
+            {e.statusInvoiceId === "1" && "-"}
             {e.statusInvoiceId === "2" && (
               <AdminInvestasi_ComponentButtonKonfirmasiTransaksi
                 invoiceId={e.id}
@@ -181,6 +181,7 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
             {e.statusInvoiceId === "3" && "-"}
             {e.statusInvoiceId === "4" && (
               <AdminInvestasi_ComponentButtonBandingTransaksi
+
                 invoiceId={e.id}
                 investasiId={investasiId}
                 lembarTerbeli={e.lembarTerbeli}
@@ -189,6 +190,9 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
                   setNPage(val.nPage);
                 }}
               />
+            )}
+          </Center>
+        </td>
             )} */}
             <Button
               loading={isLoading && idData == e.id}

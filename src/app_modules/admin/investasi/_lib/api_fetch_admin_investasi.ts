@@ -74,7 +74,6 @@ const apiGetAdminDetailTransaksi = async ({ id }: { id: string }) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log("Ini response",response.json())
 
   return await response.json().catch(() => null);
 }
@@ -115,7 +114,6 @@ const apiGetAdminAllTransaksiById = async ({
 
     // Fetch data
     const isStatus = status ? `&status=${status}` : "";
-    console.log("Ini status", isStatus);
     const isPage = page ? `?page=${page}` : "";
     const response = await fetch(
       `/api/admin/investasi/${id}/transaksi${isPage}${isStatus}`,

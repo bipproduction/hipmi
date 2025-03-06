@@ -38,6 +38,7 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { adminForum_getListKomentarById } from "../fun/get/get_list_komentar_by_id";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_DetailPosting({
   listKomentar,
@@ -110,22 +111,22 @@ function TableKomentar({
   const rowTable = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text lineClamp={1}>{e?.Author?.username}</Text>
         </Center>
       </td>
       <td>
-        <Box w={500}>
-          <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
+        <Box w={300}>
+          <Spoiler c={AdminColor.white} maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             <div
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "justify", textJustify: "auto" }}
               dangerouslySetInnerHTML={{ __html: e?.komentar }}
             />
           </Spoiler>
         </Box>
       </td>
       <td>
-        <Center w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text>
             {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
               e.createdAt
@@ -134,9 +135,9 @@ function TableKomentar({
         </Center>
       </td>
       <td>
-        <Center w={100}>
+        <Center  w={100}>
           <Text
-            c={e?.Forum_ReportKomentar?.length >= 3 ? "red" : "black"}
+            c={e?.Forum_ReportKomentar?.length >= 3 ? "red" : AdminColor.white}
             fw={"bold"}
             fz={"lg"}
           >
@@ -173,7 +174,7 @@ function TableKomentar({
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"gray"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
@@ -198,7 +199,7 @@ function TableKomentar({
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData text="Tidak Ada Komentar" />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -206,25 +207,24 @@ function TableKomentar({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+         
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Center c={AdminColor.white} w={150}>Username</Center>
                     </th>
                     <th>
-                      <Center w={500}>Komentar</Center>
+                      <Center c={AdminColor.white} w={300}>Komentar</Center>
                     </th>
                     <th>
-                      <Center w={200}>Tgl Komentar</Center>
+                      <Center c={AdminColor.white} w={150}>Tgl Komentar</Center>
                     </th>
                     <th>
-                      <Center w={100}>Total Report</Center>
+                      <Center c={AdminColor.white} w={100}>Total Report</Center>
                     </th>
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AdminColor.white} w={200}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

@@ -36,6 +36,7 @@ import ComponentAdminForum_ViewOneDetailKomentar from "../component/detail_one_k
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
 import { adminForum_getListReportKomentarbyId } from "../fun/get/get_list_report_komentar_by_id";
 import adminForum_funGetOneKomentarById from "../fun/get/get_one_komentar_by_id";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_HasilReportKomentar({
   komentarId,
@@ -199,12 +200,12 @@ function HasilReportPosting({
   const TableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center w={200}>
+        <Center w={150}>
           <Text>{e?.User?.Profile?.name}</Text>
         </Center>
       </td>
       <td>
-        <Center w={200}>
+        <Center w={150}>
           <Text>
             {e?.ForumMaster_KategoriReport?.title
               ? e?.ForumMaster_KategoriReport?.title
@@ -214,7 +215,7 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center w={500}>
+        <Center w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.ForumMaster_KategoriReport?.deskripsi ? (
               <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
@@ -226,7 +227,7 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center w={500}>
+        <Center w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
           </Spoiler>
@@ -241,7 +242,7 @@ function HasilReportPosting({
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"red.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
@@ -261,7 +262,7 @@ function HasilReportPosting({
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -269,8 +270,7 @@ function HasilReportPosting({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
+                
               >
                 <thead>
                   <tr>

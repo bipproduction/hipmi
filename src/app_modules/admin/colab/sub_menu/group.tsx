@@ -205,6 +205,7 @@ function TableMenu({ listGroup }: { listGroup: any }) {
       </Stack>
 
       <Modal
+        styles={{ body: { backgroundColor: AccentColor.darkblue}}}
         opened={openDetail}
         onClose={() => setOpenDetail(false)}
         centered
@@ -212,26 +213,26 @@ function TableMenu({ listGroup }: { listGroup: any }) {
         withCloseButton={false}
       >
         <SimpleGrid cols={2}>
-          <Paper bg={"gray.1"} p={"md"} h={500}>
+          <Paper bg={AdminColor.softBlue} p={"md"} h={500}>
             <ScrollArea h={"100%"} w={"100%"}>
               <ComponentAdminColab_DetailData
                 data={detailData?.ProjectCollaboration as any}
               />
             </ScrollArea>
           </Paper>
-          <Paper bg={"gray.1"} p={"md"} h={500}>
+          <Paper bg={AdminColor.softBlue} p={"md"} h={500}>
             <ScrollArea h={"100%"}>
               <Stack>
                 <Center>
-                  <Title order={4}>Anggota</Title>
+                  <Title c={AdminColor.white} order={4}>Anggota</Title>
                 </Center>
                 <Stack>
                   {detailData?.ProjectCollaboration_AnggotaRoomChat?.map(
                     (e, i) => (
                       <Box key={i}>
                         <Text lineClamp={1}>
-                          <IconCircleDot size={10} />{" "}
-                          <Text span inherit>
+                          <IconCircleDot color={AdminColor.white} size={10} />{" "}
+                          <Text c={AdminColor.white} span inherit>
                             {e?.User?.Profile?.name}
                           </Text>
                         </Text>

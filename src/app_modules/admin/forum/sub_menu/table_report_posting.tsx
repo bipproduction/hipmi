@@ -99,12 +99,12 @@ function TableView() {
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white} w={150}>
             <Text lineClamp={1}>{e?.User.username}</Text>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white} w={150}>
             {e?.forumMaster_KategoriReportId === null ? (
               <Text>Lainnya</Text>
             ) : (
@@ -137,7 +137,7 @@ function TableView() {
         </td> */}
   
         <td>
-          <Center w={200}>
+          <Center w={250}>
             <Badge
               color={
                 (e?.Forum_Posting?.ForumMaster_StatusPosting?.id as any) === 1
@@ -244,7 +244,7 @@ function TableView() {
                       <Text>Postingan</Text>
                     </th> */}
                     <th>
-                      <Center c={AdminColor.white} w={200}>Status Posting</Center>
+                      <Center c={AdminColor.white} w={250}>Status Posting</Center>
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Tanggal Report</Center>
