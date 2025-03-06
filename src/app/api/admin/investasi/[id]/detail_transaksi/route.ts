@@ -2,14 +2,13 @@ import prisma from "@/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 export async function GET(req: Request,
-    { params }: { params: { id: any } }) {
+    { params }: { params: { id: string } }) {
     try {
         let fixData;
         const { id } = params
-        const data = await prisma.investasi_Invoice.findMany({
+        const data = await prisma.investasi_Invoice.findUnique({
             where: {
-                investasiId: id,
-                isActive: true,
+                id: id
             },
             include: {
                 Author: true,
@@ -18,6 +17,7 @@ export async function GET(req: Request,
                 MasterBank: true,
             }
         })
+        
         fixData = {
             data: data,
         }

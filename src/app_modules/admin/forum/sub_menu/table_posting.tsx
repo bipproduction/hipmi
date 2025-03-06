@@ -107,7 +107,7 @@ function TablePublish() {
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
+          <Center w={100}>
             <Text c={AdminColor.white} lineClamp={1}>{e?.Author?.username}</Text>
           </Center>
         </td>
@@ -121,23 +121,6 @@ function TablePublish() {
               {e?.ForumMaster_StatusPosting?.status}
             </Badge>
           </Center>
-        </td>
-        <td>
-          <Box w={400}>
-            <Spoiler
-              // w={400}
-              c={AdminColor.white}
-              maxHeight={60}
-              hideLabel="sembunyikan"
-              showLabel="tampilkan"
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: e?.diskusi,
-                }}
-              />
-            </Spoiler>
-          </Box>
         </td>
         <td>
           <Center w={150}>
@@ -242,9 +225,6 @@ function TablePublish() {
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Status</Center>
-                    </th>
-                    <th>
-                      <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Tanggal Publish</Center>

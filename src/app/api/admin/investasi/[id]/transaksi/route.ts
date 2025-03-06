@@ -58,7 +58,6 @@ export async function GET(
           MasterBank: true,
         },
       });
-
       const nCount = await prisma.investasi_Invoice.count({
         where: {
           investasiId: id,

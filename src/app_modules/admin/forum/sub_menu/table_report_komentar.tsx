@@ -110,12 +110,12 @@ function TableView() {
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
+          <Center w={150}>
             <Text c={AdminColor.white} lineClamp={1}>{e?.User?.Profile?.name}</Text>
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center w={150}>
             {e?.forumMaster_KategoriReportId === null ? (
               <Text c={AdminColor.white}>Lainnya</Text>
             ) : (
@@ -126,8 +126,9 @@ function TableView() {
 
 
         <td>
-          <Box w={400}>
+          <Box w={250}>
             <Spoiler
+              style={{ textAlign: "justify", textJustify: "auto"}}
               c={AdminColor.white}
               // w={400}
               maxHeight={60}
@@ -238,7 +239,7 @@ function TableView() {
 
 
                     <th>
-                      <Text c={AdminColor.white}>Komentar</Text>
+                      <Center c={AdminColor.white}>Komentar</Center>
                     </th>
 
 

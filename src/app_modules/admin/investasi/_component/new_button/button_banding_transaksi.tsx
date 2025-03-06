@@ -8,42 +8,42 @@ import {
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function AdminInvestasi_ComponentButtonBandingTransaksi({
   invoiceId,
   investasiId,
   lembarTerbeli,
-  onLoadData,
+  
 }: {
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-  onLoadData: (val: any) => void;
+
 }) {
+  console.log("Ini invoiceid", invoiceId)
+  console.log("Ini investasiid", investasiId)
+  console.log("Ini lembar terbeli", lembarTerbeli)
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
   async function onAccept() {
+    try {
+    setLoading(true);
     const res = await adminInvestasi_funAcceptTransaksiById({
       invoiceId,
       investasiId,
       lembarTerbeli,
     });
-
-    // if (res.status == 200) {
-    //   try {
-    //     const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
-    //       investasiId,
-    //       page: 1,
-    //     });
-    //     onLoadData(dataTransaksi);
-    //   } catch (error) {
-    //     console.log(error);
-    //   } finally {
-    //     ComponentAdminGlobal_NotifikasiBerhasil(res.message);
-    //     setLoading(true);
-    //   }
-    // } else {
-    //   ComponentAdminGlobal_NotifikasiGagal(res.message);
-    // }
+    if (res.status == 200) {
+        router.back();
+        ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+    } else {
+      console.error("reject error", res.message);
+      ComponentAdminGlobal_NotifikasiGagal(res.message);
+    }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
