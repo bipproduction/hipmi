@@ -178,12 +178,12 @@ function HasilReportPosting({
   const TableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center c={AdminColor.white} w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text>{e?.User?.username}</Text>
         </Center>
       </td>
       <td>
-        <Center c={AdminColor.white} w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text>
             {e?.ForumMaster_KategoriReport?.title
               ? e?.ForumMaster_KategoriReport?.title
@@ -193,10 +193,10 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center c={AdminColor.white} w={500}>
+        <Center c={AdminColor.white} w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.ForumMaster_KategoriReport?.deskripsi ? (
-              <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
+              <Text style={{textJustify: "auto", textAlign: "justify"}}>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
             ) : (
               <Text>-</Text>
             )}
@@ -205,9 +205,9 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center c={AdminColor.white} w={500}>
+        <Center c={AdminColor.white} w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
-            {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
+            {e?.deskripsi ? <Text style={{textJustify: "auto", textAlign: "justify"}}>{e?.deskripsi}</Text> : <Text>-</Text>}
           </Spoiler>
         </Center>
       </td>
@@ -252,16 +252,16 @@ function HasilReportPosting({
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Username</Center>
+                      <Center w={150} c={AdminColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Kategori</Center>
+                      <Center w={150} c={AdminColor.white}>Kategori</Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Deskripsi</Center>
+                      <Center w={300} c={AdminColor.white}>Deskripsi</Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Deskripsi Lainnya</Center>
+                      <Center w={300} c={AdminColor.white}>Deskripsi Lainnya</Center>
                     </th>
                   </tr>
                 </thead>

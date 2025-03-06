@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "@/app_modules/forum/model/interface";
 import {
   Badge,
@@ -21,17 +22,17 @@ export default function ComponentAdminForum_ViewOneDetailKomentar({
   return (
     <>
       <Stack spacing={"xs"} h={"100%"} w={"50%"}>
-        <Paper bg={"gray"} p={"xs"} style={{ borderRadius: "6px" }}>
+        <Paper bg={AdminColor.softBlue} p={"xs"} style={{ borderRadius: "6px" }}>
           <Title order={4} c={"white"}>
             Detail Komentar
           </Title>
         </Paper>
 
-        <Paper withBorder p={"md"} radius={"md"} shadow="sm">
+        <Paper  p={"md"} radius={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <Stack spacing={5}>
               <Group position="apart">
-                <Text fw={"bold"}>
+                <Text fw={"bold"} c={AdminColor.white}>
                   Username:{" "}
                   <Text span inherit>
                     {dataKomentar?.Author?.username}

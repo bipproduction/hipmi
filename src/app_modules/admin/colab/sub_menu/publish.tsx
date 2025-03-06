@@ -265,30 +265,32 @@ function TableMenu({ listData }: { listData: any }) {
 
       {/* Detail Data */}
       <Modal
+        styles={{body: { backgroundColor: AdminColor.softBlue}}}
         opened={openDetail}
         onClose={() => setOpenDetail(false)}
         centered
         withCloseButton={false}
         size={"lg"}
       >
-        <Paper p={"md"} bg={"gray.1"}>
+        <Paper p={"md"} bg={AdminColor.softBlue}>
           <ComponentAdminColab_DetailData data={detailData as any} />
         </Paper>
       </Modal>
 
       {/* Reject Project */}
       <Modal
+        styles={{body: { backgroundColor: AdminColor.softBlue}}}
         opened={openReject}
         onClose={() => setOpenReject(false)}
         centered
         withCloseButton={false}
         size={"lg"}
       >
-        <Paper p={"md"}>
+        <Paper bg={AdminColor.softBlue} p={"md"}>
           <Stack>
-            <Text>
+            <Text c={AdminColor.white}>
               Apakah anda yakin ingin mereport project{" "}
-              <Text span inherit fw={"bold"}>
+              <Text c={AdminColor.white} span inherit fw={"bold"}>
                 {detailData?.title}
               </Text>
               ?
