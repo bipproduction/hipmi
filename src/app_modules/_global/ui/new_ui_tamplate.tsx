@@ -14,7 +14,7 @@ export function NewUI_Tamplate({ children }: { children: React.ReactNode }) {
         position: "relative",
         maxWidth: "500px", // Batasi lebar maksimum untuk tampilan mobile
         margin: "0 auto", // Pusatkan di tengah layar desktop
-        border: "1px solid #ccc", // Garis tepi untuk visualisasi
+        // border: "1px solid #ccc", // Garis tepi untuk visualisasi
       }}
     >
       <BackgroundImage

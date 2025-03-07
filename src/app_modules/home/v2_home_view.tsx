@@ -158,7 +158,7 @@ export function V2_View_Home() {
           }
         />
 
-        <NewUI_Content>
+        <NewUI_Content isScroll="auto">
           <BodyHome dataUser={dataUser} />
         </NewUI_Content>
 

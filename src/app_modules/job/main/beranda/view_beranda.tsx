@@ -4,7 +4,7 @@ import { gs_jobTiggerBeranda } from "@/lib/global_state";
 import { RouterJob } from "@/lib/router_hipmi/router_job";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { Center, Loader, Stack, TextInput } from "@mantine/core";
+import { Box, Center, Loader, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
@@ -102,7 +102,7 @@ export default function Job_ViewBeranda() {
 
   return (
     <>
-      <Stack spacing={30}>
+      <Stack spacing={"sm"}>
         {isShowUpdate && (
           <Job_ComponentButtonUpdateBeranda
             onSetIsNewPost={(val) => {
@@ -125,32 +125,34 @@ export default function Job_ViewBeranda() {
           }}
           radius={"xl"}
           icon={<IconSearch />}
-          placeholder="Pekerjaan apa yang anda cari ?"
+          placeholder="Pekerjaan apa yang anda cari ni?"
           onChange={(val) => {
             onSearch(val.currentTarget.value);
           }}
         />
 
-        {!data?.length && isLoading ? (
-          <Job_ComponentSkeletonBeranda />
-        ) : _.isEmpty(data) ? (
-          <ComponentGlobal_IsEmptyData />
-        ) : (
-          // --- Main component --- //
-          <ScrollOnly
-            height="75vh"
-            renderLoading={() => (
-              <Center mt={"lg"}>
-                <Loader color={"yellow"} />
-              </Center>
-            )}
-            data={data}
-            setData={setData as any}
-            moreData={handleMoreData}
-          >
-            {(item) => <ComponentJob_BerandaCardView data={item} />}
-          </ScrollOnly>
-        )}
+        <Box mb={"xl"}>
+          {!data?.length && isLoading ? (
+            <Job_ComponentSkeletonBeranda />
+          ) : _.isEmpty(data) ? (
+            <ComponentGlobal_IsEmptyData />
+          ) : (
+            // --- Main component --- //
+            <ScrollOnly
+              height="75vh"
+              renderLoading={() => (
+                <Center mt={"lg"}>
+                  <Loader color={"yellow"} />
+                </Center>
+              )}
+              data={data}
+              setData={setData as any}
+              moreData={handleMoreData}
+            >
+              {(item) => <ComponentJob_BerandaCardView data={item} />}
+            </ScrollOnly>
+          )}
+        </Box>
       </Stack>
     </>
   );
