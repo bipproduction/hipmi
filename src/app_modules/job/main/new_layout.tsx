@@ -49,9 +49,9 @@ export default function NewLayoutJob_Main({
   return (
     <>
       <NewUI_Tamplate>
-        <NewUI_Header title="Job" routerLeft={RouterHome.main_home} />
+        <NewUI_Header title="Job ni" routerLeft={RouterHome.main_home} />
 
-        <NewUI_Content>{children}</NewUI_Content>
+        <NewUI_Content isScroll="unset">{children}</NewUI_Content>
 
         <NewUI_Footer>
           <SimpleGrid cols={3} h={"9vh"} mx={"xs"} w={"100%"}>
@@ -82,17 +82,6 @@ export default function NewLayoutJob_Main({
         </NewUI_Footer>
       </NewUI_Tamplate>
 
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Job"
-            routerLeft={RouterHome.main_home}
-          />
-        }
-        footer={}
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
     </>
   );
 }
