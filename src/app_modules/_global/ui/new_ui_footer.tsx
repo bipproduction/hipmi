@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box, rem } from "@mantine/core";
 import { AccentColor } from "../color";
 
 export function NewUI_Footer({ children }: { children: React.ReactNode }) {
@@ -19,6 +19,8 @@ export function NewUI_Footer({ children }: { children: React.ReactNode }) {
           justifyContent: "center",
           maxWidth: "500px", // Batasi lebar maksimum untuk tampilan mobile
           margin: "0 auto", // Pusatkan di tengah layar desktop
+          borderRadius: "20px 20px 0px 0px",
+          width: "100%",
         }}
       >
         {children}
