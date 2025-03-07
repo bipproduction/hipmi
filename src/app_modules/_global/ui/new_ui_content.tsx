@@ -1,6 +1,12 @@
 import { Box } from "@mantine/core";
 
-export function NewUI_Content({ children }: { children: React.ReactNode }) {
+export function NewUI_Content({
+  children,
+  isScroll,
+}: {
+  children: React.ReactNode;
+  isScroll?: React.CSSProperties["overflowY"];
+}) {
   return (
     <>
       <Box
@@ -10,7 +16,7 @@ export function NewUI_Content({ children }: { children: React.ReactNode }) {
           bottom: "10vh", // Berakhir di atas footer
           left: 0,
           right: 0,
-          overflowY: "auto", // Bisa di-scroll
+          overflowY: isScroll ? isScroll : "hidden", // Bisa di-scroll
           padding: "16px",
           maxWidth: "500px", // Batasi lebar maksimum untuk tampilan mobile
           margin: "0 auto", // Pusatkan di tengah layar desktop
