@@ -1,7 +1,9 @@
 export {
     apiGetAdminCollaborationStatusCountDashboard,
-    apiGetAdminCollaborationStatusById,
-    apiGetAdminCollaborationRoomById
+    apiGetAdminCollaborationPublish,
+    apiGetAdminCollaborationReject,
+    apiGetAdminCollaborationRoomById,
+    apiGetAdminCollaborationById
    
 }
 const apiGetAdminCollaborationStatusCountDashboard = async ({
@@ -25,8 +27,7 @@ const apiGetAdminCollaborationStatusCountDashboard = async ({
     // console.log("Ini Response", await response.json());
     return await response.json().catch(() => null);
 }
-const apiGetAdminCollaborationStatusById = async ({ name, page}: {
-    name: "Publish" | "Reject",
+const apiGetAdminCollaborationPublish = async ({ page }: {
     page: string,
     
 }) => {
@@ -35,7 +36,28 @@ const apiGetAdminCollaborationStatusById = async ({ name, page}: {
     if (!token) return await token.json().catch(() => null);
     
     const isPage = page ? `?page=${page}` : "";
-    const response = await fetch(`/api/admin/collaboration/${name}${isPage}`, {
+    const response = await fetch(`/api/admin/collaboration/status/publish/${isPage}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        }
+    })
+
+    return await response.json().catch(() => null);
+}
+
+const apiGetAdminCollaborationReject = async ({ page }: {
+    page: string,
+    
+}) => {
+    
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+    
+    const isPage = page ? `?page=${page}` : "";
+    const response = await fetch(`/api/admin/collaboration/status/reject/${isPage}`, {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -65,6 +87,22 @@ const apiGetAdminCollaborationRoomById = async ({ page, search }: {
         }
     })
 
+    return await response.json().catch(() => null);
+}
+
+const apiGetAdminCollaborationById = async ({id} : {id: string}) => {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) return await token.json().catch(() => null);
+
+    const response = await fetch(`/api/admin/collaboration/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        }
+    })
     return await response.json().catch(() => null);
 }
 

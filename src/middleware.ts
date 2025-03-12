@@ -36,6 +36,7 @@ const middlewareConfig: MiddlewareConfig = {
     // >> buat dibawah sini <<
     "/api/admin/donasi/*",
     "/api/admin/investasi/*",
+    "/api/admin/collaboration/*",
     
 
     // Akses awal
