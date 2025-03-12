@@ -11,7 +11,6 @@ export function NewUI_Content({
     <>
       <Box
         style={{
-          position: "fixed",
           top: "8vh", // Mulai di bawah header
           bottom: "10vh", // Berakhir di atas footer
           left: 0,

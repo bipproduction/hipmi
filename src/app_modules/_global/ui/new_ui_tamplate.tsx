@@ -8,7 +8,7 @@ export function NewUI_Tamplate({ children }: { children: React.ReactNode }) {
     <Box
       style={{
         width: "100%",
-        height: "100vh",
+        minHeight: "100dvh",
         overflow: "hidden",
         backgroundColor: MainColor.darkblue,
         position: "relative",
