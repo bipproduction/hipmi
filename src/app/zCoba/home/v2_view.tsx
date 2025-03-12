@@ -3,6 +3,7 @@
 
 import {
   Badge,
+  Box,
   Button,
   Card,
   Group,
@@ -26,10 +27,16 @@ export default function ViewV2() {
           Aplikasi dengan layout yang dioptimalkan untuk tampilan mobile
         </Text>
 
-
         <Stack spacing="md">
           {[...Array(5)].map((_, index) => (
-            <Card  opacity={0.3} key={index} shadow="sm" padding="md" radius="md" withBorder>
+            <Card
+              opacity={0.3}
+              key={index}
+              shadow="sm"
+              padding="md"
+              radius="md"
+              withBorder
+            >
               <Card.Section>
                 <Image
                   src={`/api/placeholder/400/200`}
@@ -63,6 +70,26 @@ export default function ViewV2() {
           ))}
         </Stack>
 
+        <Stack spacing="md">
+          {[...Array(5)].map((_, index) => (
+            <Box key={index} mb="xl" h="100px" bg={"gray"}>
+              Test
+            </Box>
+          ))}
+        </Stack>
+
+        {[...Array(5)].map((_, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "gray",
+              marginBottom: "15px",
+              height: "100px",
+            }}
+          >
+            Test
+          </div>
+        ))}
 
         <Paper
           shadow="md"
@@ -84,7 +111,6 @@ export default function ViewV2() {
             Klaim Sekarang
           </Button>
         </Paper>
-        
       </Stack>
     </ClientLayout>
   );

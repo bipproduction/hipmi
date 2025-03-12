@@ -1,3 +1,5 @@
+"use client"
+
 import { ActionIcon, Box, Group, Title, Loader } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -41,7 +43,6 @@ export function Component_Header({
         w={"100%"}
         h={"100%"}
         position={posotion ? posotion : "apart"}
-        px={"md"}
       >
         {hideButtonLeft ? (
           <ActionIcon disabled variant="transparent"></ActionIcon>
