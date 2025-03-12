@@ -14,13 +14,12 @@ import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";
 export default function ComponentEvent_DetailData({
   isDaftarPeserta,
   isReport,
-  data
+  data,
 }: {
   isDaftarPeserta?: boolean;
   isReport?: boolean;
-  data: MODEL_EVENT | null
+  data: MODEL_EVENT | null;
 }) {
-
   return (
     <>
       {!data ? (
@@ -28,7 +27,10 @@ export default function ComponentEvent_DetailData({
       ) : (
         <Stack>
           {isReport && (
-            <ComponentGlobal_BoxInformation isReport informasi={data?.catatan} />
+            <ComponentGlobal_BoxInformation
+              isReport
+              informasi={data?.catatan}
+            />
           )}
 
           <ComponentGlobal_CardStyles marginBottom={"16px"}>

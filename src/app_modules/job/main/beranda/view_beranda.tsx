@@ -1,12 +1,13 @@
 "use client";
 
-import { gs_jobTiggerBeranda } from "@/lib/global_state";
-import { RouterJob } from "@/lib/router_hipmi/router_job";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { ActionIcon, Box, Center, Loader, Stack, TextInput } from "@mantine/core";
+import { gs_jobTiggerBeranda } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
+import { clientLogger } from "@/util/clientLogger";
+import { Box, Center, Loader, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
@@ -15,11 +16,9 @@ import {
   Job_ComponentButtonUpdateBeranda,
   Job_ComponentSkeletonBeranda,
 } from "../../component";
+import { apiGetJob } from "../../component/api_fetch_job";
 import ComponentJob_BerandaCardView from "../../component/beranda/card_view";
 import { MODEL_JOB } from "../../model/interface";
-import { apiGetJob } from "../../component/api_fetch_job";
-import { clientLogger } from "@/util/clientLogger";
-import Component_NewCreateButton from "@/app_modules/_global/component/new/new_button_create";
 
 export default function Job_ViewBeranda() {
   const [data, setData] = useState<MODEL_JOB[]>([]);

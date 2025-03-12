@@ -32,17 +32,17 @@ export default function UIGlobal_LayoutTamplate({
         }}
       >
         <Container mih={"100vh"} p={0} size={rem(500)} bg={MainColor.darkblue}>
-          <BackgroundImage
+          {/* <BackgroundImage
             src={"/aset/global/main_background.png"}
             h={"100vh"}
             style={{ position: "relative" }}
-          >
+          > */}
             <UIHeader header={header} />
 
             <UIChildren footer={footer}>{children}</UIChildren>
 
             <UIFooter footer={footer} />
-          </BackgroundImage>
+          {/* </BackgroundImage> */}
         </Container>
       </Box>
     </>
@@ -78,7 +78,7 @@ export function UIChildren({
   return (
     <>
       <Box style={{ zIndex: 0 }} h={footer ? "82vh" : "92vh"} pos={"static"}>
-        <ScrollArea h={"100%"} px={"md"}>
+        <ScrollArea h={"100%"} px={"md"} pt={"sm"}>
           {children}
         </ScrollArea>
       </Box>

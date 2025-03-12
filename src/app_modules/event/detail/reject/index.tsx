@@ -4,43 +4,42 @@ import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { clientLogger } from "@/util/clientLogger";
 import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiGetEventDetailById } from "../../_lib/api_event";
+import { MODEL_EVENT } from "../../_lib/interface";
 import ComponentEvent_DetailData from "../../component/detail/detail_data";
 import { Event_funDeleteById } from "../../fun/delete/fun_delete";
 import { Event_funEditStatusById } from "../../fun/edit/fun_edit_status_by_id";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetEventDetailById } from "../../_lib/api_event";
-import { MODEL_EVENT } from "../../_lib/interface";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Event_DetailReject() {
-   const params = useParams<{ id: string }>();
-   const eventId = params.id as string;
-   const [data, setData] = useState<MODEL_EVENT | null>(null);
+  const params = useParams<{ id: string }>();
+  const eventId = params.id as string;
+  const [data, setData] = useState<MODEL_EVENT | null>(null);
 
-   useShallowEffect(() => {
-     onLoadData();
-   }, []);
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
 
-   async function onLoadData() {
-     try {
-       const respone = await apiGetEventDetailById({
-         id: eventId,
-       });
+  async function onLoadData() {
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
 
-       if (respone) {
-         setData(respone.data);
-       }
-     } catch (error) {
-       clientLogger.error("Error get data detail event", error);
-     }
-   }
-
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
+  }
 
   return (
     <>
@@ -52,7 +51,13 @@ export default function Event_DetailReject() {
   );
 }
 
-function ButtonAction({ eventId, data }: { eventId: string , data: MODEL_EVENT | null}) {
+function ButtonAction({
+  eventId,
+  data,
+}: {
+  eventId: string;
+  data: MODEL_EVENT | null;
+}) {
   const router = useRouter();
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
@@ -133,6 +138,8 @@ function ButtonAction({ eventId, data }: { eventId: string , data: MODEL_EVENT |
           </Button>
         </SimpleGrid>
       )}
+
+    
 
       {/* MODAL EDIT */}
       <UIGlobal_Modal
