@@ -1,7 +1,6 @@
 "use client";
 
 import { Component_Header } from "@/app_modules/_global/component/new/component_header";
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import UI_NewLayoutTamplate, {
   UI_NewChildren,
   UI_NewHeader,
