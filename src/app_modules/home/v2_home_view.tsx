@@ -7,7 +7,6 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { NewUI_Header } from "../_global/ui/new_ui_header";
-import { NewUI_Tamplate } from "../_global/ui/new_ui_tamplate";
 import { gs_notifikasi_kategori_app } from "../notifikasi/lib";
 import { apiGetNotifikasiHome, apiGetDataHome } from "./fun/get/api_home";
 import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
@@ -21,6 +20,7 @@ import BodyHome from "./component/body_home";
 import { NewUI_Footer } from "../_global/ui/new_ui_footer";
 import NewFooterHome from "./component/new_footer_home";
 import { NewUI_Content } from "../_global/ui/new_ui_content";
+import { NewUI_Tamplate } from "../_global/ui/new_ui_tamplate";
 
 export function V2_View_Home() {
   const [countNtf, setCountNtf] = useState<number | null>(null);

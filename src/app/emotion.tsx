@@ -2,10 +2,7 @@
 import { MainColor } from "@/app_modules/_global/color";
 // import './globals.css'
 import { CacheProvider } from "@emotion/react";
-import {
-  MantineProvider,
-  useEmotionCache
-} from "@mantine/core";
+import { MantineProvider, useEmotionCache } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Provider } from "jotai";
 import { useServerInsertedHTML } from "next/navigation";
@@ -33,11 +30,14 @@ export default function RootStyleRegistry({
       <head>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
         />
         <title>HIPMI</title>
       </head>
-      <body suppressHydrationWarning={true} style={{backgroundColor: MainColor.black}}>
+      <body
+        suppressHydrationWarning={true}
+        style={{ backgroundColor: MainColor.black }}
+      >
         <CacheProvider value={cache}>
           <MantineProvider withGlobalStyles withNormalizeCSS>
             <Notifications position="top-center" containerWidth={300} />
