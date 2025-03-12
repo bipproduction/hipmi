@@ -17,13 +17,7 @@ import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
 import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 
-export function AdminInvestasi_DetailPublish({
-  dataTransaksi,
-  statusTransaksi,
-}: {
-  dataTransaksi: any[];
-  statusTransaksi: any[];
-  }) {
+export function AdminInvestasi_DetailPublish() {
   const params = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_INVESTASI | null>(null);
   const [selectPage, setSelectPage] = useAtom(gs_admin_invetasi_menu_publish);

@@ -132,7 +132,7 @@ export default function AdminJob_ViewTavleReview() {
         <td>
           <Spoiler
             c={AdminColor.white}
-            w={200}
+            w={150}
             maxHeight={50}
             hideLabel="sembunyikan"
             showLabel="tampilkan"
@@ -141,7 +141,7 @@ export default function AdminJob_ViewTavleReview() {
           </Spoiler>
         </td>
         <td>
-          <Center w={200}>
+          <Center w={150}>
             {e.imageId ? (
               <Button
                 loaderPosition="center"
@@ -170,7 +170,7 @@ export default function AdminJob_ViewTavleReview() {
           <Spoiler
             style={{ color: AdminColor.white }}
             hideLabel="sembunyikan"
-            w={400}
+            w={250}
             maxHeight={50}
             showLabel="tampilkan"
           >
@@ -226,6 +226,7 @@ export default function AdminJob_ViewTavleReview() {
   return (
     <>
       <Modal
+        styles={{ header: { backgroundColor: AdminColor.softBlue }, body: { backgroundColor: AdminColor.softBlue}, title: { color: AdminColor.white } }}
         title={"Apakah anda yakin ingin mempublish job ini?"}
         withCloseButton={false}
         opened={publish}
@@ -261,6 +262,7 @@ export default function AdminJob_ViewTavleReview() {
       </Modal>
 
       <Modal
+        styles={{ header: { backgroundColor: AdminColor.softBlue }, body: { backgroundColor: AdminColor.softBlue}, title: { color: AdminColor.white } }}
         opened={reject}
         onClose={() => {
           setReject(false);
@@ -276,7 +278,7 @@ export default function AdminJob_ViewTavleReview() {
               maxRows={5}
               maxLength={300}
               autosize
-              label={<Text fw={"bold"}>Alasan Penolakan</Text>}
+              label={<Text c={AdminColor.white} fw={"bold"}>Alasan Penolakan</Text>}
               placeholder="Masukkan alasan penolakan lowongan ini"
               onChange={(val) => setCatatan(val.currentTarget.value)}
             />
