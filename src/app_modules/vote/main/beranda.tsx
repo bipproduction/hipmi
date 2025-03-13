@@ -91,7 +91,7 @@ export default function Vote_Beranda() {
   }
 
   return (
-    <Stack mt={"1vh"}>
+    <Stack>
       {isShowUpdate && (
         <Affix position={{ top: rem(100) }} w={"100%"}>
           <Center>
@@ -131,7 +131,7 @@ export default function Vote_Beranda() {
       ) : (
         <Box>
           <ScrollOnly
-            height="75vh"
+            height="73vh"
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />

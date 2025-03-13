@@ -30,7 +30,6 @@ export default function Vote_Riwayat() {
   return (
     <>
       <Tabs
-        mt={1}
         variant="pills"
         radius={"xl"}
         value={params.id}
@@ -65,6 +64,7 @@ export default function Vote_Riwayat() {
                     params.id === e.id
                       ? `1px solid ${AccentColor.yellow}`
                       : `1px solid ${MainColor.white}`,
+                  color: "black",
                 }}
               >
                 {e.label}

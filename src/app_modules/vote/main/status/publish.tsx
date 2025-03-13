@@ -48,7 +48,7 @@ export default function Vote_StatusPublish() {
           // --- Main component --- //
           <Box>
             <ScrollOnly
-              height="75vh"
+              height="73vh"
               renderLoading={() => (
                 <Center mt={"lg"}>
                   <Loader color={"yellow"} />

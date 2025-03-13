@@ -47,7 +47,7 @@ export default function Vote_StatusReject() {
         // --- Main component --- //
         <Box>
           <ScrollOnly
-            height="75vh"
+            height="73vh"
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />
