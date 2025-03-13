@@ -94,10 +94,10 @@ export function ComponentPortofolio_ButtonEditLogoBisnis({
           color="yellow"
           c={"black"}
           style={{
-            width: "90%",
             transition: "0.5s",
             position: "absolute",
             bottom: 20,
+            width: 300,
           }}
         >
           Simpan
