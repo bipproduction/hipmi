@@ -99,7 +99,7 @@ export function UserSearch_UiView() {
 
   return (
     <>
-      <Stack spacing={"xl"}>
+      <Stack>
         <TextInput
           radius={"xl"}
           style={{ zIndex: 99 }}
@@ -116,7 +116,7 @@ export function UserSearch_UiView() {
               <ComponentGlobal_IsEmptyData text="Pengguna tidak ditemukan" />
             ) : (
               <ScrollOnly
-                height="84vh"
+                height="75vh"
                 renderLoading={() => (
                   <Center mt={"lg"}>
                     <Loader color={"yellow"} />
