@@ -1,20 +1,28 @@
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
-import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export default function UploadFotoProfileLayout({
   children,
 }: {
   children: any;
 }) {
- 
-
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Update Foto" />}
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header title="Update Foto" />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
     </>
   );
 }

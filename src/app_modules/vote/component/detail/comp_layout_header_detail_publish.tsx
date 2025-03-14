@@ -25,6 +25,7 @@ import { useState } from "react";
 import { voting_funUpdateIsArsipById } from "../../fun";
 import { MODEL_VOTING } from "../../model/interface";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 
 
 export function Voting_ComponentLayoutHeaderDetailPublish({
@@ -64,7 +65,7 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
 
   return (
     <>
-      <UIGlobal_LayoutHeaderTamplate
+      <Component_Header
         title={title}
         customButtonRight={
           <ActionIcon

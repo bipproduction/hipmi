@@ -60,8 +60,8 @@ const useStyles = createStyles((theme) => ({
       height: "8vh",
     },
     borderBottom: `1px solid ${AccentColor.blue}`,
-    borderBottomLeftRadius: "10px",
-    borderBottomRightRadius: "10px",
+    borderBottomLeftRadius: "20px",
+    borderBottomRightRadius: "20px",
   },
 
   content: {
@@ -85,8 +85,8 @@ const useStyles = createStyles((theme) => ({
     transform: "translateX(-50%)", // Pusatkan footer
     maxWidth: "500px", // Batasi lebar footer
     color: MainColor.white,
-    borderTopLeftRadius: "10px",
-    borderTopRightRadius: "10px",
+    borderTopLeftRadius: "20px",
+    borderTopRightRadius: "20px",
   },
 }));
 
