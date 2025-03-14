@@ -165,7 +165,7 @@ export default function Forum_MainDetail({
         ) : (
           <Box>
             <ScrollOnly
-              height={"60vh"}
+              height={"70vh"}
               renderLoading={() => (
                 <Center mt={"lg"}>
                   <Loader color={"yellow"} />

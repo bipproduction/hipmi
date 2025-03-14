@@ -134,7 +134,7 @@ export function UI_NewChildren({ children }: { children: ReactNode }) {
   const { classes } = useStyles();
   return (
     <Box className={classes.content}>
-      <Container size="xl" pt={"md"}>
+      <Container size="xs" py={"xs"}>
         {children}
       </Container>
     </Box>
