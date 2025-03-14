@@ -73,7 +73,7 @@ export function Voting_ViewDetailKontributorVoting() {
       ) : (
         <Box>
           <ScrollOnly
-            height="75vh"
+            height="82vh"
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />

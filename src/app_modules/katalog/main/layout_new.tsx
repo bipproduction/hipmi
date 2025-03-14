@@ -1,17 +1,17 @@
 "use client";
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
-import {
-  UIGlobal_LayoutHeaderTamplate,
-  UIGlobal_LayoutTamplate,
-} from "@/app_modules/_global/ui";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { apiGetUserProfile } from "@/app_modules/user";
-import { ActionIcon, Skeleton } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import DrawerKatalogNew from "../component/drawer_katalog_new";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function LayoutKatalogNew({
   children,
@@ -48,7 +48,7 @@ export default function LayoutKatalogNew({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="KATALOG"
@@ -73,13 +73,40 @@ export default function LayoutKatalogNew({
         }
       >
         {children}
-        <DrawerKatalogNew
-          opened={opened}
-          close={() => close()}
-          userRoleId={userRoleId}
-          userId={userLoginId}
-        />
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="KATALOG"
+            customButtonRight={
+              loading ? (
+                <ActionIcon disabled variant="transparent">
+                  <CustomSkeleton h={20} w={20} radius={"100%"} />
+                </ActionIcon>
+              ) : authorId == userLoginId ? (
+                <ActionIcon
+                  c="white"
+                  variant="transparent"
+                  onClick={() => open()}
+                >
+                  <IconDotsVertical />
+                </ActionIcon>
+              ) : (
+                <ActionIcon disabled variant="transparent"></ActionIcon>
+              )
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
+
+      <DrawerKatalogNew
+        opened={opened}
+        close={() => close()}
+        userRoleId={userRoleId}
+        userId={userLoginId}
+      />
     </>
   );
 }

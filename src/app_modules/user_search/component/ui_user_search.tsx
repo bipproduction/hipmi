@@ -1,10 +1,9 @@
 "use client";
 
-import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
@@ -23,7 +22,6 @@ import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { userSearch_getAllUser } from "../fun/get/get_all_user";
 import { apiGetUserSearch } from "./api_fetch_user_search";
 import { UserSearch_SkeletonView } from "./skeleton_view";
 
@@ -99,7 +97,7 @@ export function UserSearch_UiView() {
 
   return (
     <>
-      <Stack spacing={"xl"}>
+      <Stack>
         <TextInput
           radius={"xl"}
           style={{ zIndex: 99 }}
@@ -116,7 +114,7 @@ export function UserSearch_UiView() {
               <ComponentGlobal_IsEmptyData text="Pengguna tidak ditemukan" />
             ) : (
               <ScrollOnly
-                height="84vh"
+                height="75vh"
                 renderLoading={() => (
                   <Center mt={"lg"}>
                     <Loader color={"yellow"} />

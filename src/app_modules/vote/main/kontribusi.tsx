@@ -43,7 +43,7 @@ export default function Vote_Kontribusi() {
         ) : (
           <Box>
             <ScrollOnly
-              height="82vh"
+              height="80vh"
               renderLoading={() => (
                 <Center mt={"lg"}>
                   <Loader color={"yellow"} />
