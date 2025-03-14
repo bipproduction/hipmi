@@ -11,13 +11,14 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { gs_colab_hot_menu } from "../global_state";
+import { Collaboration_ComponentNewFooter } from "../component/comp_new_footer_collaboration";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren, UI_NewFooter } from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export default function LayoutColab_Main({
   children,
-  cekNotif,
 }: {
   children: React.ReactNode;
-  cekNotif: boolean;
 }) {
   const router = useRouter();
   const [hotMenu, setHotMenu] = useAtom(gs_colab_hot_menu);
@@ -46,7 +47,20 @@ export default function LayoutColab_Main({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Collaboration"
+            routerLeft={RouterHome.main_home}
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+        <UI_NewFooter>
+          <Collaboration_ComponentNewFooter />
+        </UI_NewFooter>
+      </UI_NewLayoutTamplate>
+
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Collaboration"
@@ -79,41 +93,10 @@ export default function LayoutColab_Main({
             ))}
           </SimpleGrid>
 
-          // <Footer height={"10vh"} bg={"black"}>
-          //   {/* {value} */}
-          //   <Stack justify="center" h={"100%"}>
-          //     <Grid>
-          //       {listFooter.map((e) => (
-          //         <Grid.Col key={e.id} span={"auto"} pt={"md"}>
-          //           <Center>
-          //             <Stack
-          //               align="center"
-          //               spacing={0}
-          //               onClick={() => {
-          //                 router.replace(e.path);
-          //                 setHotMenu(e.id);
-          //               }}
-          //             >
-          //               <ActionIcon
-          //                 variant="transparent"
-          //                 c={hotMenu === e.id ? "blue" : "white"}
-          //               >
-          //                 {e.icon}
-          //               </ActionIcon>
-          //               <Text fz={10} c={hotMenu === e.id ? "blue" : "white"}>
-          //                 {e.name}
-          //               </Text>
-          //             </Stack>
-          //           </Center>
-          //         </Grid.Col>
-          //       ))}
-          //     </Grid>
-          //   </Stack>
-          // </Footer>
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
     </>
   );
 }
