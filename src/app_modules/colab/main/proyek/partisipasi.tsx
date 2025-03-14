@@ -49,7 +49,7 @@ export default function Colab_PartisipasiProyek() {
       ) : (
         <Box>
           <ScrollOnly
-            height="73vh"
+            height="75vh"
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />

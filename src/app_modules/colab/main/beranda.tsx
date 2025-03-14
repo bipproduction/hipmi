@@ -77,7 +77,7 @@ export default function Colab_Beranda({
         ) : (
           <Box>
             <ScrollOnly
-              height="82vh"
+              height="80vh"
               renderLoading={() => (
                 <Center mt={"lg"}>
                   <Loader color={"yellow"} />
