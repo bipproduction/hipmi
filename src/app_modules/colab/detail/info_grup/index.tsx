@@ -22,15 +22,26 @@ import {
 import {
   MODEL_COLLABORATION_ROOM_CHAT
 } from "../../model/interface";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export default function Colab_DetailInfoGrup() {
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={<UIGlobal_LayoutHeaderTamplate title="Info Grup" />}
       >
         <InfoGroup />
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header title="Info Grup" />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <InfoGroup />
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
     </>
   );
 }

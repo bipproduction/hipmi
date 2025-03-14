@@ -3,7 +3,15 @@
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
-import { Affix, Center, Loader, Stack, TextInput, rem } from "@mantine/core";
+import {
+  Affix,
+  Box,
+  Center,
+  Loader,
+  Stack,
+  TextInput,
+  rem,
+} from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
@@ -15,6 +23,7 @@ import { Forum_ComponentIsDataEmpty } from "../component/other_component";
 import { Forum_SkeletonCard } from "../component/skeleton_view";
 import { MODEL_FORUM_POSTING } from "../model/interface";
 import mqtt_client from "@/util/mqtt_client";
+import { AccentColor } from "@/app_modules/_global/color";
 
 export default function Forum_Beranda({
   userLoginId,
@@ -155,7 +164,7 @@ export default function Forum_Beranda({
 
       <ComponentGlobal_CreateButton path={RouterForum.create} />
 
-      <Stack spacing={"xl"}>
+      <Stack>
         <TextInput
           disabled={!data}
           radius={"xl"}
@@ -171,28 +180,31 @@ export default function Forum_Beranda({
           <Forum_ComponentIsDataEmpty />
         ) : (
           // --- Main component --- //
-          <ScrollOnly
-            height="85vh"
-            renderLoading={() => (
-              <Center mt={"lg"}>
-                <Loader color={"yellow"} />
-              </Center>
-            )}
-            data={data}
-            setData={setData as any}
-            moreData={handleMoreData}
+          <Box
           >
-            {(item) => (
-              <ComponentForum_BerandaCardView
-                data={item}
-                userLoginId={userLoginId}
-                onLoadData={(val) => {
-                  setData(val);
-                }}
-                allData={data}
-              />
-            )}
-          </ScrollOnly>
+            <ScrollOnly
+              height="80vh"
+              renderLoading={() => (
+                <Center mt={"lg"}>
+                  <Loader color={"yellow"} />
+                </Center>
+              )}
+              data={data}
+              setData={setData as any}
+              moreData={handleMoreData}
+            >
+              {(item) => (
+                <ComponentForum_BerandaCardView
+                  data={item}
+                  userLoginId={userLoginId}
+                  onLoadData={(val) => {
+                    setData(val);
+                  }}
+                  allData={data}
+                />
+              )}
+            </ScrollOnly>
+          </Box>
         )}
       </Stack>
     </>

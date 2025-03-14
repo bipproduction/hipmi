@@ -1,18 +1,21 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
-import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
-import { ActionIcon, Avatar } from "@mantine/core";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
+import { ActionIcon, Avatar, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function LayoutForum_Main({
   userLoginId,
@@ -45,13 +48,56 @@ export default function LayoutForum_Main({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Forum"
+            iconRight={
+              !data ? (
+                <CustomSkeleton height={30} width={30} circle />
+              ) : (
+                <ActionIcon
+                  radius={"xl"}
+                  variant="transparent"
+                  onClick={() => {
+                    setIsLoading(true);
+                    router.push(RouterForum.forumku + data?.id);
+                  }}
+                >
+                  {isLoading ? (
+                    <Avatar
+                      size={30}
+                      radius={"100%"}
+                      style={{
+                        borderColor: "white",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                      }}
+                    >
+                      <ComponentGlobal_Loader variant="dots" />
+                    </Avatar>
+                  ) : (
+                    <ComponentGlobal_LoaderAvatar
+                      fileId={data.Profile.imageId as any}
+                      sizeAvatar={30}
+                    />
+                  )}
+                </ActionIcon>
+              )
+            }
+          />
+        </UI_NewHeader>
+       
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
+
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Forum"
             iconRight={
               !data ? (
-                <CustomSkeleton height={30} width={30} circle/>
+                <CustomSkeleton height={30} width={30} circle />
               ) : (
                 <ActionIcon
                   radius={"xl"}
@@ -86,7 +132,7 @@ export default function LayoutForum_Main({
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
     </>
   );
 }

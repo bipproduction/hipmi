@@ -8,6 +8,8 @@ import { ActionIcon } from "@mantine/core";
 import { IconDotsVertical, IconEdit } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export default function LayoutColab_DetailProyekSaya({
   children,
@@ -27,7 +29,7 @@ export default function LayoutColab_DetailProyekSaya({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Proyek Saya"
@@ -43,7 +45,24 @@ export default function LayoutColab_DetailProyekSaya({
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Proyek Saya"
+            customButtonRight={
+              <ActionIcon
+                variant="transparent"
+                onClick={() => setOpenDrawer(true)}
+              >
+                <IconDotsVertical color="white" />
+              </ActionIcon>
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
 
       <UIGlobal_Drawer
         opened={openDrawer}

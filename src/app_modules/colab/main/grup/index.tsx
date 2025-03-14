@@ -54,7 +54,7 @@ export default function Colab_GrupDiskus() {
         ) : (
           <Box>
             <ScrollOnly
-              height="82vh"
+              height="85vh"
               renderLoading={() => (
                 <Center mt={"lg"}>
                   <Loader color={"yellow"} />

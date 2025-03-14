@@ -5,11 +5,7 @@ import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
-import {
-  Center,
-  Loader,
-  Stack
-} from "@mantine/core";
+import { Center, Loader, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
@@ -123,7 +119,7 @@ export default function Forum_Forumku({
         ) : (
           // --- Main component --- //
           <ScrollOnly
-            height={dataPosting.length < 5 ? "75vh" : "100vh"}
+            height={"75vh"}
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />
