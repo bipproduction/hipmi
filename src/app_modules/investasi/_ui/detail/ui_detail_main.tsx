@@ -1,11 +1,11 @@
 "use client";
 
 import { MainColor } from "@/app_modules/_global/color";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 import {
-  UIGlobal_Drawer,
-  UIGlobal_LayoutHeaderTamplate,
-  UIGlobal_LayoutTamplate,
+  UIGlobal_Drawer
 } from "@/app_modules/_global/ui";
+import UI_NewLayoutTamplate, { UI_NewChildren, UI_NewHeader } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import {
   NEW_RouterInvestasi
 } from "@/lib/router_hipmi/router_investasi";
@@ -64,7 +64,33 @@ export function Investasi_UiDetailMain({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Detail "
+            customButtonRight={
+              userLoginId === data?.authorId ? (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => setOpenDrawer(true)}
+                >
+                  <IconDotsVertical color={MainColor.white} />
+                </ActionIcon>
+              ) : (
+                <ActionIcon disabled variant="transparent" />
+              )
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <Investasi_ViewDetailPublish
+            data={data as any}
+            userLoginId={userLoginId}
+          />
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
+
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Detail "
@@ -87,7 +113,7 @@ export function Investasi_UiDetailMain({
           data={data as any}
           userLoginId={userLoginId}
         />
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
 
       <UIGlobal_Drawer
         opened={openDrawer}

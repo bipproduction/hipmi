@@ -166,7 +166,7 @@ export function Investasi_ViewInvoice({
                           color={copied ? "teal" : "yellow"}
                           c={"black"}
                         >
-                          {copied ? "Berhasil" : "Salin"}
+                          {copied ? "Disalin" : "Salin"}
                         </Button>
                       )}
                     </CopyButton>
@@ -224,7 +224,7 @@ export function Investasi_ViewInvoice({
                           c={"black"}
                           onClick={copy}
                         >
-                          {copied ? "Berhasil" : "Salin"}
+                          {copied ? "Disalin" : "Salin"}
                         </Button>
                       )}
                     </CopyButton>

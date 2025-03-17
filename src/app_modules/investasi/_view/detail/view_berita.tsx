@@ -45,7 +45,7 @@ export function Investasi_ViewDetailBerita() {
     <>
       <ComponentGlobal_CardStyles>
         <Stack>
-          {data.imagesId && (
+          {data.imageId && (
             <ComponentGlobal_LoadImageLandscape
               fileId={data.imageId as string}
             />

@@ -27,6 +27,11 @@ import {
   Investasi_ViewDetailReject,
   Investasi_ViewDetailReview,
 } from "../../_view";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, {
+  UI_NewHeader,
+  UI_NewChildren,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export function Investasi_UiDetailPortofolio() {
   const params = useParams<{ id: string }>();
@@ -88,10 +93,11 @@ export function Investasi_UiDetailPortofolio() {
     );
   }
 
+  // DRAFT
   if (data.masterStatusInvestasiId == "3")
     return (
       <>
-        <UIGlobal_LayoutTamplate
+        {/* <UIGlobal_LayoutTamplate
           header={
             <UIGlobal_LayoutHeaderTamplate
               title={`Detail Draft`}
@@ -107,7 +113,26 @@ export function Investasi_UiDetailPortofolio() {
           }
         >
           <Investasi_ViewDetailDraft dataInvestasi={data} />
-        </UIGlobal_LayoutTamplate>
+        </UIGlobal_LayoutTamplate> */}
+
+        <UI_NewLayoutTamplate>
+          <UI_NewHeader>
+            <Component_Header
+              title={`Detail Draft`}
+              customButtonRight={
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => setOpenDrawer(true)}
+                >
+                  <IconDotsVertical color={MainColor.white} />
+                </ActionIcon>
+              }
+            />
+          </UI_NewHeader>
+          <UI_NewChildren>
+            <Investasi_ViewDetailDraft dataInvestasi={data} />
+          </UI_NewChildren>
+        </UI_NewLayoutTamplate>
 
         <UIGlobal_DrawerCustom
           opened={openDrawer}
@@ -122,7 +147,7 @@ export function Investasi_UiDetailPortofolio() {
                     onClick={() => {
                       setPageId(e?.id);
                       setLoading(true);
-                     
+
                       router.push(e?.path, { scroll: false });
                     }}
                   >
@@ -144,20 +169,34 @@ export function Investasi_UiDetailPortofolio() {
     );
 
   return (
-    <UIGlobal_LayoutTamplate
-      header={
-        <UIGlobal_LayoutHeaderTamplate
-          title={`Detail ${data.MasterStatusInvestasi.name}`}
-        />
-      }
-    >
-      {data.masterStatusInvestasiId === "2" && (
-        <Investasi_ViewDetailReview dataInvestasi={data} />
-      )}
+    // <UIGlobal_LayoutTamplate
+    //   header={
+    //     <UIGlobal_LayoutHeaderTamplate
+    //       title={`Detail ${data.MasterStatusInvestasi.name}`}
+    //     />
+    //   }
+    // >
+    //   {data.masterStatusInvestasiId === "2" && (
+    //     <Investasi_ViewDetailReview dataInvestasi={data} />
+    //   )}
 
-      {data.masterStatusInvestasiId === "4" && (
-        <Investasi_ViewDetailReject dataInvestasi={data} />
-      )}
-    </UIGlobal_LayoutTamplate>
+    //   {data.masterStatusInvestasiId === "4" && (
+    //     <Investasi_ViewDetailReject dataInvestasi={data} />
+    //   )}
+    // </UIGlobal_LayoutTamplate>
+    <UI_NewLayoutTamplate>
+      <UI_NewHeader>
+        <Component_Header title={`Detail ${data.MasterStatusInvestasi.name}`} />
+      </UI_NewHeader>
+      <UI_NewChildren>
+        {data.masterStatusInvestasiId === "2" && (
+          <Investasi_ViewDetailReview dataInvestasi={data} />
+        )}
+
+        {data.masterStatusInvestasiId === "4" && (
+          <Investasi_ViewDetailReject dataInvestasi={data} />
+        )}
+      </UI_NewChildren>
+    </UI_NewLayoutTamplate>
   );
 }

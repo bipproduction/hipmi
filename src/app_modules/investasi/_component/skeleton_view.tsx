@@ -23,7 +23,7 @@ function Investasi_SkeletonEditProspektus() {
               transition: "all 0.3s ease",
               position: "absolute",
               bottom: 20,
-              width: "90%",
+              width: 300,
             }}
           >
             <CustomSkeleton h={40} width={"100%"} radius={"xl"} />

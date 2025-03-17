@@ -4,18 +4,12 @@ import {
   ComponentGlobal_LoadImageLandscape,
 } from "@/app_modules/_global/component";
 import { MODEL_INVOICE_INVESTASI } from "@/app_modules/investasi/_lib/interface";
-import {
-  Box,
-  Grid,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title
-} from "@mantine/core";
+import { Box, Grid, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { Investasi_ComponentBoxDaftarBerita } from "../comp_box_daftar_berita";
 import { Investasi_ComponentBoxDaftarDokumen } from "../comp_box_daftar_dokumen";
 import { Investasi_ComponentBoxProspektus } from "../comp_box_prospektus";
 import { MainColor } from "@/app_modules/_global/color";
+import { Investasi_ComponentBoxInvestor } from "../comp_box_investor";
 
 export function Investasi_ComponentBoxDetailData({
   data,
@@ -116,6 +110,8 @@ export function Investasi_ComponentBoxDetailData({
               { maxWidth: "36rem", cols: 1, spacing: "sm" },
             ]}
           >
+            <Investasi_ComponentBoxInvestor id={data.Investasi.id} />
+
             <Investasi_ComponentBoxProspektus
               prospektusFileId={data.Investasi.prospektusFileId}
             />

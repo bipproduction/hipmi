@@ -50,7 +50,7 @@ export function Investasi_UiPortofolioNew() {
             }}
          >
             <Stack>
-               <Tabs.List grow mb={"xs"}>
+               <Tabs.List grow>
                   {status.map((e) => (
                      <Tabs.Tab
                         w={"20%"}
