@@ -1,5 +1,3 @@
-import { IRealtimeData } from "@/lib/global_state";
-import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,
@@ -7,6 +5,8 @@ import {
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { IRealtimeData } from "@/lib/global_state";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { clientLogger } from "@/util/clientLogger";
 import { Button, Paper, Radio, Stack, Title } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
@@ -38,6 +38,7 @@ export function Investasi_ViewMetodePembayaran({
 
   async function onProses() {
     try {
+      setLoading(true);
       const res = await investasi_funCreateInvoice({
         data: {
           total: total,
@@ -48,6 +49,7 @@ export function Investasi_ViewMetodePembayaran({
       });
 
       if (res.status != 201) {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(res.message);
         return;
       }
@@ -73,13 +75,13 @@ export function Investasi_ViewMetodePembayaran({
         });
 
         ComponentGlobal_NotifikasiBerhasil(res.message);
-        setLoading(true);
         router.push(NEW_RouterInvestasi.invoice + res.data?.id, {
           scroll: false,
         });
       }
     } catch (error) {
       clientLogger.error("Error create invoice:", error);
+      setLoading(false);
     }
   }
 
@@ -108,7 +110,8 @@ export function Investasi_ViewMetodePembayaran({
               <Radio
                 styles={{
                   radio: {
-                    color: "yellow", backgroundColor: MainColor.white
+                    color: "yellow",
+                    backgroundColor: MainColor.white,
                   },
                 }}
                 value={e.id}
