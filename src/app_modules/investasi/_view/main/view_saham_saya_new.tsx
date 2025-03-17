@@ -37,37 +37,36 @@ export function Investasi_ViewSahamSayaNew() {
    }, []);
 
    return (
-      <>
-         <Box>
-            {
-               loading ?
-                  <SkeletonInvestasiSahamSaya />
-                  :
-                  _.isEmpty(data) ? (
-                     <ComponentGlobal_IsEmptyData />
-                  ) : (
-                     <ScrollOnly
-                        height="82vh"
-                        renderLoading={() => (
-                           <Center>
-                              <ComponentGlobal_Loader size={25} />
-                           </Center>
-                        )}
-                        data={data}
-                        setData={setData}
-                        moreData={async () => {
-                           const pageNew = activePage + 1
-                           const loadData = await apiGetAllSahamSaya(`?cat=saham-saya&page=${pageNew}`)
-                           setActivePage((val) => val + 1);
+     <>
+       <Box>
+         {loading ? (
+           <SkeletonInvestasiSahamSaya />
+         ) : _.isEmpty(data) ? (
+           <ComponentGlobal_IsEmptyData />
+         ) : (
+           <ScrollOnly
+             height="82vh"
+             renderLoading={() => (
+               <Center>
+                 <ComponentGlobal_Loader size={25} />
+               </Center>
+             )}
+             data={data}
+             setData={setData}
+             moreData={async () => {
+               const pageNew = activePage + 1;
+               const loadData = await apiGetAllSahamSaya(
+                 `?cat=saham-saya&page=${pageNew}`
+               );
+               setActivePage((val) => val + 1);
 
-                           return loadData.data;
-                        }}
-                     >
-                        {(item) => <Investasi_ComponentSahamSayaNew data={item} />}
-                     </ScrollOnly>
-                  )
-            }
-         </Box>
-      </>
+               return loadData.data;
+             }}
+           >
+             {(item) => <Investasi_ComponentSahamSayaNew data={item} />}
+           </ScrollOnly>
+         )}
+       </Box>
+     </>
    );
 }

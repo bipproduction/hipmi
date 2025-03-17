@@ -9,13 +9,13 @@ import { Investasi_ViewDaftarTransaksiNew } from "@/app_modules/investasi/_view/
 export default async function Page() {
   const userLoginId = await funGetUserIdByToken();
 
-  const statusTransaksi = await getMaster_StatusTransaksiInvestasi();
-  const listTransaksi = await getListAllTransaksiById_Investasi(
-    userLoginId as string
-  );
+  // const statusTransaksi = await getMaster_StatusTransaksiInvestasi();
+  // const listTransaksi = await getListAllTransaksiById_Investasi(
+  //   userLoginId as string
+  // );
 
   // NEW
-  const dataTransaksi = await investasi_funGetTransaksiByUserId({ page: 1 });
+  // const dataTransaksi = await investasi_funGetTransaksiByUserId({ page: 1 });
 
   return (
     <>

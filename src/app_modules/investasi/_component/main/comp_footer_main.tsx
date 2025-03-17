@@ -47,7 +47,7 @@ export function Investasi_ComponentFooterMain() {
 
   return (
     <>
-      <SimpleGrid cols={listFooter.length} h={"9vh"} mx={"xs"}>
+      <SimpleGrid cols={listFooter.length} h={"9vh"} mx={"xs"} w={"100%"}>
         {listFooter.map((e: any, i) => (
           <Stack key={i} align="center" justify="center" spacing={0}>
             <ActionIcon
