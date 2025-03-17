@@ -1,11 +1,14 @@
 "use client";
 
-import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 import {
-  UIGlobal_Drawer,
-  UIGlobal_LayoutHeaderTamplate,
-  UIGlobal_LayoutTamplate,
+  UIGlobal_Drawer
 } from "@/app_modules/_global/ui";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { ActionIcon } from "@mantine/core";
 import { IconCirclePlus, IconDotsVertical } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
@@ -28,7 +31,7 @@ export function Investasi_UiRekapBerita() {
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Rekap Berita"
@@ -46,7 +49,28 @@ export function Investasi_UiRekapBerita() {
         }
       >
         <Investasi_ViewRekapBerita />
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Rekap Berita"
+            customButtonRight={
+              <ActionIcon
+                variant="transparent"
+                onClick={() => {
+                  setOpenDrawer(true);
+                }}
+              >
+                <IconDotsVertical color="white" />
+              </ActionIcon>
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <Investasi_ViewRekapBerita />
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
 
       <UIGlobal_Drawer
         opened={openDrawer}

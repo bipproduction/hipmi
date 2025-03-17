@@ -53,7 +53,7 @@ export function Investasi_ViewDaftarDokumen() {
           ) : (
             <Box>
               <ScrollOnly
-                height="90vh"
+                height="82vh"
                 renderLoading={() => (
                   <Center>
                     <ComponentGlobal_Loader size={25} />

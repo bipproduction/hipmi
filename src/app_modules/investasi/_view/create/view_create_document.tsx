@@ -137,7 +137,7 @@ export function Investasi_ViewCreateDocument() {
               transition: "0.5s",
               position: "absolute",
               bottom: 20,
-              width: "90%",
+              width: 300,
             }}
             onClick={() => {
               onCreate();

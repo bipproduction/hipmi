@@ -54,7 +54,6 @@ export function Investasi_ViewEditDokumen() {
         id: dokumenId,
       });
       if (response.success) {
-        console.log(response.data);
         setData(response.data);
       }
     } catch (error) {
@@ -224,7 +223,7 @@ export function Investasi_ViewEditDokumen() {
               transition: "0.5s",
               position: "absolute",
               bottom: 20,
-              width: "90%",
+              width: 300,
             }}
             onClick={() => {
               onUpdate();
