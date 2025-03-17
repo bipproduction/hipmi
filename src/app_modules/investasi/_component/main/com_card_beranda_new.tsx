@@ -97,16 +97,16 @@ export function Investasi_ComponentCardBerandaNew({
                           "days"
                         ) <=
                       0 ? (
-                        <Group position="right" spacing={"xs"}>
-                          <IconXboxX color="red" />
+                        <Group position="right" spacing={5}>
+                          <IconXboxX color="red" size={20} />
                           <Text
                             truncate
                             variant="text"
                             c={Warna.merah}
                             sx={{ fontFamily: "Greycliff CF, sans-serif" }}
                             ta="center"
-                            fz="md"
-                            fw={700}
+                            fw={"bold"}
+                            fz="sm"
                           >
                             Waktu Habis
                           </Text>

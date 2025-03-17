@@ -23,6 +23,11 @@ import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetBeritaInvestasiById } from "../../_lib/api_interface";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, {
+  UI_NewHeader,
+  UI_NewChildren,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export function Investasi_UiDetailBerita({
   userLoginId,
@@ -91,7 +96,7 @@ export function Investasi_UiDetailBerita({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Detail Berita"
@@ -111,7 +116,30 @@ export function Investasi_UiDetailBerita({
         }
       >
         <Investasi_ViewDetailBerita />
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Detail Berita"
+            customButtonRight={
+              data && userLoginId === data.investasi.authorId ? (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => setOpenDrawer(true)}
+                >
+                  <IconDotsVertical color="white" />
+                </ActionIcon>
+              ) : (
+                ""
+              )
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <Investasi_ViewDetailBerita />
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
 
       <UIGlobal_DrawerCustom
         opened={openDrawer}
