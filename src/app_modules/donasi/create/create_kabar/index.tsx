@@ -155,7 +155,7 @@ export default function Donasi_CreateKabar() {
           maxInput={1000}
         />
 
-        <Stack spacing={5}>
+        <Stack spacing={0}>
           <ComponentGlobal_BoxUploadImage>
             {img ? (
               <AspectRatio ratio={1 / 1} mt={5} maw={300} mx={"auto"}>
@@ -188,7 +188,7 @@ export default function Donasi_CreateKabar() {
           }}
           disabled={_.values(kabar).includes("") ? true : false}
           radius={"xl"}
-          mt={"lg"}
+          mt={"xl"}
           bg={MainColor.yellow}
           color="yellow"
           c={"black"}
