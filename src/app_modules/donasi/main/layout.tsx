@@ -1,11 +1,15 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewFooter,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
 import { RouterCrowd } from "@/lib/router_hipmi/router_crowd";
 import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
-import { MainColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
-import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import { ActionIcon, SimpleGrid, Stack, Text } from "@mantine/core";
 import {
   IconGiftCardFilled,
@@ -48,7 +52,7 @@ export default function LayoutDonasi({
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Donasi"
@@ -84,7 +88,41 @@ export default function LayoutDonasi({
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header title="Donasi" routerLeft={RouterCrowd.main} />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+        <UI_NewFooter>
+          <SimpleGrid cols={listFooter.length} h={"9vh"} mx={"xs"} w={"100%"}>
+            {listFooter.map((e, i) => (
+              <Stack key={i} align="center" justify="center" spacing={0}>
+                <ActionIcon
+                  // disabled={e.path === "" ? true : false}
+                  variant="transparent"
+                  c={active === i ? MainColor.yellow : MainColor.white}
+                  onClick={() =>
+                    e.path === ""
+                      ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")
+                      : (router.replace(e.path), setActive(i))
+                  }
+                >
+                  {e.icon}
+                </ActionIcon>
+                <Text
+                  c={active === i ? MainColor.yellow : MainColor.white}
+                  fz={"xs"}
+                  lineClamp={1}
+                >
+                  {e.name}
+                </Text>
+              </Stack>
+            ))}
+          </SimpleGrid>
+        </UI_NewFooter>
+      </UI_NewLayoutTamplate>
     </>
   );
 }
