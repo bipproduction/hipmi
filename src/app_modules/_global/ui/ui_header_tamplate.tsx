@@ -50,7 +50,7 @@ export default function UIGlobal_LayoutHeaderTamplate({
       <Box
         h={"8vh"}
         style={{
-          borderBottom: `1px solid ${AccentColor.blue}`,
+          borderBottom: `2px solid ${AccentColor.blue}`,
           borderBottomLeftRadius: "10px",
           borderBottomRightRadius: "10px",
         }}

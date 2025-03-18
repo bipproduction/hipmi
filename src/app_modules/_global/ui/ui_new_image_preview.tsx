@@ -10,7 +10,7 @@ import {
   Image,
   rem,
   ScrollArea,
-  Skeleton
+  Skeleton,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
@@ -20,8 +20,10 @@ import { MainColor } from "../color";
 import ComponentGlobal_Loader from "../component/loader";
 import UIGlobal_LayoutHeaderTamplate from "./ui_header_tamplate";
 import { UIHeader } from "./ui_layout_tamplate";
+import { Component_Header } from "../component/new/component_header";
+import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "./V2_layout_tamplate";
 
-export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
+export function UIGlobal_NewImagePreview({ fileId }: { fileId: string }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +48,68 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
 
   return (
     <>
-      <Box
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Preview Image"
+            hideButtonLeft
+            customButtonRight={
+              <ActionIcon
+                onClick={() => {
+                  router.back(), setIsLoading(true);
+                }}
+                variant="transparent"
+              >
+                {isLoading ? (
+                  <ComponentGlobal_Loader />
+                ) : (
+                  <IconX color={MainColor.yellow} />
+                )}
+              </ActionIcon>
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <Box
+            style={{ zIndex: 0 }}
+            h={"90vh"}
+            pos={"static"}
+            px={"lg"}
+          >
+            {isImage === null ? (
+              <Skeleton height={200} radius={"sm"} />
+            ) : isImage ? (
+              <ScrollArea h={"100%"}>
+                <Center>
+                  <Image alt="Image" src={url} maw={500} miw={200} />
+                </Center>
+              </ScrollArea>
+            ) : (
+              <Box
+                bg={"gray"}
+                style={{
+                  borderColor: "white",
+                  borderStyle: "solid",
+                  borderWidth: "0.5px",
+                  borderRadius: "5px",
+                  height: 300,
+                }}
+              >
+                <Center h={"100%"}>
+                  <Image
+                    alt="Image"
+                    height={100}
+                    width={100}
+                    src={pathAssetImage.no_image}
+                  />
+                </Center>
+              </Box>
+            )}
+          </Box>
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
+
+      {/* <Box
         w={"100%"}
         h={"100%"}
         style={{
@@ -80,7 +143,13 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
             }
           />
 
-          <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"} pt={"sm"}>
+          <Box
+            style={{ zIndex: 0 }}
+            h={"90vh"}
+            pos={"static"}
+            px={"lg"}
+            pt={"sm"}
+          >
             {isImage === null ? (
               <Skeleton height={200} radius={"sm"} />
             ) : isImage ? (
@@ -112,7 +181,7 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
             )}
           </Box>
         </Container>
-      </Box>
+      </Box> */}
     </>
   );
 }
