@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Donasi_funDeleteKabar } from "../../fun/delete/fun_delete.kabar";
 import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "@/app_modules/_global/ui/V2_layout_tamplate";
 
 export default function LayoutUpdateKabarDonasi({
   children,
@@ -45,7 +47,7 @@ export default function LayoutUpdateKabarDonasi({
   }
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Update Kabar"
@@ -61,7 +63,24 @@ export default function LayoutUpdateKabarDonasi({
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Update Kabar"
+            customButtonRight={
+              <ActionIcon
+                variant="transparent"
+                onClick={() => setOpenDrawer(true)}
+              >
+                <IconDotsVertical color="white" />
+              </ActionIcon>
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
 
       <UIGlobal_DrawerCustom
         opened={openDrawer}

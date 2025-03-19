@@ -28,6 +28,9 @@ const useStyles = createStyles((theme) => ({
     [`@media (min-width: 769px)`]: {
       right: "calc(50% - 250px + 20px)", // Sesuaikan dengan lebar container (500px)
     },
+    [":hover"]: {
+      backgroundColor: AccentColor.blue,
+    },
   },
 }));
 
