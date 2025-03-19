@@ -7,9 +7,11 @@ import { APIs } from "@/lib";
 import { Badge, Center, Grid, Image, SimpleGrid, Text } from "@mantine/core";
 import { IconImageInPicture } from "@tabler/icons-react";
 import { useState } from "react";
+import { AdminJob_ComponentImageView } from "./image_view";
 
 export function AdminJob_DetailPublish({ data }: { data: MODEL_JOB }) {
   const [isLoading, setLoading] = useState(false);
+
   const listData = [
     {
       title: "Username",
@@ -58,21 +60,9 @@ export function AdminJob_DetailPublish({ data }: { data: MODEL_JOB }) {
         </Admin_ComponentBoxStyle>
 
         {data.imageId && (
-          <Admin_ComponentBoxStyle>
-            <Center>
-              <Image
-                onLoad={() => setLoading(false)}
-                alt="Foto"
-                src={APIs.GET({ fileId: data.imageId })}
-                mah={500}
-                maw={300}
-              />
-            </Center>
-          </Admin_ComponentBoxStyle>
+         <AdminJob_ComponentImageView imageId={data.imageId}/>
         )}
       </SimpleGrid>
-
-      {/* <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre> */}
     </>
   );
 }

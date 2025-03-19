@@ -33,6 +33,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
 import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
 
 export default function AdminJob_TablePublish() {
   return (
@@ -155,7 +156,9 @@ function TableStatus() {
         </td>
         <td>
           <Center>
-            <Admin_DetailButton path={`/dev/admin/job/${e.id}/publish`} />
+            <Admin_DetailButton
+              path={String(RouterAdminJob.detail({ id: e.id }))}
+            />
           </Center>
         </td>
         {/* <td>

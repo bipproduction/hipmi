@@ -9,11 +9,13 @@ import { useShallowEffect } from "@mantine/hooks";
 import { clientLogger } from "@/util/clientLogger";
 import { apiGetOneJobById } from "../lib/api_fetch_admin_job";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { AdminJob_DetailPublish } from "../_components/detail_status";
+import { AdminJob_DetailPublish } from "../_components/detail/publish";
+import { MODEL_JOB } from "@/app_modules/job/model/interface";
+import { AdminJob_DetailReview } from "../_components/detail/review";
 
 export function AdminJob_ViewDetailPublish() {
-  const param = useParams<{ id: string; status: string }>();
-  const [data, setData] = useState();
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_JOB>();
 
   useShallowEffect(() => {
     handleLoadData();
@@ -37,16 +39,19 @@ export function AdminJob_ViewDetailPublish() {
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name={`Detail ${param.status} `} />
+        <ComponentAdminGlobal_HeaderTamplate name={`Detail data`} />
         <AdminGlobal_ComponentBackButton />
 
         {!data ? (
           <SimpleGrid cols={2}>
             <CustomSkeleton height={500} width={"100%"} />
-            <CustomSkeleton height={500} width={"100%"} />
           </SimpleGrid>
-        ) : (
+        ) : data.MasterStatus.name === "Publish" ? (
           <AdminJob_DetailPublish data={data} />
+        ) : data.MasterStatus.name === "Review" ? (
+          <AdminJob_DetailReview data={data} />
+        ) : (
+          ""
         )}
       </Stack>
     </>

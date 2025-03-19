@@ -5,4 +5,5 @@ export const RouterAdminJob = {
   reject: "/dev/admin/job/child/reject",
   arsip: "/dev/admin/job/child/arsip",
   detail_poster: "/dev/admin/job/detail/poster/",
+  detail: ({ id }: { id: string }) => `/dev/admin/job/${id}`,
 };
