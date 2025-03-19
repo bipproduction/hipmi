@@ -46,7 +46,7 @@ export default function Notifikasi_UiNewLayout({
           >
             <UIHeader header={header} />
 
-            <UIChildren>{children}</UIChildren>
+            <UIChildrenNotifikasi>{children}</UIChildrenNotifikasi>
           </BackgroundImage>
         </Container>
       </Box>
@@ -76,7 +76,7 @@ function UIHeader({ header }: { header: React.ReactNode }) {
   );
 }
 
-function UIChildren({ children }: { children: React.ReactNode }) {
+export function UIChildrenNotifikasi({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [mstrKategori, setMstrKategori] = useState<any[] | null>(null);
   const [categoryPage, setCategoryPage] = useAtom(gs_notifikasi_kategori_app);
@@ -100,7 +100,7 @@ function UIChildren({ children }: { children: React.ReactNode }) {
           Null
         </Button>
       ) : (
-        <Box style={{ zIndex: 0 }} h={"92vh"} px={"xs"} pos={"static"}>
+        <Box style={{ zIndex: 0 }} h={"90vh"}  pos={"static"}>
           <Box
             mb={"xs"}
             style={{

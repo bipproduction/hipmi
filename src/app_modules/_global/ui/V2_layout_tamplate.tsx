@@ -59,7 +59,7 @@ const useStyles = createStyles((theme) => ({
     [`@media (max-width: 768px)`]: {
       height: "8vh",
     },
-    borderBottom: `1px solid ${AccentColor.blue}`,
+    borderBottom: `2px solid ${AccentColor.blue}`,
     borderBottomLeftRadius: "20px",
     borderBottomRightRadius: "20px",
   },
@@ -74,7 +74,7 @@ const useStyles = createStyles((theme) => ({
   footer: {
     width: "100%",
     backgroundColor: MainColor.darkblue,
-    borderTop: `1px solid ${AccentColor.blue}`,
+    borderTop: `2px solid ${AccentColor.blue}`,
     height: "10vh", // Tinggi footer
     display: "flex",
     alignItems: "center",
