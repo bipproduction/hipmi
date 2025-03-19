@@ -13,17 +13,7 @@ import global_limit from "@/lib/limit";
 import { useShallowEffect } from "@mantine/hooks";
 import { apiGetJobArsipCount, apiGetJobStatusCountDashboard } from "../lib/api_fetch_admin_job";
 
-export default function AdminJob_Main({
-  // countPublish,
-  // countReview,
-  // countReject,
-  // countArsip,
-}: {
-    // countPublish: number;
-    // countReview: number;
-    // countReject: number;
-    // countArsip: number
-  }) {
+export default function AdminJob_Main() {
   const [countPublish, setCountPublish] = useState<number | null>(null);
   const [countReview, setCountReview] = useState<number | null>(null);
   const [countReject, setCountReject] = useState<number | null>(null);
