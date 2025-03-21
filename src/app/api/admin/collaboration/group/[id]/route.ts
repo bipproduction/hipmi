@@ -1,46 +1,42 @@
-import prisma from "@/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
-    const data = await prisma.projectCollaboration.findUnique({
+
+    const data = await prisma.projectCollaboration_RoomChat.findUnique({
       where: {
         id: id,
       },
       select: {
         id: true,
-        isActive: true,
-        title: true,
-        lokasi: true,
-        purpose: true,
-        benefit: true,
-        createdAt: true,
-        report: true,
-        Author: {
+        name: true,
+        ProjectCollaboration: {
           select: {
             id: true,
-            username: true,
+            isActive: true,
+            title: true,
+            lokasi: true,
+            purpose: true,
+            benefit: true,
+            createdAt: true,
+            ProjectCollaborationMaster_Industri: true,
+            Author: true
           },
         },
-        ProjectCollaborationMaster_Industri: true,
-        ProjectCollaboration_Partisipasi: {
-          where: {
-            User: {
-              active: true,
-            },
-          },
+        ProjectCollaboration_AnggotaRoomChat: {
           select: {
-            id: true,
             User: {
               select: {
+                username: true,
                 id: true,
                 Profile: {
                   select: {
+                    id: true,
                     name: true,
                   },
                 },
@@ -50,23 +46,28 @@ export async function GET(
         },
       },
     });
+
     return NextResponse.json(
       {
         success: true,
-        message: "Success get collaboration",
+        message: "Success get data collaboration group",
         data: data,
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error) {
-    backendLogger.error("Error get collaboration >>", error);
+    backendLogger.error("Error get data collaboration group", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Error get collaboration",
-        reason: (error as Error).message,
+        message: "Error get data collaboration group",
+        error: (error as Error).message,
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }

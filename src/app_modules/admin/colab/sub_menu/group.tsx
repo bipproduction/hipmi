@@ -32,6 +32,7 @@ import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 
 export default function AdminColab_TableGroup({
   listGroup,
@@ -114,7 +115,11 @@ function TableMenu({ listGroup }: { listGroup: any }) {
       <td>
         <Center>
           <Stack>
-            <Button
+            <Admin_DetailButton
+              path={`/dev/admin/colab/detail/group/${e.id}`}
+            />
+
+            {/* <Button
               loading={
                 idProject === e?.id ? (loadingDetail ? true : false) : false
               }
@@ -126,8 +131,9 @@ function TableMenu({ listGroup }: { listGroup: any }) {
                 onDetailData(e?.id);
               }}
             >
-              Detail
-            </Button>
+              Detail 1
+            </Button> */}
+
             {/* <Button
               // loading={
               //   idProject === e?.id ? (loadingReject ? true : false) : false
@@ -154,19 +160,12 @@ function TableMenu({ listGroup }: { listGroup: any }) {
         <ComponentAdminGlobal_TitlePage
           name="Group Chat"
           color={AdminColor.softBlue}
-          component={
-            <></>
-          }
+          component={<></>}
         />
         <Paper p={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <ScrollArea h={"65vh"}>
-              <Table
-                verticalSpacing={"xs"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                
-              >
+              <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -205,7 +204,7 @@ function TableMenu({ listGroup }: { listGroup: any }) {
       </Stack>
 
       <Modal
-        styles={{ body: { backgroundColor: AccentColor.darkblue}}}
+        styles={{ body: { backgroundColor: AccentColor.darkblue } }}
         opened={openDetail}
         onClose={() => setOpenDetail(false)}
         centered
@@ -224,7 +223,9 @@ function TableMenu({ listGroup }: { listGroup: any }) {
             <ScrollArea h={"100%"}>
               <Stack>
                 <Center>
-                  <Title c={AdminColor.white} order={4}>Anggota</Title>
+                  <Title c={AdminColor.white} order={4}>
+                    Anggota
+                  </Title>
                 </Center>
                 <Stack>
                   {detailData?.ProjectCollaboration_AnggotaRoomChat?.map(

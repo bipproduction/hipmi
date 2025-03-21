@@ -18,7 +18,7 @@ export default function Admin_DetailButton({ path }: { path: string }) {
         leftIcon={<IconEye size={25} color={"white"} />}
         onClick={() => {
           setLoading(true);
-          router.push(path);
+          router.push(path || "");
         }}
       >
         Detail
