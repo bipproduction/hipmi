@@ -66,7 +66,6 @@ function TableMenu() {
       const response = await apiGetAdminCollaborationPublish({
         page: `${activePage}`,
       })
-      console.log("Ini Response", response)
 
       if (response?.success && response?.data?.data) {
         setData(response.data.data);

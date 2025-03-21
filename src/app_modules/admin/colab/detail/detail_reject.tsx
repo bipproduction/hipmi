@@ -28,7 +28,7 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
 
-function DetailPublish() {
+function DetailReject() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_COLLABORATION | null>(null);
@@ -55,24 +55,24 @@ function DetailPublish() {
     }
   };
 
-  async function onReject() {
-    try {
-      setLoading(true)
-      const response = await adminColab_funReportProjectById({
-        colabId: params.id,
-        report: report,
-      });
+//   async function onReject() {
+//     try {
+//       setLoading(true);
+//       const response = await adminColab_funReportProjectById({
+//         colabId: params.id,
+//         report: report,
+//       });
 
-      if (response.status == 200) {
-        setLoading(false);
-        router.back();
-      }
-    } catch (error) {
-      setLoading(false);
-      ComponentGlobal_NotifikasiPeringatan("Gagal Load");
-      clientLogger.error("Invalid report collaboration", error);
-    }
-  }
+//       if (response.status == 200) {
+//         setLoading(false);
+//         router.back();
+//       }
+//     } catch (error) {
+//       setLoading(false);
+//       ComponentGlobal_NotifikasiPeringatan("Gagal Load");
+//       clientLogger.error("Invalid report collaboration", error);
+//     }
+//   }
 
   const listData = [
     {
@@ -103,14 +103,17 @@ function DetailPublish() {
       label: "Keuntungan",
       value: data?.benefit,
     },
+    {
+      label: "Catatan Report",
+      value: data?.report,
+    },
   ];
 
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name={`Detail publish`} />
-          <AdminGlobal_ComponentBackButton />
-        
+        <ComponentAdminGlobal_HeaderTamplate name={`Detail reject`} />
+        <AdminGlobal_ComponentBackButton />
 
         <SimpleGrid cols={2}>
           {!data ? (
@@ -132,68 +135,13 @@ function DetailPublish() {
                   </Grid>
                 ))}
 
-                <Group position="center">
-                  <Button
-                    mt={"xl"}
-                    radius={"xl"}
-                    bg={"red"}
-                    color="red"
-                    onClick={() => {
-                      setOpenReject(true);
-                    }}
-                    leftIcon={<IconFlag2Off size={20} color="white" />}
-                  >
-                    Reject
-                  </Button>
-                </Group>
               </Stack>
             </Admin_ComponentBoxStyle>
           )}
         </SimpleGrid>
       </Stack>
-
-      {/* Reject Project */}
-      <Modal
-        styles={{ body: { backgroundColor: AdminColor.softBlue } }}
-        opened={openReject}
-        onClose={() => setOpenReject(false)}
-        centered
-        withCloseButton={false}
-        size={"md"}
-      >
-        <Paper bg={AdminColor.softBlue} p={"md"}>
-          <Stack>
-            <Text c={AdminColor.white}>
-              Apakah anda yakin ingin mereport project{" "}
-              <Text c={AdminColor.white} span inherit fw={"bold"}>
-                {data?.title}
-              </Text>
-              ?
-            </Text>{" "}
-            <Textarea
-              minRows={3}
-              maxRows={5}
-              placeholder="Ketik alasan report.."
-              onChange={(val) => setReport(val.currentTarget.value)}
-            />
-            <Group position="right">
-              <Button
-                loading={loading}
-                loaderPosition="center"
-                leftIcon={<IconCheck />}
-                radius={"xl"}
-                onClick={() => {
-                  onReject();
-                }}
-              >
-                Simpan
-              </Button>
-            </Group>
-          </Stack>
-        </Paper>
-      </Modal>
     </>
   );
 }
 
-export default DetailPublish;
+export default DetailReject;
