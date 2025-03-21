@@ -21,11 +21,11 @@ import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
 import adminColab_getListAllRejected from "../fun/get/get_list_all_reject";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { clientLogger } from "@/util/clientLogger";
-
 import { useShallowEffect } from "@mantine/hooks";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { IconEye } from "@tabler/icons-react";
 import { apiGetAdminCollaborationReject } from "../lib/api_fetch_admin_collaboration";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 
 export default function AdminColab_TableRejected() {
   return (
@@ -52,7 +52,7 @@ function TableMenu() {
       const response = await apiGetAdminCollaborationReject({
         page: `${activePage}`,
       })
-      console.log("Ini Response", response)
+      
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
         setNPage(response.data.nPage || 1);
@@ -88,9 +88,10 @@ function TableMenu() {
       <tr key={i}>
         <td>
           <Center c={AdminColor.white}>
-            <Text lineClamp={1}>{e?.Author?.Profile?.name}</Text>
+            <Text lineClamp={1}>{e?.Author.username}</Text>
           </Center>
         </td>
+
         <td>
           <Center c={AdminColor.white}>
             <Box>
@@ -100,11 +101,13 @@ function TableMenu() {
             </Box>
           </Center>
         </td>
+
         <td>
           <Center c={AdminColor.white}>
             <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
           </Center>
         </td>
+
         <td>
           <Center c={AdminColor.white}>
             <Text>{e?.ProjectCollaboration_Partisipasi.length}</Text>
@@ -112,22 +115,7 @@ function TableMenu() {
         </td>
         <td>
           <Center>
-            <Box w={300}>
-              <Center c={AdminColor.white}>
-                <Spoiler
-                  hideLabel={"sembunyikan"}
-                  maxHeight={50}
-                  showLabel="tampilkan"
-                >
-                  {e?.report}
-                </Spoiler>
-              </Center>
-            </Box>
-          </Center>
-        </td>
-        <td>
-          <Center>
-            <Button
+            {/* <Button
               loading={loading && e?.id == idData ? true : false}
               leftIcon={<IconEye />}
               loaderPosition="center"
@@ -139,7 +127,8 @@ function TableMenu() {
               }}
             >
               Detail
-            </Button>
+            </Button> */}
+            <Admin_DetailButton path={`/dev/admin/colab/detail/reject/${e.id}`} />
           </Center>
         </td>
       </tr >
@@ -181,9 +170,6 @@ function TableMenu() {
                       </th>
                       <th>
                         <Center c={AdminColor.white}>Jumlah Partisipan</Center>
-                      </th>
-                      <th>
-                        <Center c={AdminColor.white}>Report</Center>
                       </th>
                       <th>
                         <Center c={AdminColor.white}>Aksi</Center>

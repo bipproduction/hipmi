@@ -1,10 +1,26 @@
 "use client";
 
-import { Stack, SimpleGrid, Paper, Group, Title, Text, Flex, ThemeIcon } from "@mantine/core";
+import {
+  Stack,
+  SimpleGrid,
+  Paper,
+  Group,
+  Title,
+  Text,
+  Flex,
+  ThemeIcon,
+} from "@mantine/core";
 import { useRouter } from "next/navigation";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { IconAlertTriangle, IconMessage2, IconUpload } from "@tabler/icons-react";
-import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  IconAlertTriangle,
+  IconMessage2,
+  IconUpload,
+} from "@tabler/icons-react";
+import {
+  AccentColor,
+  AdminColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { useState } from "react";
 import { clientLogger } from "@/util/clientLogger";
 import { apiGetAdminCollaborationStatusCountDashboard } from "../lib/api_fetch_admin_collaboration";
@@ -18,10 +34,8 @@ export default function AdminColab_Dashboard() {
   const [countReject, setCountReject] = useState<number | null>(null);
   const router = useRouter();
 
- 
-
   useShallowEffect(() => {
-    handlerLoadData()
+    handlerLoadData();
   }, []);
 
   async function handlerLoadData() {
@@ -30,18 +44,18 @@ export default function AdminColab_Dashboard() {
         global_limit(() => onLoadCountPublish()),
         global_limit(() => onLoadCountRoom()),
         global_limit(() => onLoadCountReject()),
-      ]
+      ];
       const result = await Promise.all(listLoadData);
     } catch (error) {
-      clientLogger.error("Error handler load data", error)
+      clientLogger.error("Error handler load data", error);
     }
   }
   async function onLoadCountPublish() {
     try {
       const response = await apiGetAdminCollaborationStatusCountDashboard({
         name: "Publish",
-      })
-      if (response) { 
+      });
+      if (response) {
         setCountPublish(response.data);
       }
     } catch (error) {
@@ -49,14 +63,11 @@ export default function AdminColab_Dashboard() {
     }
   }
 
-
   async function onLoadCountRoom() {
     try {
-      const response = await apiGetAdminCollaborationStatusCountDashboard(
-        {
-          name: "Room",
-        }
-      )
+      const response = await apiGetAdminCollaborationStatusCountDashboard({
+        name: "Room",
+      });
       if (response) {
         setCountRoom(response.data);
       }
@@ -69,7 +80,7 @@ export default function AdminColab_Dashboard() {
     try {
       const response = await apiGetAdminCollaborationStatusCountDashboard({
         name: "Reject",
-      })
+      });
       if (response) {
         setCountReject(response.data);
       }
@@ -82,47 +93,44 @@ export default function AdminColab_Dashboard() {
     {
       id: 1,
       name: "Publish",
-      jumlah: countPublish
-      == null ? (
-        <CustomSkeleton height={40} width={40} />
-      ) : countPublish ? (
-        countPublish
-      ) : (
-        "-"
-      )
-      ,
+      jumlah:
+        countPublish == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countPublish ? (
+          countPublish
+        ) : (
+          "-"
+        ),
       color: "green",
-      icon: <IconUpload size={18} color="#4CAF4F" />
+      icon: <IconUpload size={18} color="#4CAF4F" />,
     },
     {
       id: 2,
       name: "Group Chat",
-      jumlah: countRoom
-      == null ? (
-        <CustomSkeleton height={40} width={40} />
-      ) : countRoom ? (
-        countRoom
-      ) : (
-        "-"
-      )
-      ,
+      jumlah:
+        countRoom == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countRoom ? (
+          countRoom
+        ) : (
+          "-"
+        ),
       color: "orange",
-      icon: <IconMessage2 size={18} color="#FF9800" />
+      icon: <IconMessage2 size={18} color="#FF9800" />,
     },
     {
       id: 3,
       name: "Reject",
-      jumlah: countReject
-       == null ? (
-        <CustomSkeleton height={40} width={40} />
-      ) : countReject ? (
-        countReject
-      ) : (
-        "-"
-        )
-      ,
+      jumlah:
+        countReject == null ? (
+          <CustomSkeleton height={40} width={40} />
+        ) : countReject ? (
+          countReject
+        ) : (
+          "-"
+        ),
       color: "red",
-      icon: <IconAlertTriangle size={18} color="#FF4B4C" />
+      icon: <IconAlertTriangle size={18} color="#FF4B4C" />,
     },
   ];
   return (
@@ -145,13 +153,16 @@ export default function AdminColab_Dashboard() {
               shadow="md"
               radius="md"
               p="md"
-            // sx={{ borderColor: e.color, borderStyle: "solid" }}
+              // sx={{ borderColor: e.color, borderStyle: "solid" }}
             >
-
               <Stack spacing={0}>
-                <Text fw={"bold"} c={AccentColor.white}>{e.name}</Text>
+                <Text fw={"bold"} c={AccentColor.white}>
+                  {e.name}
+                </Text>
                 <Flex align={"center"} justify={"space-between"}>
-                  <Title color={AccentColor.white}>{e.jumlah ? e.jumlah : 0}</Title>
+                  <Title color={AccentColor.white}>
+                    {e.jumlah ? e.jumlah : 0}
+                  </Title>
                   <ThemeIcon
                     radius={"xl"}
                     size={"md"}
@@ -161,7 +172,6 @@ export default function AdminColab_Dashboard() {
                   </ThemeIcon>
                 </Flex>
               </Stack>
-
             </Paper>
           ))}
         </SimpleGrid>
@@ -169,7 +179,6 @@ export default function AdminColab_Dashboard() {
     </>
   );
 }
-function apiGetAdminCollaborationStatuCountDashboard(arg0: { name: string; }) {
+function apiGetAdminCollaborationStatuCountDashboard(arg0: { name: string }) {
   throw new Error("Function not implemented.");
 }
-

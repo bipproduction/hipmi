@@ -13,9 +13,13 @@ export async function GET(request: Request, { params }: {
         
         if (fixStatus === "Publish") {
             fixData = await prisma.projectCollaboration.count({
-                where: {
-                    isActive: true,
+              where: {
+                isActive: true,
+                isReject: false,
+                Author: {
+                  active: true,
                 },
+              },
             });
 
         } else if (fixStatus === "Reject") {
