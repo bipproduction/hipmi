@@ -1,5 +1,6 @@
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
 
 export async function GET(
   request: Request,

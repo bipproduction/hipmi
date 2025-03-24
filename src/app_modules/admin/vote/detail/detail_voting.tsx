@@ -1,0 +1,64 @@
+"use client";
+
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
+import { SimpleGrid, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AdminVoting_ComponentDetailPublish } from "../component/comp_publish";
+import { apiGetOneVotingById } from "../lib/api_fetch_admin_voting";
+
+export function AdminVote_DetailVoting() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_VOTING | null>();
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneVotingById({
+        id: param.id,
+      });
+
+      if (response) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.log("Error get one data voting admin", error);
+    }
+  };
+
+  return (
+    <>
+      <Stack>
+        <ComponentAdminGlobal_HeaderTamplate name="Detail voting" />
+        <AdminGlobal_ComponentBackButton />
+
+        {data === undefined && (
+          <SimpleGrid cols={2}>
+            <CustomSkeleton height={500} />
+          </SimpleGrid>
+        )}
+
+        {data && data.voting_StatusId === "1" ? (
+          <AdminVoting_ComponentDetailPublish data={data} />
+        ) : data && data.voting_StatusId === "2" ? (
+          "detail review"
+        ) : data && data.voting_StatusId === "4" ? (
+          "detail reject"
+        ) : (
+          ""
+        )}
+
+        {/* <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre> */}
+      </Stack>
+    </>
+  );
+}
