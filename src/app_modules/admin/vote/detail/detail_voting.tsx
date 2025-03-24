@@ -8,8 +8,10 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { AdminVoting_ComponentDetailPublish } from "../component/comp_publish";
+import { AdminVoting_ComponentDetailPublish } from "../component/comp_detail_publish";
 import { apiGetOneVotingById } from "../lib/api_fetch_admin_voting";
+import { AdminVoting_ComponentDetailReview } from "../component/comp_detail_review";
+import { AdminVoting_ComponentDetailReject } from "../component/comp_detail_reject";
 
 export function AdminVote_DetailVoting() {
   const param = useParams<{ id: string }>();
@@ -50,14 +52,12 @@ export function AdminVote_DetailVoting() {
         {data && data.voting_StatusId === "1" ? (
           <AdminVoting_ComponentDetailPublish data={data} />
         ) : data && data.voting_StatusId === "2" ? (
-          "detail review"
+          <AdminVoting_ComponentDetailReview data={data} />
         ) : data && data.voting_StatusId === "4" ? (
-          "detail reject"
+          <AdminVoting_ComponentDetailReject data={data} />
         ) : (
           ""
         )}
-
-        {/* <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre> */}
       </Stack>
     </>
   );
