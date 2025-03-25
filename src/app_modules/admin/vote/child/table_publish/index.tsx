@@ -22,13 +22,10 @@ import {
   Stack,
   Table,
   Text,
-  TextInput
+  TextInput,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import {
-  IconCircleCheckFilled,
-  IconSearch
-} from "@tabler/icons-react";
+import { IconCircleCheckFilled, IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,6 +33,8 @@ import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
 import { apiGetAdminVotingByStatus } from "../../lib/api_fetch_admin_voting";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 
 export default function AdminVote_TablePublish() {
   return (
@@ -110,53 +109,12 @@ function TableStatus() {
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center>
-            <Button
-              loading={
-                e?.id === voteId ? (loading === true ? true : false) : false
-              }
-              radius={"xl"}
-              color="green"
-              leftIcon={<IconCircleCheckFilled />}
-              onClick={async () => {
-                setVoteId(e?.id);
-                setLoading(true);
-                await new Promise((r) => setTimeout(r, 500));
-                onList(e?.id, setHasil, setKontributor, setLoading, open);
-              }}
-            >
-              Lihat Hasil
-            </Button>
-          </Center>
-        </td>
-        <td>
           <Center c={AccentColor.white}>{e?.Author?.username}</Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e?.title}</Center>
         </td>
-        <td>
-          <Center c={"white"}>
-            <Spoiler
-              hideLabel="sembunyikan"
-              maw={400}
-              maxHeight={50}
-              showLabel="tampilkan"
-            >
-              {e?.deskripsi}
-            </Spoiler>
-          </Center>
-        </td>
-        <td>
-          <Stack>
-            {e?.Voting_DaftarNamaVote.map((v) => (
-              <Box key={v?.id}>
-                <Text c={AccentColor.white}>- {v?.value}</Text>
-              </Box>
-            ))}
-          </Stack>
-        </td>
-
+  
         <td>
           <Center c={AccentColor.white}>
             {new Intl.DateTimeFormat("id-ID", {
@@ -171,7 +129,12 @@ function TableStatus() {
             }).format(new Date(e?.akhirVote))}
           </Center>
         </td>
-        
+
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminVote.detail({id: e.id})} />
+          </Center>
+        </td>
       </tr>
     ));
   };
@@ -201,17 +164,9 @@ function TableStatus() {
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1500}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
-                    <th>
-                      <Center c={AccentColor.white}>Aksi</Center>
-                    </th>
                     <th>
                       <Center c={AccentColor.white}>Username</Center>
                     </th>
@@ -219,16 +174,13 @@ function TableStatus() {
                       <Center c={AccentColor.white}>Judul</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Deskripsi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Pilihan</Center>
-                    </th>
-                    <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Selesai Vote</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

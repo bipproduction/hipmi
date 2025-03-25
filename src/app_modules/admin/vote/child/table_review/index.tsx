@@ -53,6 +53,8 @@ import { apiGetAdminVotingByStatus } from "../../lib/api_fetch_admin_voting";
 import _ from "lodash";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 
 export default function AdminVote_TableReview() {
   return (
@@ -127,14 +129,13 @@ function TableStatus() {
   async function onPageClick(p: any) {
     setActivePage(p);
   }
-  
+
   async function onLoadData() {
     handleLoadData();
     setIsLoading(false);
     setIsShowReload(false);
     setIsAdminVoting_TriggerReview(false);
   }
-
 
   async function onReject() {
     const data = {
@@ -216,7 +217,7 @@ function TableStatus() {
         }
         handleLoadData();
         ComponentGlobal_NotifikasiBerhasil(res.message);
-        closePublish()
+        closePublish();
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
       }
@@ -248,27 +249,6 @@ function TableStatus() {
         <td>
           <Center c={AccentColor.white}>{e.title}</Center>
         </td>
-        <td>
-          <Center c={AccentColor.white}>
-            <Spoiler
-              hideLabel="sembunyikan"
-              maw={400}
-              maxHeight={50}
-              showLabel="tampilkan"
-            >
-              {e.deskripsi}
-            </Spoiler>
-          </Center>
-        </td>
-        <td>
-          <Stack>
-            {e.Voting_DaftarNamaVote.map((v) => (
-              <Box key={v.id}>
-                <Text c={AccentColor.white}>- {v.value}</Text>
-              </Box>
-            ))}
-          </Stack>
-        </td>
 
         <td>
           <Center c={AccentColor.white}>
@@ -286,6 +266,12 @@ function TableStatus() {
         </td>
 
         <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminVote.detail({ id: e.id })} />
+          </Center>
+        </td>
+
+        {/* <td>
           <Stack align="center">
             <Button
               w={120}
@@ -313,7 +299,7 @@ function TableStatus() {
               Reject
             </Button>
           </Stack>
-        </td>
+        </td> */}
       </tr>
     ));
   };
@@ -369,7 +355,6 @@ function TableStatus() {
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1500}
               >
                 <thead>
                   <tr>
@@ -378,12 +363,6 @@ function TableStatus() {
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Judul</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Deskripsi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Pilihan</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
@@ -414,14 +393,14 @@ function TableStatus() {
       </Stack>
 
       <Modal
-        styles={{ body: { backgroundColor: AdminColor.softBlue}}}
+        styles={{ body: { backgroundColor: AdminColor.softBlue } }}
         opened={openedReject}
         onClose={closeReject}
         centered
         withCloseButton={false}
         size={"md"}
       >
-        <Stack >
+        <Stack>
           <Textarea
             styles={{ label: { color: AdminColor.white } }}
             minRows={2}
@@ -455,7 +434,7 @@ function TableStatus() {
         </Stack>
       </Modal>
       <Modal
-        styles={{ body: { backgroundColor: AdminColor.softBlue}}}
+        styles={{ body: { backgroundColor: AdminColor.softBlue } }}
         opened={openedPublish}
         onClose={closePublish}
         centered
@@ -463,7 +442,9 @@ function TableStatus() {
         size={"md"}
       >
         <Stack align="center">
-          <Title c={AdminColor.white} order={5}>Apakah anda yakin ingin mempublish vote ini?</Title>
+          <Title c={AdminColor.white} order={5}>
+            Apakah anda yakin ingin mempublish vote ini?
+          </Title>
           <Group position="center">
             <Button radius={"xl"} onClick={() => closePublish()}>
               Batal
