@@ -12,6 +12,7 @@ import { apiGetAdminDetailEventById } from "../_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { AdminEvent_ViewDetailPublish } from "../_view/view_detail_publish";
+import { AdminEvent_ViewDetailReview } from "../_view/view_detail_review";
 
 export function AdminEvent_UiNewDetail() {
   const params = useParams<{ id: string }>();
@@ -56,7 +57,7 @@ export function AdminEvent_UiNewDetail() {
         ) : data.EventMaster_Status.name === "Publish" ? (
          <AdminEvent_ViewDetailPublish data={data}/>
         ) : data.EventMaster_Status.name === "Review" ? (
-          "Detail Review"
+          <AdminEvent_ViewDetailReview data={data}/>
         ) : data.EventMaster_Status.name === "Reject" ? (
           "Detail Reject"
         ) : (

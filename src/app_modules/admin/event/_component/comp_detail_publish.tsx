@@ -49,16 +49,12 @@ function AdminEvent_ComponentDetailPublish({ data }: { data: MODEL_EVENT }) {
 
   return (
     <>
-      <Grid>
-        <Grid.Col span={9}>
-          <Admin_ComponentBoxStyle>
-            <Stack>
-              <AdminEvent_ComponentDetailData data={data} />
-              {donwloadButton()}
-            </Stack>
-          </Admin_ComponentBoxStyle>
-        </Grid.Col>
-      </Grid>
+      <Admin_ComponentBoxStyle>
+        <Stack>
+          <AdminEvent_ComponentDetailData data={data} />
+          {donwloadButton()}
+        </Stack>
+      </Admin_ComponentBoxStyle>
       {/* <ComponentEvent_DetailDataEvent data={data} /> */}
     </>
   );
