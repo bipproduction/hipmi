@@ -49,11 +49,11 @@ export function AdminVote_DetailVoting() {
           </SimpleGrid>
         )}
 
-        {data && data.voting_StatusId === "1" ? (
+        {data && data.Voting_Status.name === "Publish" ? (
           <AdminVoting_ComponentDetailPublish data={data} />
-        ) : data && data.voting_StatusId === "2" ? (
+        ) : data && data.Voting_Status.name === "Review" ? (
           <AdminVoting_ComponentDetailReview data={data} />
-        ) : data && data.voting_StatusId === "4" ? (
+        ) : data && data.Voting_Status.name === "Reject" ? (
           <AdminVoting_ComponentDetailReject data={data} />
         ) : (
           ""

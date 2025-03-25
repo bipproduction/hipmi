@@ -9,6 +9,8 @@ interface Props {
 }
 
 export function AdminVoting_ComponentDetail({ data }: Props) {
+  const cekHari = moment(data.akhirVote).diff(new Date(), "minutes");
+
   const listData = [
     {
       title: "Username",
@@ -32,7 +34,9 @@ export function AdminVoting_ComponentDetail({ data }: Props) {
     },
     {
       title: "Status",
-      value: <Badge variant="light">{data.Voting_Status.name}</Badge>,
+      value: (
+        <Badge variant="light">{cekHari < 0 ? "Riwayat" : "Publish"}</Badge>
+      ),
     },
   ];
 
