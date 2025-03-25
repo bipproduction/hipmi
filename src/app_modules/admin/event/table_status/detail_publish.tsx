@@ -6,7 +6,7 @@ import { IconCircleCheck } from '@tabler/icons-react';
 import { Button, Group, Stack } from '@mantine/core';
 import AdminGlobal_ComponentBackButton from '../../_admin_global/back_button';
 import { AdminEvent_ViewDetailPeserta } from '../_view';
-import AdminEvent_ViewDetailData from '../detail/view_detail_data';
+import AdminEvent_ComponentDetailPublish from '../_component/comp_detail_publish';
 import AdminEvent_DetailDataSponsor from '../_component/detail_data_sponsor';
 
 function AdminEvent_DetailPublish() {
@@ -22,11 +22,11 @@ function AdminEvent_DetailPublish() {
       name: "Daftar Peserta",
       icon: <IconCircleCheck />,
     },
-    {
-      id: "3",
-      name: "Daftar Sponsor",
-      icon: <IconCircleCheck />,
-    }
+    // {
+    //   id: "3",
+    //   name: "Daftar Sponsor",
+    //   icon: <IconCircleCheck />,
+    // }
   ]
   return (
     <>
@@ -50,14 +50,14 @@ function AdminEvent_DetailPublish() {
           ))}
         </Group>
         {selectPage == "1" ? (
-          <AdminEvent_ViewDetailData />
+          <AdminEvent_ComponentDetailPublish data={{} as any} />
         ) : null}
         {selectPage == "2" ? (
           <AdminEvent_ViewDetailPeserta />
         ) : null}
-        {selectPage == "3" ? (
+        {/* {selectPage == "3" ? (
           <AdminEvent_DetailDataSponsor />
-        ) : null}
+        ) : null} */}
       </Stack>
     </>
   );
