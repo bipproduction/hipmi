@@ -5,15 +5,16 @@ import {
   AdminColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 import { clientLogger } from "@/util/clientLogger";
 import {
-  Box,
   Button,
   Center,
   Group,
@@ -21,15 +22,14 @@ import {
   Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   Textarea,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconBan, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -127,7 +127,7 @@ function TableStatus() {
 
     return data?.map((e, i) => (
       <tr key={i}>
-        <td>
+        {/* <td>
           <Center>
             <Button
               color={"red"}
@@ -145,8 +145,8 @@ function TableStatus() {
               </Stack>
             </Button>
           </Center>
-        </td>
-        <td>
+        </td> */}
+        {/* <td>
           <Center c={"white"}>
             <Spoiler
               hideLabel="sembunyikan"
@@ -157,14 +157,14 @@ function TableStatus() {
               {e.catatan}
             </Spoiler>
           </Center>
-        </td>
+        </td> */}
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.Profile?.name}</Center>
+          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e.title}</Center>
         </td>
-        <td>
+        {/* <td>
           <Center c={"white"}>
             <Spoiler
               hideLabel="sembunyikan"
@@ -175,8 +175,8 @@ function TableStatus() {
               {e.deskripsi}
             </Spoiler>
           </Center>
-        </td>
-        <td>
+        </td> */}
+        {/* <td>
           <Stack>
             {e.Voting_DaftarNamaVote.map((v) => (
               <Box key={v.id}>
@@ -184,7 +184,7 @@ function TableStatus() {
               </Box>
             ))}
           </Stack>
-        </td>
+        </td> */}
 
         <td>
           <Center c={AccentColor.white}>
@@ -198,6 +198,12 @@ function TableStatus() {
             {new Intl.DateTimeFormat("id-ID", {
               dateStyle: "long",
             }).format(new Date(e?.akhirVote))}
+          </Center>
+        </td>
+
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminVote.detail({ id: e.id })} />
           </Center>
         </td>
       </tr>
@@ -229,37 +235,24 @@ function TableStatus() {
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1500}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
-                    <th>
-                      <Center c={AccentColor.white}>Aksi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Catatan</Center>
-                    </th>
                     <th>
                       <Center c={AccentColor.white}>Author</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Judul</Center>
                     </th>
-                    <th>
-                      <Center c={AccentColor.white}>Deskripsi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Pilihan</Center>
-                    </th>
+
                     <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Selesai Vote</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

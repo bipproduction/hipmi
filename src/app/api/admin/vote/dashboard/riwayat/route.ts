@@ -11,7 +11,10 @@ export async function GET(request: Request) {
         Voting_Status: {
           name: "Publish",
         },
-        isArsip: true,
+        isActive: true,
+        akhirVote: {
+          lte: new Date(),
+        },
       },
     });
 

@@ -32,6 +32,8 @@ import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
 import { apiGetAdminVotingRiwayat } from "../../lib/api_fetch_admin_voting";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 
 export default function AdminVote_Riwayat() {
   return (
@@ -104,7 +106,7 @@ function TableStatus() {
 
     return data.map((e, i) => (
       <tr key={i}>
-        <td>
+        {/* <td>
           <Center>
             <Button
               loading={
@@ -123,14 +125,14 @@ function TableStatus() {
               Lihat Hasil
             </Button>
           </Center>
-        </td>
+        </td> */}
         <td>
           <Center c={AccentColor.white}>{e?.Author?.username}</Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e?.title}</Center>
         </td>
-        <td>
+        {/* <td>
           <Center c="white">
             <Spoiler
               hideLabel="sembunyikan"
@@ -141,8 +143,8 @@ function TableStatus() {
               {e?.deskripsi}
             </Spoiler>
           </Center>
-        </td>
-        <td>
+        </td> */}
+        {/* <td>
           <Stack>
             {e?.Voting_DaftarNamaVote.map((v) => (
               <Box key={v?.id}>
@@ -150,7 +152,7 @@ function TableStatus() {
               </Box>
             ))}
           </Stack>
-        </td>
+        </td> */}
 
         <td>
           <Center c={AccentColor.white}>
@@ -166,6 +168,13 @@ function TableStatus() {
             }).format(new Date(e?.akhirVote))}
           </Center>
         </td>
+
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminVote.detail({id: e.id})}/>
+          </Center>
+        </td>
+
       </tr>
     ));
   };
@@ -205,25 +214,19 @@ function TableStatus() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white}>Aksi</Center>
-                    </th>
-                    <th>
                       <Center c={AccentColor.white}>Username</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Judul</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Deskripsi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Pilihan</Center>
-                    </th>
-                    <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Selesai Vote</Center>
+                    </th>
+                    <th>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
