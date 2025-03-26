@@ -6,6 +6,7 @@ import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import {
+  Box,
   Button,
   Center,
   Modal,
@@ -16,7 +17,7 @@ import {
   Table,
   Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconEyeEdit, IconSearch } from "@tabler/icons-react";
@@ -29,6 +30,7 @@ import { IconEyeCheck } from "@tabler/icons-react";
 import { clientLogger } from "@/util/clientLogger";
 import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 
 export default function AdminDonasi_TableReject() {
   return (
@@ -51,15 +53,14 @@ function TableStatus() {
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
-
   useShallowEffect(() => {
     const loadInitialData = async () => {
       try {
         const response = await apiGetAdminDonasiByStatus({
           name: "Reject",
           page: `${isActivePage}`,
-          search: isSearch
-        })
+          search: isSearch,
+        });
 
         if (response?.success && response?.data.data) {
           setData(response.data.data);
@@ -72,19 +73,18 @@ function TableStatus() {
         clientLogger.error("Invalid data format recieved:", error);
         setData([]);
       }
-    }
+    };
     loadInitialData();
-  }, [isActivePage, isSearch])
-
+  }, [isActivePage, isSearch]);
 
   const onSearch = (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -96,48 +96,49 @@ function TableStatus() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.title}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
           <Center c={AccentColor.white}>
-            <ComponentGlobal_TampilanRupiah  nominal={+e.target} />
+            <ComponentGlobal_TampilanRupiah nominal={+e.target} />
           </Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e?.DonasiMaster_Ketegori.name}</Center>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.DonasiMaster_Durasi.name} hari</Center>
+          <Center c={AccentColor.white}>
+            {e?.DonasiMaster_Durasi.name} hari
+          </Center>
         </td>
         <td>
           <Center>
-            <Button
-              style={{ backgroundColor: MainColor.green }}
-              color={AccentColor.white}
-              leftIcon={<IconEyeCheck />}
-              radius={"xl"}
-              onClick={() =>
-                router.push(RouterAdminDonasi_OLD.detail_reject + `${e.id}`)
-              }
-            >
-              Lihat Alasan
-            </Button>
+            <Admin_DetailButton
+              path={RouterAdminDonasi_OLD.detail_reject + e.id}
+            />
           </Center>
 
           {/* <ModalReject opened={opened} close={close} /> */}
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
@@ -177,16 +178,12 @@ function TableStatus() {
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-
-
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
               <Table
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1125}
-
               >
                 <thead>
                   <tr>
@@ -206,7 +203,7 @@ function TableStatus() {
                       <Center c={AccentColor.white}>Durasi</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Alasan</Center>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>

@@ -1,33 +1,31 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Button,
+  Box,
   Center,
-  Group,
   Pagination,
   Paper,
   ScrollArea,
   Stack,
   Table,
   Text,
-  TextInput,
-  Title
+  TextInput
 } from "@mantine/core";
-import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import adminDonasi_getListPublish from "../fun/get/get_list_publish";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { useShallowEffect } from "@mantine/hooks";
-import { clientLogger } from "@/util/clientLogger";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function AdminDonasi_TablePublish() {
   return (
@@ -56,8 +54,8 @@ function TableStatus() {
         const response = await apiGetAdminDonasiByStatus({
           name: "Publish",
           page: `${isActivePage}`,
-          search: isSearch
-        })
+          search: isSearch,
+        });
 
         if (response?.success && response?.data.data) {
           setData(response.data.data);
@@ -70,18 +68,18 @@ function TableStatus() {
         clientLogger.error("Invalid data format recieved:", error);
         setData([]);
       }
-    }
+    };
     loadInitialData();
-  }, [isActivePage, isSearch])
+  }, [isActivePage, isSearch]);
 
   const onSearch = (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
       return (
@@ -92,12 +90,23 @@ function TableStatus() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white}>{e.title}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
           <Center c={AccentColor.white}>
@@ -109,15 +118,15 @@ function TableStatus() {
             <ComponentGlobal_TampilanRupiah nominal={+e.terkumpul} />
           </Center>
         </td>
-        <td>
+        {/* <td>
           <Center c={AccentColor.white}>{e.DonasiMaster_Ketegori.name}</Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e.DonasiMaster_Durasi.name} hari</Center>
-        </td>
+        </td> */}
         <td>
           <Center>
-            <Button
+            {/* <Button
               loaderPosition="center"
               loading={isLoading && e?.id === idData ? true : false}
               style={{ backgroundColor: MainColor.green, }}
@@ -131,13 +140,15 @@ function TableStatus() {
               }}
             >
               Tampilkan
-            </Button>
+            </Button> */}
+            <Admin_DetailButton
+              path={RouterAdminDonasi_OLD.detail_publish + e.id}
+            />
           </Center>
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
@@ -179,15 +190,12 @@ function TableStatus() {
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1120}
-
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
+                    <th>
+                      <Center c={AccentColor.white}>Username</Center>
+                    </th>
                     <th>
                       <Center c={AccentColor.white}>Judul</Center>
                     </th>
@@ -196,12 +204,6 @@ function TableStatus() {
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Terkumpul</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Ketegori</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Durasi</Center>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Aksi</Center>
@@ -224,7 +226,6 @@ function TableStatus() {
             </Center>
           </Paper>
         )}
-
       </Stack>
     </>
   );

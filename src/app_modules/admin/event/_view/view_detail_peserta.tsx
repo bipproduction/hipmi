@@ -158,14 +158,6 @@ export function AdminEvent_ViewDetailPeserta() {
                </thead>
                <tbody>{renderTableBody()}</tbody>
              </Table>
-             {_.isEmpty(data) ? (
-               <ComponentAdminGlobal_IsEmptyData
-                 text="Tidak ada peserta"
-                 marginTop={100}
-               />
-             ) : (
-               ""
-             )}
            </ScrollArea>
  
            <Center mt={"xl"}>
