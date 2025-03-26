@@ -31,7 +31,6 @@ export function AdminEvent_UiNewDetail() {
       });
 
       if (response?.success && response?.data) {
-        console.log("res >>", response.data);
         setData(response.data);
       } else {
         console.error("Invalid data format received:", response);

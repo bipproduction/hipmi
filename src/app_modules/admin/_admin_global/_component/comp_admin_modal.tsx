@@ -8,12 +8,16 @@ export function Admin_ComponentModal({
   onClose,
   title,
   size,
+  withCloseButton,
+  closeOnClickOutside,
 }: {
   children: React.ReactNode;
   opened: boolean;
   onClose: () => void;
   size?: "sm" | "md" | "lg" | "xl";
-  title: string
+  title: any;
+  withCloseButton?: boolean | undefined;
+  closeOnClickOutside?: boolean | undefined;
 }) {
   return (
     <>
@@ -25,10 +29,11 @@ export function Admin_ComponentModal({
         }}
         opened={opened}
         onClose={onClose}
-        withCloseButton={false}
         size={size ? size : "sm"}
         centered
         title={title}
+        withCloseButton={withCloseButton ? withCloseButton : false}
+        closeOnClickOutside={closeOnClickOutside}
       >
         {children}
       </Modal>

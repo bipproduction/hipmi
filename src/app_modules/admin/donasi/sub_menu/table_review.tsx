@@ -1,15 +1,18 @@
 "use client";
 
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
 import { gs_adminDonasi_triggerReview } from "@/lib/global_state";
 import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
-import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Affix,
+  Box,
   Button,
   Center,
-  Group,
   Pagination,
   Paper,
   rem,
@@ -18,21 +21,16 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconEyeCheck, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import adminDonasi_getListReview from "../fun/get/get_list_review";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
-import { error } from "console";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 
 export default function AdminDonasi_TableReview() {
   return (
@@ -70,9 +68,8 @@ function TableStatus() {
       const response = await apiGetAdminDonasiByStatus({
         name: "Review",
         page: `${isActivePage}`,
-        search: isSearch
-      })
-
+        search: isSearch,
+      });
 
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
@@ -85,7 +82,7 @@ function TableStatus() {
       clientLogger.error("Error get data table publish", error);
       setData([]);
     }
-  }
+  };
   async function onLoadData() {
     loadInitialData();
     setLoadingReload(false);
@@ -96,11 +93,11 @@ function TableStatus() {
   const onSearch = async (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -112,16 +109,24 @@ function TableStatus() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
 
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AdminColor.white}>{e?.Author?.username}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
-          <Center c={AdminColor.white}>{e?.title}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
           <Center c={AdminColor.white}>
@@ -132,14 +137,19 @@ function TableStatus() {
           <Center c={AdminColor.white}>{e?.DonasiMaster_Ketegori.name}</Center>
         </td>
         <td>
-          <Center c={AdminColor.white}>{e?.DonasiMaster_Durasi.name} hari</Center>
+          <Center c={AdminColor.white}>
+            {e?.DonasiMaster_Durasi.name} hari
+          </Center>
         </td>
         <td>
           <Center>
-            <Button
+            {/* <Button
               loaderPosition="center"
               loading={isLoading && e?.id == idData ? true : false}
-              style={{ backgroundColor: MainColor.green, color: AccentColor.white }}
+              style={{
+                backgroundColor: MainColor.green,
+                color: AccentColor.white,
+              }}
               leftIcon={<IconEyeCheck />}
               radius={"xl"}
               onClick={() => {
@@ -149,13 +159,16 @@ function TableStatus() {
               }}
             >
               Tampilkan
-            </Button>
+            </Button> */}
+
+            <Admin_DetailButton
+              path={RouterAdminDonasi_OLD.detail_review + e?.id}
+            />
           </Center>
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
@@ -221,9 +234,7 @@ function TableStatus() {
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1120}
                 h={"100%"}
-
               >
                 <thead>
                   <tr>
@@ -261,7 +272,6 @@ function TableStatus() {
             </Center>
           </Paper>
         )}
-
       </Stack>
     </>
   );
