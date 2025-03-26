@@ -35,7 +35,7 @@ export function AdminVoting_ComponentDetail({ data }: Props) {
     {
       title: "Status",
       value: (
-        <Badge variant="light">{cekHari < 0 ? "Riwayat" : "Publish"}</Badge>
+        <Badge variant="light">{data.Voting_Status.name === "Publish" && cekHari < 0 ? "Riwayat" : data.Voting_Status.name}</Badge>
       ),
     },
   ];

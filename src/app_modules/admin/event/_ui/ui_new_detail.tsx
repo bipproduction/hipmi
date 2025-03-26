@@ -13,6 +13,7 @@ import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { AdminEvent_ViewDetailPublish } from "../_view/view_detail_publish";
 import { AdminEvent_ViewDetailReview } from "../_view/view_detail_review";
+import { AdminEvent_ViewDetailReject } from "../_view/view_detail_reject";
 
 export function AdminEvent_UiNewDetail() {
   const params = useParams<{ id: string }>();
@@ -30,7 +31,6 @@ export function AdminEvent_UiNewDetail() {
       });
 
       if (response?.success && response?.data) {
-        console.log("res >>", response.data);
         setData(response.data);
       } else {
         console.error("Invalid data format received:", response);
@@ -55,11 +55,11 @@ export function AdminEvent_UiNewDetail() {
         ) : !data ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : data.EventMaster_Status.name === "Publish" ? (
-         <AdminEvent_ViewDetailPublish data={data}/>
+          <AdminEvent_ViewDetailPublish data={data} />
         ) : data.EventMaster_Status.name === "Review" ? (
-          <AdminEvent_ViewDetailReview data={data}/>
+          <AdminEvent_ViewDetailReview data={data} />
         ) : data.EventMaster_Status.name === "Reject" ? (
-          "Detail Reject"
+          <AdminEvent_ViewDetailReject data={data} />
         ) : (
           ""
         )}

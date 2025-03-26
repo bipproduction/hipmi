@@ -24,7 +24,14 @@ function AdminEvent_ComponentDetailData({
     },
     {
       label: "Status",
-      value: <Badge>{data?.EventMaster_Status.name}</Badge>,
+      value: (
+        <Badge>
+          {data?.EventMaster_Status.name === "Publish" &&
+          moment(data.tanggalSelesai).diff(new Date(), "minutes") < 0
+            ? "Riwayat"
+            : data?.EventMaster_Status.name}
+        </Badge>
+      ),
     },
     {
       label: "Judul",

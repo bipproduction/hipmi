@@ -134,7 +134,7 @@ function TableStatus() {
         <td>
           <Center c={AdminColor.white}>
             <Box w={100}>
-              <Text lineClamp={1}>{e?.Author?.username} dasdsasdasdsa sadasd</Text>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
             </Box>
           </Center>
         </td>
