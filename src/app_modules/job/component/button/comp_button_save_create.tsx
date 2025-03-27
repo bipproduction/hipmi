@@ -20,41 +20,157 @@ import { WibuRealtime } from "wibu-pkg";
 import { job_funCreateNoFile, job_funCreateWithFile } from "../../fun";
 import { gs_job_hot_menu } from "../../global_state";
 import { MODEL_JOB } from "../../model/interface";
+import { apiCreatedJob } from "../../lib/api_fetch_job";
+import {
+  apiCreatedNotificationToAdmin,
+  apiGetSeasonUserId,
+} from "@/app_modules/_global/lib/api_fetch_global";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetUserId } from "@/app_modules/_global/lib/api_user";
 
 function Job_ComponentButtonSaveCreate({
   value,
   file,
+  userLoginId,
 }: {
   value: MODEL_JOB;
   file: File;
+  userLoginId: string;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [hotMenu, setHotMenu] = useAtom(gs_job_hot_menu);
 
-  async function onCreate() {
+  // async function onCreate() {
+  //   try {
+  //     setIsLoading(true);
+  //     if (file === null) {
+  //       const createNoFile = await job_funCreateNoFile({
+  //         data: value,
+  //       });
+
+  //       if (createNoFile.status === 201) {
+  //         const dataNotifikasi: IRealtimeData = {
+  //           appId: createNoFile.data?.id as any,
+  //           status: createNoFile.data?.MasterStatus?.name as any,
+  //           userId: createNoFile.data?.authorId as any,
+  //           pesan: createNoFile.data?.title as any,
+  //           kategoriApp: "JOB",
+  //           title: "Job baru",
+  //         };
+
+  //         const notif = await notifikasiToAdmin_funCreate({
+  //           data: dataNotifikasi as any,
+  //         });
+
+  //         if (notif.status === 201) {
+  //           WibuRealtime.setData({
+  //             type: "notification",
+  //             pushNotificationTo: "ADMIN",
+  //           });
+
+  //           WibuRealtime.setData({
+  //             type: "trigger",
+  //             pushNotificationTo: "ADMIN",
+  //             dataMessage: dataNotifikasi,
+  //           });
+
+  //           setHotMenu(2);
+  //           router.replace(RouterJob.status({ id: "2" }));
+  //           ComponentGlobal_NotifikasiBerhasil(createNoFile.message);
+  //         }
+  //       } else {
+  //         setIsLoading(false);
+
+  //         ComponentGlobal_NotifikasiGagal(createNoFile.message);
+  //       }
+  //     } else {
+  //       const uploadFile = await funGlobal_UploadToStorage({
+  //         file: file,
+  //         dirId: DIRECTORY_ID.job_image,
+  //       });
+
+  //       if (!uploadFile.success) {
+  //         setIsLoading(false);
+  //         ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+  //         return;
+  //       }
+
+  //       const createWithFile = await job_funCreateWithFile({
+  //         data: value,
+  //         fileId: uploadFile.data.id,
+  //       });
+
+  //       if (createWithFile.status === 201) {
+  //         const dataNotifikasi: IRealtimeData = {
+  //           appId: createWithFile.data?.id as any,
+  //           status: createWithFile.data?.MasterStatus?.name as any,
+  //           userId: createWithFile.data?.authorId as any,
+  //           pesan: createWithFile.data?.title as any,
+  //           kategoriApp: "JOB",
+  //           title: "Job baru",
+  //         };
+
+  //         const notif = await notifikasiToAdmin_funCreate({
+  //           data: dataNotifikasi as any,
+  //         });
+
+  //         if (notif.status === 201) {
+  //           WibuRealtime.setData({
+  //             type: "notification",
+  //             pushNotificationTo: "ADMIN",
+  //           });
+
+  //           WibuRealtime.setData({
+  //             type: "trigger",
+  //             pushNotificationTo: "ADMIN",
+  //             dataMessage: dataNotifikasi,
+  //           });
+
+  //           setHotMenu(2);
+  //           router.replace(RouterJob.status({ id: "2" }));
+  //           ComponentGlobal_NotifikasiBerhasil(createWithFile.message);
+  //         }
+  //       } else {
+  //         setIsLoading(false);
+  //         ComponentGlobal_NotifikasiGagal(createWithFile.message);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     clientLogger.error("Error create job", error);
+  //   }
+  // }
+
+  async function handleCreated() {
     try {
+      let fixData;
       setIsLoading(true);
+
       if (file === null) {
-        const createNoFile = await job_funCreateNoFile({
-          data: value,
+        fixData = {
+          ...value,
+          authorId: userLoginId,
+        };
+        const responseNoFile = await apiCreatedJob({
+          data: fixData,
         });
 
-        if (createNoFile.status === 201) {
+        if (responseNoFile) {
           const dataNotifikasi: IRealtimeData = {
-            appId: createNoFile.data?.id as any,
-            status: createNoFile.data?.MasterStatus?.name as any,
-            userId: createNoFile.data?.authorId as any,
-            pesan: createNoFile.data?.title as any,
+            appId: responseNoFile.data?.id as any,
+            status: responseNoFile.data?.MasterStatus?.name as any,
+            userId: responseNoFile.data?.authorId as any,
+            pesan: responseNoFile.data?.title as any,
             kategoriApp: "JOB",
             title: "Job baru",
           };
 
-          const notif = await notifikasiToAdmin_funCreate({
-            data: dataNotifikasi as any,
+          const responseNotification = await apiCreatedNotificationToAdmin({
+            data: dataNotifikasi,
           });
 
-          if (notif.status === 201) {
+          if (responseNotification) {
             WibuRealtime.setData({
               type: "notification",
               pushNotificationTo: "ADMIN",
@@ -68,13 +184,13 @@ function Job_ComponentButtonSaveCreate({
 
             setHotMenu(2);
             router.replace(RouterJob.status({ id: "2" }));
-            ComponentGlobal_NotifikasiBerhasil(createNoFile.message);
+            ComponentGlobal_NotifikasiBerhasil(responseNoFile.message);
           }
-        } else {
-          setIsLoading(false);
-
-          ComponentGlobal_NotifikasiGagal(createNoFile.message);
-        }
+        } 
+        // else {
+        //   setIsLoading(false);
+        //   ComponentGlobal_NotifikasiGagal(responseNoFile.message);
+        // }
       } else {
         const uploadFile = await funGlobal_UploadToStorage({
           file: file,
@@ -87,17 +203,22 @@ function Job_ComponentButtonSaveCreate({
           return;
         }
 
-        const createWithFile = await job_funCreateWithFile({
-          data: value,
-          fileId: uploadFile.data.id,
+        fixData = {
+          ...value,
+          authorId: userLoginId,
+          imageId: uploadFile.data.id,
+        };
+
+        const responseWithFile = await apiCreatedJob({
+          data: fixData,
         });
 
-        if (createWithFile.status === 201) {
+        if (responseWithFile.status === 201) {
           const dataNotifikasi: IRealtimeData = {
-            appId: createWithFile.data?.id as any,
-            status: createWithFile.data?.MasterStatus?.name as any,
-            userId: createWithFile.data?.authorId as any,
-            pesan: createWithFile.data?.title as any,
+            appId: responseWithFile.data?.id as any,
+            status: responseWithFile.data?.MasterStatus?.name as any,
+            userId: responseWithFile.data?.authorId as any,
+            pesan: responseWithFile.data?.title as any,
             kategoriApp: "JOB",
             title: "Job baru",
           };
@@ -120,12 +241,9 @@ function Job_ComponentButtonSaveCreate({
 
             setHotMenu(2);
             router.replace(RouterJob.status({ id: "2" }));
-            ComponentGlobal_NotifikasiBerhasil(createWithFile.message);
+            ComponentGlobal_NotifikasiBerhasil(responseWithFile.message);
           }
-        } else {
-          setIsLoading(false);
-          ComponentGlobal_NotifikasiGagal(createWithFile.message);
-        }
+        } 
       }
     } catch (error) {
       setIsLoading(false);
@@ -169,9 +287,7 @@ function Job_ComponentButtonSaveCreate({
         loading={isLoading ? true : false}
         w={"100%"}
         radius={"xl"}
-        onClick={() => {
-          onCreate();
-        }}
+        onClick={handleCreated}
       >
         Simpan
       </Button>
