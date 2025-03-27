@@ -14,7 +14,7 @@ import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { Job_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_status_id";
 import { MODEL_JOB } from "../../model/interface";
 import { clientLogger } from "@/util/clientLogger";
-import { apiGetJobById } from "../../component/api_fetch_job";
+import { apiGetJobById } from "../../lib/api_fetch_job";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Job_DetailReview() {

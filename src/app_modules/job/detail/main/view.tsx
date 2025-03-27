@@ -9,7 +9,7 @@ import { IconBrandWhatsapp } from "@tabler/icons-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { apiGetJobById } from "../../component/api_fetch_job";
+import { apiGetJobById } from "../../lib/api_fetch_job";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { MODEL_JOB } from "../../model/interface";
 
