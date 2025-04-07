@@ -172,7 +172,11 @@ export const middleware = async (req: NextRequest) => {
       }
     } catch (error) {
       console.error("Error validating user:", error);
-      return setCorsHeaders(unauthorizedResponseValidationUser());
+      if (!token) {
+        console.error("Token is undefined");
+        return setCorsHeaders(unauthorizedResponseToken());
+      }
+      return setCorsHeaders(await unauthorizedResponseValidationUser(token, req));
     }
   }
 
@@ -253,14 +257,33 @@ function unauthorizedResponseUserNotActive(req: NextRequest) {
   );
 }
 
-function unauthorizedResponseValidationUser() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized validation user" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
+async function unauthorizedResponseValidationUser(
+  token: string,
+  req: NextRequest
+) {
+  console.log("Token:", token);
+  const userLogout = await fetch(new URL("/api/auth/logout", req.url), {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (userLogout.ok) {
+    const response = NextResponse.redirect(new URL("/login", req.url));
+    response.cookies.delete(middlewareConfig.sessionKey);
+    return setCorsHeaders(response);
+  }
+  console.error("Error logging out user:", await userLogout.json());
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/invalid-user", req.url))
   );
+  // return setCorsHeaders(
+  //   new NextResponse(JSON.stringify({ error: "Logout failed" }), {
+  //     status: 500,
+  //     headers: { "Content-Type": "application/json" },
+  //   })
+  // );
 }
 
 function setCorsHeaders(res: NextResponse): NextResponse {
