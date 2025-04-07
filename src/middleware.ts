@@ -124,7 +124,7 @@ export const middleware = async (req: NextRequest) => {
   if (pathname.startsWith(apiPath)) {
     const reqToken = req.headers.get("Authorization")?.split(" ")[1];
     if (!reqToken) {
-      return setCorsHeaders(unauthorizedResponse());
+      return setCorsHeaders(unauthorizedResponseToken());
     }
 
     try {
@@ -139,11 +139,11 @@ export const middleware = async (req: NextRequest) => {
       );
 
       if (!validationResponse.ok) {
-        return setCorsHeaders(unauthorizedResponse());
+        return setCorsHeaders(unauthorizedResponseAPI());
       }
     } catch (error) {
       console.error("Error validating API request:", error);
-      return setCorsHeaders(unauthorizedResponse());
+      return setCorsHeaders(unauthorizedResponseValidationAPIRequest());
     }
   }
 
@@ -164,19 +164,15 @@ export const middleware = async (req: NextRequest) => {
       const userValidateJson = await userValidate.json();
 
       if (userValidateJson.success == true && !userValidateJson.data) {
-        return setCorsHeaders(
-          NextResponse.redirect(new URL("/invalid-user", req.url))
-        );
+        unauthorizedResponseDataUserNotFound(req);
       }
 
       if (!userValidateJson.data.active) {
-        return setCorsHeaders(
-          NextResponse.redirect(new URL("/waiting-room", req.url))
-        );
+        return setCorsHeaders(unauthorizedResponseUserNotActive(req));
       }
     } catch (error) {
       console.error("Error validating user:", error);
-      return setCorsHeaders(unauthorizedResponse());
+      return setCorsHeaders(unauthorizedResponseValidationUser());
     }
   }
 
@@ -211,11 +207,60 @@ function getToken(req: NextRequest, sessionKey: string): string | undefined {
   );
 }
 
-function unauthorizedResponse(): NextResponse {
+function unauthorizedResponse() {
   return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
     status: 401,
     headers: { "Content-Type": "application/json" },
   });
+}
+
+function unauthorizedResponseToken() {
+  return new NextResponse(JSON.stringify({ error: "Unauthorized token" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function unauthorizedResponseAPI() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized Response API" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseValidationAPIRequest() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized validation api request" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseDataUserNotFound(req: NextRequest) {
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/invalid-user", req.url))
+  );
+}
+
+function unauthorizedResponseUserNotActive(req: NextRequest) {
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/waiting-room", req.url))
+  );
+}
+
+function unauthorizedResponseValidationUser() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized validation user" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }
 
 function setCorsHeaders(res: NextResponse): NextResponse {
