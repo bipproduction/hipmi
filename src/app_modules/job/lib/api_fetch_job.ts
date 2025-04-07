@@ -1,4 +1,10 @@
-export { apiGetJob, apiGetJobArsip, apiGetJobById, apiGetJobByStatus };
+export {
+  apiGetJob,
+  apiGetJobArsip,
+  apiGetJobById,
+  apiGetJobByStatus,
+  apiCreatedJob,
+};
 
 const apiGetJobByStatus = async ({
   status,
@@ -163,6 +169,39 @@ const apiGetJobById = async ({ id }: { id: string }) => {
     return await response.json();
   } catch (error) {
     console.error("Error get data job:", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+
+const apiCreatedJob = async ({ data }: { data: any }) => {
+  try {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/job`, {
+      method: "POST",
+      body: JSON.stringify({ data }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error("Failed created job", response.statusText, errorData);
+      throw new Error(errorData?.message || "Failed created job");
+    }
+
+    // Return the JSON response
+    return await response.json();
+  } catch (error) {
+    console.error("Error created job", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };

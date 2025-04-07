@@ -16,7 +16,7 @@ import {
   Job_ComponentButtonUpdateBeranda,
   Job_ComponentSkeletonBeranda,
 } from "../../component";
-import { apiGetJob } from "../../component/api_fetch_job";
+import { apiGetJob } from "../../lib/api_fetch_job";
 import ComponentJob_BerandaCardView from "../../component/beranda/card_view";
 import { MODEL_JOB } from "../../model/interface";
 

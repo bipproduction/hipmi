@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
 import { clientLogger } from "@/util/clientLogger";
-import { apiGetJobById } from "../../component/api_fetch_job";
+import { apiGetJobById } from "../../lib/api_fetch_job";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Job_DetailArsip() {

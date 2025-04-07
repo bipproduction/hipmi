@@ -25,7 +25,7 @@ import { Job_ComponentButtonUpdate } from "../component";
 import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
-import { apiGetJobById } from "../component/api_fetch_job";
+import { apiGetJobById } from "../lib/api_fetch_job";
 import { Job_SkeletonEdit } from "../component/skeleton/comp_skeleton_beranda";
 const ReactQuill = dynamic(
   () => {

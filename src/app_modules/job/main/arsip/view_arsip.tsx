@@ -10,7 +10,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
-import { apiGetJob, apiGetJobArsip } from "../../component/api_fetch_job";
+import { apiGetJob, apiGetJobArsip } from "../../lib/api_fetch_job";
 import ComponentJob_CardStatus from "../../component/card/card_view";
 import { MODEL_JOB } from "../../model/interface";
 

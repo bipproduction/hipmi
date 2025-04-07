@@ -9,7 +9,7 @@ import { useState } from "react";
 import ComponentJob_CardStatus from "../../component/card/card_view";
 import job_getAllStatusReview from "../../fun/get/status/get_list_review";
 import { useShallowEffect } from "@mantine/hooks";
-import { apiGetJobByStatus } from "../../component/api_fetch_job";
+import { apiGetJobByStatus } from "../../lib/api_fetch_job";
 
 export default function Job_Review({ nameStatus }: { nameStatus: string }) {
   const [data, setData] = useState<any[] | null>(null);
