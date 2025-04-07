@@ -20,7 +20,7 @@ export default function InvalidUser() {
       await fetch("/api/auth/logout", {
         method: "GET",
       });
-      router.push("/login");
+      router.push("/login", {scroll: false});
     } catch (error) {
       console.error("Gagal menghapus cookie:", error);
     } finally {
