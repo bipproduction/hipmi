@@ -163,7 +163,6 @@ export const middleware = async (req: NextRequest) => {
 
       const userValidateJson = await userValidate.json();
 
-
       if (userValidateJson.success == true && !userValidateJson.data) {
         return setCorsHeaders(
           NextResponse.redirect(new URL("/invalid-user", req.url))
