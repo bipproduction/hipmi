@@ -92,6 +92,11 @@ export const middleware = async (req: NextRequest) => {
   const user = await verifyToken({ token, encodedKey });
   const response = NextResponse.next();
 
+  console.log("Token:", token);
+  console.log("User:", user);
+  console.log("Request URL:", req.url);
+  console.log("Request Pathname:", pathname);
+
   // Handle login page access
   if (pathname === loginPath) {
     if (user) {
