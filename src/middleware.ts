@@ -38,6 +38,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/user/activation",
     "/api/user-validate",
     "/api/version",
+    "/api/validation",
 
     // PAGE
     "/login",
@@ -90,12 +91,31 @@ export const middleware = async (req: NextRequest) => {
   // Get token from cookies or Authorization header
   const token = getToken(req, sessionKey);
   const user = await verifyToken({ token, encodedKey });
-  const response = NextResponse.next();
 
-  console.log("Token:", token);
-  console.log("User:", user);
   console.log("Request URL:", req.url);
-  console.log("Request Pathname:", pathname);
+
+  // const fetchValidation = async (url: string) => {
+  //   try {
+  //     const origin = new URL(req.url).origin;
+  //     console.log("Origin URL:", origin + url);
+  //     console.log("URL:", url);
+  //     const response = await fetch(origin + url, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     if (!response.ok) {
+  //       console.error("Validation failed:", response.statusText);
+  //       return null;
+  //     }
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching validation:", error);
+  //     return null;
+  //   }
+  // };
 
   // Handle login page access
   if (pathname === loginPath) {
@@ -131,8 +151,11 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
+      // const validationResponse = await fetchValidation("/api/validation");
+      // console.log("Validation Response:", validationResponse);
+      console.log("TOKEN >>", token);
       const validationResponse = await fetch(
-        new URL(validationApiRoute, req.url),
+        `${new URL(req.url).origin}/api/validation`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -202,6 +225,7 @@ export const middleware = async (req: NextRequest) => {
   //     path: "/",
   //   });
   // }
+  const response = NextResponse.next();
   return setCorsHeaders(response);
 };
 
