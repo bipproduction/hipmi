@@ -41,6 +41,7 @@ const middlewareConfig: MiddlewareConfig = {
     "/api/get-cookie",
     "/api/user/activation",
     "/api/user-validate",
+    "/api/version",
 
     // PAGE
     "/login",
@@ -176,7 +177,14 @@ export const middleware = async (req: NextRequest) => {
         console.error("Token is undefined");
         return setCorsHeaders(unauthorizedResponseToken());
       }
-      return setCorsHeaders(await unauthorizedResponseValidationUser(token, req));
+      return setCorsHeaders(
+        await unauthorizedResponseValidationUser({
+          loginPath,
+          sessionKey,
+          token,
+          req,
+        })
+      );
     }
   }
 
@@ -257,11 +265,17 @@ function unauthorizedResponseUserNotActive(req: NextRequest) {
   );
 }
 
-async function unauthorizedResponseValidationUser(
-  token: string,
-  req: NextRequest
-) {
-  console.log("Token:", token);
+async function unauthorizedResponseValidationUser({
+  loginPath,
+  sessionKey,
+  token,
+  req,
+}: {
+  loginPath: string;
+  sessionKey: string;
+  token: string;
+  req: NextRequest;
+}) {
   const userLogout = await fetch(new URL("/api/auth/logout", req.url), {
     headers: {
       "Content-Type": "application/json",
@@ -270,8 +284,9 @@ async function unauthorizedResponseValidationUser(
   });
 
   if (userLogout.ok) {
-    const response = NextResponse.redirect(new URL("/login", req.url));
-    response.cookies.delete(middlewareConfig.sessionKey);
+    const response = NextResponse.redirect(new URL(loginPath, req.url));
+    // Clear invalid token
+    response.cookies.delete(sessionKey);
     return setCorsHeaders(response);
   }
   console.error("Error logging out user:", await userLogout.json());

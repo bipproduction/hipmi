@@ -1,12 +1,25 @@
 import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import { prisma } from "@/lib";
-import { NextRequest, NextResponse } from "next/server";
-
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const token = req.headers.get("Authorization")?.split(" ")[1];
+    const SESSIONKEY = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
+    // const token = req.headers.get("Authorization")?.split(" ")[1]
+    const token =
+      cookies().get(SESSIONKEY)?.value ||
+      req.headers.get("Authorization")?.split(" ")[1];
+    if (!token) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized token not found",
+        },
+        { status: 401 }
+      );
+    }
 
     const decripted = await decrypt({
       token: token!,
