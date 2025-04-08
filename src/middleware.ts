@@ -129,8 +129,11 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
+      // const origin = new URL(req.url).origin;
+      // console.log("origin", origin);
+      
       const validationResponse = await fetch(
-        new URL(validationApiRoute, req.url),
+        `${new URL(req.url).origin}/api/validation`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -151,12 +154,15 @@ export const middleware = async (req: NextRequest) => {
   // Handle /dev routes that require active status
   if (pathname.startsWith("/dev")) {
     try {
-      const userValidate = await fetch(new URL("/api/user-validate", req.url), {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const userValidate = await fetch(
+        new URL(req.url).origin + "/api/user-validate",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!userValidate.ok) {
         throw new Error("Failed to validate user");
@@ -227,10 +233,13 @@ function unauthorizedResponse() {
 }
 
 function unauthorizedResponseTokenAPI() {
-  return new NextResponse(JSON.stringify({ error: "Unauthorized token on API" }), {
-    status: 401,
-    headers: { "Content-Type": "application/json" },
-  });
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized token on API" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }
 
 function unauthorizedResponseTokenPAGE() {
