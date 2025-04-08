@@ -127,7 +127,7 @@ export const middleware = async (req: NextRequest) => {
 
     try {
       const validationResponse = await fetch(
-        `${new URL(req.url).origin}/api/validation`,
+        new URL(validationApiRoute, req.url),
         {
           headers: {
             "Content-Type": "application/json",
