@@ -118,35 +118,32 @@ export const middleware = async (req: NextRequest) => {
     return setCorsHeaders(response);
   }
 
-  // // Handle API requests
-  // if (pathname.startsWith(apiPath)) {
-  //   // const reqToken = req.headers.get("Authorization")?.split(" ")[1];
-  //   if (!token) {
-  //     return setCorsHeaders(unauthorizedResponseTokenAPI());
-  //   }
+  // Handle API requests
+  if (pathname.startsWith(apiPath)) {
+    // const reqToken = req.headers.get("Authorization")?.split(" ")[1];
+    if (!token) {
+      return setCorsHeaders(unauthorizedResponseTokenAPI());
+    }
 
-  //   try {
-  //     // const origin = new URL(req.url).origin;
-  //     // console.log("origin", origin);
+    try {
+      const validationResponse = await fetch(
+        `${new URL(req.url).origin}/api/validation`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  //     const validationResponse = await fetch(
-  //       `${new URL(req.url).origin}/api/validation`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (!validationResponse.ok) {
-  //       return setCorsHeaders(unauthorizedResponseAPI());
-  //     }
-  //   } catch (error) {
-  //     console.error("Error validating API request:", error);
-  //     return setCorsHeaders(unauthorizedResponseValidationAPIRequest());
-  //   }
-  // }
+      if (!validationResponse.ok) {
+        return setCorsHeaders(unauthorizedResponseAPI());
+      }
+    } catch (error) {
+      console.error("Error validating API request:", error);
+      return setCorsHeaders(unauthorizedResponseValidationAPIRequest());
+    }
+  }
 
   // // Handle /dev routes that require active status
   // if (pathname.startsWith("/dev")) {
