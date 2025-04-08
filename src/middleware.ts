@@ -123,9 +123,9 @@ export const middleware = async (req: NextRequest) => {
 
   // Handle API requests
   if (pathname.startsWith(apiPath)) {
-    const reqToken = req.headers.get("Authorization")?.split(" ")[1];
-    if (!reqToken) {
-      return setCorsHeaders(unauthorizedResponseToken());
+    // const reqToken = req.headers.get("Authorization")?.split(" ")[1];
+    if (!token) {
+      return setCorsHeaders(unauthorizedResponseTokenAPI());
     }
 
     try {
@@ -134,7 +134,7 @@ export const middleware = async (req: NextRequest) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${reqToken}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -175,7 +175,7 @@ export const middleware = async (req: NextRequest) => {
       console.error("Error validating user:", error);
       if (!token) {
         console.error("Token is undefined");
-        return setCorsHeaders(unauthorizedResponseToken());
+        return setCorsHeaders(unauthorizedResponseTokenPAGE());
       }
       return setCorsHeaders(
         await unauthorizedResponseValidationUser({
@@ -226,8 +226,15 @@ function unauthorizedResponse() {
   });
 }
 
-function unauthorizedResponseToken() {
-  return new NextResponse(JSON.stringify({ error: "Unauthorized token" }), {
+function unauthorizedResponseTokenAPI() {
+  return new NextResponse(JSON.stringify({ error: "Unauthorized token on API" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function unauthorizedResponseTokenPAGE() {
+  return new NextResponse(JSON.stringify({ error: "Unauthorized  on page" }), {
     status: 401,
     headers: { "Content-Type": "application/json" },
   });
