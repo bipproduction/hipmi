@@ -153,7 +153,7 @@ export const middleware = async (req: NextRequest) => {
     try {
       // const validationResponse = await fetchValidation("/api/validation");
       // console.log("Validation Response:", validationResponse);
-      console.log("TOKEN >>", token);
+      // console.log("TOKEN >>", token);
       const validationResponse = await fetch(
         `${new URL(req.url).origin}/api/validation`,
         {
@@ -163,6 +163,13 @@ export const middleware = async (req: NextRequest) => {
           },
         }
       );
+
+      const validationResponseJson = await validationResponse.json();
+      console.log("Validation Response JSON:", validationResponseJson);
+
+      if (validationResponseJson.success === false) {
+        return setCorsHeaders(unauthorizedResponseDataUserNotFound(req));
+      }
 
       if (!validationResponse.ok) {
         return setCorsHeaders(unauthorizedResponseAPI());
