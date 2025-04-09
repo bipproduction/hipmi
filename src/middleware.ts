@@ -2,7 +2,6 @@ import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-
 type MiddlewareConfig = {
   apiPath: string;
   loginPath: string;
@@ -163,28 +162,30 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-      const validationResponse = await fetch(
-        `${new URL(req.url).origin}/api/validation`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const originURL = new URL(req.url).origin;
+      console.log("Origin URL >> ", originURL);
+      const pathApiValidation = `${new URL(req.url).origin}/api/validation`;
+      const validationResponse = await fetch(pathApiValidation, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!validationResponse.ok) {
+        console.error("Validation failed:", validationResponse.statusText);
+        return setCorsHeaders(unauthorizedResponseAPI());
+      }
 
       const validationResponseJson = await validationResponse.json();
-      console.log("Validation Response JSON:", validationResponseJson);
 
       if (validationResponseJson.success === false) {
         return setCorsHeaders(unauthorizedResponseDataUserNotFound(req));
       }
-
-      if (!validationResponse.ok) {
-        return setCorsHeaders(unauthorizedResponseAPI());
-      }
     } catch (error) {
-      console.error("Error validating API request:", error);
+      console.error(
+        "Error validating API request:",
+        (error as Error).message || error
+      );
       return setCorsHeaders(unauthorizedResponseValidationAPIRequest());
     }
   }
