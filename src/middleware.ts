@@ -76,19 +76,8 @@ export const middleware = async (req: NextRequest) => {
   } = middlewareConfig;
 
   const { pathname } = req.nextUrl;
-  // console.warn(cookies().get("hipmi-key")?.value);
-  // const f = await fetch("https://localhost:3000/api/middleware", {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // console.warn(await f.text())
-  // console.log("Cookies >>", req.cookies.get("hipmi-key")?.value);
-
-  // Handle CORS
   const corsResponse = handleCors(req);
+
   if (corsResponse) {
     return corsResponse;
   }
@@ -104,29 +93,6 @@ export const middleware = async (req: NextRequest) => {
   const user = await verifyToken({ token, encodedKey });
 
   console.log("Request URL v2 >>", req.url);
-
-  // const fetchValidation = async (url: string) => {
-  //   try {
-  //     const origin = new URL(req.url).origin;
-  //     console.log("Origin URL:", origin + url);
-  //     console.log("URL:", url);
-  //     const response = await fetch(origin + url, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     if (!response.ok) {
-  //       console.error("Validation failed:", response.statusText);
-  //       return null;
-  //     }
-  //     const data = await response.json();
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching validation:", error);
-  //     return null;
-  //   }
-  // };
 
   // Handle login page access
   if (pathname === loginPath) {
@@ -165,7 +131,8 @@ export const middleware = async (req: NextRequest) => {
       const originURL = process.env.NEXT_PUBLIC_API_URL;
       console.log("Origin URL >> ", originURL);
 
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
       const validationResponse = await fetch(`${apiBaseUrl}/api/validation`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -191,48 +158,49 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
-  // // Handle /dev routes that require active status
-  // if (pathname.startsWith("/dev")) {
-  //   try {
-  //     const userValidate = await fetch(
-  //       new URL(req.url).origin + "/api/user-validate",
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
+  // Handle /dev routes that require active status
+  if (pathname.startsWith("/dev")) {
+    try {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
 
-  //     if (!userValidate.ok) {
-  //       throw new Error("Failed to validate user");
-  //     }
+      const userValidate = await fetch(`${apiBaseUrl}/api/user-validate`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  //     const userValidateJson = await userValidate.json();
+      if (!userValidate.ok) {
+        console.error("Validation failed:", userValidate.statusText);
+        return setCorsHeaders(unauthorizedResponseAPIUserValidate());
+      }
 
-  //     if (userValidateJson.success == true && !userValidateJson.data) {
-  //       unauthorizedResponseDataUserNotFound(req);
-  //     }
+      const userValidateJson = await userValidate.json();
 
-  //     if (!userValidateJson.data.active) {
-  //       return setCorsHeaders(unauthorizedResponseUserNotActive(req));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error validating user:", error);
-  //     if (!token) {
-  //       console.error("Token is undefined");
-  //       return setCorsHeaders(unauthorizedResponseTokenPAGE());
-  //     }
-  //     return setCorsHeaders(
-  //       await unauthorizedResponseValidationUser({
-  //         loginPath,
-  //         sessionKey,
-  //         token,
-  //         req,
-  //       })
-  //     );
-  //   }
-  // }
+      if (userValidateJson.success == true && !userValidateJson.data) {
+        unauthorizedResponseDataUserNotFound(req);
+      }
+
+      if (!userValidateJson.data.active) {
+        return setCorsHeaders(unauthorizedResponseUserNotActive(req));
+      }
+    } catch (error) {
+      console.error("Error api user validate:", error);
+      if (!token) {
+        console.error("Token is undefined");
+        return setCorsHeaders(unauthorizedResponseTokenPAGE());
+      }
+      return setCorsHeaders(
+        await unauthorizedResponseValidationUser({
+          loginPath,
+          sessionKey,
+          token,
+          req,
+        })
+      );
+    }
+  }
 
   // // Ensure token is preserved in cookie
   // if (token) {
@@ -271,6 +239,16 @@ function unauthorizedResponse() {
     status: 401,
     headers: { "Content-Type": "application/json" },
   });
+}
+
+function unauthorizedResponseAPIUserValidate() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized api user validate" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }
 
 function unauthorizedResponseTokenAPI() {
