@@ -1,5 +1,7 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+
 
 type MiddlewareConfig = {
   apiPath: string;
@@ -75,6 +77,16 @@ export const middleware = async (req: NextRequest) => {
   } = middlewareConfig;
 
   const { pathname } = req.nextUrl;
+  // console.warn(cookies().get("hipmi-key")?.value);
+  // const f = await fetch("https://localhost:3000/api/middleware", {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  // console.warn(await f.text())
+  // console.log("Cookies >>", req.cookies.get("hipmi-key")?.value);
 
   // Handle CORS
   const corsResponse = handleCors(req);
@@ -92,7 +104,7 @@ export const middleware = async (req: NextRequest) => {
   const token = getToken(req, sessionKey);
   const user = await verifyToken({ token, encodedKey });
 
-  console.log("Request URL:", req.url);
+  console.log("Request URL v2 >>", req.url);
 
   // const fetchValidation = async (url: string) => {
   //   try {
@@ -151,9 +163,6 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-      // const validationResponse = await fetchValidation("/api/validation");
-      // console.log("Validation Response:", validationResponse);
-      // console.log("TOKEN >>", token);
       const validationResponse = await fetch(
         `${new URL(req.url).origin}/api/validation`,
         {
