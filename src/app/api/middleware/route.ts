@@ -14,8 +14,7 @@ export async function GET(req: Request) {
   console.log("Token received in Cookies:", tokenCookies);
 
   const tokenHeader = req.headers.get("Authorization")?.split(" ")[1];
-    console.log("Token received in Header:", tokenHeader);
-
+  console.log("Token received in Header:", tokenHeader);
 
   if (!tokenCookies) return NextResponse.json({ success: false });
   return NextResponse.json({ success: true });

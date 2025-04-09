@@ -162,10 +162,11 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-      const originURL = new URL(req.url).origin;
+      const originURL = process.env.NEXT_PUBLIC_API_URL;
       console.log("Origin URL >> ", originURL);
-      const pathApiValidation = `${new URL(req.url).origin}/api/validation`;
-      const validationResponse = await fetch(pathApiValidation, {
+
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
+      const validationResponse = await fetch(`${apiBaseUrl}/api/validation`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
