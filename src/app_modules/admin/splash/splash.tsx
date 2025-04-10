@@ -11,6 +11,7 @@ import {
   gs_admin_navbar_subMenu,
 } from "../_admin_global/new_global_state";
 import { IAdmin_ActivePage } from "../notifikasi/route_setting/type_of_select_page";
+import { AccentColor } from "@/app_modules/_global/color";
 
 export default function SplashDashboardAdmin() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function SplashDashboardAdmin() {
     <>
       <Center h={"100vh"}>
         <Stack spacing={0}>
-          <Title>Welcome Admin</Title>
+          <Title c={AccentColor.white}>Welcome Admin</Title>
 
           <AspectRatio ratio={1 / 1} mah={700} maw={700}>
             <Image src={"/aset/logo/logo-hipmi.png"} alt="Logo" />

@@ -37,7 +37,7 @@ export function Admin_ComponentButtonUserCircle({
 
   async function onClickLogout() {
     setLoadingLogout(true);
-    const res = await fetch(`/api/auth/logout?id=${dataUser.id}`, {
+    const res = await fetch(`/api/auth/logout?id=${dataUser?.id}`, {
       method: "GET",
     });
 
@@ -69,7 +69,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconUser />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>{dataUser.username}</Text>
+                <Text lineClamp={1}>{dataUser?.username}</Text>
               </Grid.Col>
             </Grid>
 
@@ -78,7 +78,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconPhone />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>+{dataUser.nomor}</Text>
+                <Text lineClamp={1}>+{dataUser?.nomor}</Text>
               </Grid.Col>
             </Grid>
 
@@ -208,7 +208,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconUser />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>{dataUser.username}</Text>
+                <Text lineClamp={1}>{dataUser?.username}</Text>
               </Grid.Col>
             </Grid>
           </Menu.Item>
@@ -218,7 +218,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconPhone />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>+{dataUser.nomor}</Text>
+                <Text lineClamp={1}>+{dataUser?.nomor}</Text>
               </Grid.Col>
             </Grid>
           </Menu.Item>

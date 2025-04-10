@@ -92,8 +92,6 @@ export const middleware = async (req: NextRequest) => {
   const token = getToken(req, sessionKey);
   const user = await verifyToken({ token, encodedKey });
 
-  console.log("Request URL v2 >>", req.url);
-
   // Handle login page access
   if (pathname === loginPath) {
     if (user) {
@@ -128,8 +126,6 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-      const originURL = process.env.NEXT_PUBLIC_API_URL;
-      console.log("Origin URL >> ", originURL);
 
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;

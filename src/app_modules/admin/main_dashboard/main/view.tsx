@@ -25,9 +25,6 @@ export default function AdminMain() {
     try {
       const response = await apiGetCountUserActive();
       if (response) {
-        // console.log(response.data);
-        // console.log(typeof response.data);
-        // console.log( response);
         setCountUser(response.data);
       }
 
