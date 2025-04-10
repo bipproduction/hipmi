@@ -1,6 +1,5 @@
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { Modal } from "@mantine/core";
-import { reject } from "lodash";
 
 export function Admin_ComponentModal({
   children,
@@ -15,7 +14,7 @@ export function Admin_ComponentModal({
   opened: boolean;
   onClose: () => void;
   size?: "sm" | "md" | "lg" | "xl";
-  title: any;
+  title?: any;
   withCloseButton?: boolean | undefined;
   closeOnClickOutside?: boolean | undefined;
 }) {

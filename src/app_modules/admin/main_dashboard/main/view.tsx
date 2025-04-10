@@ -16,10 +16,10 @@ export default function AdminMain() {
   const [countUser, setCountUser] = useState<number | null>(null);
   const [countPortofolio, setCountPortofolio] = useState<number | null>(null);
 
-  useShallowEffect(() => {
-    onLoadDataUser();
-    onLoadDataPortofolio();
-  }, []);
+  // useShallowEffect(() => {
+  //   onLoadDataUser();
+  //   onLoadDataPortofolio();
+  // }, []);
 
   async function onLoadDataUser() {
     try {

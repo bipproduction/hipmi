@@ -30,7 +30,7 @@
     "@mantine/tiptap": "^7.5.3",
     "@prisma/client": "^6.3.0",
     "@react-pdf/renderer": "^3.4.4",
-    "@tabler/icons-react": "^2.38.0",
+    "@tabler/icons-react": "^3.31.0",
     "@tiptap/extension-highlight": "^2.2.3",
     "@tiptap/extension-link": "^2.2.3",
     "@tiptap/extension-subscript": "^2.2.3",
