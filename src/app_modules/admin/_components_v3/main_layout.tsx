@@ -6,38 +6,38 @@ import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { gs_admin_ntf } from "@/lib/global_state";
 import {
-    AppShell,
-    Burger,
-    Divider,
-    Group,
-    Header,
-    MediaQuery,
-    Navbar,
-    ScrollArea,
-    Stack,
-    Text,
-    useMantineTheme
+  AppShell,
+  Burger,
+  Divider,
+  Drawer,
+  Group,
+  Header,
+  MediaQuery,
+  Navbar,
+  ScrollArea,
+  Stack,
+  Text,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import {
-    IconBriefcase,
-    IconCoin,
-    IconHome,
-    IconMessage,
-    IconUser
+  IconBriefcase,
+  IconCoin,
+  IconHome,
+  IconMessage,
+  IconUser,
 } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
+import { Admin_UiNavbar } from "../_admin_global";
 import {
-    Admin_UiNavbar
-} from "../_admin_global";
-import {
-    gs_admin_navbar_menu,
-    gs_admin_navbar_subMenu,
+  gs_admin_navbar_menu,
+  gs_admin_navbar_subMenu,
 } from "../_admin_global/new_global_state";
 import { Admin_V3_ComponentButtonUserCircle } from "./comp_button_user_circle";
+import { Admin_V3_SkeletonNavbar } from "./skeleton_navbar";
 
 export function Admin_V3_MainLayout({
   children,
@@ -52,7 +52,6 @@ export function Admin_V3_MainLayout({
   listNotifikasi: MODEL_NOTIFIKASI[];
   version: string;
 }) {
-  const router = useRouter();
   const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
   const userRoleId = dataUser?.masterUserRoleId;
   const [activeId, setActiveId] = useAtom(gs_admin_navbar_menu);
@@ -61,7 +60,6 @@ export function Admin_V3_MainLayout({
     useState<MODEL_NOTIFIKASI[]>(listNotifikasi);
 
   // Notifikasi
-  const [isDrawerNotifikasi, setDrawerNotifikasi] = useState(false);
   const [countNtf, setCountNtf] = useState(countNotifikasi);
   const [newAdminNtf, setNewAdminNtf] = useAtom(gs_admin_ntf);
 
@@ -82,54 +80,74 @@ export function Admin_V3_MainLayout({
       console.error("Error fetching user data", error);
     }
   }
+  const [openPop, setOpenPop] = useState(false);
+  const [opened, handlers] = useDisclosure(false);
+  const [openedDrawer, handlersDrawer] = useDisclosure(false);
+  const pathname = usePathname();
 
-  const [opened, { toggle, close }] = useDisclosure(false);
+  const navLinks = [
+    { icon: IconHome, label: "Home", path: "/" },
+    { icon: IconBriefcase, label: "Portfolio", path: "/portfolio" },
+    { icon: IconUser, label: "About Me", path: "/about" },
+    { icon: IconCoin, label: "Price List", path: "/pricing" },
+    { icon: IconMessage, label: "Contact", path: "/contact" },
+  ];
 
+  const isActive = (path: string) => {
+    if (path === "/" && pathname === "/") return true;
+    if (path !== "/" && pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
-    <AppShell
-      bg={MainColor.darkblue}
-      padding={"md"}
-      navbarOffsetBreakpoint="md"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="md"
-          hidden={!opened}
-          width={{ base: 250 }}
-          bg={AccentColor.darkblue}
-          style={{ borderColor: "transparent", transition: " ease 1s" }}
-          height={"93vh"}
-        >
-          <Navbar.Section
-            h={"88vh"}
-            grow
-            component={ScrollArea}
-            style={{ color: "white", transition: "1s" }}
+    <>
+      <AppShell
+        bg={MainColor.darkblue}
+        padding={"md"}
+        navbarOffsetBreakpoint="md"
+        navbar={
+          <Navbar
+            p="md"
+            hiddenBreakpoint="md"
+            hidden={!opened}
+            width={{ base: 250 }}
+            bg={AccentColor.darkblue}
+            style={{ borderColor: "transparent", transition: " ease 1s" }}
+            height={"93vh"}
           >
-            <Stack style={{ color: "white" }} mb={"lg"}>
-              <Admin_UiNavbar
-                userRoleId={userRoleId as any}
-                activeId={activeId as any}
-                activeChildId={activeChildId as any}
-                setActiveId={setActiveId}
-                setActiveChildId={setActiveChildId}
-              />
-            </Stack>
-          </Navbar.Section>
+            <Navbar.Section
+              h={"88vh"}
+              grow
+              component={ScrollArea}
+              style={{ color: "white", transition: "1s" }}
+            >
+              <Stack style={{ color: "white" }} mb={"lg"}>
+                {!dataUser ? (
+                  <Admin_V3_SkeletonNavbar />
+                ) : (
+                  <Admin_UiNavbar
+                    userRoleId={userRoleId as any}
+                    activeId={activeId as any}
+                    activeChildId={activeChildId as any}
+                    setActiveId={setActiveId}
+                    setActiveChildId={setActiveChildId}
+                  />
+                )}
+              </Stack>
+            </Navbar.Section>
 
-          <Navbar.Section h="5">
-            <Stack>
-              <Divider />
-              <Group position="center">
-                <Text fs={"italic"} c={"white"} fz={"xs"}>
-                  V {version}
-                </Text>
-              </Group>
-            </Stack>
-          </Navbar.Section>
+            <Navbar.Section h="5">
+              <Stack>
+                <Divider />
+                <Group position="center">
+                  <Text fs={"italic"} c={"white"} fz={"xs"}>
+                    V {version}
+                  </Text>
+                </Group>
+              </Stack>
+            </Navbar.Section>
 
-          {/* <Box  style={{ flex: "1" }}>
+            {/* <Box  style={{ flex: "1" }}>
             <Stack spacing="xs">
               {navLinks.map((link) => (
                 <Anchor
@@ -163,51 +181,85 @@ export function Admin_V3_MainLayout({
               ))}
             </Stack>
           </Box> */}
+          </Navbar>
+        }
+        header={
+          <Header height={"7vh"} px="md" bg={AccentColor.darkblue}>
+            <Group style={{ height: "100%" }} position="apart">
+              <MediaQuery largerThan="md" styles={{ display: "none" }}>
+                <Burger
+                  disabled={!dataUser}
+                  opened={opened}
+                  onClick={handlers.toggle}
+                  size="sm"
+                  color={!dataUser ? "gray" : AccentColor.white}
+                />
+              </MediaQuery>
 
-          {/* <Box mt="auto">
-            <Divider my="sm" />
-            <Group position="center" mt="md">
-              <ThemeIcon size={36} radius="xl" color="blue">
-                <IconBrandGithub size={18} />
-              </ThemeIcon>
-              <ThemeIcon size={36} radius="xl" color="blue">
-                <IconBrandLinkedin size={18} />
-              </ThemeIcon>
-              <ThemeIcon size={36} radius="xl" color="blue">
-                <IconMail size={18} />
-              </ThemeIcon>
-            </Group>
-          </Box> */}
-        </Navbar>
-      }
-      header={
-        <Header
-          height={"7vh"}
-          px="md"
-          bg={AccentColor.darkblue}
-          //   style={{ border: "none" }}
-        >
-          <Group style={{ height: "100%" }} position="apart">
-            <MediaQuery largerThan="md" styles={{ display: "none" }}>
-              <Burger
-                disabled={!dataUser}
-                opened={opened}
-                onClick={toggle}
-                size="sm"
-                color={!dataUser ? "gray" : AccentColor.white}
+              <Text size="lg" weight={700} c={MainColor.white}>
+                HIMPI DASHBOARD
+              </Text>
+
+              <Admin_V3_ComponentButtonUserCircle
+                dataUser={dataUser as any}
+                openPop={openPop}
+                setOpenPop={setOpenPop}
+                setNavbarOpen={handlers.close}
+                setDrawerNotifikasi={handlersDrawer.toggle}
               />
-            </MediaQuery>
+            </Group>
+          </Header>
+        }
+      >
+        {children}
+      </AppShell>
 
-            <Text size="lg" weight={700} c={MainColor.white}>
-              HIMPI DASHBOARD
+      <Drawer
+        styles={{
+          content: {
+            backgroundColor: AccentColor.blue,
+            color: AccentColor.white,
+          },
+          header: {
+            backgroundColor: AccentColor.darkblue,
+            color: AccentColor.white,
+          },
+          close: {
+            color: AccentColor.white,
+            "&:hover": {
+              backgroundColor: AccentColor.blue,
+              color: AccentColor.white,
+            },
+          },
+        }}
+        title={
+          <Group position="apart">
+            <Text fw={"bold"} fz={"lg"}>
+              Notifikasi
             </Text>
-
-            <Admin_V3_ComponentButtonUserCircle dataUser={dataUser as any} />
           </Group>
-        </Header>
-      }
-    >
-      {children}
-    </AppShell>
+        }
+        opened={openedDrawer}
+        onClose={handlersDrawer.toggle}
+        position="right"
+        size={"sm"}
+      >
+        On Maintenance . . .
+        {/* <ComponentAdmin_UIDrawerNotifikasi
+                newAdminNtf={newAdminNtf}
+                listNotifikasi={dataNotifikasi}
+                onChangeNavbar={(val: { id: string; childId: string }) => {
+                  setActiveId(val.id as any);
+                  setActiveChildId(val.childId);
+                }}
+                onToggleNavbar={(val: any) => {
+                  setDrawerNotifikasi(val);
+                }}
+                onLoadCountNotif={(val: any) => {
+                  setCountNtf(val);
+                }}
+              /> */}
+      </Drawer>
+    </>
   );
 }

@@ -14,7 +14,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import {
   IconBell,
@@ -22,7 +22,7 @@ import {
   IconLogout,
   IconReplaceUser,
   IconUser,
-  IconUserCircle
+  IconUserCircle,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -30,12 +30,24 @@ import { Admin_ComponentModal } from "../_admin_global/_component/comp_admin_mod
 
 export function Admin_V3_ComponentButtonUserCircle({
   dataUser,
+  openPop,
+  setOpenPop,
+  setNavbarOpen,
+  setDrawerNotifikasi,
 }: {
   dataUser: MODEL_USER | null;
+  openPop: boolean;
+  setOpenPop: React.Dispatch<React.SetStateAction<boolean>>;
+  // setOpenPop: (open: boolean) => void;
+  setNavbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // setNavbarOpen: (open: boolean) => void;
+  setDrawerNotifikasi: React.Dispatch<React.SetStateAction<boolean>>;
+  // setDrawerNotifikasi: (open: boolean) => void;
+
 }) {
   const router = useRouter();
   const [isOpenMenuUser, setOpenMenuUser] = useState(false);
-  const [openPop, setOpenPop] = useState(false);
+  // const [openPop, setOpenPop] = useState(false);
   const [openModalLogout, setOpenModalLogout] = useState(false);
   const [openModalReplaceUser, setOpenModalReplaceUser] = useState(false);
   const [loadingLogout, setLoadingLogout] = useState(false);
@@ -62,7 +74,7 @@ export function Admin_V3_ComponentButtonUserCircle({
       icon: IconBell,
       label: "Notifikasi",
       color: "",
-      onClick: () => console.log("Notifikasi"),
+      onClick: () => setDrawerNotifikasi(true),
     },
     {
       icon: IconReplaceUser,
@@ -100,6 +112,7 @@ export function Admin_V3_ComponentButtonUserCircle({
             variant="transparent"
             onClick={() => {
               setOpenPop((o) => !o);
+              setNavbarOpen(false);
             }}
           >
             <IconUserCircle color={dataUser ? "white" : "gray"} />
@@ -116,7 +129,7 @@ export function Admin_V3_ComponentButtonUserCircle({
             {listMenu.map((e, i) => (
               <Group key={i}>
                 <e.icon size={18} />
-                <Text lineClamp={1} >{e.label}</Text>
+                <Text lineClamp={1}>{e.label}</Text>
               </Group>
             ))}
 
@@ -131,57 +144,9 @@ export function Admin_V3_ComponentButtonUserCircle({
                 </Center>
               ))}
             </SimpleGrid>
-
-            {/* <SimpleGrid cols={2}>
-              <Button
-                radius={"xl"}
-                onClick={() => router.push("/dev/home", { scroll: false })}
-              >
-                User Access
-              </Button>
-              <Button
-                radius={"xl"}
-                color="red"
-                onClick={() => setOpenModal(true)}
-              >
-                Keluar
-              </Button>
-            </SimpleGrid> */}
           </Stack>
         </Popover.Dropdown>
       </Popover>
-
-      {/* <Modal
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
-        centered
-        withCloseButton={false}
-        closeOnClickOutside={false}
-      >
-        <Stack>
-          <Title order={6}>Anda yakin ingin keluar ?</Title>
-          <Group align="center" position="center">
-            <Button
-              onClick={() => {
-                setOpenModal(false);
-              }}
-              radius={50}
-            >
-              Batal
-            </Button>
-            <Button
-              loaderPosition="center"
-              loading={loadingLogout ? true : false}
-              radius={50}
-              bg={Warna.merah}
-              color="red"
-              onClick={() => onClickLogout()}
-            >
-              Keluar
-            </Button>
-          </Group>
-        </Stack>
-      </Modal> */}
 
       <Admin_ComponentModal
         opened={openModalLogout}
@@ -205,7 +170,7 @@ export function Admin_V3_ComponentButtonUserCircle({
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingLogout ? true : false}
+              loading={loadingLogout}
               radius={50}
               bg={Warna.merah}
               color="red"
@@ -225,7 +190,7 @@ export function Admin_V3_ComponentButtonUserCircle({
       >
         <Stack>
           <Title order={5} c={AccentColor.white}>
-            Anda yakin ingin keluar ?
+            Anda yakin ingin pindah ke tampilan user ?
           </Title>
           <Group align="center" position="center">
             <Button
@@ -239,15 +204,16 @@ export function Admin_V3_ComponentButtonUserCircle({
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingLogout ? true : false}
+              loading={loadingReplaceUser}
               radius={50}
               bg={AccentColor.softblue}
               color="blue"
               onClick={() => {
                 router.push("/dev/home", { scroll: false });
+                setLoadingReplaceUser(true)
               }}
             >
-              User Akses
+              Ke Tampilan User
             </Button>
           </Group>
         </Stack>

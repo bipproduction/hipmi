@@ -16,18 +16,15 @@ export default function AdminMain() {
   const [countUser, setCountUser] = useState<number | null>(null);
   const [countPortofolio, setCountPortofolio] = useState<number | null>(null);
 
-  // useShallowEffect(() => {
-  //   onLoadDataUser();
-  //   onLoadDataPortofolio();
-  // }, []);
+  useShallowEffect(() => {
+    onLoadDataUser();
+    onLoadDataPortofolio();
+  }, []);
 
   async function onLoadDataUser() {
     try {
       const response = await apiGetCountUserActive();
       if (response) {
-        // console.log(response.data);
-        // console.log(typeof response.data);
-        // console.log( response);
         setCountUser(response.data);
       }
 
