@@ -28,6 +28,8 @@ import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_
 import { AdminJob_funEditStatusPublishById } from "../../fun/edit/fun_edit_status_publish_by_id";
 import { AdminJob_ComponentImageView } from "./image_view";
 import { useRouter } from "next/navigation";
+import { Admin_V3_ComponentBreakpoint } from "@/app_modules/admin/_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentDetail } from "@/app_modules/admin/_components_v3/comp_detail_data";
 
 export function AdminJob_DetailReview({ data }: { data: MODEL_JOB }) {
   const router = useRouter();
@@ -142,21 +144,13 @@ export function AdminJob_DetailReview({ data }: { data: MODEL_JOB }) {
 
   return (
     <>
-      <SimpleGrid cols={2}>
+      <Admin_V3_ComponentBreakpoint>
         <Admin_ComponentBoxStyle>
-          {listData.map((item, index) => (
-            <Grid key={index}>
-              <Grid.Col span={2}>
-                <Text>{item.title}</Text>
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Text>:</Text>
-              </Grid.Col>
-              <Grid.Col span={"auto"}>
-                <Text>{item.value}</Text>
-              </Grid.Col>
-            </Grid>
-          ))}
+          <Stack>
+            {listData.map((item, index) => (
+               <Admin_V3_ComponentDetail key={index} item={item}/>
+            ))}
+          </Stack>
 
           <Grid mt={"xl"}>
             <Grid.Col span={2}></Grid.Col>
@@ -190,7 +184,7 @@ export function AdminJob_DetailReview({ data }: { data: MODEL_JOB }) {
         </Admin_ComponentBoxStyle>
 
         {data.imageId && <AdminJob_ComponentImageView imageId={data.imageId} />}
-      </SimpleGrid>
+      </Admin_V3_ComponentBreakpoint>
 
       {/* PUBLISH MODAL */}
       <Modal

@@ -25,6 +25,8 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import { AdminJob_ComponentImageView } from "./image_view";
+import { Admin_V3_ComponentBreakpoint } from "@/app_modules/admin/_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentDetail } from "@/app_modules/admin/_components_v3/comp_detail_data";
 
 export function AdminJob_DetailReject({ data }: { data: MODEL_JOB }) {
   const [isLoading, setLoading] = useState(false);
@@ -95,21 +97,13 @@ export function AdminJob_DetailReject({ data }: { data: MODEL_JOB }) {
 
   return (
     <>
-      <SimpleGrid cols={2}>
+      <Admin_V3_ComponentBreakpoint>
         <Admin_ComponentBoxStyle>
-          {listData.map((item, index) => (
-            <Grid key={index}>
-              <Grid.Col span={2}>
-                <Text>{item.title}</Text>
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Text>:</Text>
-              </Grid.Col>
-              <Grid.Col span={"auto"}>
-                <Text>{item.value}</Text>
-              </Grid.Col>
-            </Grid>
-          ))}
+          <Stack>
+            {listData.map((item, index) => (
+              <Admin_V3_ComponentDetail key={index} item={item} />
+            ))}
+          </Stack>
 
           <Group position="center" mt={"xl"}>
             <Button
@@ -129,7 +123,7 @@ export function AdminJob_DetailReject({ data }: { data: MODEL_JOB }) {
         {newData.imageId && (
           <AdminJob_ComponentImageView imageId={newData.imageId} />
         )}
-      </SimpleGrid>
+      </Admin_V3_ComponentBreakpoint>
 
       <Modal
         styles={{

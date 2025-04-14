@@ -1,13 +1,13 @@
 "use client";
 
-import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Admin_ComponentBoxStyle } from "@/app_modules/admin/_admin_global/_component/comp_admin_boxstyle";
+import { Admin_V3_ComponentBreakpoint } from "@/app_modules/admin/_components_v3/comp_simple_grid_breakpoint";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
-import { APIs } from "@/lib";
-import { Badge, Center, Grid, Image, SimpleGrid, Text } from "@mantine/core";
-import { IconImageInPicture } from "@tabler/icons-react";
+import { Badge, Grid, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { AdminJob_ComponentImageView } from "./image_view";
+import { MainColor } from "@/app_modules/_global/color";
+import { Admin_V3_ComponentDetail } from "@/app_modules/admin/_components_v3/comp_detail_data";
 
 export function AdminJob_DetailPublish({ data }: { data: MODEL_JOB }) {
   const [isLoading, setLoading] = useState(false);
@@ -32,37 +32,29 @@ export function AdminJob_DetailPublish({ data }: { data: MODEL_JOB }) {
 
     {
       title: "Konten",
-      value: <div dangerouslySetInnerHTML={{ __html: data.content }} />,
+      value: <div  dangerouslySetInnerHTML={{ __html: data.content }} />,
     },
     {
-      title: "Deskripsi",
+      title: "Deskripsi ",
       value: <div dangerouslySetInnerHTML={{ __html: data.deskripsi }} />,
     },
   ];
 
   return (
     <>
-      <SimpleGrid cols={2}>
+      <Admin_V3_ComponentBreakpoint>
         <Admin_ComponentBoxStyle>
-          {listData.map((item, index) => (
-            <Grid key={index}>
-              <Grid.Col span={2}>
-                <Text>{item.title}</Text>
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Text>:</Text>
-              </Grid.Col>
-              <Grid.Col span={"auto"}>
-                <Text>{item.value}</Text>
-              </Grid.Col>
-            </Grid>
-          ))}
+          <Stack>
+            {listData.map((item, index) => (
+              <Admin_V3_ComponentDetail key={index} item={item}/>
+            ))}
+          </Stack>
         </Admin_ComponentBoxStyle>
 
-        {data.imageId && (
-         <AdminJob_ComponentImageView imageId={data.imageId}/>
-        )}
-      </SimpleGrid>
+        {data.imageId && <AdminJob_ComponentImageView imageId={data.imageId} />}
+      </Admin_V3_ComponentBreakpoint>
     </>
   );
 }
+
+
