@@ -10,6 +10,7 @@ import {
   Center,
   Divider,
   Group,
+  MediaQuery,
   Popover,
   SimpleGrid,
   Stack,
@@ -18,6 +19,7 @@ import {
 } from "@mantine/core";
 import {
   IconBell,
+  IconDotsVertical,
   IconHierarchy2,
   IconLogout,
   IconReplaceUser,
@@ -27,6 +29,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentModal } from "../_admin_global/_component/comp_admin_modal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { ComponentAdminGlobal_NotifikasiPeringatan } from "../_admin_global/admin_notifikasi/notifikasi_peringatan";
 
 export function Admin_V3_ComponentButtonUserCircle({
   dataUser,
@@ -43,20 +47,24 @@ export function Admin_V3_ComponentButtonUserCircle({
   // setNavbarOpen: (open: boolean) => void;
   setDrawerNotifikasi: React.Dispatch<React.SetStateAction<boolean>>;
   // setDrawerNotifikasi: (open: boolean) => void;
-
 }) {
   const router = useRouter();
-  const [isOpenMenuUser, setOpenMenuUser] = useState(false);
-  // const [openPop, setOpenPop] = useState(false);
+
+  // STATE DESKTOP VIEW
+  const [dks_opened, setDksOpened] = useState(false);
+
+  // STATE MOBILE VIEW
   const [openModalLogout, setOpenModalLogout] = useState(false);
   const [openModalReplaceUser, setOpenModalReplaceUser] = useState(false);
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [loadingReplaceUser, setLoadingReplaceUser] = useState(false);
 
-  const listMenu = [
+  const listMenuMobile = [
     {
       icon: IconUser,
       label: dataUser?.username,
+      color: "",
+      onClick: () => {},
     },
     {
       icon: IconHierarchy2,
@@ -66,15 +74,48 @@ export function Admin_V3_ComponentButtonUserCircle({
           : dataUser?.masterUserRoleId == "3"
             ? "Super Admin"
             : "",
+      color: "",
+      onClick: () => {},
     },
-  ];
-
-  const listAction = [
     {
       icon: IconBell,
       label: "Notifikasi",
       color: "",
-      onClick: () => setDrawerNotifikasi(true),
+      onClick: () => {
+        ComponentAdminGlobal_NotifikasiPeringatan(
+          "Notifikasi: Masih dalam pengembangan",
+          2000
+        );
+        // setDrawerNotifikasi(true);
+      },
+    },
+    {
+      icon: IconReplaceUser,
+      label: "Tampilan user",
+      color: "",
+      onClick: () => setOpenModalReplaceUser(true),
+    },
+    {
+      icon: IconLogout,
+      label: "Logout",
+      color: "red",
+      onClick: () => setOpenModalLogout(true),
+    },
+  ];
+
+  const listMenuDekstop = [
+    {
+      icon: IconBell,
+      label: "Notifikasi",
+      color: "",
+      onClick: () => {
+        ComponentAdminGlobal_NotifikasiPeringatan(
+          "Notifikasi: Masih dalam pengembangan",
+          2000
+        );
+
+        // setDrawerNotifikasi(true);
+      },
     },
     {
       icon: IconReplaceUser,
@@ -103,50 +144,129 @@ export function Admin_V3_ComponentButtonUserCircle({
     }
   }
 
-  return (
-    <>
-      <Popover opened={openPop} onChange={setOpenPop} position="left-start">
-        <Popover.Target>
-          <ActionIcon
-            disabled={!dataUser}
-            variant="transparent"
-            onClick={() => {
-              setOpenPop((o) => !o);
-              setNavbarOpen(false);
+  const PopoverButton = () => {
+    return (
+      <>
+        <Popover opened={openPop} onChange={setOpenPop} position="bottom-end">
+          <Popover.Target>
+            <div>
+              <MediaQuery largerThan={"md"} styles={{ display: "none" }}>
+                <ActionIcon
+                  disabled={!dataUser}
+                  variant="transparent"
+                  onClick={() => {
+                    setOpenPop((o) => !o);
+                    setNavbarOpen(false);
+                  }}
+                >
+                  <IconUserCircle color={dataUser ? "white" : "gray"} />
+                </ActionIcon>
+              </MediaQuery>
+
+              <MediaQuery smallerThan={"md"} styles={{ display: "none" }}>
+                <Group spacing={"xl"}>
+                  <Group>
+                    <IconUser color={dataUser ? "white" : "gray"} size={25} />
+                    <Text c="white" fz={"lg"} fw={500}>
+                      {!dataUser?.username ? (
+                        <CustomSkeleton height={16} width={100} radius={"xl"} />
+                      ) : (
+                        dataUser?.username
+                      )}
+                    </Text>{" "}
+                    <Divider
+                      orientation="vertical"
+                      color={dataUser ? "white" : "gray"}
+                    />
+                    <Text c="white" fz={"lg"} fw={500}>
+                      {!dataUser?.username ? (
+                        <CustomSkeleton height={16} width={100} radius={"xl"} />
+                      ) : dataUser?.masterUserRoleId == "2" ? (
+                        "Admin"
+                      ) : dataUser?.masterUserRoleId == "3" ? (
+                        "Super Admin"
+                      ) : (
+                        ""
+                      )}
+                    </Text>{" "}
+                  </Group>
+                  <ActionIcon
+                    disabled={!dataUser}
+                    variant="transparent"
+                    onClick={() => {
+                      setOpenPop((o) => !o);
+                      setNavbarOpen(false);
+                    }}
+                  >
+                    <IconDotsVertical color={dataUser ? "white" : "gray"} />
+                  </ActionIcon>
+                </Group>
+              </MediaQuery>
+            </div>
+          </Popover.Target>
+
+          <Popover.Dropdown
+            style={{
+              backgroundColor: AccentColor.blue,
+              color: AccentColor.white,
             }}
           >
-            <IconUserCircle color={dataUser ? "white" : "gray"} />
-          </ActionIcon>
-        </Popover.Target>
+            {/* <PopoverDropDownView /> */}
+            <Stack>
+              {/* Mobile View */}
+              <>
+                {listMenuMobile.map((e, i) => (
+                  <MediaQuery
+                    largerThan={"md"}
+                    styles={{ display: "none" }}
+                    key={i}
+                  >
+                    <Group onClick={e.onClick}>
+                      <e.icon size={18} color={e.color || "white"} />
+                      <Text c={e.color || "white"} lineClamp={1}>
+                        {e.label}
+                      </Text>
+                    </Group>
+                  </MediaQuery>
+                ))}
+              </>
+              {/* Mobile View */}
 
-        <Popover.Dropdown
-          style={{
-            backgroundColor: AccentColor.blue,
-            color: AccentColor.white,
-          }}
-        >
-          <Stack>
-            {listMenu.map((e, i) => (
-              <Group key={i}>
-                <e.icon size={18} />
-                <Text lineClamp={1}>{e.label}</Text>
-              </Group>
-            ))}
+              {/* Desktop View */}
+              <>
+                {listMenuDekstop.map((e, i) => (
+                  <MediaQuery
+                    smallerThan={"md"}
+                    styles={{ display: "none" }}
+                    key={i}
+                  >
+                    <Group
+                      onClick={e.onClick}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <e.icon size={18} color={e.color || "white"} />
+                      <Text c={e.color || "white"} lineClamp={1}>
+                        {e.label}
+                      </Text>
+                    </Group>
+                  </MediaQuery>
+                ))}
+              </>
+              {/* Desktop View */}
 
-            <Divider />
+              <Divider />
+            </Stack>
+          </Popover.Dropdown>
+        </Popover>
+      </>
+    );
+  };
 
-            <SimpleGrid cols={3}>
-              {listAction.map((e, i) => (
-                <Center key={i}>
-                  <ActionIcon variant="transparent" onClick={e.onClick}>
-                    <e.icon color={e.color || "white"} />
-                  </ActionIcon>
-                </Center>
-              ))}
-            </SimpleGrid>
-          </Stack>
-        </Popover.Dropdown>
-      </Popover>
+  return (
+    <>
+      <PopoverButton />
 
       <Admin_ComponentModal
         opened={openModalLogout}
@@ -210,7 +330,7 @@ export function Admin_V3_ComponentButtonUserCircle({
               color="blue"
               onClick={() => {
                 router.push("/dev/home", { scroll: false });
-                setLoadingReplaceUser(true)
+                setLoadingReplaceUser(true);
               }}
             >
               Ke Tampilan User

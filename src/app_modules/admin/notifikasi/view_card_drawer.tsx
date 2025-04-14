@@ -68,31 +68,31 @@ export default function AdminNotifikasi_ViewCardDrawer({
       if (data?.kategoriApp === "JOB") {
         setDataId(data.id);
 
-        const checkJob = await adminNotifikasi_findRouterJob({
-          appId: data.appId,
-          notifikasiId: data.id,
-          router: router,
-          activePage: activePage,
-          onLoadCountNotif(val) {
-            onLoadCountNotif(val);
-          },
-          onLoadDataNotifikasi(val) {
-            onLoadDataNotifikasi(val);
-          },
-          onChangeNavbar(val) {
-            onChangeNavbar({
-              id: val.id,
-              childId: val.childId,
-            });
-          },
-        });
+        // const checkJob = await adminNotifikasi_findRouterJob({
+        //   appId: data.appId,
+        //   notifikasiId: data.id,
+        //   router: router,
+        //   activePage: activePage,
+        //   onLoadCountNotif(val) {
+        //     onLoadCountNotif(val);
+        //   },
+        //   onLoadDataNotifikasi(val) {
+        //     onLoadDataNotifikasi(val);
+        //   },
+        //   onChangeNavbar(val) {
+        //     onChangeNavbar({
+        //       id: val.id,
+        //       childId: val.childId,
+        //     });
+        //   },
+        // });
 
-        if (checkJob) {
-          setIsAdminJob_TriggerReview(false);
-          setVisible(false);
-          setDataId("");
-          onToggleNavbar(false);
-        }
+        // if (checkJob) {
+        //   setIsAdminJob_TriggerReview(false);
+        //   setVisible(false);
+        //   setDataId("");
+        //   onToggleNavbar(false);
+        // }
 
         return;
       }

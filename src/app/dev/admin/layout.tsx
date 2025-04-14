@@ -38,7 +38,6 @@ export default async function Layout({
       <Admin_V3_MainLayout
         userLoginId={userLoginId}
         countNotifikasi={{} as any}
-        listNotifikasi={[] as []}
         version={version}
       >
         {children}

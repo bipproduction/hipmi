@@ -38,26 +38,24 @@ import {
 } from "../_admin_global/new_global_state";
 import { Admin_V3_ComponentButtonUserCircle } from "./comp_button_user_circle";
 import { Admin_V3_SkeletonNavbar } from "./skeleton_navbar";
+import { Admin_V3_ViewDrawerNotifikasi } from "./notifikasi/view_drawer_notifikasi";
 
 export function Admin_V3_MainLayout({
   children,
   userLoginId,
   countNotifikasi,
-  listNotifikasi,
+
   version,
 }: {
   children: React.ReactNode;
   userLoginId: string;
   countNotifikasi: number;
-  listNotifikasi: MODEL_NOTIFIKASI[];
   version: string;
 }) {
   const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
   const userRoleId = dataUser?.masterUserRoleId;
   const [activeId, setActiveId] = useAtom(gs_admin_navbar_menu);
   const [activeChildId, setActiveChildId] = useAtom(gs_admin_navbar_subMenu);
-  const [dataNotifikasi, setDataNotifikasi] =
-    useState<MODEL_NOTIFIKASI[]>(listNotifikasi);
 
   // Notifikasi
   const [countNtf, setCountNtf] = useState(countNotifikasi);
@@ -78,26 +76,13 @@ export function Admin_V3_MainLayout({
       }
     } catch (error) {
       console.error("Error fetching user data", error);
+      setDataUser(null);
     }
   }
   const [openPop, setOpenPop] = useState(false);
   const [opened, handlers] = useDisclosure(false);
   const [openedDrawer, handlersDrawer] = useDisclosure(false);
-  const pathname = usePathname();
 
-  const navLinks = [
-    { icon: IconHome, label: "Home", path: "/" },
-    { icon: IconBriefcase, label: "Portfolio", path: "/portfolio" },
-    { icon: IconUser, label: "About Me", path: "/about" },
-    { icon: IconCoin, label: "Price List", path: "/pricing" },
-    { icon: IconMessage, label: "Contact", path: "/contact" },
-  ];
-
-  const isActive = (path: string) => {
-    if (path === "/" && pathname === "/") return true;
-    if (path !== "/" && pathname.startsWith(path)) return true;
-    return false;
-  };
 
   return (
     <>
@@ -146,41 +131,6 @@ export function Admin_V3_MainLayout({
                 </Group>
               </Stack>
             </Navbar.Section>
-
-            {/* <Box  style={{ flex: "1" }}>
-            <Stack spacing="xs">
-              {navLinks.map((link) => (
-                <Anchor
-                  key={link.path}
-                  component={Link}
-                  href={link.path}
-                  color={isActive(link.path) ? "blue" : "dimmed"}
-                  weight={500}
-                  p="xs"
-                  style={{
-                    display: "flex",
-                    borderRadius: theme.radius.sm,
-                    backgroundColor: isActive(link.path)
-                      ? theme.colors.dark[6]
-                      : "transparent",
-                  }}
-                  //   onClick={() => {
-                  //     if (
-                  //       typeof window !== "undefined" &&
-                  //       window.innerWidth < theme.breakpoints.md
-                  //     ) {
-                  //       close();
-                  //     }
-                  //   }}
-                >
-                  <Group>
-                    <link.icon size={18} />
-                    <Text>{link.label}</Text>
-                  </Group>
-                </Anchor>
-              ))}
-            </Stack>
-          </Box> */}
           </Navbar>
         }
         header={
@@ -197,7 +147,7 @@ export function Admin_V3_MainLayout({
               </MediaQuery>
 
               <Text size="lg" weight={700} c={MainColor.white}>
-                HIMPI DASHBOARD
+                HIPMI DASHBOARD
               </Text>
 
               <Admin_V3_ComponentButtonUserCircle
@@ -244,7 +194,17 @@ export function Admin_V3_MainLayout({
         position="right"
         size={"sm"}
       >
-        On Maintenance . . .
+        <Admin_V3_ViewDrawerNotifikasi
+          userLoginId={userLoginId}
+          openedDrawer={openedDrawer}
+          onChangeNavbar={(val: { id: string; childId: string }) => {
+            setActiveId(val.id as any);
+            setActiveChildId(val.childId);
+          }}
+          onToggleNavbar={(val: any) => {
+            handlersDrawer.close
+          }}
+        />
         {/* <ComponentAdmin_UIDrawerNotifikasi
                 newAdminNtf={newAdminNtf}
                 listNotifikasi={dataNotifikasi}
