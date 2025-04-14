@@ -5,10 +5,12 @@ import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/inpu
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
+import { RouterAdminGlobal } from "@/lib";
 import { IRealtimeData } from "@/lib/global_state";
 import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
 import { clientLogger } from "@/util/clientLogger";
@@ -21,23 +23,21 @@ import {
   Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
   Textarea,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
-import { IconBan, IconPhotoCheck, IconSearch } from "@tabler/icons-react";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { IconPhotoCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
 import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
-import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
-import { RouterAdminGlobal } from "@/lib";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
 export default function AdminJob_TableReject() {
   return (
@@ -93,7 +93,7 @@ function TableStatus() {
     setActivePage(1);
   };
 
-  const onPageClick = (page: number) => {
+  const onNextPage = (page: number) => {
     setActivePage(page);
   };
 
@@ -162,103 +162,6 @@ function TableStatus() {
         </td>
       </tr>
     ));
-
-    // return data?.map((e, i) => (
-    //   <tr key={i}>
-    //     <td>
-    //       <Center w={150}>
-    //         <Text c={AdminColor.white}>{e?.Author?.username}</Text>
-    //       </Center>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         w={200}
-    //         maxHeight={50}
-    //         hideLabel="sembunyikan"
-    //         showLabel="tampilkan"
-    //         c={AdminColor.white}
-    //       >
-    //         {e.title}
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Center w={150}>
-    //         {e.imageId ? (
-    //           <Button
-    //             loading={isLoading && e?.imageId === jobId}
-    //             loaderPosition="center"
-    //             color="green"
-    //             radius={"xl"}
-    //             leftIcon={<IconPhotoCheck />}
-    //             onClick={() => {
-    //               setJobId(e?.imageId);
-    //               setIsLoading(true);
-    //               router.push(RouterAdminJob.detail_poster + e?.imageId);
-    //             }}
-    //           >
-    //             Lihat
-    //           </Button>
-    //         ) : (
-    //           <Center w={150}>
-    //             <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
-    //               Tidak ada poster
-    //             </Text>
-    //           </Center>
-    //         )}
-    //       </Center>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         c={AdminColor.white}
-    //         w={400}
-    //         maxHeight={50}
-    //         hideLabel="sembunyikan"
-    //         showLabel="tampilkan"
-    //       >
-    //         <div dangerouslySetInnerHTML={{ __html: e.content }} />
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         c={AdminColor.white}
-    //         hideLabel="sembunyikan"
-    //         w={400}
-    //         maxHeight={50}
-    //         showLabel="tampilkan"
-    //       >
-    //         <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         c={AdminColor.white}
-    //         hideLabel="sembunyikan"
-    //         w={400}
-    //         maxHeight={50}
-    //         showLabel="tampilkan"
-    //       >
-    //         {e.catatan}
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Button
-    //         color={"red"}
-    //         leftIcon={<IconBan />}
-    //         radius={"xl"}
-    //         onClick={() => {
-    //           setReject(true);
-    //           setJobId(e.id);
-    //           setCatatan(e.catatan);
-    //         }}
-    //       >
-    //         <Stack spacing={0} c={AdminColor.white}>
-    //           <Text fz={10}>Tambah</Text>
-    //           <Text fz={10}>Catatan</Text>
-    //         </Stack>
-    //       </Button>
-    //     </td>
-    //   </tr>
-    // ));
   };
 
   return (
@@ -364,21 +267,21 @@ function TableStatus() {
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onNextPage(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
     </>
   );
 }
+
+
 
 async function onReject({
   jobId,

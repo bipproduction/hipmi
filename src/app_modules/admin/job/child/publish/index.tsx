@@ -2,13 +2,14 @@
 
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
 import { RouterAdminGlobal } from "@/lib";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
 import { clientLogger } from "@/util/clientLogger";
 import {
-  ActionIcon,
   Badge,
   Box,
   Button,
@@ -22,18 +23,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import {
-  IconEye,
-  IconEyeSearch,
-  IconPencilSearch,
-  IconPhotoCheck,
-  IconSearch,
-} from "@tabler/icons-react";
+import { IconPhotoCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
-import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
-import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
 export default function AdminJob_TablePublish() {
   return (
@@ -161,28 +155,6 @@ function TableStatus() {
             />
           </Center>
         </td>
-        {/* <td>
-          <Spoiler
-            c={AdminColor.white}
-            hideLabel="sembunyikan"
-            w={400}
-            maxHeight={50}
-            showLabel="tampilkan"
-          >
-            <div dangerouslySetInnerHTML={{ __html: e.content }} />
-          </Spoiler>
-        </td>
-        <td>
-          <Spoiler
-            c={AdminColor.white}
-            hideLabel="sembunyikan"
-            w={400}
-            maxHeight={50}
-            showLabel="tampilkan"
-          >
-            <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-          </Spoiler>
-        </td> */}
       </tr>
     ));
   };
@@ -190,7 +162,6 @@ function TableStatus() {
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Publish"
           color={AdminColor.softBlue}
@@ -234,7 +205,7 @@ function TableStatus() {
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>
-              <Pagination
+              <Admin_V3_ComponentPaginationBreakpoint
                 value={activePage}
                 total={nPage}
                 onChange={(val) => {

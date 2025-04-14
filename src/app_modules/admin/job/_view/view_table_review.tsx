@@ -52,6 +52,7 @@ import { apiGetAdminJobByStatus } from "../lib/api_fetch_admin_job";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminJob_ViewTavleReview() {
   const router = useRouter();
@@ -178,104 +179,7 @@ export default function AdminJob_ViewTavleReview() {
       </tr>
     ));
 
-    // return data.map((e, i) => (
-    //   <tr key={i}>
-    //     <td>
-    //       <Center w={150}>
-    //         <Text c={AdminColor.white}>{e?.Author?.username}</Text>
-    //       </Center>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         c={AdminColor.white}
-    //         w={150}
-    //         maxHeight={50}
-    //         hideLabel="sembunyikan"
-    //         showLabel="tampilkan"
-    //       >
-    //         {e.title}
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Center w={150}>
-    //         {e.imageId ? (
-    //           <Button
-    //             loaderPosition="center"
-    //             loading={isLoading && jobId == e?.id}
-    //             color="green"
-    //             radius={"xl"}
-    //             leftIcon={<IconPhotoCheck />}
-    //             onClick={() => {
-    //               setJobId(e?.id);
-    //               setIsLoading(true);
-    //               router.push(RouterAdminGlobal.preview_image({ id: e.imageId }));
-    //             }}
-    //           >
-    //             Lihat
-    //           </Button>
-    //         ) : (
-    //           <Center w={150}>
-    //             <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
-    //               Tidak ada poster
-    //             </Text>
-    //           </Center>
-    //         )}
-    //       </Center>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         style={{ color: AdminColor.white }}
-    //         hideLabel="sembunyikan"
-    //         w={250}
-    //         maxHeight={50}
-    //         showLabel="tampilkan"
-    //       >
-    //         <div dangerouslySetInnerHTML={{ __html: e.content }} />
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Spoiler
-    //         style={{ color: AdminColor.white }}
-    //         hideLabel="sembunyikan"
-    //         w={400}
-    //         maxHeight={50}
-    //         showLabel="tampilkan"
-    //       >
-    //         <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-    //       </Spoiler>
-    //     </td>
-    //     <td>
-    //       <Stack>
-    //         <Stack align="center">
-    //           <Button
-    //             color={"green"}
-    //             leftIcon={<IconCircleCheck />}
-    //             radius={"xl"}
-    //             onClick={() => {
-    //               setJobId(e?.id);
-    //               setPublish(true);
-    //             }
 
-    //             }
-    //           >
-    //             Publish
-    //           </Button>
-    //           <Button
-    //             color={"red"}
-    //             leftIcon={<IconBan />}
-    //             radius={"xl"}
-    //             onClick={() => {
-    //               setReject(true);
-    //               setJobId(e.id);
-    //             }}
-    //           >
-    //             Reject
-    //           </Button>
-    //         </Stack>
-    //       </Stack>
-    //     </td>
-    //   </tr>
-    // ));
   };
 
   return (
@@ -452,7 +356,7 @@ export default function AdminJob_ViewTavleReview() {
               </Table>
             </ScrollArea>
             <Center mt={"xl"}>
-              <Pagination
+              <Admin_V3_ComponentPaginationBreakpoint
                 value={activePage}
                 total={nPage}
                 onChange={(val) => {

@@ -149,7 +149,13 @@ export function Admin_V3_ComponentButtonUserCircle({
       <>
         <Popover opened={openPop} onChange={setOpenPop} position="bottom-end">
           <Popover.Target>
-            <div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
               <MediaQuery largerThan={"md"} styles={{ display: "none" }}>
                 <ActionIcon
                   disabled={!dataUser}
@@ -159,14 +165,20 @@ export function Admin_V3_ComponentButtonUserCircle({
                     setNavbarOpen(false);
                   }}
                 >
-                  <IconUserCircle color={dataUser ? "white" : "gray"} />
+                  <IconUserCircle
+                    color={dataUser ? "white" : "gray"}
+                    size={25}
+                  />
                 </ActionIcon>
               </MediaQuery>
 
               <MediaQuery smallerThan={"md"} styles={{ display: "none" }}>
                 <Group spacing={"xl"}>
                   <Group>
-                    <IconUser color={dataUser ? "white" : "gray"} size={25} />
+                    <IconUserCircle
+                      color={dataUser ? "white" : "gray"}
+                      size={25}
+                    />
                     <Text c="white" fz={"lg"} fw={500}>
                       {!dataUser?.username ? (
                         <CustomSkeleton height={16} width={100} radius={"xl"} />
