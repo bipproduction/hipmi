@@ -1,8 +1,11 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { IRealtimeData } from "@/lib/global_state";
 import { clientLogger } from "@/util/clientLogger";
 import {
   Button,
@@ -15,18 +18,16 @@ import {
   Table,
   TextInput,
   Title,
+  Text,
+  Box
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
-import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
-import adminUserAccess_getListUser from "../fun/get/get_list_all_user";
 import { WibuRealtime } from "wibu-pkg";
-import { gs_access_user, IRealtimeData } from "@/lib/global_state";
-import { useAtom } from "jotai";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { useShallowEffect } from "@mantine/hooks";
 import { apiGetUserAccess } from "../_lib/api_fetch_user_access";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminUserAccess_View() {
   const [data, setData] = useState<MODEL_USER[]>([]);
@@ -126,10 +127,14 @@ export default function AdminUserAccess_View() {
   const tableBody = data.map((e, i) => (
     <tr key={e.id}>
       <td>
-        <Center c={AdminColor.white}>{e.username}</Center>
+        <Box w={200}>
+          <Text c={AdminColor.white}>{e.username}</Text>
+        </Box>
       </td>
       <td>
-        <Center c={AdminColor.white}>+{e.nomor}</Center>
+        <Box w={200}>
+          <Text c={AdminColor.white}>+{e.nomor}</Text>
+        </Box>
       </td>
       <td>
         {e.active === false ? (
@@ -195,10 +200,10 @@ export default function AdminUserAccess_View() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Username</Center>
+                      <Text c={AdminColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Nomor</Center>
+                      <Text c={AdminColor.white}>Nomor</Text>
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Aksi</Center>
@@ -208,15 +213,13 @@ export default function AdminUserAccess_View() {
                 <tbody>{tableBody}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
