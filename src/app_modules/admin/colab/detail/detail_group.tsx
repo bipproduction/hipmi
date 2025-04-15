@@ -22,6 +22,9 @@ import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamp
 import { apiGetAdminCollaborationGroupById } from "../lib/api_fetch_admin_collaboration";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
 import { IconCaretRight } from "@tabler/icons-react";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 function DetailGroup() {
   const params = useParams<{ id: string }>();
@@ -84,33 +87,22 @@ function DetailGroup() {
       <ComponentAdminGlobal_HeaderTamplate name={`Detail group`} />
       <AdminGlobal_ComponentBackButton />
 
-      <Grid>
-        <Grid.Col span={6}>
-          {!data ? (
-            <CustomSkeleton height={"50vh"} width={"100%"} />
-          ) : (
-            <Admin_ComponentBoxStyle
-              style={{
-                height: 500,
-              }}
-            >
-              <ScrollArea h={450} scrollbarSize={"md"}>
-                <Stack spacing={"xs"}>
-                  {listData.map((e, i) => (
-                    <Grid c={"white"} key={i}>
-                      <Grid.Col span={4}>
-                        <Text c={AdminColor.white} fw={"bold"}>
-                          {e.label}
-                        </Text>
-                      </Grid.Col>
-                      <Grid.Col span={1}>:</Grid.Col>
-                      <Grid.Col span={"auto"}>
-                        <Text c={AdminColor.white}>{e.value}</Text>
-                      </Grid.Col>
-                    </Grid>
-                  ))}
+      {!data ? (
+        <Admin_V3_ComponentSkeletonBreakpoint skeletonRequest={2} />
+      ) : (
+        <Admin_V3_ComponentBreakpoint>
+          <Admin_ComponentBoxStyle
+            style={{
+              height: 500,
+            }}
+          >
+            <ScrollArea h={450} scrollbarSize={"md"}>
+              <Stack spacing={"xs"}>
+                {listData.map((e, i) => (
+                  <Admin_V3_ComponentDetail key={i} item={e}/>
+                ))}
 
-                  {/* <Group position="center">
+                {/* <Group position="center">
                 <Button
                   mt={"xl"}
                   radius={"xl"}
@@ -124,52 +116,49 @@ function DetailGroup() {
                   Reject
                 </Button>
               </Group> */}
-                </Stack>
-              </ScrollArea>
-            </Admin_ComponentBoxStyle>
-          )}
-        </Grid.Col>
-
-        <Grid.Col span={6}>
-          {!data ? (
-            <CustomSkeleton height={"50vh"} width={"100%"} />
-          ) : (
-            <Admin_ComponentBoxStyle
-              style={{
-                height: 500,
-              }}
-            >
-              <Stack>
-                <Title align="center" order={6}>
-                  Anggota
-                </Title>
-
-                <ScrollArea h={400}>
-                  {data.ProjectCollaboration_AnggotaRoomChat.map((e, i) => (
-                    <Group key={i} align="flex-start" mb={"md"}>
-                      <IconCaretRight />
-
-                      <Stack spacing={0} w={"70%"}>
-                        <Grid>
-                          <Grid.Col span={3} fw={"bold"}>Username</Grid.Col>
-                          <Grid.Col span={1}>:</Grid.Col>
-                          <Grid.Col span={8}>{e.User.username}</Grid.Col>
-                        </Grid>
-
-                        <Grid>
-                          <Grid.Col span={3} fw={"bold"}>Name</Grid.Col>
-                          <Grid.Col span={1}>:</Grid.Col>
-                          <Grid.Col span={8}>{e.User.Profile.name}</Grid.Col>
-                        </Grid>
-                      </Stack>
-                    </Group>
-                  ))}
-                </ScrollArea>
               </Stack>
-            </Admin_ComponentBoxStyle>
-          )}
-        </Grid.Col>
-      </Grid>
+            </ScrollArea>
+          </Admin_ComponentBoxStyle>
+
+          <Admin_ComponentBoxStyle
+            style={{
+              height: 500,
+            }}
+          >
+            <Stack>
+              <Title align="center" order={6}>
+                Anggota
+              </Title>
+
+              <ScrollArea h={400}>
+                {data.ProjectCollaboration_AnggotaRoomChat.map((e, i) => (
+                  <Group key={i} align="flex-start" mb={"md"}>
+                    <IconCaretRight />
+
+                    <Stack spacing={0} w={"70%"}>
+                      <Grid>
+                        <Grid.Col span={3} fw={"bold"}>
+                          Username
+                        </Grid.Col>
+                        <Grid.Col span={1}>:</Grid.Col>
+                        <Grid.Col span={8}>{e.User.username}</Grid.Col>
+                      </Grid>
+
+                      <Grid>
+                        <Grid.Col span={3} fw={"bold"}>
+                          Name
+                        </Grid.Col>
+                        <Grid.Col span={1}>:</Grid.Col>
+                        <Grid.Col span={8}>{e.User.Profile.name}</Grid.Col>
+                      </Grid>
+                    </Stack>
+                  </Group>
+                ))}
+              </ScrollArea>
+            </Stack>
+          </Admin_ComponentBoxStyle>
+        </Admin_V3_ComponentBreakpoint>
+      )}
     </Stack>
   );
 }

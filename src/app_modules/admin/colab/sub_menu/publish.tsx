@@ -1,42 +1,31 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
 import {
-  Stack,
+  Box,
+  Button,
+  Center,
   Group,
-  Title,
+  Pagination,
   Paper,
   ScrollArea,
+  Stack,
   Table,
-  Center,
   Text,
-  Badge,
-  Spoiler,
-  Pagination,
-  Button,
-  Modal,
-  TextInput,
-  Textarea,
-  Box,
+  Title,
 } from "@mantine/core";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
-import { useState } from "react";
-import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import adminColab_getListAllPublish from "../fun/get/get_list_all_publish";
-import ComponentAdminColab_DetailData from "../component/detail_data";
-import adminColab_getOneByColabId from "../fun/get/get_one_by_colab_id";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import _ from "lodash";
-import { IconBan, IconCheck, IconEye } from "@tabler/icons-react";
-import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconEye } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 
-import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { apiGetAdminCollaborationPublish } from "../lib/api_fetch_admin_collaboration";
 import { RouterAdminColab } from "@/lib/router_admin/router_admin_colab";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetAdminCollaborationPublish } from "../lib/api_fetch_admin_collaboration";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminColab_TablePublish() {
   return (
@@ -65,24 +54,24 @@ function TableMenu() {
     try {
       const response = await apiGetAdminCollaborationPublish({
         page: `${activePage}`,
-      })
+      });
 
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
         setNPage(response.data.nPage || 1);
       } else {
         console.error("Invalid data format recieved", response);
-        setData([])
+        setData([]);
       }
     } catch (error) {
       clientLogger.error("Invalid data table publish", error);
       setData([]);
     }
-  }
+  };
 
   const onPageCLick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -94,29 +83,32 @@ function TableMenu() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
 
     return data.map((e, i) => (
-      <tr key={i}>
+      <tr
+        key={i}
+        style={{
+          color: AdminColor.white,
+        }}
+      >
         <td>
-          <Center c={AdminColor.white}>
-            <Text lineClamp={1}>{e?.Author?.Profile?.name}</Text>
-          </Center>
+          <Box w={150}>
+            <Text lineClamp={1}>
+              {e?.Author?.username}
+            </Text>
+          </Box>
         </td>
         <td>
-          <Center c={AdminColor.white}>
-            <Box>
-              <Center c={AdminColor.white}>
-                <Text lineClamp={1}>{e?.title}</Text>
-              </Center>
-            </Box>
-          </Center>
+          <Box w={150}>
+            <Text lineClamp={1}>{e?.title}</Text>
+          </Box>
         </td>
         <td>
-          <Center c={AdminColor.white}>
+          <Box w={150}>
             <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
-          </Center>
+          </Box>
         </td>
         <td>
           <Center c={AdminColor.white}>
@@ -143,7 +135,7 @@ function TableMenu() {
         </td>
       </tr>
     ));
-  }
+  };
 
   // async function onReport() {
   //   if (report === "")
@@ -184,25 +176,20 @@ function TableMenu() {
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-          <Paper p={"md"} bg={AdminColor.softBlue} >
+          <Paper p={"md"} bg={AdminColor.softBlue}>
             <Stack>
               <ScrollArea h={"65vh"}>
-                <Table
-                  verticalSpacing={"xs"}
-                  horizontalSpacing={"md"}
-                  p={"md"}
-
-                >
+                <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
                   <thead>
                     <tr>
                       <th>
-                        <Center c={AdminColor.white}>Username</Center>
+                        <Text c={AdminColor.white}>Username</Text>
                       </th>
                       <th>
-                        <Center c={AdminColor.white}>Title</Center>
+                        <Text c={AdminColor.white}>Title</Text>
                       </th>
                       <th>
-                        <Center c={AdminColor.white}>Industri</Center>
+                        <Text c={AdminColor.white}>Industri</Text>
                       </th>
                       <th>
                         <Center c={AdminColor.white}>Jumlah Partisipan</Center>
@@ -215,8 +202,7 @@ function TableMenu() {
                   <tbody>{renderTableBody()}</tbody>
                 </Table>
               </ScrollArea>
-              <Pagination
-                position="center"
+              <Admin_V3_ComponentPaginationBreakpoint
                 total={isNPage}
                 value={activePage}
                 onChange={(val) => {

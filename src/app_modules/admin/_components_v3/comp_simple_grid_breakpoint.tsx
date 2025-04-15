@@ -2,13 +2,15 @@ import { SimpleGrid } from "@mantine/core";
 
 export function Admin_V3_ComponentBreakpoint({
   children,
+  cols
 }: {
   children: React.ReactNode;
+  cols?: number;
 }) {
   return (
     <>
       <SimpleGrid
-        cols={2}
+        cols={cols || 2}
         breakpoints={[
           { maxWidth: "sm", cols: 1 },
           { maxWidth: "md", cols: 1 },

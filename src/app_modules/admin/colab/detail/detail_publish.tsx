@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Button,
-  Flex,
   Grid,
   Group,
   Modal,
@@ -13,20 +15,19 @@ import {
   Stack,
   Text,
   Textarea,
-  Title,
 } from "@mantine/core";
-import { useParams, useRouter } from "next/navigation";
-import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
 import { useShallowEffect } from "@mantine/hooks";
-import { clientLogger } from "@/util/clientLogger";
-import { apiGetAdminCollaborationById } from "../lib/api_fetch_admin_collaboration";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { IconCheck, IconFlag2Off } from "@tabler/icons-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
+import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
-import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
+import { apiGetAdminCollaborationById } from "../lib/api_fetch_admin_collaboration";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 function DetailPublish() {
   const router = useRouter();
@@ -57,7 +58,7 @@ function DetailPublish() {
 
   async function onReject() {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await adminColab_funReportProjectById({
         colabId: params.id,
         report: report,
@@ -109,27 +110,16 @@ function DetailPublish() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={`Detail publish`} />
-          <AdminGlobal_ComponentBackButton />
-        
+        <AdminGlobal_ComponentBackButton />
 
-        <SimpleGrid cols={2}>
-          {!data ? (
-            <CustomSkeleton height={"50vh"} width={"100%"} />
-          ) : (
+        {!data ? (
+          <Admin_V3_ComponentSkeletonBreakpoint />
+        ) : (
+          <Admin_V3_ComponentBreakpoint >
             <Admin_ComponentBoxStyle>
-              <Stack spacing={"xs"}>
+              <Stack >
                 {listData.map((e, i) => (
-                  <Grid c={"white"} key={i}>
-                    <Grid.Col span={4}>
-                      <Text c={AdminColor.white} fw={"bold"}>
-                        {e.label}
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={"auto"}>
-                      <Text c={AdminColor.white}>{e.value}</Text>
-                    </Grid.Col>
-                  </Grid>
+                  <Admin_V3_ComponentDetail key={i} item={e}/>
                 ))}
 
                 <Group position="center">
@@ -148,8 +138,8 @@ function DetailPublish() {
                 </Group>
               </Stack>
             </Admin_ComponentBoxStyle>
-          )}
-        </SimpleGrid>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
 
       {/* Reject Project */}
