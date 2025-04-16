@@ -204,15 +204,13 @@ function TableStatus() {
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Admin_V3_ComponentPaginationBreakpoint
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
