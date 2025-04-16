@@ -1,39 +1,31 @@
 "use client";
 
-import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
-import {
-  MODEL_FORUM_REPORT_POSTING
-} from "@/app_modules/forum/model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_FORUM_REPORT_POSTING } from "@/app_modules/forum/model/interface";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
   Box,
   Button,
   Center,
-  Group,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
   Stack,
   Table,
   Text,
-  TextInput,
-  Title
+  TextInput
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconFlag3, IconSearch } from "@tabler/icons-react";
-import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
-import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
-import adminForum_funGetAllReportPosting from "../fun/get/get_all_report_posting";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { useShallowEffect } from "@mantine/hooks";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { apiGetAdminForumReportPosting } from "../lib/api_fetch_admin_forum";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function AdminForum_TableReportPosting() {
   return (
@@ -59,20 +51,20 @@ function TableView() {
       try {
         const response = await apiGetAdminForumReportPosting({
           page: `${activePage}`,
-        })
+          search: isSearch,
+        });
 
         if (response?.success && response?.data.data) {
           setData(response.data.data);
-          setNPage(response.data.nCount || 1)
+          setNPage(response.data.nCount || 1);
         } else {
-          console.error("Invalid data format recieved", response),
-            setData([])
+          console.error("Invalid data format recieved", response), setData([]);
         }
       } catch (error) {
-        clientLogger.error("Invalid data format recieved", error)
-        setData([])
+        clientLogger.error("Invalid data format recieved", error);
+        setData([]);
       }
-    }
+    };
     loadInitialData();
   }, [activePage, isSearch]);
   async function onSearch(searchTerm: string) {
@@ -82,7 +74,7 @@ function TableView() {
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -94,36 +86,30 @@ function TableView() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data?.map((e, i) => (
-      <tr key={i}>
+      <tr key={i} style={{ color: AdminColor.white }}>
         <td>
-          <Center c={AdminColor.white} w={150}>
+          <Text w={100}>
             <Text lineClamp={1}>{e?.User.username}</Text>
-          </Center>
+          </Text>
         </td>
         <td>
-          <Center c={AdminColor.white} w={150}>
+          <Text w={150}>
             {e?.forumMaster_KategoriReportId === null ? (
               <Text>Lainnya</Text>
             ) : (
               <Text lineClamp={1}>{e?.ForumMaster_KategoriReport.title}</Text>
             )}
-          </Center>
+          </Text>
         </td>
-  
-        {/* <td>
-          <Center w={200}>
-            <Text lineClamp={1}>{e?.Forum_Posting.Author.username}</Text>
-          </Center>
-        </td>
-  
+
         <td>
-          <Box w={400}>
+          <Box w={150}>
             <Spoiler
               // w={400}
-              maxHeight={60}
+              maxHeight={50}
               hideLabel="sembunyikan"
               showLabel="tampilkan"
             >
@@ -134,10 +120,10 @@ function TableView() {
               />
             </Spoiler>
           </Box>
-        </td> */}
-  
+        </td>
+
         <td>
-          <Center w={250}>
+          <Center>
             <Badge
               color={
                 (e?.Forum_Posting?.ForumMaster_StatusPosting?.id as any) === 1
@@ -149,34 +135,15 @@ function TableView() {
             </Badge>
           </Center>
         </td>
-  
-        <td>
-          <Center w={150}>
-            <Text c={AdminColor.white}>
-            {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
-               new Date(e?.createdAt)
-              )}
-            </Text>
-          </Center>
-        </td>
-  
+
         <td>
           <Stack align="center" spacing={"xs"}>
-            {/* <ButtonAction postingId={e?.id} /> */}
             <ButtonLihatReportLainnya postingId={e?.forum_PostingId} />
-            {/* <ComponentAdminForum_ButtonDeletePosting
-              postingId={e?.forum_PostingId}
-              onSuccesDelete={(val) => {
-                if (val) {
-                  onLoadData();
-                }
-              }}
-            /> */}
           </Stack>
         </td>
       </tr>
     ));
-  }
+  };
 
   return (
     <>
@@ -190,31 +157,11 @@ function TableView() {
               radius={"xl"}
               placeholder="Cari postingan"
               onChange={(val) => {
-
                 onSearch(val.currentTarget.value);
               }}
             />
           }
         />
-        {/* <Group
-          position="apart"
-          bg={"orange.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4} c={"white"}>
-            Report Posting
-          </Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari postingan"
-            onChange={(val) => {
-
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group> */}
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
@@ -227,27 +174,22 @@ function TableView() {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Pelapor</Center>
+                      <Text c={AdminColor.white}>Pelapor</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Jenis Laporan</Center>
-                    </th>
-                    {/* <th>
-                      <Center c={AdminColor.white}>Author</Center>
+                      <Text c={AdminColor.white}>Jenis Laporan</Text>
                     </th>
                     <th>
-                      <Text>Postingan</Text>
-                    </th> */}
-                    <th>
-                      <Center c={AdminColor.white} w={250}>Status Posting</Center>
+                      <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Tanggal Report</Center>
+                      <Center c={AdminColor.white} w={250}>
+                        Status Posting
+                      </Center>
                     </th>
 
                     <th>
@@ -258,15 +200,13 @@ function TableView() {
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
@@ -280,8 +220,7 @@ function ButtonLihatReportLainnya({ postingId }: { postingId: string }) {
   return (
     <>
       <Button
-        fz={"xs"}
-        loading={loading ? true : false}
+        loading={loading}
         loaderPosition="center"
         radius={"xl"}
         w={170}
@@ -291,7 +230,7 @@ function ButtonLihatReportLainnya({ postingId }: { postingId: string }) {
           router.push(RouterAdminForum.report_posting + postingId);
         }}
       >
-        <Text>Lihat Report Lain</Text>
+        <Text> Report Lain</Text>
       </Button>
     </>
   );
