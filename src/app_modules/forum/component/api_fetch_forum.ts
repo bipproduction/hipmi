@@ -34,7 +34,7 @@ const apiGetAllForum = async ({
     // Check if the response is OK
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      console.error("Failed to get all forum:", response.statusText, errorData);
+      console.error("Failed to get all forum", response.statusText, errorData);
       throw new Error(errorData?.message || "Failed to get all forum");
     }
 

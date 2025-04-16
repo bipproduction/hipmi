@@ -27,6 +27,9 @@ import { IconCheck, IconFlag2Off } from "@tabler/icons-react";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 function DetailReject() {
   const router = useRouter();
@@ -55,24 +58,24 @@ function DetailReject() {
     }
   };
 
-//   async function onReject() {
-//     try {
-//       setLoading(true);
-//       const response = await adminColab_funReportProjectById({
-//         colabId: params.id,
-//         report: report,
-//       });
+  //   async function onReject() {
+  //     try {
+  //       setLoading(true);
+  //       const response = await adminColab_funReportProjectById({
+  //         colabId: params.id,
+  //         report: report,
+  //       });
 
-//       if (response.status == 200) {
-//         setLoading(false);
-//         router.back();
-//       }
-//     } catch (error) {
-//       setLoading(false);
-//       ComponentGlobal_NotifikasiPeringatan("Gagal Load");
-//       clientLogger.error("Invalid report collaboration", error);
-//     }
-//   }
+  //       if (response.status == 200) {
+  //         setLoading(false);
+  //         router.back();
+  //       }
+  //     } catch (error) {
+  //       setLoading(false);
+  //       ComponentGlobal_NotifikasiPeringatan("Gagal Load");
+  //       clientLogger.error("Invalid report collaboration", error);
+  //     }
+  //   }
 
   const listData = [
     {
@@ -115,30 +118,19 @@ function DetailReject() {
         <ComponentAdminGlobal_HeaderTamplate name={`Detail reject`} />
         <AdminGlobal_ComponentBackButton />
 
-        <SimpleGrid cols={2}>
-          {!data ? (
-            <CustomSkeleton height={"50vh"} width={"100%"} />
-          ) : (
+        {!data ? (
+          <Admin_V3_ComponentSkeletonBreakpoint />
+        ) : (
+          <Admin_V3_ComponentBreakpoint cols={1}>
             <Admin_ComponentBoxStyle>
               <Stack spacing={"xs"}>
                 {listData.map((e, i) => (
-                  <Grid c={"white"} key={i}>
-                    <Grid.Col span={4}>
-                      <Text c={AdminColor.white} fw={"bold"}>
-                        {e.label}
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={"auto"}>
-                      <Text c={AdminColor.white}>{e.value}</Text>
-                    </Grid.Col>
-                  </Grid>
+                 <Admin_V3_ComponentDetail key={i} item={e}/>
                 ))}
-
               </Stack>
             </Admin_ComponentBoxStyle>
-          )}
-        </SimpleGrid>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
     </>
   );

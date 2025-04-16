@@ -1,31 +1,27 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Stack,
+  Box,
+  Center,
   Group,
-  Title,
+  Pagination,
   Paper,
   ScrollArea,
+  Stack,
   Table,
-  Center,
   Text,
-  Badge,
-  Spoiler,
-  Box,
-  Pagination,
-  Button,
+  Title,
 } from "@mantine/core";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { useState } from "react";
-import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
-import adminColab_getListAllRejected from "../fun/get/get_list_all_reject";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { IconEye } from "@tabler/icons-react";
-import { apiGetAdminCollaborationReject } from "../lib/api_fetch_admin_collaboration";
+import { useState } from "react";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { apiGetAdminCollaborationReject } from "../lib/api_fetch_admin_collaboration";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminColab_TableRejected() {
   return (
@@ -41,35 +37,32 @@ function TableMenu() {
   const [data, setData] = useState<MODEL_COLLABORATION[] | null>(null);
   const [isNPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [idData, setIdData] = useState("");
 
   useShallowEffect(() => {
-    loadInitialData()
-  }, [activePage])
+    loadInitialData();
+  }, [activePage]);
   const loadInitialData = async () => {
     try {
       const response = await apiGetAdminCollaborationReject({
         page: `${activePage}`,
-      })
-      
+      });
+
       if (response?.success && response?.data?.data) {
         setData(response.data.data);
         setNPage(response.data.nPage || 1);
       } else {
         console.error("Invalid data format recieved", response);
-        setData([])
+        setData([]);
       }
-
     } catch (error) {
       clientLogger.error("Error get data table reject", error);
       setData([]);
     }
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -81,31 +74,27 @@ function TableMenu() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
 
     return data.map((e, i) => (
-      <tr key={i}>
+      <tr key={i} style={{ color: AdminColor.white }}>
         <td>
-          <Center c={AdminColor.white}>
+          <Box w={150}>
             <Text lineClamp={1}>{e?.Author.username}</Text>
-          </Center>
+          </Box>
         </td>
 
         <td>
-          <Center c={AdminColor.white}>
-            <Box>
-              <Center c={AdminColor.white}>
-                <Text lineClamp={1}>{e?.title}</Text>
-              </Center>
-            </Box>
-          </Center>
+          <Box w={150} c={AdminColor.white}>
+            <Text lineClamp={1}>{e?.title}</Text>
+          </Box>
         </td>
 
         <td>
-          <Center c={AdminColor.white}>
+          <Box w={150} c={AdminColor.white}>
             <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
-          </Center>
+          </Box>
         </td>
 
         <td>
@@ -115,25 +104,14 @@ function TableMenu() {
         </td>
         <td>
           <Center>
-            {/* <Button
-              loading={loading && e?.id == idData ? true : false}
-              leftIcon={<IconEye />}
-              loaderPosition="center"
-              radius={"xl"}
-              color="green"
-              onClick={() => {
-                setLoading(true);
-                setIdData(e.id);
-              }}
-            >
-              Detail
-            </Button> */}
-            <Admin_DetailButton path={`/dev/admin/colab/detail/reject/${e.id}`} />
+            <Admin_DetailButton
+              path={`/dev/admin/colab/detail/reject/${e.id}`}
+            />
           </Center>
         </td>
-      </tr >
+      </tr>
     ));
-  }
+  };
   return (
     <>
       <Stack spacing={"xs"}>
@@ -143,7 +121,9 @@ function TableMenu() {
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title c={AdminColor.white} order={4}>Reject</Title>
+          <Title c={AdminColor.white} order={4}>
+            Reject
+          </Title>
         </Group>
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
@@ -151,22 +131,17 @@ function TableMenu() {
           <Paper p={"md"} bg={AdminColor.softBlue}>
             <Stack>
               <ScrollArea h={"65vh"}>
-                <Table
-                  verticalSpacing={"lg"}
-                  horizontalSpacing={"md"}
-                  p={"md"}
-
-                >
+                <Table verticalSpacing={"lg"} horizontalSpacing={"md"} p={"md"}>
                   <thead>
                     <tr>
                       <th>
-                        <Center c={AdminColor.white}>Username</Center>
+                        <Text c={AdminColor.white}>Username</Text>
                       </th>
                       <th>
-                        <Center c={AdminColor.white}>Title</Center>
+                        <Text c={AdminColor.white}>Title</Text>
                       </th>
                       <th>
-                        <Center c={AdminColor.white}>Industri</Center>
+                        <Text c={AdminColor.white}>Industri</Text>
                       </th>
                       <th>
                         <Center c={AdminColor.white}>Jumlah Partisipan</Center>
@@ -179,10 +154,9 @@ function TableMenu() {
                   <tbody>{renderTableBody()}</tbody>
                 </Table>
               </ScrollArea>
-              <Pagination
-                position="center"
-                total={isNPage}
+              <Admin_V3_ComponentPaginationBreakpoint
                 value={activePage}
+                total={isNPage}
                 onChange={(val) => {
                   onPageClick(val);
                 }}

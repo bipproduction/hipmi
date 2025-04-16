@@ -1,7 +1,11 @@
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { SimpleGrid } from "@mantine/core";
 
-export function Admin_V3_ComponentSkeletonBreakpoint() {
+export function Admin_V3_ComponentSkeletonBreakpoint({
+  skeletonRequest,
+}: {
+  skeletonRequest?: number;
+}) {
   return (
     <>
       <SimpleGrid
@@ -12,7 +16,9 @@ export function Admin_V3_ComponentSkeletonBreakpoint() {
           { maxWidth: "lg", cols: 1 },
         ]}
       >
-        <CustomSkeleton height={500} width={"100%"} />
+        {Array.from({ length: skeletonRequest || 1 }, (_, index) => (
+          <CustomSkeleton key={index} height={500} width={"100%"} />
+        ))}
       </SimpleGrid>
     </>
   );

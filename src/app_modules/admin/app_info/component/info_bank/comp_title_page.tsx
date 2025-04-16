@@ -11,21 +11,21 @@ export function AdminAppInformation_ComponentTitlePageBank({
     <>
       <ComponentAdminGlobal_TitlePage
         name="Informasi Bank"
-        component={
-          <Button
-            w={120}
-            leftIcon={<IconCirclePlus />}
-            radius={"xl"}
-            onClick={() => {
-              onEventListener({
-                isCreate: true,
-                isUpdate: false,
-              });
-            }}
-          >
-            Tambah
-          </Button>
-        }
+        // component={
+        //   <Button
+        //     w={120}
+        //     leftIcon={<IconCirclePlus />}
+        //     radius={"xl"}
+        //     onClick={() => {
+        //       onEventListener({
+        //         isCreate: true,
+        //         isUpdate: false,
+        //       });
+        //     }}
+        //   >
+        //     Tambah
+        //   </Button>
+        // }
       />
     </>
   );

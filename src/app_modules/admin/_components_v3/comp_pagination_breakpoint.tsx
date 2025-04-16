@@ -17,7 +17,7 @@ export function Admin_V3_ComponentPaginationBreakpoint({
   return (
     <>
       <Pagination
-      mt={"xs"}
+        mt={"xs"}
         value={value}
         total={total}
         onChange={(val) => {
