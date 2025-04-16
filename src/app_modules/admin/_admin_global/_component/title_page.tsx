@@ -10,7 +10,7 @@ export function ComponentAdminGlobal_TitlePage({
   color,
   component,
 }: {
-  name: string;
+  name: React.ReactNode | string
   color?: string;
   component?: React.ReactNode;
 }) {

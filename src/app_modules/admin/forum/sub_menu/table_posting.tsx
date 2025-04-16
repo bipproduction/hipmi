@@ -96,20 +96,17 @@ function TablePublish() {
       );
     }
     return data?.map((e, i) => (
-      <tr key={i} style={{
-        color: AdminColor.white
-      }}>
-        {/* Aksi */}
+      <tr
+        key={i}
+        style={{
+          color: AdminColor.white,
+        }}
+      >
+        {/* Author */}
         <td>
-          <Stack align="center" spacing={"xs"}>
-            <ButtonAction postingId={e?.id} />
-            <ComponentAdminForum_ButtonDeletePosting
-              postingId={e?.id}
-              onSuccesDelete={(val) => {
-                onDelete(val);
-              }}
-            />
-          </Stack>
+          <Box w={100}>
+            <Text lineClamp={1}>{e?.Author?.username}</Text>
+          </Box>
         </td>
 
         {/* Status */}
@@ -125,15 +122,6 @@ function TablePublish() {
               {e?.ForumMaster_StatusPosting?.status}
             </Badge>
           </Center>
-        </td>
-
-        {/* Author */}
-        <td>
-          <Box w={100}>
-            <Text lineClamp={1}>
-              {e?.Author?.username}
-            </Text>
-          </Box>
         </td>
 
         {/* Deskripsi */}
@@ -174,6 +162,19 @@ function TablePublish() {
               {e?.Forum_ReportPosting.length}
             </Text>
           </Center>
+        </td>
+
+        {/* Aksi */}
+        <td>
+          <Stack align="center" spacing={"xs"}>
+            <ButtonAction postingId={e?.id} />
+            <ComponentAdminForum_ButtonDeletePosting
+              postingId={e?.id}
+              onSuccesDelete={(val) => {
+                onDelete(val);
+              }}
+            />
+          </Stack>
         </td>
 
         {/* <td>
@@ -222,14 +223,10 @@ function TablePublish() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Aksi</Center>
+                      <Text c={AdminColor.white}>Username</Text>
                     </th>
-
                     <th>
                       <Center c={AdminColor.white}>Status</Center>
-                    </th>
-                    <th>
-                      <Text c={AdminColor.white}>Username</Text>
                     </th>
                     <th>
                       <Text c={AdminColor.white}>Postingan</Text>
@@ -239,6 +236,10 @@ function TablePublish() {
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Total Report Posting</Center>
+                    </th>
+
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
