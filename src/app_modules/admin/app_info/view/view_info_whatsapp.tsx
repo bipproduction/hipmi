@@ -14,6 +14,7 @@ import {
   Grid,
   Group,
   Paper,
+  SimpleGrid,
   Stack,
   TextInput,
   Title,
@@ -25,6 +26,7 @@ import { useState } from "react";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import adminAppInformation_funUpdateNomorAdmin from "../fun/update/fun_update_nomor";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 
 export default function AdminAppInformation_ViewInformasiWhatApps() {
   const [dataNomor, setDataNomor] = useState<any | null>(null);
@@ -89,90 +91,84 @@ export default function AdminAppInformation_ViewInformasiWhatApps() {
           </Group>
         </Stack>
 
-        <Grid>
-          <Grid.Col span={4}>
-            {!dataNomor ? (
-              <CustomSkeleton height={100} width={300} />
-            ) : (
-              <Paper bg={AdminColor.softBlue} p={"md"}>
-                <Stack>
-                  <Paper
-                    c={AdminColor.white}
-                    bg={AccentColor.darkblue}
-                    p={"xl"}
-                  >
-                    <Group position="apart">
-                      <Title order={2}>{`+${dataNomor?.nomor}`}</Title>
-                      <Tooltip label={"Edit"}>
-                        <ActionIcon
-                          style={{ transition: "0.2s" }}
-                          variant="transparent"
-                          radius={"xl"}
-                          onClick={() => {
-                            toggle();
-                            setUpdateNomor(dataNomor?.nomor);
-                          }}
-                        >
-                          <IconEdit
-                            style={{
-                              transition: "0.2s",
-                            }}
-                            color={opened ? "gray" : AdminColor.white}
-                          />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
-                  </Paper>
-
-                  <Collapse
-                    in={opened}
-                    transitionDuration={300}
-                    transitionTimingFunction="linear"
-                  >
-                    <Stack>
-                      <TextInput
-                        type="number"
-                        placeholder="Update nomor admin"
-                        icon={<IconPhone />}
-                        value={updateNomor}
-                        label={
-                          <Title c="white" order={6}>
-                            Nomor Aktif Admin
-                          </Title>
-                        }
-                        onChange={(val) => {
-                          setUpdateNomor(val.currentTarget.value);
+        {!dataNomor ? (
+          <CustomSkeleton height={100} width={300} />
+        ) : (
+          <Admin_V3_ComponentBreakpoint cols={3} md={2} lg={2}>
+            <Paper bg={AdminColor.softBlue} p={"md"}>
+              <Stack>
+                <Paper c={AdminColor.white} bg={AccentColor.darkblue} p={"xl"}>
+                  <Group position="apart" spacing={0}>
+                    <Tooltip label={"Edit"}>
+                      <ActionIcon
+                        style={{ transition: "0.2s" }}
+                        variant="transparent"
+                        radius={"xl"}
+                        onClick={() => {
+                          toggle();
+                          setUpdateNomor(dataNomor?.nomor);
                         }}
-                      />
-                      <Group position="right">
-                        <Button
-                          style={{ transition: "0.2s" }}
-                          radius={"xl"}
-                          onClick={() => {
-                            toggle();
+                      >
+                        <IconEdit
+                          style={{
+                            transition: "0.2s",
                           }}
-                        >
-                          Batal
-                        </Button>
-                        <Button
-                          style={{ transition: "0.2s" }}
-                          disabled={updateNomor === "" ? true : false}
-                          color="green"
-                          radius={"xl"}
-                          onClick={() => {
-                            onUpdate();
-                          }}
-                        >
-                          Update
-                        </Button>
-                      </Group>
-                    </Stack>
-                  </Collapse>
-                </Stack>
-              </Paper>
-            )}
-          </Grid.Col>
-        </Grid>
+                          color={opened ? "gray" : AdminColor.white}
+                        />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Title order={3}>{`+${dataNomor?.nomor}`}</Title>
+                  </Group>
+                </Paper>
+
+                <Collapse
+                  in={opened}
+                  transitionDuration={300}
+                  transitionTimingFunction="linear"
+                >
+                  <Stack>
+                    <TextInput
+                      type="number"
+                      placeholder="Update nomor admin"
+                      icon={<IconPhone />}
+                      value={updateNomor}
+                      label={
+                        <Title c="white" order={6}>
+                          Nomor Aktif Admin
+                        </Title>
+                      }
+                      onChange={(val) => {
+                        setUpdateNomor(val.currentTarget.value);
+                      }}
+                    />
+                    <Group position="right">
+                      <Button
+                        style={{ transition: "0.2s" }}
+                        radius={"xl"}
+                        onClick={() => {
+                          toggle();
+                        }}
+                      >
+                        Batal
+                      </Button>
+                      <Button
+                        style={{ transition: "0.2s" }}
+                        disabled={updateNomor === "" ? true : false}
+                        color="green"
+                        radius={"xl"}
+                        onClick={() => {
+                          onUpdate();
+                        }}
+                      >
+                        Update
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Collapse>
+              </Stack>
+            </Paper>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
     </>
   );

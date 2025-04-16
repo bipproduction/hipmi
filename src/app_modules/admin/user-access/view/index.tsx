@@ -19,7 +19,7 @@ import {
   TextInput,
   Title,
   Text,
-  Box
+  Box,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
@@ -30,7 +30,7 @@ import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminUserAccess_View() {
-  const [data, setData] = useState<MODEL_USER[]>([]);
+  const [data, setData] = useState<MODEL_USER[] | null>(null);
   const [nPage, setNPage] = useState(1);
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
@@ -124,51 +124,65 @@ export default function AdminUserAccess_View() {
     }
   }
 
-  const tableBody = data.map((e, i) => (
-    <tr key={e.id}>
-      <td>
-        <Box w={200}>
-          <Text c={AdminColor.white}>{e.username}</Text>
-        </Box>
-      </td>
-      <td>
-        <Box w={200}>
-          <Text c={AdminColor.white}>+{e.nomor}</Text>
-        </Box>
-      </td>
-      <td>
-        {e.active === false ? (
-          <Center>
-            <Button
-              loaderPosition="center"
-              loading={isLoadingAccess && userId === e.id}
-              radius={"xl"}
-              color="Green"
-              onClick={() => {
-                onAccess(e.id, e.nomor);
-              }}
-            >
-              Grand Access
-            </Button>
-          </Center>
-        ) : (
-          <Center>
-            <Button
-              loaderPosition="center"
-              loading={isLoadingDelete && userId === e.id}
-              radius={"xl"}
-              color="red"
-              onClick={() => {
-                onDelete(e.id);
-              }}
-            >
-              Delete Access
-            </Button>
-          </Center>
-        )}
-      </td>
-    </tr>
-  ));
+  const tableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data.map((e, i) => (
+      <tr key={e.id}>
+        <td>
+          <Box w={200}>
+            <Text c={AdminColor.white}>{e.username}</Text>
+          </Box>
+        </td>
+        <td>
+          <Box w={200}>
+            <Text c={AdminColor.white}>+{e.nomor}</Text>
+          </Box>
+        </td>
+        <td>
+          {e.active === false ? (
+            <Center>
+              <Button
+                loaderPosition="center"
+                loading={isLoadingAccess && userId === e.id}
+                radius={"xl"}
+                color="Green"
+                onClick={() => {
+                  onAccess(e.id, e.nomor);
+                }}
+              >
+                Grand Access
+              </Button>
+            </Center>
+          ) : (
+            <Center>
+              <Button
+                loaderPosition="center"
+                loading={isLoadingDelete && userId === e.id}
+                radius={"xl"}
+                color="red"
+                onClick={() => {
+                  onDelete(e.id);
+                }}
+              >
+                Delete Access
+              </Button>
+            </Center>
+          )}
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
@@ -191,7 +205,7 @@ export default function AdminUserAccess_View() {
           />
         </Group>
 
-        {!data.length ? (
+        {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
@@ -210,7 +224,7 @@ export default function AdminUserAccess_View() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{tableBody}</tbody>
+                <tbody>{tableBody()}</tbody>
               </Table>
             </ScrollArea>
             <Admin_V3_ComponentPaginationBreakpoint
