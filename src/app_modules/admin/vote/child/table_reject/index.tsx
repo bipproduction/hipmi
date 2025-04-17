@@ -10,6 +10,7 @@ import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_ad
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
 import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
@@ -19,7 +20,6 @@ import {
   Center,
   Group,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Stack,
@@ -30,7 +30,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
-import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AdminVote_funEditCatatanRejectById } from "../../fun/edit/fun_edit_catatan_reject_by_id";
@@ -118,7 +117,7 @@ function TableStatus() {
         <tr>
           <td colSpan={12}>
             <Center>
-              <Text color={"gray"}>Tidak ada data</Text>
+              <ComponentAdminGlobal_IsEmptyData />
             </Center>
           </td>
         </tr>
@@ -159,10 +158,14 @@ function TableStatus() {
           </Center>
         </td> */}
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Text w={100} c={AccentColor.white}>
+            {e?.Author?.username}
+          </Text>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e.title}</Center>
+          <Text w={150} c={AccentColor.white} lineClamp={1}>
+            {e?.title}
+          </Text>
         </td>
         {/* <td>
           <Center c={"white"}>
@@ -230,8 +233,6 @@ function TableStatus() {
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
-        ) : _.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
@@ -239,10 +240,10 @@ function TableStatus() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white}>Author</Center>
+                      <Text c={AccentColor.white}>Author</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Judul</Center>
+                      <Text c={AccentColor.white}>Judul</Text>
                     </th>
 
                     <th>
@@ -260,15 +261,13 @@ function TableStatus() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

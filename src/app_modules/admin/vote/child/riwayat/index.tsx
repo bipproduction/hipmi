@@ -3,28 +3,27 @@
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
 import {
-  Box,
-  Button,
   Center,
   Modal,
   Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconReportAnalytics, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 import { clientLogger } from "@/util/clientLogger";
 import _ from "lodash";
 import { useState } from "react";
@@ -32,8 +31,7 @@ import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
 import { apiGetAdminVotingRiwayat } from "../../lib/api_fetch_admin_voting";
-import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
-import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
 export default function AdminVote_Riwayat() {
   return (
@@ -97,7 +95,7 @@ function TableStatus() {
         <tr>
           <td colSpan={12}>
             <Center>
-              <Text color={"gray"}>Tidak ada data</Text>
+              <ComponentAdminGlobal_IsEmptyData />
             </Center>
           </td>
         </tr>
@@ -127,10 +125,14 @@ function TableStatus() {
           </Center>
         </td> */}
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Text w={100} c={AccentColor.white}>
+            {e?.Author?.username}
+          </Text>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.title}</Center>
+          <Text w={150} c={AccentColor.white} lineClamp={1}>
+            {e?.title}
+          </Text>
         </td>
         {/* <td>
           <Center c="white">
@@ -171,10 +173,9 @@ function TableStatus() {
 
         <td>
           <Center>
-            <Admin_DetailButton path={RouterAdminVote.detail({id: e.id})}/>
+            <Admin_DetailButton path={RouterAdminVote.detail({ id: e.id })} />
           </Center>
         </td>
-
       </tr>
     ));
   };
@@ -214,10 +215,10 @@ function TableStatus() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white}>Username</Center>
+                      <Text c={AccentColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Judul</Center>
+                      <Text c={AccentColor.white}>Judul</Text>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
@@ -234,15 +235,13 @@ function TableStatus() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
