@@ -22,6 +22,7 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
 }) {
   return (
     <>
+      <Admin_V3_ComponentBreakpoint cols={2}>
         <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue} shadow="sm">
           <Stack>
             <Stack spacing={5}>
@@ -29,7 +30,7 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
                 <Text c={AdminColor.white} fw={"bold"}>
                   Username:{" "}
                   <Text span inherit lineClamp={1}>
-                    {dataPosting?.Author?.username} 
+                    {dataPosting?.Author?.username}
                   </Text>
                 </Text>
 
@@ -64,8 +65,7 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
             </Box>
           </Stack>
         </Paper>
-      {/* <Admin_V3_ComponentBreakpoint>
-      </Admin_V3_ComponentBreakpoint> */}
+      </Admin_V3_ComponentBreakpoint>
     </>
   );
 }

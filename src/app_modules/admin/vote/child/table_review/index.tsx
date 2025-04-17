@@ -4,7 +4,6 @@ import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_glob
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
 import {
   Affix,
-  Box,
   Button,
   Center,
   Group,
@@ -13,7 +12,6 @@ import {
   Paper,
   rem,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
@@ -22,39 +20,33 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import {
-  IconBan,
-  IconCircleCheck,
-  IconRefresh,
-  IconSearch,
-} from "@tabler/icons-react";
+import { IconRefresh, IconSearch } from "@tabler/icons-react";
 
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
+import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   gs_adminVoting_triggerReview,
   IRealtimeData,
 } from "@/lib/global_state";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
-import mqtt_client from "@/util/mqtt_client";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
+import { clientLogger } from "@/util/clientLogger";
 import { useAtom } from "jotai";
+import _ from "lodash";
 import moment from "moment";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
-import { adminVote_funGetListReview } from "../../fun";
 import { AdminVote_funEditStatusPublishById } from "../../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../../fun/edit/fun_edit_status_reject_by_id";
-import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { clientLogger } from "@/util/clientLogger";
 import { apiGetAdminVotingByStatus } from "../../lib/api_fetch_admin_voting";
-import _ from "lodash";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
-import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
-import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
 export default function AdminVote_TableReview() {
   return (
@@ -234,7 +226,7 @@ function TableStatus() {
         <tr>
           <td colSpan={12}>
             <Center>
-              <Text color={"gray"}>Tidak ada data</Text>
+              <ComponentAdminGlobal_IsEmptyData />
             </Center>
           </td>
         </tr>
@@ -244,10 +236,14 @@ function TableStatus() {
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Text w={100} c={AccentColor.white}>
+            {e?.Author?.username}
+          </Text>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e.title}</Center>
+          <Text w={150} c={AccentColor.white} lineClamp={1}>
+            {e?.title}
+          </Text>
         </td>
 
         <td>
@@ -324,8 +320,6 @@ function TableStatus() {
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
-        ) : _.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             {isShowReload && (
@@ -351,18 +345,14 @@ function TableStatus() {
             )}
 
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white}>Username</Center>
+                      <Text c={AccentColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Judul</Center>
+                      <Text c={AccentColor.white}>Judul</Text>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
@@ -379,15 +369,13 @@ function TableStatus() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

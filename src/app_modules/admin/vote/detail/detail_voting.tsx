@@ -12,10 +12,11 @@ import { AdminVoting_ComponentDetailPublish } from "../component/comp_detail_pub
 import { apiGetOneVotingById } from "../lib/api_fetch_admin_voting";
 import { AdminVoting_ComponentDetailReview } from "../component/comp_detail_review";
 import { AdminVoting_ComponentDetailReject } from "../component/comp_detail_reject";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
 
 export function AdminVote_DetailVoting() {
   const param = useParams<{ id: string }>();
-  const [data, setData] = useState<MODEL_VOTING | null>();
+  const [data, setData] = useState<MODEL_VOTING | null>(null);
 
   useShallowEffect(() => {
     handleLoadData();
@@ -43,10 +44,9 @@ export function AdminVote_DetailVoting() {
         <ComponentAdminGlobal_HeaderTamplate name="Detail voting" />
         <AdminGlobal_ComponentBackButton />
 
-        {data === undefined && (
-          <SimpleGrid cols={2}>
-            <CustomSkeleton height={500} />
-          </SimpleGrid>
+        {data === undefined || !data && (
+          <Admin_V3_ComponentSkeletonBreakpoint skeletonRequest={2}/>
+           
         )}
 
         {data && data.Voting_Status.name === "Publish" ? (
