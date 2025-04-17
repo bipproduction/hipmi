@@ -19,7 +19,7 @@ export async function adminForum_getListReportKomentarbyId({
     take: takeData,
     skip: skipData,
     orderBy: {
-      createdAt: "desc"
+      createdAt: "desc",
     },
     where: {
       forum_KomentarId: komentarId,
@@ -32,6 +32,7 @@ export async function adminForum_getListReportKomentarbyId({
       ForumMaster_KategoriReport: true,
       User: {
         select: {
+          username: true,
           Profile: {
             select: {
               id: true,
@@ -48,11 +49,11 @@ export async function adminForum_getListReportKomentarbyId({
       forum_KomentarId: komentarId,
     },
   });
-  
+
   const allData = {
     data: data,
-    nPage: ceil(nCount / takeData)
-  }
+    nPage: ceil(nCount / takeData),
+  };
 
   return allData;
 }

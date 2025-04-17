@@ -27,6 +27,7 @@ import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
+import { Component_SetInnerHtml } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function AdminForum_TablePosting() {
   return (
@@ -126,25 +127,21 @@ function TablePublish() {
 
         {/* Deskripsi */}
         <td>
-          <Box w={150}>
+          <Box w={250}>
             <Spoiler
               // w={400}
               maxHeight={50}
               hideLabel="sembunyikan"
               showLabel="tampilkan"
             >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: e?.diskusi,
-                }}
-              />
+              <Component_SetInnerHtml props={e?.diskusi} />
             </Spoiler>
           </Box>
         </td>
 
         {/* Jumlah komentar */}
         <td>
-          <Center w={150}>
+          <Center>
             <Text fw={"bold"} fz={"lg"}>
               {e?.Forum_Komentar.length}
             </Text>
@@ -153,7 +150,7 @@ function TablePublish() {
 
         {/* Jumlah report */}
         <td>
-          <Center w={150}>
+          <Center>
             <Text
               c={e?.Forum_ReportPosting?.length >= 3 ? "red" : AdminColor.white}
               fw={"bold"}

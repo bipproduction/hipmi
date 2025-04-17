@@ -187,7 +187,7 @@ function TableView() {
                       <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white} w={250}>
+                      <Center c={AdminColor.white}>
                         Status Posting
                       </Center>
                     </th>

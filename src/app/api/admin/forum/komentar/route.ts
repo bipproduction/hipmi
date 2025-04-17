@@ -27,11 +27,7 @@ export async function GET(request: Request) {
             },
           },
         },
-        select: {
-          id: true,
-          isActive: true,
-          createdAt: true,
-          deskripsi: true,
+        include: {
           ForumMaster_KategoriReport: true,
           User: {
             select: {
@@ -46,6 +42,7 @@ export async function GET(request: Request) {
           },
           Forum_Komentar: {
             select: {
+              id: true,
               komentar: true,
             },
           },
@@ -67,11 +64,7 @@ export async function GET(request: Request) {
             },
           },
         },
-        select: {
-          id: true,
-          isActive: true,
-          createdAt: true,
-          deskripsi: true,
+        include: {
           ForumMaster_KategoriReport: true,
           User: {
             select: {
@@ -86,6 +79,7 @@ export async function GET(request: Request) {
           },
           Forum_Komentar: {
             select: {
+              id: true,
               komentar: true,
             },
           },

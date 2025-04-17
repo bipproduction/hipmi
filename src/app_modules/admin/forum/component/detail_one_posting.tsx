@@ -22,7 +22,6 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
 }) {
   return (
     <>
-      <Admin_V3_ComponentBreakpoint>
         <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue} shadow="sm">
           <Stack>
             <Stack spacing={5}>
@@ -65,7 +64,8 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
             </Box>
           </Stack>
         </Paper>
-      </Admin_V3_ComponentBreakpoint>
+      {/* <Admin_V3_ComponentBreakpoint>
+      </Admin_V3_ComponentBreakpoint> */}
     </>
   );
 }
