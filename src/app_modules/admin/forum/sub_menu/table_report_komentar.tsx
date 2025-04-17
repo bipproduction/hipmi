@@ -141,7 +141,7 @@ function TableView() {
 
         <td>
           <Stack align="center" spacing={"xs"}>
-            <ButtonLihatReportLainnya komentarId={e?.forum_KomentarId} />
+            <ButtonLihatReportLainnya komentarId={e?.Forum_Komentar.id} />
           </Stack>
         </td>
       </tr>

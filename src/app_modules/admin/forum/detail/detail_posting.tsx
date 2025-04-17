@@ -45,6 +45,7 @@ import { apiAdminGetKomentarForumById } from "../lib/api_fetch_admin_forum";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import moment from "moment";
 import "moment/locale/id";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 
 export default function AdminForum_DetailPosting({
   dataPosting,
@@ -72,10 +73,11 @@ function TableKomentar({ postingId }: { postingId: string }) {
   const [isSearch, setSearch] = useState("");
   const [isLoadingReport, setLoadingReport] = useState(false);
   const [idData, setIdData] = useState("");
+  const [isDelete, setDelete] = useState(false);
 
   useShallowEffect(() => {
     handleLoadData();
-  }, []);
+  }, [isSearch, activePage, isDelete]);
 
   async function handleLoadData() {
     try {
@@ -87,6 +89,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
 
       if (response && response.success) {
         setData(response.data.data);
+        setDelete(false);
       }
     } catch (error) {
       console.error("Invalid data format received:", error);
@@ -97,24 +100,10 @@ function TableKomentar({ postingId }: { postingId: string }) {
   async function onSearch(s: string) {
     setSearch(s);
     setActivePage(1);
-    const loadData = await adminForum_getListKomentarById({
-      postingId: postingId,
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
   async function onPageClick(p: any) {
     setActivePage(p);
-    const loadData = await adminForum_getListKomentarById({
-      postingId: postingId,
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
   const rowTable = () => {
@@ -131,7 +120,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
     }
 
     return data?.map((e, i) => (
-      <tr key={i}>
+      <tr key={i} >
         <td>
           <Box c={AdminColor.white} w={100}>
             <Text lineClamp={1}>{e?.Author?.username}</Text>
@@ -158,7 +147,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
           </Box>
         </td>
         <td>
-          <Center w={100}>
+          <Center>
             <Text
               c={
                 e?.Forum_ReportKomentar?.length >= 3 ? "red" : AdminColor.white
@@ -171,7 +160,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
           </Center>
         </td>
         <td>
-          <Stack align="center" spacing={"xs"} w={200}>
+          <Stack align="center" spacing={"xs"}>
             <Button
               disabled={e?.Forum_ReportKomentar.length <= 0 ? true : false}
               loaderPosition="center"
@@ -188,7 +177,12 @@ function TableKomentar({ postingId }: { postingId: string }) {
             >
               Lihat Report
             </Button>
-            <ButtonDeleteKomentar komentarId={e?.id} />
+            <ButtonDeleteKomentar
+              komentarId={e?.id}
+              onSuccessDelete={(val) => {
+                setDelete(val);
+              }}
+            />
           </Stack>
         </td>
       </tr>
@@ -269,7 +263,13 @@ function TableKomentar({ postingId }: { postingId: string }) {
   );
 }
 
-function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
+function ButtonDeleteKomentar({
+  komentarId,
+  onSuccessDelete,
+}: {
+  komentarId: string;
+  onSuccessDelete: (val: any) => void;
+}) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
   const [loadindDel, setLoadingDel] = useState(false);
@@ -280,7 +280,9 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
       if (res.status === 200) {
         setLoadingDel(false);
         setLoadingDel2(false);
+        onSuccessDelete(true);
         ComponentGlobal_NotifikasiBerhasil(res.message);
+
         close();
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
@@ -289,9 +291,15 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
   }
   return (
     <>
-      <Modal opened={opened} onClose={close} centered withCloseButton={false}>
+      <Admin_ComponentModal
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+      >
         <Stack>
-          <Title order={5}>Anda yakin menghapus komentar ini ?</Title>
+          <Title order={5} c={AdminColor.white}>
+            Anda yakin menghapus komentar ini ?
+          </Title>
           <Group position="center">
             <Button
               radius={"xl"}
@@ -304,7 +312,7 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingDel2 ? true : false}
+              loading={loadingDel2}
               radius={"xl"}
               color="red"
               onClick={() => {
@@ -316,10 +324,10 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </Admin_ComponentModal>
 
       <Button
-        loading={loadindDel ? true : false}
+        loading={loadindDel}
         loaderPosition="center"
         radius={"xl"}
         w={170}
