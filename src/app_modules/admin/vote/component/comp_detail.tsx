@@ -1,8 +1,9 @@
 "use client";
 
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
-import { Badge, Grid, Stack, Text, Title } from "@mantine/core";
+import { Badge, ScrollArea, Stack, Text } from "@mantine/core";
 import moment from "moment";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 interface Props {
   data: MODEL_VOTING;
@@ -35,7 +36,11 @@ export function AdminVoting_ComponentDetail({ data }: Props) {
     {
       title: "Status",
       value: (
-        <Badge variant="light">{data.Voting_Status.name === "Publish" && cekHari < 0 ? "Riwayat" : data.Voting_Status.name}</Badge>
+        <Badge variant="light">
+          {data.Voting_Status.name === "Publish" && cekHari < 0
+            ? "Riwayat"
+            : data.Voting_Status.name}
+        </Badge>
       ),
     },
   ];
@@ -44,34 +49,20 @@ export function AdminVoting_ComponentDetail({ data }: Props) {
     <>
       <Stack>
         {listData.map((item, index) => (
-          <Grid key={index}>
-            <Grid.Col span={3}>
-              <Text>{item.title}</Text>
-            </Grid.Col>
-            <Grid.Col span={1}>
-              <Text>:</Text>
-            </Grid.Col>
-            <Grid.Col span={"auto"}>
-              <Text>{item.value}</Text>
-            </Grid.Col>
-          </Grid>
+          <Admin_V3_ComponentDetail item={item} key={index} />
         ))}
-
-        <Grid>
-          <Grid.Col span={3}>
-            <Text>Daftar Pilihan</Text>
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>:</Text>
-          </Grid.Col>
-          <Grid.Col span={"auto"}>
-            <Stack>
-              {data.Voting_DaftarNamaVote.map((e, i) => (
-                <Text key={i}>- {e.value}</Text>
-              ))}
-            </Stack>
-          </Grid.Col>
-        </Grid>
+        <Admin_V3_ComponentDetail
+          item={{
+            label: <Text>Daftar Pilihan</Text>,
+            value: (
+              <Stack>
+                {data.Voting_DaftarNamaVote.map((e, i) => (
+                  <Text key={i}>- {e.value}</Text>
+                ))}
+              </Stack>
+            ),
+          }}
+        />
       </Stack>
     </>
   );

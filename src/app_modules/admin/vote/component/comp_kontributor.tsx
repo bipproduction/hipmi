@@ -13,7 +13,7 @@ import {
   ScrollArea,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
@@ -21,6 +21,8 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
 import { apiGetAdminKontibutorVotingById } from "../lib/api_fetch_admin_voting";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { MainColor } from "@/app_modules/_global/color";
 
 interface Props {
   dataHasil: MODEL_VOTING_DAFTAR_NAMA_VOTE[];
@@ -55,20 +57,23 @@ export function AdminVoting_ComponentKontributorList({ dataHasil }: Props) {
             Hasil Kontributor
           </Title>
 
-          <Grid justify="center">
+          <Admin_V3_ComponentBreakpoint
+            cols={dataHasil.length}
+            sm={2}
+            md={2}
+            lg={2}
+          >
             {dataHasil?.map((e: MODEL_VOTING_DAFTAR_NAMA_VOTE, i) => (
-              <Grid.Col span={3} key={i}>
-                <Stack p={"md"} align="center">
-                  <Paper withBorder p={"xl"}>
-                    <Text fz={30}>{e.jumlah}</Text>
-                  </Paper>
-                  <Text lineClamp={2} fz={"sm"}>
-                    {e.value}
-                  </Text>
-                </Stack>
-              </Grid.Col>
+              <Stack key={i} p={"md"} align="center">
+                <Paper withBorder p={"xl"}>
+                  <Text fz={30}>{e.jumlah}</Text>
+                </Paper>
+                <Text lineClamp={2} fz={"sm"}>
+                  {e.value}
+                </Text>
+              </Stack>
             ))}
-          </Grid>
+          </Admin_V3_ComponentBreakpoint>
 
           {!data ? (
             <CustomSkeleton height={100} />
@@ -79,19 +84,31 @@ export function AdminVoting_ComponentKontributorList({ dataHasil }: Props) {
               </Text>
             </Center>
           ) : (
-            <Box h={450} px={"sm"}>
-              <ScrollArea h={430} w={"100%"} p={"sm"}>
+            <Box h={450}>
+              <ScrollArea h={430} w={"100%"}>
                 <Stack p={"sm"}>
                   {data?.map((e, i) => (
-                    <Stack spacing={"xs"} key={i}>
+                    <Stack
+                      spacing={"xs"}
+                      key={i}
+                      bg={MainColor.soft_darkblue}
+                      p={"sm"}
+                    >
                       <Grid>
                         <Grid.Col span={5}>
-                          <Stack justify="center" h={"100%"}>
-                            <Text truncate fz={"sm"} fw={"bold"}>
-                              {e ? e?.Author?.username : "Nama kontributor"}
-                            </Text>
+                          <Stack justify="center" h={"100%"} align="center">
+                            <Box w={100}>
+                              <Text
+                                truncate
+                                fz={"sm"}
+                                fw={"bold"}
+                              >
+                                {e ? e?.Author?.username : "Nama kontributor"}
+                              </Text>
+                            </Box>
                           </Stack>
                         </Grid.Col>
+
                         <Grid.Col span={5}>
                           <Center>
                             <Badge>
@@ -109,7 +126,7 @@ export function AdminVoting_ComponentKontributorList({ dataHasil }: Props) {
                           </Center>
                         </Grid.Col>
                       </Grid>
-                      <Divider />
+                      {/* <Divider /> */}
                     </Stack>
                   ))}
                 </Stack>

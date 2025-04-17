@@ -15,7 +15,7 @@ export function Admin_V3_ComponentDetail({
 
         <Grid.Col span={"auto"}>
           <Text>
-            {item.value} 
+            {item.value}
           </Text>
         </Grid.Col>
       </Grid>
