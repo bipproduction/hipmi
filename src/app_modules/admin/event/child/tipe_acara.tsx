@@ -1,9 +1,12 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { apiGetAdminEventTipeAcara } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Button,
@@ -11,24 +14,22 @@ import {
   Group,
   Modal,
   Paper,
-  SimpleGrid,
   Stack,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconCirclePlus, IconEditCircle, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconEditCircle, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
 import { AdminEvent_funCreateTipeAcara } from "../fun/create/fun_create_tipe_acara";
 import { AdminEvent_funEditActivationTipeAcaraById } from "../fun/edit/fun_edit_activation_tipe_acara";
 import { AdminEvent_funEditTipeAcara } from "../fun/edit/fun_edit_tipe_acara";
 import { AdminEvent_getListTipeAcara } from "../fun/get/get_list_tipe_acara";
-import { apiGetAdminEventTipeAcara } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { clientLogger } from "@/util/clientLogger";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminEvent_DetailTipeAcara() {
   return (
@@ -51,7 +52,10 @@ function DetailTipeAcara() {
     id: "",
     name: "",
   });
-  const [openCreate, setOpenCreate] = useState(false);
+  const [openCreate, setOpenCreate] = useState(true);
+
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
 
   useShallowEffect(() => {
     onLoadData();
@@ -91,7 +95,12 @@ function DetailTipeAcara() {
         </Stack>
       </Modal>
 
-      <Group
+      <ComponentAdminGlobal_TitlePage
+        name="Tipe Acara"
+        color={AdminColor.softBlue}
+      />
+
+      {/* <Group
         position="apart"
         bg={AdminColor.softBlue}
         p={"xs"}
@@ -109,68 +118,17 @@ function DetailTipeAcara() {
         >
           Tambah
         </Button>
-      </Group>
+      </Group> */}
 
       {!tipe ? (
-        <CustomSkeleton height={400} width={"60%"} />
+        <Admin_V3_ComponentSkeletonBreakpoint />
       ) : (
-        <SimpleGrid
-          cols={2}
-          spacing="lg"
-          breakpoints={[
-            { maxWidth: "62rem", cols: 4, spacing: "lg" },
-            { maxWidth: "48rem", cols: 2, spacing: "sm" },
-            { maxWidth: "36rem", cols: 1, spacing: "sm" },
-          ]}
-        >
+        <Admin_V3_ComponentBreakpoint md={2} lg={2}>
           <div>
-            <Paper p={"md"} bg={AdminColor.softBlue}>
-              <Stack>
-                <Title c={AdminColor.white} order={3}>Tipe Acara Yang Tersedia </Title>
-                <Stack px={"md"}>
-                  {tipe.map((e, i) => (
-                    <Stack key={e.id} spacing={"xs"}>
-                      <Group position="apart">
-                        <Text c={AdminColor.white}>{e.name}</Text>
-                        <Group>
-                          <ActionIcon
-                            variant="transparent"
-                            onClick={() => {
-                              setOpenEditor(true);
-                              setOpenCreate(false);
-                              setEdit(e);
-                            }}
-                          >
-                            <IconEditCircle color="green" />
-                          </ActionIcon>{" "}
-                          <ActionIcon
-                            variant="transparent"
-                            onClick={() => {
-                              open();
-                              setHapusTipe({
-                                ...hapusTipe,
-                                id: e.id,
-                                name: e.name,
-                              });
-                            }}
-                          >
-                            <IconTrash color="red" />
-                          </ActionIcon>
-                        </Group>
-                      </Group>
-                      <Divider />
-                    </Stack>
-                  ))}
-                </Stack>
-              </Stack>
-            </Paper>
-          </div>
-
-          {openCreate ? (
-            <div>
-              <Paper p={"sm"} bg={AdminColor.softBlue} shadow="lg" >
+            {openCreate && (
+              <Paper p={"sm"} bg={AdminColor.softBlue} shadow="lg">
                 <Stack>
-                    <TextInput
+                  <TextInput
                     styles={{ label: { color: AdminColor.white } }}
                     value={name ? name : ""}
                     label="Masukan Tipe"
@@ -180,9 +138,9 @@ function DetailTipeAcara() {
                     }}
                   />
                   <Group position="right">
-                    <Button radius={"xl"} onClick={() => setOpenCreate(false)}>
+                    {/* <Button radius={"xl"} onClick={() => setOpenCreate(false)}>
                       Batal
-                    </Button>
+                    </Button> */}
                     <Button
                       disabled={!name}
                       style={{
@@ -197,13 +155,9 @@ function DetailTipeAcara() {
                   </Group>
                 </Stack>
               </Paper>
-            </div>
-          ) : (
-            ""
-          )}
+            )}
 
-          <div>
-            {openEditor ? (
+            {openEditor && (
               <Paper p={"sm"} bg={AdminColor.softBlue}>
                 <Stack>
                   <TextInput
@@ -214,7 +168,7 @@ function DetailTipeAcara() {
                     onChange={(val) => {
                       setEdit({
                         ...(edit as any),
-                        namaBank: val.target.value,
+                        name: val.target.value,
                       });
                     }}
                   />
@@ -222,11 +176,15 @@ function DetailTipeAcara() {
                     <Group position="apart">
                       <Button
                         radius={"xl"}
-                        onClick={() => setOpenEditor(false)}
+                        onClick={() => {
+                          setOpenEditor(false), setOpenCreate(true);
+                        }}
                       >
                         Batal
                       </Button>
                       <Button
+                        loaderPosition="center"
+
                         disabled={!edit?.name}
                         style={{
                           transition: "all 0.5s ease",
@@ -234,7 +192,13 @@ function DetailTipeAcara() {
                         radius={"xl"}
                         color="green"
                         onClick={() =>
-                          onUpdate(edit?.id, edit?.name, setTipe, setOpenEditor)
+                          onUpdate(
+                            edit?.id,
+                            edit?.name,
+                            setTipe,
+                            setOpenEditor,
+                            setOpenCreate
+                          )
                         }
                       >
                         Update
@@ -243,11 +207,58 @@ function DetailTipeAcara() {
                   </Group>
                 </Stack>
               </Paper>
-            ) : (
-              ""
             )}
           </div>
-        </SimpleGrid>
+
+          <div>
+            <Paper p={"md"} bg={AdminColor.softBlue}>
+              <Stack>
+                <Title c={AdminColor.white} order={3}>
+                  Tipe Acara Yang Tersedia{" "}
+                </Title>
+                <Stack px={"md"}>
+                  <Stack>
+                    {tipe.map((e, i) => (
+                      <div key={i}>
+                        <Admin_V3_ComponentBreakpoint allCols={2}>
+                          <Text c={AdminColor.white} lineClamp={1}>
+                            {e.name}
+                          </Text>
+                          <Group position="right">
+                            <ActionIcon
+                              variant="transparent"
+                              onClick={() => {
+                                setOpenEditor(true);
+                                setOpenCreate(false);
+                                setEdit(e);
+                              }}
+                            >
+                              <IconEdit color={AdminColor.green} />
+                            </ActionIcon>{" "}
+                            {/* <ActionIcon
+                         variant="transparent"
+                         onClick={() => {
+                           open();
+                           setHapusTipe({
+                             ...hapusTipe,
+                             id: e.id,
+                             name: e.name,
+                           });
+                         }}
+                       >
+                         <IconTrash color="red" />
+                       </ActionIcon> */}
+                          </Group>
+                        </Admin_V3_ComponentBreakpoint>
+                        <Divider />
+                      </div>
+                    ))}
+                  </Stack>
+                </Stack>
+              </Stack>
+            </Paper>
+          </div>
+        </Admin_V3_ComponentBreakpoint>
       )}
     </>
   );
@@ -270,13 +281,20 @@ async function onSave(name: string, setName: any, setTipe: any) {
   });
 }
 
-async function onUpdate(id: any, edit: any, setTipe: any, setOpenEditor: any) {
+async function onUpdate(
+  id: any,
+  edit: any,
+  setTipe: any,
+  setOpenEditor: any,
+  setOpenCreate: any
+) {
   await AdminEvent_funEditTipeAcara(id, edit).then(async (res) => {
     if (res.status === 200) {
       await AdminEvent_getListTipeAcara().then((val) => {
         setTipe(val);
         ComponentGlobal_NotifikasiBerhasil(res.message);
         setOpenEditor(false);
+        setOpenCreate(true);
       });
     } else {
       ComponentGlobal_NotifikasiGagal(res.message);

@@ -3,6 +3,7 @@ import { Badge, Grid, Stack, Text } from "@mantine/core";
 import moment from "moment";
 import "moment/locale/id";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 function AdminEvent_ComponentDetailData({
   data,
@@ -62,17 +63,7 @@ function AdminEvent_ComponentDetailData({
   return (
     <>
       {listData.map((item, index) => (
-        <Grid key={index}>
-          <Grid.Col span={3}>
-            <Text fw={"bold"}>{item.label}</Text>
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>:</Text>
-          </Grid.Col>
-          <Grid.Col span={"auto"}>
-            <Text>{item.value}</Text>
-          </Grid.Col>
-        </Grid>
+        <Admin_V3_ComponentDetail item={item} key={index} />
       ))}
     </>
   );

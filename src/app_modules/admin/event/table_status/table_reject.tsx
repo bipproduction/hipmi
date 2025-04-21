@@ -14,7 +14,6 @@ import {
   Center,
   Group,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Stack,
@@ -30,6 +29,7 @@ import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 
 export default function AdminEvent_TableReject() {
@@ -282,15 +282,13 @@ function TableStatus() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

@@ -14,6 +14,7 @@ import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data"
 import { AdminEvent_ViewDetailPublish } from "../_view/view_detail_publish";
 import { AdminEvent_ViewDetailReview } from "../_view/view_detail_review";
 import { AdminEvent_ViewDetailReject } from "../_view/view_detail_reject";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
 
 export function AdminEvent_UiNewDetail() {
   const params = useParams<{ id: string }>();
@@ -49,9 +50,7 @@ export function AdminEvent_UiNewDetail() {
         <AdminGlobal_ComponentBackButton />
 
         {data === undefined ? (
-          <SimpleGrid cols={2}>
-            <CustomSkeleton h={500} />
-          </SimpleGrid>
+         <Admin_V3_ComponentSkeletonBreakpoint/>
         ) : !data ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : data.EventMaster_Status.name === "Publish" ? (

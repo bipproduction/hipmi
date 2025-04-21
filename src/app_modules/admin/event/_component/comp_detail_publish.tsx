@@ -3,6 +3,7 @@ import { Button, Grid, Stack, Text } from "@mantine/core";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
 import AdminEvent_ComponentDetailData from "./comp_detail_data";
 import QRCode from "react-qr-code";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 function AdminEvent_ComponentDetailPublish({ data }: { data: MODEL_EVENT }) {
   const handleDownloadQR = () => {
@@ -27,7 +28,19 @@ function AdminEvent_ComponentDetailPublish({ data }: { data: MODEL_EVENT }) {
   const donwloadButton = () => {
     return (
       <>
-        <Grid>
+        <Admin_V3_ComponentDetail
+          item={{
+            title: "QR Code",
+            value: (
+              <QRCode
+                id={data.id}
+                style={{ height: 100, width: 100 }}
+                value={`${origin}/dev/event/konfirmasi/${data.id}`}
+              />
+            ),
+          }}
+        />
+        {/* <Grid>
           <Grid.Col span={3}>
             <Text fw={"bold"}>QR Code</Text>
           </Grid.Col>
@@ -35,14 +48,13 @@ function AdminEvent_ComponentDetailPublish({ data }: { data: MODEL_EVENT }) {
             <Text>:</Text>
           </Grid.Col>
           <Grid.Col span={"auto"}>
-            {/* <Button onClick={handleDownloadQR}>Download QR</Button> */}
             <QRCode
               id={data.id}
               style={{ height: 100, width: 100 }}
               value={`${origin}/dev/event/konfirmasi/${data.id}`}
             />
           </Grid.Col>
-        </Grid>
+        </Grid> */}
       </>
     );
   };
