@@ -1,40 +1,40 @@
 "use client";
 
-import {
-  Stack,
-  Group,
-  Title,
-  Paper,
-  ScrollArea,
-  Center,
-  Pagination,
-  Table,
-  Grid,
-  TextInput,
-  Button,
-  Text,
-  ActionIcon,
-  Overlay,
-  Switch,
-  Modal,
-} from "@mantine/core";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { MODEL_NEW_DEFAULT_MASTER } from "@/app_modules/model_global/interface";
-import { useState } from "react";
-import { IconCirclePlus, IconEdit, IconTrash } from "@tabler/icons-react";
-import adminDonasi_funCreateKategori from "../fun/create/fun_create_kategori";
-import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
-import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
-import adminDonasi_getMasterKategori from "../fun/master/get_list_kategori";
-import adminDonasi_funDeleteKategori from "../fun/delete/fun_delete_by_id";
-import adminDonasi_funUpdatekategoriById from "../fun/update/fun_update_kategori_by_id";
-import _ from "lodash";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetAdminDonasiKategori } from "../lib/api_fetch_admin_donasi";
+import { MODEL_NEW_DEFAULT_MASTER } from "@/app_modules/model_global/interface";
 import { clientLogger } from "@/util/clientLogger";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Center,
+  Group,
+  Modal,
+  Paper,
+  ScrollArea,
+  Stack,
+  Switch,
+  Table,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconEdit } from "@tabler/icons-react";
+import _ from "lodash";
+import { useState } from "react";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
+import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import adminDonasi_funCreateKategori from "../fun/create/fun_create_kategori";
+import adminDonasi_funDeleteKategori from "../fun/delete/fun_delete_by_id";
+import adminDonasi_getMasterKategori from "../fun/master/get_list_kategori";
+import adminDonasi_funUpdatekategoriById from "../fun/update/fun_update_kategori_by_id";
+import { apiGetAdminDonasiKategori } from "../lib/api_fetch_admin_donasi";
 
 export default function AdminDonasi_TableKategori() {
   return (
@@ -50,7 +50,7 @@ export default function AdminDonasi_TableKategori() {
 function TableView() {
   const [data, setData] = useState<MODEL_NEW_DEFAULT_MASTER[] | null>(null);
   const [create, setCreate] = useState("");
-  const [isCreate, setIsCreate] = useState(false);
+  const [isCreate, setIsCreate] = useState(true);
 
   // const [kategoriId, setKategoriId] = useState("");
   const [updateKategori, setUpdateKategori] = useState({
@@ -70,16 +70,15 @@ function TableView() {
   }, []);
 
   async function onLoadData() {
-  try {
-    const response = await apiGetAdminDonasiKategori();
-    if (response) {
-
-      setData(response.data)
+    try {
+      const response = await apiGetAdminDonasiKategori();
+      if (response) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get kategori", error);
     }
-  } catch (error) {
-    clientLogger.error("Error get kategori" , error)
   }
-}
 
   async function onCreateNewKategori() {
     const tambahData = await adminDonasi_funCreateKategori({
@@ -96,7 +95,6 @@ function TableView() {
   }
 
   async function onChangeStatus() {
-    
     const del = await adminDonasi_funDeleteKategori({
       kategoriId: updateStatus.kategoriId,
       isActive: updateStatus.isActive as any,
@@ -123,6 +121,7 @@ function TableView() {
       const loadData = await adminDonasi_getMasterKategori();
       setData(loadData);
       setIsUpdate(false);
+      setIsCreate(true);
     } else {
       ComponentAdminGlobal_NotifikasiGagal(updt.message);
     }
@@ -138,14 +137,14 @@ function TableView() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white}>
+          <Box c={AccentColor.white}>
             <Text>{e?.name}</Text>
-          </Center>
+          </Box>
         </td>
         <td>
           <Center>
@@ -168,6 +167,7 @@ function TableView() {
         <td>
           <Group position="center">
             <ActionIcon
+              variant="transparent"
               onClick={() => {
                 setIsUpdate(true);
                 setIsCreate(false);
@@ -183,52 +183,139 @@ function TableView() {
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        {/* <pre>{JSON.stringify(listUser, null, 2)}</pre> */}
         <ComponentAdminGlobal_TitlePage
           name="Kategori"
           color={AdminColor.softBlue}
-          component={
-            <Button
-              w={120}
-              leftIcon={<IconCirclePlus />}
-              radius={"xl"}
-              onClick={() => {
-                setIsCreate(true);
-                setIsUpdate(false);
-              }}
-            >
-              Tambah
-            </Button>
-          }
+          // component={
+          //   <Button
+          //     w={120}
+          //     leftIcon={<IconCirclePlus />}
+          //     radius={"xl"}
+          //     onClick={() => {
+          //       setIsCreate(true);
+          //       setIsUpdate(false);
+          //     }}
+          //   >
+          //     Tambah
+          //   </Button>
+          // }
         />
-        {/* <Group
-          position="apart"
-          bg={"gray.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Kategori</Title>
-          <Button
-            w={120}
-            leftIcon={<IconCirclePlus />}
-            radius={"xl"}
-            onClick={() => {
-              setIsCreate(true);
-              setIsUpdate(false);
-            }}
-          >
-            Tambah
-          </Button>
-        </Group> */}
 
-        <Grid>
-          <Grid.Col span={"auto"}>
+        {!data ? (
+          <Admin_V3_ComponentSkeletonBreakpoint />
+        ) : (
+          <Admin_V3_ComponentBreakpoint md={2} lg={2}>
+            <div>
+              {isCreate && (
+                <Paper p={"md"} bg={AdminColor.softBlue}>
+                  <Stack>
+                    <TextInput
+                      value={create}
+                      label={
+                        <Title c={AdminColor.white} order={6}>
+                          Tambah Kategori
+                        </Title>
+                      }
+                      placeholder="Masukan kategori baru"
+                      onChange={(val) => {
+                        setCreate(val.currentTarget.value);
+                      }}
+                    />
+                    <Group position="right">
+                      {/* <Button
+                      style={{
+                        transition: "0.5s",
+                      }}
+                      radius={"xl"}
+                      onClick={() => {
+                        setIsCreate(false);
+                        setCreate("");
+                      }}
+                    >
+                      Batal
+                    </Button> */}
+                      <Button
+                        style={{
+                          transition: "0.5s",
+                        }}
+                        disabled={create === ""}
+                        radius={"xl"}
+                        color="teal"
+                        onClick={() => {
+                          onCreateNewKategori();
+                        }}
+                      >
+                        Simpan
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Paper>
+              )}
+
+              {isUpdate && (
+                <Paper
+                  p={"md"}
+                  bg={AdminColor.softBlue}
+                  style={{ transition: "1s" }}
+                >
+                  <Stack>
+                    <TextInput
+                      value={updateKategori.name}
+                      label={
+                        <Title c={AdminColor.white} order={6}>
+                          Update Kategori
+                        </Title>
+                      }
+                      placeholder="Update kategori"
+                      onChange={(val) => {
+                        const data = _.clone(updateKategori);
+                        setUpdateKategori({
+                          kategoriId: data.kategoriId,
+                          name: val.currentTarget.value,
+                        });
+                      }}
+                    />
+                    <Group position="right">
+                      <Button
+                        style={{
+                          transition: "0.5s",
+                        }}
+                        radius={"xl"}
+                        onClick={() => {
+                          setIsUpdate(false);
+                          setIsCreate(true);
+                          setUpdateKategori({
+                            kategoriId: "",
+                            name: "",
+                          });
+                        }}
+                      >
+                        Batal
+                      </Button>
+                      <Button
+                        disabled={updateKategori.name === "" ? true : false}
+                        style={{
+                          transition: "0.5s",
+                        }}
+                        color="green"
+                        radius={"xl"}
+                        onClick={() => {
+                          onUpdate();
+                        }}
+                      >
+                        Update
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Paper>
+              )}
+            </div>
+
             <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"70vh"}>
               <ScrollArea w={"100%"} h={"90%"}>
                 <Table
@@ -236,12 +323,11 @@ function TableView() {
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
-
                 >
                   <thead>
                     <tr>
                       <th>
-                        <Center c={AccentColor.white}>Kategori</Center>
+                        <Text c={AccentColor.white}>Kategori</Text>
                       </th>
                       <th>
                         <Center c={AccentColor.white}>Status</Center>
@@ -265,105 +351,8 @@ function TableView() {
                 />
               </Center> */}
             </Paper>
-          </Grid.Col>
-
-          <Grid.Col span={4}>
-            {isCreate ? (
-              <Paper p={"md"} bg={AdminColor.softBlue}>
-                <Stack>
-                  <TextInput
-                    value={create}
-                    label={<Title c={AdminColor.white} order={6}>Tambah Kategori</Title>}
-                    placeholder="Masukan kategori baru"
-                    onChange={(val) => {
-                      setCreate(val.currentTarget.value);
-                    }}
-                  />
-                  <Group position="right">
-                    <Button
-                      style={{
-                        transition: "0.5s",
-                      }}
-                      radius={"xl"}
-                      onClick={() => {
-                        setIsCreate(false);
-                        setCreate("");
-                      }}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      style={{
-                        transition: "0.5s",
-                      }}
-                      disabled={create === "" ? true : false}
-                      radius={"xl"}
-                      color="teal"
-                      onClick={() => {
-                        onCreateNewKategori();
-                      }}
-                    >
-                      Simpan
-                    </Button>
-                  </Group>
-                </Stack>
-              </Paper>
-            ) : (
-              ""
-            )}
-
-            {isUpdate ? (
-              <Paper p={"md"} bg={AdminColor.softBlue} style={{ transition: "1s" }}>
-                <Stack>
-                  <TextInput
-                    value={updateKategori.name}
-                    label={<Title c={AdminColor.white} order={6}>Update Kategori</Title>}
-                    placeholder="Update kategori"
-                    onChange={(val) => {
-                      const data = _.clone(updateKategori);
-                      setUpdateKategori({
-                        kategoriId: data.kategoriId,
-                        name: val.currentTarget.value,
-                      });
-                    }}
-                  />
-                  <Group position="right">
-                    <Button
-                      style={{
-                        transition: "0.5s",
-                      }}
-                      radius={"xl"}
-                      onClick={() => {
-                        setIsUpdate(false);
-                        setUpdateKategori({
-                          kategoriId: "",
-                          name: "",
-                        });
-                      }}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      disabled={updateKategori.name === "" ? true : false}
-                      style={{
-                        transition: "0.5s",
-                      }}
-                      color="green"
-                      radius={"xl"}
-                      onClick={() => {
-                        onUpdate();
-                      }}
-                    >
-                      Update
-                    </Button>
-                  </Group>
-                </Stack>
-              </Paper>
-            ) : (
-              ""
-            )}
-          </Grid.Col>
-        </Grid>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
 
       <Modal
