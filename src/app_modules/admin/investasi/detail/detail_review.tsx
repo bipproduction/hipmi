@@ -25,6 +25,11 @@ import { ComponentAdminInvestasi_UIDetailFile } from "../_component/ui_detail_fi
 import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
 import { adminInvestasi_funEditStatusPublishById } from "../fun/edit/fun_status_publish_by_id";
 import Admin_funRejectInvestasi from "../fun/fun_reject_investasi";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AdminInvestasi_ViewDetailData } from "../_view";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import { AdminInvestasi_ComponentNewDetailData } from "../_component/new_detail_data";
 
 export default function AdminInvestasi_DetailReview() {
   const params = useParams<{ id: string }>();
@@ -167,13 +172,10 @@ export default function AdminInvestasi_DetailReview() {
     }
   }
 
-  if (!data) {
-    return <SkeletonAdminInvestasi />;
-  }
-
   return (
     <>
-      <Stack px={"lg"}>
+      <Stack>
+        <ComponentAdminGlobal_HeaderTamplate name="Investasi: Review" />
         <Group position="apart">
           <AdminGlobal_ComponentBackButton />
 
@@ -199,7 +201,7 @@ export default function AdminInvestasi_DetailReview() {
           )}
         </Group>
 
-        <SimpleGrid
+        {/* <SimpleGrid
           cols={3}
           spacing="lg"
           breakpoints={[
@@ -208,24 +210,32 @@ export default function AdminInvestasi_DetailReview() {
             { maxWidth: "36rem", cols: 1, spacing: "sm" },
           ]}
         >
-          {/* Data Author */}
           <ComponentAdminInvestasi_DetailDataAuthor
             data={data?.author as any}
           />
 
-          {/* Data Foto */}
           <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId} />
 
-          {/* Data Detail */}
           <ComponentAdminInvestasi_DetailData data={data} />
-        </SimpleGrid>
+        </SimpleGrid> */}
 
-        <ComponentAdminInvestasi_UIDetailFile
-          title={data?.title}
-          dataProspektus={data?.ProspektusInvestasi}
-          listDokumen={data?.DokumenInvestasi}
-          prospektusFileId={data?.prospektusFileId}
-        />
+        {!data ? (
+          <Admin_V3_ComponentSkeletonBreakpoint />
+        ) : (
+          <Admin_V3_ComponentBreakpoint md={2} lg={2}>
+            <AdminInvestasi_ComponentNewDetailData data={data as any} />
+            {/* Data Foto */}
+            <Admin_V3_ComponentBreakpoint cols={1}>
+              <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId} />
+              <ComponentAdminInvestasi_UIDetailFile
+                title={data?.title}
+                dataProspektus={data?.ProspektusInvestasi}
+                listDokumen={data?.DokumenInvestasi}
+                prospektusFileId={data?.prospektusFileId}
+              />
+            </Admin_V3_ComponentBreakpoint>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
 
       <Admin_ComponentModalReport

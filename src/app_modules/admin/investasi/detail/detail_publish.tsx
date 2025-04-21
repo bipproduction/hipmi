@@ -1,25 +1,17 @@
 "use client";
 
-import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
-import { Button, Group, Stack, Tabs } from "@mantine/core";
+import { Button, Group, Stack } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
-import { useState } from "react";
+import { useAtom } from "jotai";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { gs_admin_invetasi_menu_publish } from "../_lib/global_state";
 import {
-  AdminInvestasi_ViewDaftarInvestor,
   AdminInvestasi_ViewDaftarTransaksi,
   AdminInvestasi_ViewDetailData,
 } from "../_view";
-import { useAtom } from "jotai";
-import { gs_admin_invetasi_menu_publish } from "../_lib/global_state";
-import { useParams } from "next/navigation";
-import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
-import { clientLogger } from "@/util/clientLogger";
-import { useShallowEffect } from "@mantine/hooks";
 
 export function AdminInvestasi_DetailPublish() {
-  const params = useParams<{ id: string }>();
-  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
   const [selectPage, setSelectPage] = useAtom(gs_admin_invetasi_menu_publish);
   const listPage = [
     {
@@ -39,31 +31,16 @@ export function AdminInvestasi_DetailPublish() {
     // },
   ];
 
-  useShallowEffect(() => {
-    loadInitialData()
-  }, []);
-  const loadInitialData = async () => {
-    try {
-      const response = await apiGetAdminInvestasiById({
-        id: params.id
-      })
-
-      if (response?.success && response?.data) {
-        setData(response.data)
-      }
-    } catch (error) {
-      clientLogger.error("Invalid data format recieved:", error)
-      setData(null);
-    }
-  }
   return (
     <>
-      <Stack >
+      <Stack>
+        <ComponentAdminGlobal_HeaderTamplate name={"Investasi: Publish"} />
         <AdminGlobal_ComponentBackButton />
 
         <Group>
           {listPage.map((e) => (
-            <Button variant="outline"
+            <Button
+              variant="outline"
               key={e.id}
               color={selectPage == e.id ? "green" : "gray"}
               radius={"xl"}
@@ -77,13 +54,8 @@ export function AdminInvestasi_DetailPublish() {
           ))}
         </Group>
 
-        {selectPage == "1" ? (
-          <AdminInvestasi_ViewDetailData data={data as any} />
-        ) : null}
-        {selectPage == "2" ? (
-          <AdminInvestasi_ViewDaftarTransaksi
-          />
-        ) : null}
+        {selectPage == "1" ? <AdminInvestasi_ViewDetailData /> : null}
+        {selectPage == "2" ? <AdminInvestasi_ViewDaftarTransaksi /> : null}
       </Stack>
     </>
   );

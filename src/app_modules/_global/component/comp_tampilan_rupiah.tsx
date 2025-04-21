@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { MantineStyleSystemProps, SystemProp, Text } from "@mantine/core";
 import { MainColor } from "../color";
 
 export default function ComponentGlobal_TampilanRupiah({
@@ -15,7 +15,7 @@ export default function ComponentGlobal_TampilanRupiah({
   return (
     <>
       <Text
-        fw={fontWeight ? fontWeight : "bold"}
+        fw={fontWeight ?? "bold"}
         fz={fontSize ? fontSize : "md"}
         style={{
           color: color ? color : MainColor.white,
