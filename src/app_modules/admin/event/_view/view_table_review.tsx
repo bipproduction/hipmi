@@ -50,6 +50,7 @@ import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_rejec
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminEvent_ComponentTableReview() {
   const [data, setData] = useState<MODEL_EVENT[] | null>(null);
@@ -399,11 +400,7 @@ export default function AdminEvent_ComponentTableReview() {
             )}
 
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -412,7 +409,7 @@ export default function AdminEvent_ComponentTableReview() {
                     <th>
                       <Center c={AdminColor.white}>Judul</Center>
                     </th>
-                   
+
                     <th>
                       <Center c={AdminColor.white}>
                         Tanggal & Waktu Mulai
@@ -432,15 +429,13 @@ export default function AdminEvent_ComponentTableReview() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
+              <Admin_V3_ComponentPaginationBreakpoint
                 value={activePage}
                 total={isNPage}
                 onChange={(val) => {
                   onPageClick(val);
                 }}
               />
-            </Center>
           </Paper>
         )}
       </Stack>

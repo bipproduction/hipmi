@@ -77,7 +77,6 @@
 //     }
 //   }
 
-
 //   const loadStatus = async () => {
 //     try {
 //       const response = await apiGetMasterStatusTransaksi()
@@ -103,7 +102,7 @@
 //     setActivePage(page);
 //     setData(loadData.data as any);
 //     setNPage(loadData.nPage);
-    
+
 //   }
 
 //   async function onSelected(selectStatus: any) {
@@ -241,7 +240,7 @@
 //               data={listStatus?.map(status => ({
 //                 value: status.id,
 //                 label: status.name,
-                
+
 //               })) || []}
 //               onChange={(val: any) => {
 //                 console.log(val)
@@ -350,11 +349,13 @@ import {
   ComponentAdminGlobal_TampilanRupiah,
   ComponentAdminGlobal_TitlePage,
 } from "@/app_modules/admin/_admin_global/_component";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   MODEL_INVOICE_INVESTASI,
   MODEL_STATUS_INVOICE_INVESTASI,
 } from "@/app_modules/investasi/_lib/interface";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
@@ -362,21 +363,19 @@ import {
   Button,
   Center,
   Group,
-  Pagination,
   Paper,
   ScrollArea,
   Select,
   Stack,
   Table,
-  Text,
+  Text
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconEyeCheck, IconReload } from "@tabler/icons-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiGetAdminAllTransaksiById } from "../../_lib/api_fetch_admin_investasi";
-import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { AdminInvestasi_ComponentCekBuktiTransfer } from "../../_component/new_button/button_cek_bukti_transfer";
+import { apiGetAdminAllTransaksiById } from "../../_lib/api_fetch_admin_investasi";
 
 export function AdminInvestasi_ViewDaftarTransaksi() {
   const params = useParams<{ id: string }>();
@@ -627,15 +626,13 @@ export function AdminInvestasi_ViewDaftarTransaksi() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

@@ -1,32 +1,30 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import { clientLogger } from "@/util/clientLogger";
 import {
   Box,
   Button,
   Center,
-  Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconDownload, IconEyeCheck, IconSearch } from "@tabler/icons-react";
+import { IconDownload, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import QRCode from "react-qr-code";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminEvent_TablePublish() {
   return (
@@ -139,7 +137,7 @@ function TableStatus() {
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} >
+          <Center c={AdminColor.white}>
             <Box w={100}>
               <Text lineClamp={2}>{e.title}</Text>
             </Box>
@@ -290,13 +288,11 @@ function TableStatus() {
             </Table>
           </ScrollArea>
 
-          <Center mt="xl">
-            <Pagination
-              value={activePage}
-              total={isNPage}
-              onChange={onPageClick}
-            />
-          </Center>
+          <Admin_V3_ComponentPaginationBreakpoint
+            value={activePage}
+            total={isNPage}
+            onChange={onPageClick}
+          />
         </Paper>
       )}
     </Stack>

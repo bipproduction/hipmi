@@ -12,6 +12,7 @@ import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_adm
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 import AdminEvent_ComponentDetailData from "../_component/comp_detail_data";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 export function AdminEvent_ViewDetailReject({ data }: { data: MODEL_EVENT }) {
   const [newData, setNewData] = useState<MODEL_EVENT>(data);
@@ -53,7 +54,13 @@ export function AdminEvent_ViewDetailReject({ data }: { data: MODEL_EVENT }) {
       <Admin_ComponentBoxStyle>
         <Stack>
           <AdminEvent_ComponentDetailData data={newData} />
-          <Grid>
+          <Admin_V3_ComponentDetail
+          item={{
+            title: "Catatan report",
+            value: newData.catatan
+          }}
+          />
+          {/* <Grid>
             <Grid.Col span={3}>
               <Text fw={"bold"}>Catatan report</Text>
             </Grid.Col>
@@ -63,7 +70,7 @@ export function AdminEvent_ViewDetailReject({ data }: { data: MODEL_EVENT }) {
             <Grid.Col span={"auto"}>
               <Text>{newData.catatan}</Text>
             </Grid.Col>
-          </Grid>
+          </Grid> */}
 
           <Group mt={100} spacing={"xl"} position="center">
             <Button

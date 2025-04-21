@@ -1,16 +1,16 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Box,
-  Button,
   Center,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Stack,
@@ -20,17 +20,14 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconEyeEdit, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import adminDonasi_getListReject from "../fun/get/get_list_reject";
-import { IconEyeCheck } from "@tabler/icons-react";
-import { clientLogger } from "@/util/clientLogger";
-import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
 
 export default function AdminDonasi_TableReject() {
   return (
@@ -180,11 +177,7 @@ function TableStatus() {
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -210,17 +203,14 @@ function TableStatus() {
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            {/* <ScrollArea>
-          </ScrollArea> */}
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

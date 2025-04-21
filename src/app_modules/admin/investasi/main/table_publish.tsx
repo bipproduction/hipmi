@@ -3,6 +3,7 @@
 import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import {
+  Box,
   Button,
   Center,
   Group,
@@ -38,6 +39,7 @@ import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi"
 import { useShallowEffect } from "@mantine/hooks";
 import { clientLogger } from "@/util/clientLogger";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function Admin_TablePublishInvestasi() {
   return (
@@ -114,47 +116,47 @@ function TableView() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center >
+          <Box w={100}>
             <Text c={AccentColor.white} lineClamp={1}>
               {e.author.username}
             </Text>
-          </Center>
+          </Box>
         </td>
         <td>
-          <Center >
+          <Box w={150}>
             <Text c={AccentColor.white} lineClamp={1}>
               {e.title}
             </Text>
-          </Center>
+          </Box>
         </td>
         <td>
-          <Center c={AccentColor.white} >
+          <Center c={AccentColor.white}>
             {_.toNumber(e.progress).toFixed(2)} %
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} >
+          <Center c={AccentColor.white}>
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+e.sisaLembar)}
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} >
+          <Center c={AccentColor.white}>
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+e.totalLembar)}
           </Center>
         </td>
         <td>
-          <Center >
+          <Center>
             <Text c={AccentColor.white} lineClamp={1}>
               {e.Investasi_Invoice.length}
             </Text>
           </Center>
         </td>
         <td>
-          <Center >
+          <Center>
             <Button
               loading={isLoading && idData === e.id}
               loaderPosition="center"
@@ -227,54 +229,38 @@ function TableView() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Username
-                      </Center>
+                      <Text c={AccentColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Nama Proyek
-                      </Center>
+                      <Text c={AccentColor.white}>Nama Proyek</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Progres
-                      </Center>
+                      <Center c={AccentColor.white}>Progres</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Sisa Saham
-                      </Center>
+                      <Center c={AccentColor.white}>Sisa Saham</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Total Saham
-                      </Center>
+                      <Center c={AccentColor.white}>Total Saham</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Validasi
-                      </Center>
+                      <Center c={AccentColor.white}>Validasi</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} >
-                        Aksi
-                      </Center>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
