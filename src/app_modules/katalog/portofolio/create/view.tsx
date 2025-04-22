@@ -13,7 +13,7 @@ import {
   funGlobal_UploadToStorage,
 } from "@/app_modules/_global/fun";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { BIDANG_BISNIS_OLD } from "@/app_modules/model_global/portofolio";
 import {
