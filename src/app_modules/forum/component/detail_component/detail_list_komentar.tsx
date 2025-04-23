@@ -4,6 +4,7 @@ import { Card, Divider, Spoiler, Stack, Text } from "@mantine/core";
 import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 import ComponentForum_KomentarAuthorNameOnHeader from "../komentar_component/komentar_author_header_name";
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function ComponentForum_KomentarView({
   data,
@@ -16,6 +17,30 @@ export default function ComponentForum_KomentarView({
   postingId: string;
   userLoginId: string;
 }) {
+  useShallowEffect(() => {
+   
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+    // .ql-editor img {
+    //   max-width: 40px !important;
+    //   max-height: 40px !important;
+    // }
+      .chat-content img {
+      max-width: 70px !important;
+      max-height: 70px !important;
+    }
+  `;
+    document.head.appendChild(style);
+
+    //  setQuillLoaded(true);
+
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <>
       <ComponentGlobal_CardStyles>
@@ -38,7 +63,10 @@ export default function ComponentForum_KomentarView({
                 maxHeight={100}
                 showLabel="tampilkan"
               >
-                <div dangerouslySetInnerHTML={{ __html: data.komentar }} />
+                <div
+                  className="chat-content"
+                  dangerouslySetInnerHTML={{ __html: data.komentar }}
+                />
               </Spoiler>
             ) : (
               ""

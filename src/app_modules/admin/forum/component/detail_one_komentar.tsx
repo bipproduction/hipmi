@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { Component_SetInnerHtml } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_POSTING,
@@ -46,7 +46,7 @@ export default function ComponentAdminForum_ViewOneDetailKomentar({
                 maxHeight={100}
                 showLabel="tampilkan"
               >
-                <Component_SetInnerHtml props={dataKomentar?.komentar} />
+                <Comp_DangerouslySetInnerHTML props={dataKomentar?.komentar} />
               </Spoiler>
             </Box>
           </Stack>

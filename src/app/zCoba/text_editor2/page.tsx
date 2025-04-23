@@ -70,12 +70,12 @@ export default function Page() {
     const style = document.createElement("style");
     style.textContent = `
     .ql-editor img {
-      max-width: 40px !important;
-      max-height: 40px !important;
+      max-width: 100px !important;
+      max-height: 100px !important;
     }
       .chat-content img {
-      max-width: 40px !important;
-      max-height: 40px !important;
+      max-width: 70px !important;
+      max-height: 70px !important;
     }
   `;
     document.head.appendChild(style);
