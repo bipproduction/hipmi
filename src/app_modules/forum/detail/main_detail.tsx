@@ -34,7 +34,9 @@ export default function Forum_MainDetail({
   const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING | null>(
     null
   );
-  const [listKomentar, setListKomentar] = useState<MODEL_FORUM_KOMENTAR[]>([]);
+  const [listKomentar, setListKomentar] = useState<
+    MODEL_FORUM_KOMENTAR[] | null
+  >(null);
   const [activePage, setActivePage] = useState(1);
   const [newKomentar, setNewKomentar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +132,7 @@ export default function Forum_MainDetail({
   return (
     <>
       <Stack>
-        {!dataPosting || !listKomentar ? (
+        {!dataPosting ? (
           <CustomSkeleton height={200} width={"100%"} />
         ) : (
           <ComponentForum_DetailForumView
@@ -158,7 +160,7 @@ export default function Forum_MainDetail({
           )
         )}
 
-        {!listKomentar.length && isLoading ? (
+        {!listKomentar ? (
           <Forum_SkeletonListKomentar />
         ) : _.isEmpty(listKomentar) ? (
           <ComponentGlobal_IsEmptyData text="Tidak ada komentar" />
@@ -172,7 +174,7 @@ export default function Forum_MainDetail({
                 </Center>
               )}
               data={listKomentar}
-              setData={setListKomentar}
+              setData={setListKomentar as any}
               moreData={handleMoreDataKomentar}
             >
               {(item) => (

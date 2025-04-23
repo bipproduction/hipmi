@@ -3,10 +3,10 @@ import Forum_MainDetail from "@/app_modules/forum/detail/main_detail";
 
 export default async function Page() {
   const userLoginId = await funGetUserIdByToken();
-
   return (
     <>
       <Forum_MainDetail userLoginId={userLoginId as string} />
+      {/* <Forum_V3_MainDetail userLoginId={userLoginId as string} /> */}
     </>
   );
 }

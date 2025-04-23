@@ -75,3 +75,8 @@ export interface MODEL_FORUM_REPORT_KOMENTAR {
   userId: string;
   User: MODEL_USER;
 }
+
+export type CommentItem = {
+  deskripsi: string;
+  // Add any other properties that CommentItem should have
+};
