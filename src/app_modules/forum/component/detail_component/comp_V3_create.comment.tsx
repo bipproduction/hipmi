@@ -2,8 +2,12 @@
 
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { listStiker } from "@/app_modules/_global/lib/stiker";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { UIGlobal_Modal } from "@/app_modules/_global/ui";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
 import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
@@ -13,7 +17,6 @@ import {
   Button,
   Group,
   Image,
-  Modal,
   Paper,
   ScrollArea,
   SimpleGrid,
@@ -21,20 +24,15 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { IconMoodSmileFilled, IconX } from "@tabler/icons-react";
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { forum_funCreateKomentar } from "../../fun/create/fun_create_komentar";
 import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_POSTING,
 } from "../../model/interface";
-import dynamic from "next/dynamic";
-import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { listStiker } from "@/app_modules/_global/lib/stiker";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import { IconMoodSmileFilled, IconX } from "@tabler/icons-react";
 
 const ReactQuill = dynamic(
   async () => {
@@ -54,9 +52,6 @@ const ReactQuill = dynamic(
   }
 );
 
-type ChatItem = {
-  content: string; // HTML content including text and stickers
-};
 export default function Forum_V3_CreateKomentar({
   postingId,
   data,
@@ -299,15 +294,11 @@ export default function Forum_V3_CreateKomentar({
           </Paper>
         )}
 
-        {/* <Text c="white">{JSON.stringify(editorContent, null, 2)}</Text> */}
-
-        {/* Sticker Modal */}
-        <Modal
+        <UIGlobal_Modal
           opened={opened}
-          onClose={close}
+          close={close}
           title="Pilih Stiker"
-          size="md"
-          centered
+          closeButton
         >
           <SimpleGrid cols={3} spacing="md">
             {listStiker.map((item) => (
@@ -325,36 +316,7 @@ export default function Forum_V3_CreateKomentar({
               </Box>
             ))}
           </SimpleGrid>
-        </Modal>
-
-        {/* <Group position="apart">
-          <ComponentGlobal_InputCountDown
-            maxInput={500}
-            lengthInput={editorContent.length}
-          />
-
-          <Button
-            style={{
-              transition: "0.5s",
-            }}
-            disabled={
-              editorContent === "" ||
-              editorContent === "<p><br></p>" ||
-              editorContent.length > 500
-                ? true
-                : false
-            }
-            bg={MainColor.yellow}
-            color={"yellow"}
-            c="black"
-            loaderPosition="center"
-            loading={loading}
-            radius={"xl"}
-            onClick={() => onComment()}
-          >
-            Balas
-          </Button>
-        </Group> */}
+        </UIGlobal_Modal>
       </Stack>
     </>
   );

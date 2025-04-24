@@ -2,7 +2,7 @@
 
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
-import { ComponentTextEditor } from "@/app_modules/_global/component/new/new_text_editor";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -45,7 +45,7 @@ export default function Forum_EditPosting() {
   return (
     <>
       <Stack>
-        <ComponentTextEditor
+        <Component_V3_TextEditor
           data={data.diskusi}
           onSetData={(value) => {
             setData({

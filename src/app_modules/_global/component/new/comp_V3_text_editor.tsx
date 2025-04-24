@@ -9,7 +9,7 @@ import { maxInputLength } from "../../lib/maximal_setting";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 
-export function ComponentTextEditor({
+export function Component_V3_TextEditor({
   data,
   onSetData,
 //   lengthData,

@@ -2,7 +2,6 @@
 
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
-import { ComponentTextEditor } from "@/app_modules/_global/component/new/new_text_editor";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
@@ -12,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { forum_funCreate } from "../fun/create/fun_create";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 
 export default function Forum_NewCreate() {
   const [data, setData] = useState<string>("");
@@ -19,7 +19,7 @@ export default function Forum_NewCreate() {
 
   return (
     <Stack>
-      <ComponentTextEditor
+      <Component_V3_TextEditor
         data={data}
         onSetData={(val) => {
           setData(val);

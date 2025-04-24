@@ -5,6 +5,8 @@ import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconMessageCircle, IconMessageCircleX } from "@tabler/icons-react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_DetailHeader from "./detail_header";
+import { useShallowEffect } from "@mantine/hooks";
+import { Comp_V3_SetHtmlWithSticker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 
 export default function ComponentForum_DetailForumView({
   data,
@@ -17,6 +19,22 @@ export default function ComponentForum_DetailForumView({
   userLoginId: string;
   onLoadData: (val: any) => void;
 }) {
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <>
       <ComponentGlobal_CardStyles>
@@ -31,10 +49,13 @@ export default function ComponentForum_DetailForumView({
           />
 
           {/* CONTENT */}
-          <Box p={"lg"} >
+          <Box p={"lg"}>
             <Text fz={"sm"} color="white">
               {data?.diskusi ? (
-                <div dangerouslySetInnerHTML={{ __html: data?.diskusi }} />
+                <Comp_V3_SetHtmlWithSticker
+                  props={data?.diskusi}
+                  className="chat-content"
+                />
               ) : (
                 ""
               )}
