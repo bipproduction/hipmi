@@ -1,30 +1,30 @@
 "use client";
 
-import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminEventRiwayat } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import { clientLogger } from "@/util/clientLogger";
 import {
-  Button,
+  Box,
   Center,
   Group,
-  Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconCircleCheck, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { apiGetAdminEventRiwayat } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminEvent_Riwayat() {
   return (
@@ -96,45 +96,21 @@ function DetailRiwayat() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Button
-            loaderPosition="center"
-            loading={e.id === eventId && loading ? true : false}
-            color={"green"}
-            leftIcon={<IconCircleCheck />}
-            radius={"xl"}
-            onClick={() => {
-              setEventId(e.id);
-              setLoading(true);
-              router.push(RouterAdminEvent.detail_peserta + e.id);
-            }}
-          >
-            Lihat Peserta
-          </Button>
-        </td>
-
-        <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e?.Author?.username}</Text>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text lineClamp={2}>{e.title}</Text>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e.lokasi}</Text>
-          </Center>
-        </td>
-        <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e.EventMaster_TipeAcara.name}</Text>
-          </Center>
-        </td>
-
-        <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -149,7 +125,7 @@ function DetailRiwayat() {
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -165,14 +141,10 @@ function DetailRiwayat() {
         </td>
 
         <td>
-          <Center c={AdminColor.white} w={400}>
-            <Spoiler
-              hideLabel="sembunyikan"
-              maxHeight={50}
-              showLabel="tampilkan"
-            >
-              {e.deskripsi}
-            </Spoiler>
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
           </Center>
         </td>
       </tr>
@@ -188,7 +160,9 @@ function DetailRiwayat() {
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title c={AdminColor.white} order={4}>Riwayat</Title>
+          <Title c={AdminColor.white} order={4}>
+            Riwayat
+          </Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
@@ -209,13 +183,9 @@ function DetailRiwayat() {
                 horizontalSpacing={"md"}
                 p={"md"}
                 w={"100%"}
-
               >
                 <thead>
                   <tr>
-                    <th>
-                      <Center c={AdminColor.white}>Aksi</Center>
-                    </th>
                     <th>
                       <Center c={AdminColor.white}>Username</Center>
                     </th>
@@ -223,19 +193,17 @@ function DetailRiwayat() {
                       <Center c={AdminColor.white}>Judul</Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Lokasi</Center>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Mulai
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Tipe Acara</Center>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Selesai
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Deskripsi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
@@ -243,15 +211,13 @@ function DetailRiwayat() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

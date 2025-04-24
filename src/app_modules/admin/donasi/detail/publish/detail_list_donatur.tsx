@@ -1,38 +1,62 @@
-import { AccentColor } from '@/app_modules/_global/color';
-import { AdminColor } from '@/app_modules/_global/color/color_pallet';
-import { ComponentGlobal_TampilanRupiah } from '@/app_modules/_global/component';
-import { apiGetMasterStatusTransaksi } from '@/app_modules/_global/lib/api_fetch_master';
-import { globalStatusTransaksi } from '@/app_modules/_global/lib/master_list_app';
-import { ComponentAdminGlobal_TitlePage } from '@/app_modules/admin/_admin_global/_component';
-import CustomSkeletonAdmin from '@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin';
-import { MODEL_DONASI } from '@/app_modules/donasi/model/interface';
-import { MODEL_NEW_DEFAULT_MASTER } from '@/app_modules/model_global/interface';
-import { RouterAdminGlobal } from '@/lib';
-import { clientLogger } from '@/util/clientLogger';
-import { Center, Badge, Button, Stack, Group, ActionIcon, Select, Paper, ScrollArea, Table, Pagination, Text, Modal, Title } from '@mantine/core';
-import { useDisclosure, useShallowEffect } from '@mantine/hooks';
-import { IconReload } from '@tabler/icons-react';
-import { useParams, useRouter } from 'next/navigation'
-import React, { useState } from 'react';
-import { apiGetAdminAllDaftarDonatur } from '../../lib/api_fetch_admin_donasi';
-import { ComponentAdminGlobal_NotifikasiBerhasil } from '@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil';
-import { ComponentAdminGlobal_NotifikasiGagal } from '@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal';
-import adminNotifikasi_funCreateToUser from '@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user';
-import adminDonasi_funUpdateStatusDanTotal from '../../fun/update/fun_update_status_dan_total';
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_fetch_master";
+import { globalStatusTransaksi } from "@/app_modules/_global/lib/master_list_app";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
+import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
+import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
+import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
+import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { MODEL_NEW_DEFAULT_MASTER } from "@/app_modules/model_global/interface";
+import { RouterAdminGlobal } from "@/lib";
+import { clientLogger } from "@/util/clientLogger";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Center,
+  Group,
+  Modal,
+  Paper,
+  ScrollArea,
+  Select,
+  Stack,
+  Table,
+  Text,
+  Title
+} from "@mantine/core";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { IconReload } from "@tabler/icons-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
+import { apiGetAdminAllDaftarDonatur } from "../../lib/api_fetch_admin_donasi";
 
-function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadDonasi: (val: boolean) => void, donasi: MODEL_DONASI, isReload: boolean }) {
+function TampilanListDonatur({
+  setReloadDonasi,
+  donasi,
+  isReload,
+}: {
+  setReloadDonasi: (val: boolean) => void;
+  donasi: MODEL_DONASI;
+  isReload: boolean;
+}) {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const donasiId = params.id;
   const [isLoadingCek, setLoadingCek] = useState(false);
   const [idData, setIdData] = useState("");
   const [lisDonatur, setListDonatur] = useState<any[] | null>(null);
-  const [listStatus, setListStatus] = useState<MODEL_NEW_DEFAULT_MASTER[] | null>(null);
+  const [listStatus, setListStatus] = useState<
+    MODEL_NEW_DEFAULT_MASTER[] | null
+  >(null);
   const [isNPage, setNPage] = useState<number>(1);
   const [isActivePage, setActivePage] = useState(1);
   const [selectStatus, setSelectStatus] = useState("");
   const [isLoadingReload, setIsLoadingReload] = useState(false);
-
 
   useShallowEffect(() => {
     handleLoadData();
@@ -40,11 +64,10 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
 
   useShallowEffect(() => {
     handleLoadStatus();
-  }, [])
+  }, []);
 
   const handleLoadData = async () => {
     try {
-      
       const cek = globalStatusTransaksi.find((e) => e.id === selectStatus);
       const response = await apiGetAdminAllDaftarDonatur({
         id: donasiId,
@@ -53,30 +76,25 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
       });
 
       if (response?.success && response?.data?.data) {
-    
         setListDonatur(response.data.data);
         setNPage(response.data.nPage || 1);
-        setIsLoadingReload(false)
+        setIsLoadingReload(false);
       } else {
         console.error("Invalid data format received:", response);
         setListDonatur([]);
-
       }
     } catch (error) {
       clientLogger.error("Error get data daftar donatur", error);
       setListDonatur([]);
-
     }
-  }
+  };
 
   const handleLoadStatus = async () => {
     try {
       const response = await apiGetMasterStatusTransaksi();
 
-
       if (response?.success && response?.data) {
         setListStatus(response.data);
-
       } else {
         console.error("Invalid data format received:", response);
         setListStatus(null);
@@ -85,34 +103,31 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
       clientLogger.error("Error get status donatur", error);
       setListStatus(null);
     }
-  }
+  };
   const onPageClick = async (page: number) => {
-   
     setActivePage(page);
-  }
+  };
   async function onSelect(selectStatus: any) {
     setSelectStatus(selectStatus);
-    setActivePage(1)
+    setActivePage(1);
   }
   async function onReload() {
     setSelectStatus("");
-    setIsLoadingReload(true)
+    setIsLoadingReload(true);
     handleLoadData();
   }
 
-
-
   const renderTableBody = () => {
-
-    if(isLoadingReload) return (
-      <tr>
-        <td colSpan={12}>
-          <Center>
-            <Text c={AccentColor.white}>Loading Data... </Text>
-          </Center>
-        </td>
-      </tr>
-    )
+    if (isLoadingReload)
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text c={AccentColor.white}>Loading Data... </Text>
+            </Center>
+          </td>
+        </tr>
+      );
     if (!Array.isArray(lisDonatur) || lisDonatur.length === 0) {
       return (
         <tr>
@@ -146,8 +161,8 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
           </Center>
         </td>
         <td>
-          <Center >
-            <Badge c={AccentColor.white} w={150} variant="dot">
+          <Center>
+            <Badge c={AccentColor.white} variant="dot">
               {e?.DonasiMaster_StatusInvoice?.name}
             </Badge>
           </Center>
@@ -155,14 +170,16 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
         <td>
           <Center>
             {e?.donasiMaster_StatusInvoiceId === "1" ||
-              e?.donasiMaster_StatusInvoiceId === "2" ? (
+            e?.donasiMaster_StatusInvoiceId === "2" ? (
               <Button
                 loaderPosition="center"
                 loading={isLoadingCek && idData === e?.id}
                 radius={"xl"}
                 onClick={() => {
                   setLoadingCek(true), setIdData(e?.id);
-                  router.push(RouterAdminGlobal.preview_image({ id: e.imageId }));
+                  router.push(
+                    RouterAdminGlobal.preview_image({ id: e.imageId })
+                  );
                 }}
               >
                 Cek
@@ -186,14 +203,13 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
                 danaTerkumpul={+donasi?.terkumpul}
                 target={+donasi?.target}
                 isReload
-
                 onSetDonasi={() => {
                   setReloadDonasi(true);
                 }}
                 onSuccessDonatur={(val) => {
                   setListDonatur(val.data);
                   setNPage(val.nPage);
-                  isReload
+                  isReload;
                 }}
               />
             ) : (
@@ -203,9 +219,10 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
         </td>
       </tr>
     ));
-  }
+  };
 
-  if (!lisDonatur && !listStatus) return <CustomSkeletonAdmin height={"80vh"} />
+  if (!lisDonatur && !listStatus)
+    return <CustomSkeletonAdmin height={"80vh"} />;
 
   return (
     <>
@@ -221,7 +238,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
                 style={{
                   transition: "0.5s",
                 }}
-                disabled={selectStatus ==""}
+                disabled={selectStatus == ""}
                 radius={"xl"}
                 variant="light"
                 onClick={() => {
@@ -233,10 +250,12 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
               <Select
                 placeholder="Pilih status"
                 value={selectStatus}
-                data={listStatus?.map((e, i) => ({
-                  value: e.id,
-                  label: e.name,
-                })) || []}
+                data={
+                  listStatus?.map((e, i) => ({
+                    value: e.id,
+                    label: e.name,
+                  })) || []
+                }
                 onChange={(val: any) => {
                   onSelect(val);
                 }}
@@ -251,7 +270,7 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
-              w={1500}
+              w={1120}
             >
               <thead>
                 <tr>
@@ -282,15 +301,13 @@ function TampilanListDonatur({ setReloadDonasi, donasi, isReload }: { setReloadD
             </Table>
           </ScrollArea>
 
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
-              onChange={(val) => {
-                onPageClick(val);
-              }}
-            />
-          </Center>
+          <Admin_V3_ComponentPaginationBreakpoint
+            value={isActivePage}
+            total={isNPage}
+            onChange={(val) => {
+              onPageClick(val);
+            }}
+          />
         </Paper>
       </Stack>
     </>
@@ -306,7 +323,7 @@ function ButtonAccept({
   target,
   onSetDonasi: onSuccessDonasi,
   onSuccessDonatur,
-  isReload
+  isReload,
 }: {
   invoiceId: string;
   donasiId: string;
@@ -315,7 +332,7 @@ function ButtonAccept({
   target: number;
   onSetDonasi: (val: boolean) => void;
   onSuccessDonatur: (val: any) => void;
-  isReload: boolean
+  isReload: boolean;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -324,7 +341,7 @@ function ButtonAccept({
     let nominalDonasi = nominal;
     let jumlahTerkumpul = danaTerkumpul;
     setIsLoading(true);
-    isReload
+    isReload;
 
     const updateStatus = await adminDonasi_funUpdateStatusDanTotal({
       invoiceId: invoiceId,
@@ -334,8 +351,6 @@ function ButtonAccept({
       target: target,
       statusInvoiceId: "1",
     });
-
-
 
     if (updateStatus.status == 200) {
       const dataNotif = {

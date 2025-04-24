@@ -1,14 +1,15 @@
 "use client";
+import { AccentColor } from "@/app_modules/_global/color";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { gs_adminInvestasi_triggerReview } from "@/lib/global_state";
 import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Affix,
   Button,
   Center,
-  Group,
-  Pagination,
   Paper,
   rem,
   ScrollArea,
@@ -16,23 +17,18 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconDetails, IconEyeCheck, IconRefresh, IconSearch } from "@tabler/icons-react";
+import { IconEyeCheck, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
-import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
-import { adminInvestasi_funGetAllReview } from "../fun/get/get_all_review";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import ComponentAdminGlobal_TampilanRupiahDonasi from "../../_admin_global/tampilan_rupiah";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { apiGetAdminInvestasiByStatus } from "../_lib/api_fetch_admin_investasi";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function Admin_TableReviewInvestasi() {
   return (
@@ -72,8 +68,8 @@ function TableView() {
       });
 
       if (response?.success && response?.data?.data) {
-        setData(response.data.data)
-        setNPage(response.data.nPage || 1)
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
       } else {
         console.error("Invalid data format received:", response);
         setData([]);
@@ -82,15 +78,15 @@ function TableView() {
       clientLogger.error("Error get data table review", error);
       setData([]);
     }
-  }
+  };
   const onSearch = async (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
   async function onLoadData() {
     loadInitialData();
     setLoading(false);
@@ -108,41 +104,41 @@ function TableView() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white}>
             <Text lineClamp={1}>{e.author.username}</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={400}>
+          <Center c={AccentColor.white}>
             <Text lineClamp={1}>{e.title}</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white}>
             <Text lineClamp={1}>{e.roi} %</Text>
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white}>
             <ComponentAdminGlobal_TampilanRupiahDonasi
               nominal={_.toNumber(e.targetDana)}
             />
           </Center>
         </td>
         <td>
-          <Center c={AccentColor.white} w={200}>
+          <Center c={AccentColor.white}>
             <ComponentAdminGlobal_TampilanRupiahDonasi
               nominal={_.toNumber(e.hargaLembar)}
             />
           </Center>
         </td>
         <td>
-          <Center w={200}>
+          <Center>
             <Button
               loading={isLoading && idData === e.id}
               loaderPosition="center"
@@ -161,7 +157,7 @@ function TableView() {
         </td>
       </tr>
     ));
-  }
+  };
 
   return (
     <>
@@ -238,38 +234,37 @@ function TableView() {
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Username</Center>
+                      <Center c={AccentColor.white}>Username</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={400}>Nama Proyek</Center>
+                      <Center c={AccentColor.white}>Nama Proyek</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>ROI</Center>
+                      <Center c={AccentColor.white}>ROI</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Target Dana</Center>
+                      <Center c={AccentColor.white}>Target Dana</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white} w={200}>Harga Perlembar</Center>
+                      <Center c={AccentColor.white}>Harga Perlembar</Center>
                     </th>
 
                     <th>
-                      <Center c={AccentColor.white} w={200}>Aksi</Center>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

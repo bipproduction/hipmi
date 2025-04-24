@@ -33,172 +33,192 @@ import { useState } from "react";
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { adminForum_getListKomentarById } from "../fun/get/get_list_komentar_by_id";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { apiAdminGetKomentarForumById } from "../lib/api_fetch_admin_forum";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import moment from "moment";
+import "moment/locale/id";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 
 export default function AdminForum_DetailPosting({
-  listKomentar,
   dataPosting,
-  countKomentar,
 }: {
-  listKomentar: any;
   dataPosting: MODEL_FORUM_POSTING;
-  countKomentar: number;
 }) {
   return (
     <>
       {/* <pre>{JSON.stringify(listKomentar, null, 2)}</pre> */}
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name="Forum: Detail Posting" />
+        <ComponentAdminGlobal_HeaderTamplate name="Forum: Detail" />
         <AdminGlobal_ComponentBackButton />
         <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
-        <TableKomentar
-          listKomentar={listKomentar}
-          postingId={dataPosting.id}
-          countKomentar={countKomentar}
-        />
+        <TableKomentar postingId={dataPosting.id} />
       </Stack>
     </>
   );
 }
 
-
-
-function TableKomentar({
-  listKomentar,
-  postingId,
-  countKomentar,
-}: {
-  listKomentar: any;
-  postingId: string;
-  countKomentar: number;
-}) {
+function TableKomentar({ postingId }: { postingId: string }) {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_FORUM_KOMENTAR[]>(listKomentar.data);
-  const [nPage, setNPage] = useState(listKomentar.nPage);
+  const [data, setData] = useState<MODEL_FORUM_KOMENTAR[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoadingReport, setLoadingReport] = useState(false);
   const [idData, setIdData] = useState("");
+  const [isDelete, setDelete] = useState(false);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, [isSearch, activePage, isDelete]);
+
+  async function handleLoadData() {
+    try {
+      const response = await apiAdminGetKomentarForumById({
+        id: postingId,
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response && response.success) {
+        setData(response.data.data);
+        setDelete(false);
+      }
+    } catch (error) {
+      console.error("Invalid data format received:", error);
+      setData([]);
+    }
+  }
 
   async function onSearch(s: string) {
     setSearch(s);
     setActivePage(1);
-    const loadData = await adminForum_getListKomentarById({
-      postingId: postingId,
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
   async function onPageClick(p: any) {
     setActivePage(p);
-    const loadData = await adminForum_getListKomentarById({
-      postingId: postingId,
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
-  const rowTable = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={1}>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Box w={500}>
-          <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
-            <div
-              style={{ textAlign: "center" }}
-              dangerouslySetInnerHTML={{ __html: e?.komentar }}
+  const rowTable = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data?.map((e, i) => (
+      <tr key={i} >
+        <td>
+          <Box c={AdminColor.white} w={100}>
+            <Text lineClamp={1}>{e?.Author?.username}</Text>
+          </Box>
+        </td>
+        <td>
+          <Box w={200}>
+            <Spoiler
+              c={AdminColor.white}
+              maxHeight={50}
+              hideLabel="sembunyikan"
+              showLabel="tampilkan"
+            >
+              <div
+                style={{ textAlign: "justify", textJustify: "auto" }}
+                dangerouslySetInnerHTML={{ __html: e?.komentar }}
+              />
+            </Spoiler>
+          </Box>
+        </td>
+        <td>
+          <Box c={AdminColor.white} w={100}>
+            <Text>{moment(e?.createdAt).format("DD-MM-YYYY")}</Text>
+          </Box>
+        </td>
+        <td>
+          <Center>
+            <Text
+              c={
+                e?.Forum_ReportKomentar?.length >= 3 ? "red" : AdminColor.white
+              }
+              fw={"bold"}
+              fz={"lg"}
+            >
+              {e?.Forum_ReportKomentar.length}
+            </Text>
+          </Center>
+        </td>
+        <td>
+          <Stack align="center" spacing={"xs"}>
+            <Button
+              disabled={e?.Forum_ReportKomentar.length <= 0 ? true : false}
+              loaderPosition="center"
+              loading={isLoadingReport && e?.id === idData ? true : false}
+              radius={"xl"}
+              w={170}
+              fz={"xs"}
+              leftIcon={<IconFlag3 size={15} />}
+              onClick={() => {
+                setIdData(e?.id);
+                setLoadingReport(true);
+                router.push(RouterAdminForum.report_komentar + e?.id);
+              }}
+            >
+              Lihat Report
+            </Button>
+            <ButtonDeleteKomentar
+              komentarId={e?.id}
+              onSuccessDelete={(val) => {
+                setDelete(val);
+              }}
             />
-          </Spoiler>
-        </Box>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text>
-            {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
-              e.createdAt
-            )}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={100}>
-          <Text
-            c={e?.Forum_ReportKomentar?.length >= 3 ? "red" : "black"}
-            fw={"bold"}
-            fz={"lg"}
-          >
-            {e?.Forum_ReportKomentar.length}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Stack align="center" spacing={"xs"} w={200}>
-          <Button
-            disabled={e?.Forum_ReportKomentar.length <= 0 ? true : false}
-            loaderPosition="center"
-            loading={isLoadingReport && e?.id === idData ? true : false}
-            radius={"xl"}
-            w={170}
-            fz={"xs"}
-            leftIcon={<IconFlag3 size={15} />}
-            onClick={() => {
-              setIdData(e?.id);
-              setLoadingReport(true);
-              router.push(RouterAdminForum.report_komentar + e?.id);
-            }}
-          >
-            Lihat Report
-          </Button>
-          <ButtonDeleteKomentar komentarId={e?.id} />
-        </Stack>
-      </td>
-    </tr>
-  ));
+          </Stack>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
-          position="apart"
-          bg={"gray"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Group spacing={5}>
-            <Title order={4} c={"white"}>
-              Komentar
-            </Title>
-            <Title order={4} c={"white"}>
-              {`(${countKomentar})`}
-            </Title>
-          </Group>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari komentar"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
+        <ComponentAdminGlobal_TitlePage
+          name={
+            <Group spacing={5}>
+              <Title order={4} c={"white"}>
+                Komentar:
+              </Title>
+              <Title order={4} c={"white"}>
+                {data?.length}
+              </Title>
+            </Group>
+          }
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Cari komentar"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
+          }
+        />
 
-        {_.isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData text="Tidak Ada Komentar" />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -206,40 +226,36 @@ function TableKomentar({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center w={200}>Username</Center>
+                      <Text c={AdminColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center w={500}>Komentar</Center>
+                      <Text c={AdminColor.white}>Komentar</Text>
                     </th>
                     <th>
-                      <Center w={200}>Tgl Komentar</Center>
+                      <Text c={AdminColor.white}>Tgl Komentar</Text>
                     </th>
                     <th>
-                      <Center w={100}>Total Report</Center>
+                      <Center c={AdminColor.white}>Total Report</Center>
                     </th>
                     <th>
-                      <Center w={200}>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
-                <tbody>{rowTable}</tbody>
+                <tbody>{rowTable()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
@@ -247,7 +263,13 @@ function TableKomentar({
   );
 }
 
-function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
+function ButtonDeleteKomentar({
+  komentarId,
+  onSuccessDelete,
+}: {
+  komentarId: string;
+  onSuccessDelete: (val: any) => void;
+}) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
   const [loadindDel, setLoadingDel] = useState(false);
@@ -258,7 +280,9 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
       if (res.status === 200) {
         setLoadingDel(false);
         setLoadingDel2(false);
+        onSuccessDelete(true);
         ComponentGlobal_NotifikasiBerhasil(res.message);
+
         close();
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
@@ -267,9 +291,15 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
   }
   return (
     <>
-      <Modal opened={opened} onClose={close} centered withCloseButton={false}>
+      <Admin_ComponentModal
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+      >
         <Stack>
-          <Title order={5}>Anda yakin menghapus komentar ini ?</Title>
+          <Title order={5} c={AdminColor.white}>
+            Anda yakin menghapus komentar ini ?
+          </Title>
           <Group position="center">
             <Button
               radius={"xl"}
@@ -282,7 +312,7 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingDel2 ? true : false}
+              loading={loadingDel2}
               radius={"xl"}
               color="red"
               onClick={() => {
@@ -294,10 +324,10 @@ function ButtonDeleteKomentar({ komentarId }: { komentarId: string }) {
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </Admin_ComponentModal>
 
       <Button
-        loading={loadindDel ? true : false}
+        loading={loadindDel}
         loaderPosition="center"
         radius={"xl"}
         w={170}

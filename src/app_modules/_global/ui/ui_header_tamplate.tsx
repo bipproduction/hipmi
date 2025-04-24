@@ -49,12 +49,11 @@ export default function UIGlobal_LayoutHeaderTamplate({
     <>
       <Box
         h={"8vh"}
-        // w={"100%"}
-        // pos={"sticky"}
-        // top={0}
-        // style={{
-        //   zIndex: 10,
-        // }}
+        style={{
+          borderBottom: `2px solid ${AccentColor.blue}`,
+          borderBottomLeftRadius: "10px",
+          borderBottomRightRadius: "10px",
+        }}
         sx={{
           borderStyle: "none",
         }}
@@ -85,14 +84,9 @@ export default function UIGlobal_LayoutHeaderTamplate({
               ) : (
                 <IconChevronLeft />
               )} */}
-              
 
               {/* GA PAKE LOADING SAAT KLIK BACK */}
-              {iconLeft ? (
-                iconLeft
-              ) : (
-                <IconChevronLeft />
-              )}
+              {iconLeft ? iconLeft : <IconChevronLeft />}
             </ActionIcon>
           )}
 

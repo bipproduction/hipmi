@@ -1,10 +1,11 @@
 "use client";
 
-import { gs_jobTiggerBeranda } from "@/lib/global_state";
-import { RouterJob } from "@/lib/router_hipmi/router_job";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { Center, Loader, Stack, TextInput } from "@mantine/core";
+import { gs_jobTiggerBeranda } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
+import { clientLogger } from "@/util/clientLogger";
+import { Box, Center, Loader, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import { useAtom } from "jotai";
@@ -15,10 +16,9 @@ import {
   Job_ComponentButtonUpdateBeranda,
   Job_ComponentSkeletonBeranda,
 } from "../../component";
+import { apiGetJob } from "../../lib/api_fetch_job";
 import ComponentJob_BerandaCardView from "../../component/beranda/card_view";
 import { MODEL_JOB } from "../../model/interface";
-import { apiGetJob } from "../../component/api_fetch_job";
-import { clientLogger } from "@/util/clientLogger";
 
 export default function Job_ViewBeranda() {
   const [data, setData] = useState<MODEL_JOB[]>([]);
@@ -102,7 +102,7 @@ export default function Job_ViewBeranda() {
 
   return (
     <>
-      <Stack my={1} spacing={30}>
+      <Stack spacing={"sm"}>
         {isShowUpdate && (
           <Job_ComponentButtonUpdateBeranda
             onSetIsNewPost={(val) => {
@@ -115,6 +115,8 @@ export default function Job_ViewBeranda() {
           />
         )}
 
+        {/* <Component_NewCreateButton path={RouterJob.create} /> */}
+
         <ComponentGlobal_CreateButton path={RouterJob.create} />
 
         <TextInput
@@ -125,32 +127,38 @@ export default function Job_ViewBeranda() {
           }}
           radius={"xl"}
           icon={<IconSearch />}
-          placeholder="Pekerjaan apa yang anda cari ?"
+          placeholder="Pekerjaan apa yang anda cari ni?"
           onChange={(val) => {
             onSearch(val.currentTarget.value);
           }}
         />
 
-        {!data?.length && isLoading ? (
-          <Job_ComponentSkeletonBeranda />
-        ) : _.isEmpty(data) ? (
-          <ComponentGlobal_IsEmptyData />
-        ) : (
-          // --- Main component --- //
-          <ScrollOnly
-            height="75vh"
-            renderLoading={() => (
-              <Center mt={"lg"}>
-                <Loader color={"yellow"} />
-              </Center>
-            )}
-            data={data}
-            setData={setData as any}
-            moreData={handleMoreData}
-          >
-            {(item) => <ComponentJob_BerandaCardView data={item} />}
-          </ScrollOnly>
-        )}
+        {/* <ActionIcon>
+          <IconPlus />
+        </ActionIcon> */}
+
+        <Box >
+          {!data?.length && isLoading ? (
+            <Job_ComponentSkeletonBeranda />
+          ) : _.isEmpty(data) ? (
+            <ComponentGlobal_IsEmptyData />
+          ) : (
+            // --- Main component --- //
+            <ScrollOnly
+              height="80vh"
+              renderLoading={() => (
+                <Center mt={"lg"}>
+                  <Loader color={"yellow"} />
+                </Center>
+              )}
+              data={data}
+              setData={setData as any}
+              moreData={handleMoreData}
+            >
+              {(item) => <ComponentJob_BerandaCardView data={item} />}
+            </ScrollOnly>
+          )}
+        </Box>
       </Stack>
     </>
   );

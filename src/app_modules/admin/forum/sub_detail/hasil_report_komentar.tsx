@@ -1,19 +1,21 @@
 "use client";
 
-import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import {
+  AdminColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import {
   MODEL_FORUM_KOMENTAR,
-  MODEL_FORUM_REPORT_POSTING
+  MODEL_FORUM_REPORT_POSTING,
 } from "@/app_modules/forum/model/interface";
 import mqtt_client from "@/util/mqtt_client";
 import {
+  Box,
   Button,
-  Center,
   Group,
-  Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
@@ -23,19 +25,19 @@ import {
   Title
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconTrash
-} from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 import ComponentAdminForum_ViewOneDetailKomentar from "../component/detail_one_komentar";
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
 import { adminForum_getListReportKomentarbyId } from "../fun/get/get_list_report_komentar_by_id";
-import adminForum_funGetOneKomentarById from "../fun/get/get_one_komentar_by_id";
 
 export default function AdminForum_HasilReportKomentar({
   komentarId,
@@ -47,23 +49,26 @@ export default function AdminForum_HasilReportKomentar({
   dataKomentar: MODEL_FORUM_KOMENTAR;
 }) {
   const [data, setData] = useState(dataKomentar);
-  console.log(komentarId);
 
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name="Forum: Hasil Report Komentar" />
-        <Group position="apart">
-          <AdminGlobal_ComponentBackButton />
-          <ButtonDeleteKomentar
-            komentarId={komentarId}
-            data={data}
-            onSuccess={(val) => {
-              setData(val);
-            }}
-          />
-        </Group>
-        <ComponentAdminForum_ViewOneDetailKomentar dataKomentar={data} />
+        <ComponentAdminGlobal_HeaderTamplate name="Forum: Report" />
+        <AdminGlobal_ComponentBackButton />
+
+        <Admin_V3_ComponentBreakpoint>
+          <ComponentAdminForum_ViewOneDetailKomentar dataKomentar={data} />
+          <Group position="center">
+            <ButtonDeleteKomentar
+              komentarId={komentarId}
+              data={data}
+              onSuccess={(val) => {
+                setData(val);
+              }}
+            />
+          </Group>
+        </Admin_V3_ComponentBreakpoint>
+
         <HasilReportPosting listReport={listReport} komentarId={komentarId} />
         {/* <pre>{JSON.stringify(listReport, null, 2)}</pre> */}
       </Stack>
@@ -89,11 +94,12 @@ function ButtonDeleteKomentar({
       if (res.status === 200) {
         setLoadingDel2(false);
         close();
+        router.back();
 
-        const dataKomentar = await adminForum_funGetOneKomentarById({
-          komentarId: komentarId,
-        });
-        onSuccess(dataKomentar);
+        // const dataKomentar = await adminForum_funGetOneKomentarById({
+        //   komentarId: komentarId,
+        // });
+        // onSuccess(dataKomentar);
 
         const dataNotif = {
           appId: data.id,
@@ -124,9 +130,15 @@ function ButtonDeleteKomentar({
 
   return (
     <>
-      <Modal opened={opened} onClose={close} centered withCloseButton={false}>
+      <Admin_ComponentModal
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+      >
         <Stack>
-          <Title order={5}>Anda yakin menghapus komentar ini ?</Title>
+          <Title order={5} c={MainColor.white}>
+            Anda yakin menghapus komentar ini ?
+          </Title>
           <Group position="center">
             <Button
               radius={"xl"}
@@ -150,7 +162,7 @@ function ButtonDeleteKomentar({
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </Admin_ComponentModal>
 
       {data?.isActive ? (
         <Button
@@ -185,7 +197,6 @@ function HasilReportPosting({
   const [nPage, setNPage] = useState(listReport.nPage);
   const [activePage, setActivePage] = useState(1);
 
-
   async function onPageClick(p: any) {
     setActivePage(p);
     const loadData = await adminForum_getListReportKomentarbyId({
@@ -197,24 +208,24 @@ function HasilReportPosting({
   }
 
   const TableRows = data?.map((e, i) => (
-    <tr key={i}>
+    <tr key={i} style={{ color: AdminColor.white }}>
       <td>
-        <Center w={200}>
-          <Text>{e?.User?.Profile?.name}</Text>
-        </Center>
+        <Box w={100}>
+          <Text>{e?.User?.username}</Text>
+        </Box>
       </td>
       <td>
-        <Center w={200}>
+        <Box w={150}>
           <Text>
             {e?.ForumMaster_KategoriReport?.title
               ? e?.ForumMaster_KategoriReport?.title
               : "-"}
           </Text>
-        </Center>
+        </Box>
       </td>
 
       <td>
-        <Center w={500}>
+        <Box w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.ForumMaster_KategoriReport?.deskripsi ? (
               <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
@@ -222,46 +233,37 @@ function HasilReportPosting({
               <Text>-</Text>
             )}
           </Spoiler>
-        </Center>
+        </Box>
       </td>
 
       <td>
-        <Center w={500}>
+        <Box w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
           </Spoiler>
-        </Center>
+        </Box>
       </td>
     </tr>
   ));
-  console.log("Ini data", data);
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"red.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
           <Title order={4} c={"white"}>
-            Report Komentar
+            Hasil Report Komentar
           </Title>
-          {/* <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari postingan"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          /> */}
         </Group>
 
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -269,22 +271,20 @@ function HasilReportPosting({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Username</Center>
+                      <Text c={AdminColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center>Kategori</Center>
+                      <Text c={AdminColor.white}>Kategori</Text>
                     </th>
                     <th>
-                      <Center>Deskripsi</Center>
+                      <Text c={AdminColor.white}>Deskripsi</Text>
                     </th>
                     <th>
-                      <Center>Deskripsi Lainnya</Center>
+                      <Text c={AdminColor.white}>Deskripsi Lainnya</Text>
                     </th>
                   </tr>
                 </thead>
@@ -292,15 +292,11 @@ function HasilReportPosting({
                 <tbody>{TableRows}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={onPageClick}
+            />
           </Paper>
         )}
       </Stack>

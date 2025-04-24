@@ -15,7 +15,7 @@ import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiGetJobById } from "../../component/api_fetch_job";
+import { apiGetJobById } from "../../lib/api_fetch_job";
 import ComponentJob_DetailData from "../../component/detail/detail_data";
 import { Job_funEditArsipById } from "../../fun/edit/fun_edit_arsip_by_id";
 import { gs_job_hot_menu } from "../../global_state";

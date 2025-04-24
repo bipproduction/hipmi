@@ -48,7 +48,7 @@ export default function Portofolio_UiListDetailNew() {
     <>
       <Box py={5}>
         <ScrollOnly
-          height="90vh"
+          height="80vh"
           renderLoading={() => (
             <Center mt={"lg"}>
               <ComponentGlobal_Loader />

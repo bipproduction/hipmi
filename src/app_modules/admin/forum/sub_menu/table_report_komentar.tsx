@@ -1,19 +1,15 @@
 "use client";
 
-
-import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import {
-  MODEL_FORUM_REPORT_KOMENTAR
-} from "@/app_modules/forum/model/interface";
+import { MODEL_FORUM_REPORT_KOMENTAR } from "@/app_modules/forum/model/interface";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import { clientLogger } from "@/util/clientLogger";
 import {
   Box,
   Button,
   Center,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
@@ -27,8 +23,8 @@ import { IconFlag3, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { apiGetAdminForumReportKomentar } from "../lib/api_fetch_admin_forum";
-
 
 export default function AdminForum_TableReportKomentar() {
   return (
@@ -42,7 +38,6 @@ export default function AdminForum_TableReportKomentar() {
   );
 }
 
-
 function TableView() {
   const router = useRouter();
   const [data, setData] = useState<MODEL_FORUM_REPORT_KOMENTAR[] | null>(null);
@@ -50,50 +45,37 @@ function TableView() {
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
-
   useShallowEffect(() => {
     const loadInitialData = async () => {
       try {
         const response = await apiGetAdminForumReportKomentar({
-          page: `${activePage}`
-        })
+          page: `${activePage}`,
+          search: isSearch,
+        });
+
         if (response?.success && response?.data.data) {
           setData(response.data.data);
-          setNPage(response.data.nCount || 1)
+          setNPage(response.data.nCount || 1);
         } else {
-          console.error("Invalid data format recieved", response)
-          setData([])
+          console.error("Invalid data format recieved", response);
+          setData([]);
         }
       } catch (error) {
-        clientLogger.error("Invalid data format recieved", error)
-        setData([])
+        clientLogger.error("Invalid data format recieved", error);
+        setData([]);
       }
-    }
+    };
     loadInitialData();
   }, [activePage, isSearch]);
-
-
-  // async function onLoadData({ onLoad }: { onLoad: (val: any) => void }) {
-  //   const loadData = await apiGetAdminForumReportKomentar(
-  //     { page: `${activePage}` });
-  //   onLoad(loadData);
-
-
-  //   setData(loadData.data.data);
-  //   setNPage(loadData.data.nPage);
-  // }
-
 
   const onSearch = (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
-
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
-
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -105,74 +87,66 @@ function TableView() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data?.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center w={200}>
-            <Text c={AdminColor.white} lineClamp={1}>{e?.User?.Profile?.name}</Text>
-          </Center>
+          <Box w={100}>
+            <Text c={AdminColor.white} lineClamp={1}>
+              {e?.User?.username}
+            </Text>
+          </Box>
         </td>
         <td>
-          <Center w={200}>
-            {e?.forumMaster_KategoriReportId === null ? (
+          <Box w={150}>
+            {!e?.ForumMaster_KategoriReport ? (
               <Text c={AdminColor.white}>Lainnya</Text>
             ) : (
-              <Text c={AdminColor.white} lineClamp={1}>{e?.ForumMaster_KategoriReport?.title}</Text>
+              <Text c={AdminColor.white} lineClamp={1}>
+                {e?.ForumMaster_KategoriReport?.title}
+              </Text>
             )}
-          </Center>
+          </Box>
         </td>
 
-
         <td>
-          <Box w={400}>
+          <Box w={150}>
             <Spoiler
+              style={{ textAlign: "justify", textJustify: "auto" }}
               c={AdminColor.white}
               // w={400}
-              maxHeight={60}
+              maxHeight={50}
               hideLabel="sembunyikan"
               showLabel="tampilkan"
             >
               <div
                 dangerouslySetInnerHTML={{
-                  __html: e?.deskripsi,
+                  __html: e?.Forum_Komentar.komentar,
                 }}
               />
             </Spoiler>
           </Box>
         </td>
 
-
         <td>
-          <Center w={150} >
+          <Box w={150}>
             <Text c={AdminColor.white}>
               {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
                 new Date(e?.createdAt)
               )}
             </Text>
-          </Center>
+          </Box>
         </td>
-
 
         <td>
           <Stack align="center" spacing={"xs"}>
-            {/* <ButtonAction postingId={e?.id} /> */}
-            <ButtonLihatReportLainnya komentarId={e?.forum_KomentarId} />
-            {/* <ComponentAdminForum_ButtonDeletePosting
-             postingId={e?.Forum_Komentar.forum_PostingId}
-             onSuccesDelete={(val) => {
-               if (val) {
-                 onLoadData();
-               }
-             }}
-           /> */}
+            <ButtonLihatReportLainnya komentarId={e?.Forum_Komentar.id} />
           </Stack>
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
@@ -184,32 +158,13 @@ function TableView() {
             <TextInput
               icon={<IconSearch size={20} />}
               radius={"xl"}
-              placeholder="Cari postingan"
+              placeholder="Cari Komentar"
               onChange={(val) => {
                 onSearch(val.currentTarget.value);
               }}
             />
           }
         />
-        {/* <Group
-         position="apart"
-         bg={"yellow.4"}
-         p={"xs"}
-         style={{ borderRadius: "6px" }}
-       >
-         <Title order={4} c={"white"}>
-           Report Komentar
-         </Title>
-         <TextInput
-           icon={<IconSearch size={20} />}
-           radius={"xl"}
-           placeholder="Cari postingan"
-           onChange={(val) => {
-             onSearch(val.currentTarget.value);
-           }}
-         />
-       </Group> */}
-
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
@@ -222,57 +177,46 @@ function TableView() {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-
-
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Pelapor</Center>
+                      <Text c={AdminColor.white}>Pelaporr</Text>
                     </th>
-
 
                     <th>
-                      <Center c={AdminColor.white}>Jenis Laporan</Center>
+                      <Text c={AdminColor.white}>Jenis Laporan</Text>
                     </th>
-
 
                     <th>
                       <Text c={AdminColor.white}>Komentar</Text>
                     </th>
 
-
                     <th>
-                      <Center c={AdminColor.white}>Tanggal Report</Center>
+                      <Text c={AdminColor.white}>Tanggal Report</Text>
                     </th>
-
 
                     <th>
                       <Center c={AdminColor.white}>Aksi</Center>
                     </th>
-
-
                   </tr>
                 </thead>
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
     </>
   );
 }
-
 
 function ButtonLihatReportLainnya({ komentarId }: { komentarId: string }) {
   const router = useRouter();
@@ -296,6 +240,3 @@ function ButtonLihatReportLainnya({ komentarId }: { komentarId: string }) {
     </>
   );
 }
-
-
-

@@ -1,37 +1,36 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { clientLogger } from "@/util/clientLogger";
 import {
+  Box,
   Button,
   Center,
   Group,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   Textarea,
-  TextInput,
-  Title,
+  TextInput
 } from "@mantine/core";
-import { IconPencilPlus, IconSearch } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { adminEvent_funGetListReject } from "../fun";
-import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { MainColor } from "@/app_modules/_global/color";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 
 export default function AdminEvent_TableReject() {
   return (
@@ -137,20 +136,22 @@ function TableStatus() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AdminColor.white} w={200}>{e?.Author?.username}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>{e.title}</Center>
-        </td>
-        <td>
-          <Center c={AdminColor.white} w={200}>{e.lokasi}</Center>
-        </td>
-        <td>
-          <Center c={AdminColor.white} w={200}>{e.EventMaster_TipeAcara.name}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
         </td>
 
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -165,7 +166,7 @@ function TableStatus() {
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -180,7 +181,7 @@ function TableStatus() {
           </Center>
         </td>
 
-        <td>
+        {/* <td>
           <Center c={AdminColor.white} w={500}>
             <Spoiler
               hideLabel="sembunyikan"
@@ -202,10 +203,10 @@ function TableStatus() {
               {e.catatan}
             </Spoiler>
           </Center>
-        </td>
+        </td> */}
 
         <td>
-          <Button
+          {/* <Button
             color={"red"}
             leftIcon={<IconPencilPlus />}
             radius={"xl"}
@@ -216,7 +217,12 @@ function TableStatus() {
             }}
           >
             Tambah Catatan
-          </Button>
+          </Button> */}
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
+          </Center>{" "}
         </td>
       </tr>
     ));
@@ -246,13 +252,7 @@ function TableStatus() {
         ) : (
           <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1500}
-
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -261,24 +261,18 @@ function TableStatus() {
                     <th>
                       <Center c={AdminColor.white}>Judul</Center>
                     </th>
+
                     <th>
-                      <Center c={AdminColor.white}>Lokasi</Center>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Mulai
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Tipe Acara</Center>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Selesai
+                      </Center>
                     </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Cacatan</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Deskripsi</Center>
-                    </th>
+
                     <th>
                       <Center c={AdminColor.white}>Aksi</Center>
                     </th>
@@ -288,15 +282,13 @@ function TableStatus() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

@@ -110,6 +110,7 @@ async function onClick(
   eventId: string,
   setLoading: any
 ) {
+  setLoading(true);
   const checkStatus = await event_checkStatus({ id: eventId });
 
   if (checkStatus) {
@@ -141,13 +142,14 @@ async function onClick(
         });
 
         ComponentGlobal_NotifikasiBerhasil(res.message, 1500);
-        setLoading(true);
         router.replace(RouterEvent.status({ id: "3" }));
       }
     } else {
+      setLoading(false);
       ComponentGlobal_NotifikasiGagal(res.message);
     }
   } else {
+    router.back();
     ComponentGlobal_NotifikasiPeringatan("Event telah direview admin");
   }
 }

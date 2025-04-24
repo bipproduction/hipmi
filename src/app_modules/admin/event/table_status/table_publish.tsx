@@ -1,30 +1,30 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
 import { clientLogger } from "@/util/clientLogger";
 import {
+  Box,
   Button,
   Center,
-  Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconEyeCheck, IconSearch } from "@tabler/icons-react";
+import { IconDownload, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import QRCode from "react-qr-code";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminEvent_TablePublish() {
   return (
@@ -119,33 +119,31 @@ function TableStatus() {
 
     return data.map((e, i) => (
       <tr key={i}>
-        <td>
-          <Center w={200}>
+        {/* <td>
+          <Center>
             <QRCode
               id={e.id}
               style={{ height: 70, width: 70 }}
               value={`${origin}/dev/event/konfirmasi/${e.id}`}
             />
           </Center>
-        </td>
+        </td> */}
+
         <td>
-          <Center w={200}>
-            <Button onClick={() => handleDownloadQR(e.id, e.title)}>
-              Download QR
-            </Button>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e?.Author?.username}</Text>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
           </Center>
         </td>
-        <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text lineClamp={2}>{e.title}</Text>
-          </Center>
-        </td>
-        <td>
+        {/* <td>
           <Center c={AdminColor.white} w={200}>
             <Text>{e.lokasi}</Text>
           </Center>
@@ -154,10 +152,10 @@ function TableStatus() {
           <Center c={AdminColor.white} w={200}>
             <Text>{e.EventMaster_TipeAcara?.name}</Text>
           </Center>
-        </td>
+        </td> */}
 
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -172,7 +170,7 @@ function TableStatus() {
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -187,7 +185,7 @@ function TableStatus() {
           </Center>
         </td>
 
-        <td>
+        {/* <td>
           <Center c={AdminColor.white} w={400}>
             <Spoiler
               hideLabel="sembunyikan"
@@ -197,9 +195,9 @@ function TableStatus() {
               {e.deskripsi}
             </Spoiler>
           </Center>
-        </td>
+        </td> */}
 
-        <td>
+        {/* <td>
           <Button
             loaderPosition="center"
             loading={loading && e.id === eventId}
@@ -214,6 +212,26 @@ function TableStatus() {
           >
             Detail
           </Button>
+        </td> */}
+
+        <td>
+          <Center>
+            <Button
+              leftIcon={<IconDownload />}
+              radius="xl"
+              onClick={() => handleDownloadQR(e.id, e.title)}
+            >
+              Download QR
+            </Button>
+          </Center>
+        </td>
+
+        <td>
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
+          </Center>
         </td>
       </tr>
     ));
@@ -241,20 +259,9 @@ function TableStatus() {
       ) : (
         <Paper p="md" bg={AdminColor.softBlue} h="80vh">
           <ScrollArea w="100%" h="90%">
-            <Table
-              verticalSpacing="md"
-              horizontalSpacing="md"
-              p="md"
-              w={1500}
-            >
+            <Table verticalSpacing="md" horizontalSpacing="md" p="md">
               <thead>
                 <tr>
-                  <th>
-                    <Center c={AdminColor.white}>QR Code</Center>
-                  </th>
-                  <th>
-                    <Center c={AdminColor.white}>Download QR</Center>
-                  </th>
                   <th>
                     <Center c={AdminColor.white}>Username</Center>
                   </th>
@@ -262,19 +269,15 @@ function TableStatus() {
                     <Center c={AdminColor.white}>Judul</Center>
                   </th>
                   <th>
-                    <Center c={AdminColor.white}>Lokasi</Center>
-                  </th>
-                  <th>
-                    <Center c={AdminColor.white}>Tipe Acara</Center>
-                  </th>
-                  <th>
                     <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
                   </th>
                   <th>
-                    <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
+                    <Center c={AdminColor.white}>
+                      Tanggal & Waktu Selesai
+                    </Center>
                   </th>
                   <th>
-                    <Center c={AdminColor.white}>Deskripsi</Center>
+                    <Center c={AdminColor.white}>QR Code</Center>
                   </th>
                   <th>
                     <Center c={AdminColor.white}>Aksi</Center>
@@ -285,13 +288,11 @@ function TableStatus() {
             </Table>
           </ScrollArea>
 
-          <Center mt="xl">
-            <Pagination
-              value={activePage}
-              total={isNPage}
-              onChange={onPageClick}
-            />
-          </Center>
+          <Admin_V3_ComponentPaginationBreakpoint
+            value={activePage}
+            total={isNPage}
+            onChange={onPageClick}
+          />
         </Paper>
       )}
     </Stack>

@@ -111,6 +111,8 @@ export const NEW_RouterInvestasi = {
    */
   edit_prospektus: ({ id }: { id: string }) =>
     `/dev/investasi/edit/prospektus/${id}`,
+
+  list_investor: ({ id }: { id: string }) => `/dev/investasi/${id}/investor`,
 };
 
 export const RouterInvestasi_OLD = {

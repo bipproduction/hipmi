@@ -5,12 +5,12 @@ import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { clientLogger } from "@/util/clientLogger";
-import { Box, Stack } from "@mantine/core";
+import { Box, Center, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
-import { apiGetJob, apiGetJobArsip } from "../../component/api_fetch_job";
+import { apiGetJob, apiGetJobArsip } from "../../lib/api_fetch_job";
 import ComponentJob_CardStatus from "../../component/card/card_view";
 import { MODEL_JOB } from "../../model/interface";
 
@@ -86,8 +86,12 @@ export default function Job_ViewArsip() {
         // --- Main component --- //
         <Box>
           <ScrollOnly
-            height="85vh"
-            renderLoading={() => <ComponentGlobal_Loader />}
+            height="80vh"
+            renderLoading={() => (
+              <Center>
+                <ComponentGlobal_Loader />
+              </Center>
+            )}
             data={data}
             setData={setData}
             moreData={handleMoreData}

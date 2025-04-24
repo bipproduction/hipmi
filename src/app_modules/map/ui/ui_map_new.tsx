@@ -11,6 +11,7 @@ import { ComponentMap_DetailData, ComponentMap_DrawerDetailData } from "../_comp
 import { apiGetAllMap } from "../lib/api_map";
 import { defaultLatLong, defaultMapZoom } from "../lib/default_lat_long";
 import { IDataMap } from "../lib/type_map";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
    const [mapId, setMapId] = useState("");
@@ -44,9 +45,7 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
          <Stack style={{ borderRadius: "10px" }}>
             {
                loading ?
-                  <Stack align="center" spacing="sm">
-                     <Loader color="gray" variant="dots" />
-                  </Stack>
+                  <CustomSkeleton height={"80vh"}/>
                   :
                   <Map
                      mapboxAccessToken={mapboxToken}
@@ -59,7 +58,7 @@ export function UiMap_MapBoxViewNew({ mapboxToken, }: { mapboxToken: string }) {
                      style={{
                         cursor: "pointer",
                         width: "auto",
-                        height: "90vh",
+                        height: "80vh",
                         borderRadius: "5px",
                      }}
                      attributionControl={false}

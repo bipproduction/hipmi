@@ -11,7 +11,7 @@ import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { apiGetJobByStatus } from "../../component/api_fetch_job";
+import { apiGetJobByStatus } from "../../lib/api_fetch_job";
 import ComponentJob_CardStatus from "../../component/card/card_view";
 
 export default function Job_NewViewStatus() {

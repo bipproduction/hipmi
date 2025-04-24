@@ -4,20 +4,9 @@ import {
   ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import {
-  Box,
-  Button,
-  Center,
-  Grid,
-  Stack,
-  Text
-} from "@mantine/core";
-import {
-  IconCircleCheck,
-  IconFileTypePdf
-} from "@tabler/icons-react";
+import { Box, Button, Center, Grid, Stack, Text } from "@mantine/core";
+import { IconCircleCheck, IconFileTypePdf } from "@tabler/icons-react";
 
-import { DIRECTORY_ID } from "@/lib";
 import {
   funGlobal_DeleteFileById,
   funGlobal_UploadToStorage,
@@ -26,6 +15,7 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
+import { DIRECTORY_ID } from "@/lib";
 import { clientLogger } from "@/util/clientLogger";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -160,7 +150,7 @@ export function Investasi_ViewEditProspektus() {
               transition: "all 0.3s ease",
               position: "absolute",
               bottom: 20,
-              width: "90%",
+              width: 300,
             }}
             onClick={() => {
               onUpload();

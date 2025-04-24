@@ -43,7 +43,7 @@ export default function AdminDonasi_DetailReject() {
       try {
         const response = await apiGetAdminDonasiById({
           id: params.id,
-        })
+        });
 
         if (response?.success && response?.data) {
           setData(response.data);
@@ -55,15 +55,15 @@ export default function AdminDonasi_DetailReject() {
         clientLogger.error("Invalid data format recieved:", error);
         setData(null);
       }
-    }
+    };
     loadInitialData();
-  })
+  });
 
   return (
     <>
       <Stack>
         {!data ? (
-          <SkeletonAdminDetailDonasiReject/>
+          <SkeletonAdminDetailDonasiReject />
         ) : (
           <>
             <ButtonOnHeader
@@ -88,7 +88,7 @@ export default function AdminDonasi_DetailReject() {
             </SimpleGrid>
           </>
         )}
-      </Stack >
+      </Stack>
     </>
   );
 }
@@ -158,12 +158,7 @@ function ButtonOnHeader({
         }
         buttonKiri={
           <>
-            <Button
-              radius={"xl"}
-              onClick={() => {
-                close();
-              }}
-            >
+            <Button radius={"xl"} onClick={() => setOpened(false)}>
               Batal
             </Button>
           </>
@@ -209,7 +204,9 @@ function CatatanReject({ catatan }: { catatan: string }) {
     <>
       <Paper p={"md"} bg={AdminColor.softBlue}>
         <Stack>
-          <Title c={AdminColor.white} order={5}>Alasan Penolakan :</Title>
+          <Title c={AdminColor.white} order={5}>
+            Alasan Penolakan :
+          </Title>
           <Text c={AdminColor.white}>{catatan}</Text>
         </Stack>
       </Paper>

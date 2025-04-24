@@ -25,7 +25,6 @@ export default function Job_UiStatus() {
   return (
     <>
       <Tabs
-        mt={1}
         color="yellow"
         variant="pills"
         radius={"xl"}

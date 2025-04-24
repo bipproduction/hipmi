@@ -36,9 +36,9 @@ function TampilanListPencairan({
           <Text>{e.title}</Text>
         </Center>
       </td>
-      <td width={500}>
+      <td>
         <Box w={"100%"}>
-          <Spoiler hideLabel="Sembunyikan" maxHeight={70} showLabel="Lihat">
+          <Spoiler c={AdminColor.white} hideLabel="Sembunyikan" maxHeight={70} showLabel="Lihat">
             {e.deskripsi}
           </Spoiler>
         </Box>
@@ -106,7 +106,7 @@ function TampilanListPencairan({
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
-              w={1500}
+              w={1100}
 
             >
               <thead>

@@ -9,6 +9,7 @@ export async function adminMap_funGetAllMaps() {
     },
     where: {
       isActive: true,
+      
     },
     include: {
       Portofolio: true,

@@ -1,130 +1,117 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Stack,
+  Box,
+  Center,
   Group,
-  Title,
+  Pagination,
   Paper,
   ScrollArea,
+  Stack,
   Table,
-  Center,
   Text,
-  Badge,
-  Spoiler,
-  Box,
-  Pagination,
+  Title,
 } from "@mantine/core";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
-import { MODEL_COLLABORATION } from "@/app_modules/colab/model/interface";
-import adminColab_getListAllRejected from "../fun/get/get_list_all_reject";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { apiGetAdminCollaborationReject } from "../lib/api_fetch_admin_collaboration";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
-export default function AdminColab_TableRejected({
-  listReject,
-}: {
-  listReject: any;
-}) {
+export default function AdminColab_TableRejected() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Project Collaboration" />
-        <TableMenu listReject={listReject} />
+        <TableMenu />
       </Stack>
     </>
   );
 }
-function TableMenu({ listReject }: { listReject: any }) {
-  const [data, setData] = useState<MODEL_COLLABORATION[]>(listReject.data);
-  const [isNPage, setNPage] = useState(listReject.nPage);
+function TableMenu() {
+  const [data, setData] = useState<MODEL_COLLABORATION[] | null>(null);
+  const [isNPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
 
-  let noAwal = activePage * 5 - 4;
-  async function onLoad(pindahPage: any) {
-    const load = await adminColab_getListAllRejected({ page: pindahPage });
-    setActivePage(pindahPage);
-    setData(load.data as any);
-    setNPage(load.nPage);
-  }
+  useShallowEffect(() => {
+    loadInitialData();
+  }, [activePage]);
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminCollaborationReject({
+        page: `${activePage}`,
+      });
 
-  const tableRow = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center c={AdminColor.white}>{noAwal++}</Center>
-      </td>
-      <td>
-        <Center c={AdminColor.white}>
-          <Text lineClamp={1}>{e?.Author?.Profile?.name}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AdminColor.white}>
-          <Box>
-            <Center c={AdminColor.white}>
-              <Text lineClamp={1}>{e?.title}</Text>
-            </Center>
-          </Box>
-        </Center>
-      </td>
-      <td>
-        <Center c={AdminColor.white}>
-          <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center c={AdminColor.white}>
-          <Text>{e?.ProjectCollaboration_Partisipasi.length}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center>
-          <Box w={400}>
+      if (response?.success && response?.data?.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invalid data format recieved", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data table reject", error);
+      setData([]);
+    }
+  };
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
+
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
             <Center>
-              <Spoiler
-                hideLabel={"sembunyikan"}
-                maxHeight={50}
-                showLabel="tampilkan"
-              >
-                {e?.report}
-              </Spoiler>
+              <Text color="gray">Tidak ada data</Text>
             </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data.map((e, i) => (
+      <tr key={i} style={{ color: AdminColor.white }}>
+        <td>
+          <Box w={150}>
+            <Text lineClamp={1}>{e?.Author.username}</Text>
           </Box>
-        </Center>
+        </td>
 
-        {/* <Stack>
-            <Button
-              loading={
-                idProject === e?.id ? (loadingDetail ? true : false) : false
-              }
-              leftIcon={<IconEye />}
-              loaderPosition="center"
-              radius={"xl"}
-              color="green"
-              onClick={() => {
-                getDetailData(e.id);
-              }}
-            >
-              Detail
-            </Button>
-            <Button
-              loading={
-                idProject === e?.id ? (loadingReject ? true : false) : false
-              }
-              leftIcon={<IconBan />}
-              loaderPosition="center"
-              radius={"xl"}
-              color="red"
-              onClick={() => {
-                onRejected(e.id);
-              }}
-            >
-              Reject
-            </Button>
-          </Stack> */}
-      </td>
-    </tr>
-  ));
+        <td>
+          <Box w={150} c={AdminColor.white}>
+            <Text lineClamp={1}>{e?.title}</Text>
+          </Box>
+        </td>
 
+        <td>
+          <Box w={150} c={AdminColor.white}>
+            <Text>{e?.ProjectCollaborationMaster_Industri.name}</Text>
+          </Box>
+        </td>
+
+        <td>
+          <Center c={AdminColor.white}>
+            <Text>{e?.ProjectCollaboration_Partisipasi.length}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Admin_DetailButton
+              path={`/dev/admin/colab/detail/reject/${e.id}`}
+            />
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
   return (
     <>
       <Stack spacing={"xs"}>
@@ -134,52 +121,49 @@ function TableMenu({ listReject }: { listReject: any }) {
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title c={AdminColor.white} order={4}>Reject</Title>
+          <Title c={AdminColor.white} order={4}>
+            Reject
+          </Title>
         </Group>
-        <Paper p={"md"} bg={AdminColor.softBlue}>
-          <Stack>
-            <ScrollArea h={"65vh"}>
-              <Table
-                verticalSpacing={"lg"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                
-              >
-                <thead>
-                  <tr>
-                    <th>
-                      <Center c={AdminColor.white}>No</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Username</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Title</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Industri</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Jumlah Partisipan</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Report</Center>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{tableRow}</tbody>
-              </Table>
-            </ScrollArea>
-            <Pagination
-              position="center"
-              total={isNPage}
-              value={activePage}
-              onChange={(val) => {
-                onLoad(val);
-              }}
-            />
-          </Stack>
-        </Paper>
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue}>
+            <Stack>
+              <ScrollArea h={"65vh"}>
+                <Table verticalSpacing={"lg"} horizontalSpacing={"md"} p={"md"}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <Text c={AdminColor.white}>Username</Text>
+                      </th>
+                      <th>
+                        <Text c={AdminColor.white}>Title</Text>
+                      </th>
+                      <th>
+                        <Text c={AdminColor.white}>Industri</Text>
+                      </th>
+                      <th>
+                        <Center c={AdminColor.white}>Jumlah Partisipan</Center>
+                      </th>
+                      <th>
+                        <Center c={AdminColor.white}>Aksi</Center>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTableBody()}</tbody>
+                </Table>
+              </ScrollArea>
+              <Admin_V3_ComponentPaginationBreakpoint
+                value={activePage}
+                total={isNPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+            </Stack>
+          </Paper>
+        )}
       </Stack>
     </>
   );

@@ -1,4 +1,5 @@
-import statusTransaksi from "../../../../src/bin/seeder/master/master_status_transaksi.json"
+import statusTransaksi from "../../../../src/bin/seeder/master/master_status_transaksi.json";
+import masterKategoriApp from "../../../../src/bin/seeder/master/master_kategori_app.json";
 
 export const globalStatusApp = [
   {
@@ -20,3 +21,35 @@ export const globalStatusApp = [
 ];
 
 export const globalStatusTransaksi = statusTransaksi;
+
+export const globalMasterApp = [
+  { id: "0", name: "Semua" },
+  {
+    id: "1",
+    name: "Event",
+  },
+  {
+    id: "2",
+    name: "Job",
+  },
+  {
+    id: "3",
+    name: "Voting",
+  },
+  {
+    id: "4",
+    name: "Donasi",
+  },
+  {
+    id: "5",
+    name: "Investasi",
+  },
+  {
+    id: "6",
+    name: "Forum",
+  },
+  {
+    id: "7",
+    name: "Collaboration",
+  },
+];

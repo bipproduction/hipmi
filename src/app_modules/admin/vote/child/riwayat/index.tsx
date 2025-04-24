@@ -3,28 +3,27 @@
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
 import {
-  Box,
-  Button,
   Center,
   Modal,
   Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconReportAnalytics, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_IsEmptyData from "@/app_modules/admin/_admin_global/is_empty_data";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 import { clientLogger } from "@/util/clientLogger";
 import _ from "lodash";
 import { useState } from "react";
@@ -32,6 +31,7 @@ import ComponentAdminVote_DetailHasil from "../../component/detail_hasil";
 import { AdminVote_getHasilById } from "../../fun/get/get_hasil_by_id";
 import { AdminVote_getListKontributorById } from "../../fun/get/get_list_kontributor_by_id";
 import { apiGetAdminVotingRiwayat } from "../../lib/api_fetch_admin_voting";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
 export default function AdminVote_Riwayat() {
   return (
@@ -95,7 +95,7 @@ function TableStatus() {
         <tr>
           <td colSpan={12}>
             <Center>
-              <Text color={"gray"}>Tidak ada data</Text>
+              <ComponentAdminGlobal_IsEmptyData />
             </Center>
           </td>
         </tr>
@@ -104,7 +104,7 @@ function TableStatus() {
 
     return data.map((e, i) => (
       <tr key={i}>
-        <td>
+        {/* <td>
           <Center>
             <Button
               loading={
@@ -123,14 +123,18 @@ function TableStatus() {
               Lihat Hasil
             </Button>
           </Center>
+        </td> */}
+        <td>
+          <Text w={100} c={AccentColor.white}>
+            {e?.Author?.username}
+          </Text>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Text w={150} c={AccentColor.white} lineClamp={1}>
+            {e?.title}
+          </Text>
         </td>
-        <td>
-          <Center c={AccentColor.white}>{e?.title}</Center>
-        </td>
-        <td>
+        {/* <td>
           <Center c="white">
             <Spoiler
               hideLabel="sembunyikan"
@@ -141,8 +145,8 @@ function TableStatus() {
               {e?.deskripsi}
             </Spoiler>
           </Center>
-        </td>
-        <td>
+        </td> */}
+        {/* <td>
           <Stack>
             {e?.Voting_DaftarNamaVote.map((v) => (
               <Box key={v?.id}>
@@ -150,7 +154,7 @@ function TableStatus() {
               </Box>
             ))}
           </Stack>
-        </td>
+        </td> */}
 
         <td>
           <Center c={AccentColor.white}>
@@ -164,6 +168,12 @@ function TableStatus() {
             {new Intl.DateTimeFormat("id-ID", {
               dateStyle: "long",
             }).format(new Date(e?.akhirVote))}
+          </Center>
+        </td>
+
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminVote.detail({ id: e.id })} />
           </Center>
         </td>
       </tr>
@@ -200,24 +210,14 @@ function TableStatus() {
                 verticalSpacing={"md"}
                 horizontalSpacing={"md"}
                 p={"md"}
-                w={1500}
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AccentColor.white}>Aksi</Center>
+                      <Text c={AccentColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Username</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Judul</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Deskripsi</Center>
-                    </th>
-                    <th>
-                      <Center c={AccentColor.white}>Pilihan</Center>
+                      <Text c={AccentColor.white}>Judul</Text>
                     </th>
                     <th>
                       <Center c={AccentColor.white}>Mulai Vote</Center>
@@ -225,21 +225,22 @@ function TableStatus() {
                     <th>
                       <Center c={AccentColor.white}>Selesai Vote</Center>
                     </th>
+                    <th>
+                      <Center c={AccentColor.white}>Aksi</Center>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

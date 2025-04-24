@@ -29,7 +29,7 @@ import {
 import { Job_ComponentButtonSaveCreate } from "../component";
 import { defaultDeskripsi, defaultSyarat } from "../component/default_value";
 
-export default function Job_Create() {
+export default function Job_Create({userLoginId}: {userLoginId: string}) {
   const [value, setValue] = useState({
     title: "",
     content: "",
@@ -174,7 +174,11 @@ export default function Job_Create() {
         </Stack>
       </ComponentGlobal_CardStyles>
 
-      <Job_ComponentButtonSaveCreate value={value as any} file={file as any} />
+      <Job_ComponentButtonSaveCreate
+        userLoginId={userLoginId}
+        value={value as any}
+        file={file as any}
+      />
     </Stack>
   );
 }

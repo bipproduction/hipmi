@@ -1,10 +1,14 @@
 "use client";
 
-import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  AccentColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_LoadImage,
   ComponentGlobal_TampilanRupiah,
 } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   Box,
   Button,
@@ -16,21 +20,38 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandCashapp } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
+import { apiGetOneSahamInvestasiById } from "../../_lib/api_fetch_new_investasi";
 import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 
-export function Investasi_ViewTransaksiBerhasil({
-  dataTransaksi,
-}: {
-  dataTransaksi: any;
-}) {
-  const router = useRouter();
-  const [data, setData] = useState<MODEL_INVOICE_INVESTASI>(dataTransaksi);
-  const [isLoading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+export function Investasi_ViewTransaksiBerhasil() {
   const [opened, setOpened] = useState(false);
+
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_INVOICE_INVESTASI | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneSahamInvestasiById({ id: param.id });
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+    }
+  };
+
+  if (!data) return <CustomSkeleton height={"50vh"} width={"100%"} />;
 
   return (
     <>

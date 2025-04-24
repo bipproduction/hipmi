@@ -13,6 +13,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 
 export default function ComponentAdminForum_ViewOneDetailPosting({
   dataPosting,
@@ -21,41 +22,36 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
 }) {
   return (
     <>
-      <Stack spacing={"xs"} h={"100%"} w={"50%"}>
-        <Paper bg={AdminColor.softBlue} p={"xs"} style={{ borderRadius: "6px" }}>
-          <Title order={4} c={"white"}>
-            Detail Posting
-          </Title>
-        </Paper>
-
-        <Paper  p={"md"} radius={"md"} bg={AdminColor.softBlue} shadow="sm">
+      <Admin_V3_ComponentBreakpoint cols={2}>
+        <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue} shadow="sm">
           <Stack>
             <Stack spacing={5}>
-              <Group position="apart">
+              <Admin_V3_ComponentBreakpoint allCols={2}>
                 <Text c={AdminColor.white} fw={"bold"}>
                   Username:{" "}
-                  <Text span inherit>
+                  <Text span inherit lineClamp={1}>
                     {dataPosting?.Author?.username}
                   </Text>
                 </Text>
 
-                <Badge
-                  color={
-                    (dataPosting?.ForumMaster_StatusPosting?.id as any) === 1
-                      ? "green"
-                      : "red"
-                  }
-                >
-                  {dataPosting?.ForumMaster_StatusPosting?.status}
-                </Badge>
-              </Group>
+                <Group position="right">
+                  <Badge
+                    color={
+                      (dataPosting?.ForumMaster_StatusPosting?.id as any) === 1
+                        ? "green"
+                        : "red"
+                    }
+                  >
+                    {dataPosting?.ForumMaster_StatusPosting?.status}
+                  </Badge>
+                </Group>
+              </Admin_V3_ComponentBreakpoint>
               {/* <Divider /> */}
             </Stack>
 
             <Box>
               <Spoiler
                 c={AdminColor.white}
-                w={500}
                 hideLabel="sembunyikan"
                 maxHeight={100}
                 showLabel="tampilkan"
@@ -69,7 +65,7 @@ export default function ComponentAdminForum_ViewOneDetailPosting({
             </Box>
           </Stack>
         </Paper>
-      </Stack>
+      </Admin_V3_ComponentBreakpoint>
     </>
   );
 }

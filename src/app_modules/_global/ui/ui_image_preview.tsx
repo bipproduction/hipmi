@@ -80,7 +80,7 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
             }
           />
 
-          <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"}>
+          <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"} pt={"sm"}>
             {isImage === null ? (
               <Skeleton height={200} radius={"sm"} />
             ) : isImage ? (

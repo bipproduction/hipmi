@@ -1,6 +1,11 @@
 "use client";
 
-import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "@/app_modules/forum/model/interface";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { Component_SetInnerHtml } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import {
+  MODEL_FORUM_KOMENTAR,
+  MODEL_FORUM_POSTING,
+} from "@/app_modules/forum/model/interface";
 import {
   Badge,
   Box,
@@ -20,40 +25,28 @@ export default function ComponentAdminForum_ViewOneDetailKomentar({
 }) {
   return (
     <>
-      <Stack spacing={"xs"} h={"100%"} w={"50%"}>
-        <Paper bg={"gray"} p={"xs"} style={{ borderRadius: "6px" }}>
-          <Title order={4} c={"white"}>
-            Detail Komentar
-          </Title>
-        </Paper>
-
-        <Paper withBorder p={"md"} radius={"md"} shadow="sm">
+      <Stack spacing={"xs"} h={"100%"}>
+        <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <Stack spacing={5}>
               <Group position="apart">
-                <Text fw={"bold"}>
+                <Text fw={"bold"} c={AdminColor.white}>
                   Username:{" "}
                   <Text span inherit>
                     {dataKomentar?.Author?.username}
                   </Text>
                 </Text>
-
               </Group>
               {/* <Divider /> */}
             </Stack>
 
             <Box>
               <Spoiler
-                w={500}
                 hideLabel="sembunyikan"
                 maxHeight={100}
                 showLabel="tampilkan"
               >
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: dataKomentar?.komentar,
-                  }}
-                />
+                <Component_SetInnerHtml props={dataKomentar?.komentar} />
               </Spoiler>
             </Box>
           </Stack>

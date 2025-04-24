@@ -1,31 +1,26 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_EVENT_PESERTA } from "@/app_modules/event/_lib/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
-  Button,
   Center,
-  Pagination,
   Paper,
   ScrollArea,
   Stack,
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
-import { useState } from "react";
-import { adminEvent_getListPesertaById } from "../fun";
-import _ from "lodash";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { useShallowEffect } from "@mantine/hooks";
-import { clientLogger } from "@/util/clientLogger";
-import { apiGetAdminDetailEventPesertaById } from "../_lib/api_fecth_admin_event";
-import { useParams } from "next/navigation";
 import { IconSearch } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { apiGetAdminDetailEventPesertaById } from "../_lib/api_fecth_admin_event";
 
 export function AdminEvent_ViewDetailPeserta() {
   const params = useParams<{ id: string }>();
@@ -36,7 +31,7 @@ export function AdminEvent_ViewDetailPeserta() {
 
   useShallowEffect(() => {
     loadInitialData();
-  }, [isActivePage, isSearch])
+  }, [isActivePage, isSearch]);
 
   const loadInitialData = async () => {
     try {
@@ -44,11 +39,11 @@ export function AdminEvent_ViewDetailPeserta() {
         id: params.id,
         page: `${isActivePage}`,
         search: isSearch,
-      })
+      });
 
       if (response?.success && response?.data.data) {
-        setData(response.data.data)
-        setNPage(response.data.nPage || 1)
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
       } else {
         console.error("Invalid data format recieved:", response);
         setData([]);
@@ -57,15 +52,15 @@ export function AdminEvent_ViewDetailPeserta() {
       clientLogger.error("Invalid data format recieved:", error);
       setData([]);
     }
-  }
+  };
 
   const onSearch = async (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -105,7 +100,7 @@ export function AdminEvent_ViewDetailPeserta() {
         </td>
       </tr>
     ));
-  }
+  };
 
   return (
     <>
@@ -126,60 +121,48 @@ export function AdminEvent_ViewDetailPeserta() {
           }
         />
         {!data ? (
-            <CustomSkeleton height={"80vh"} width="100%" />
-        ): (
-           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"75vh"}>
-           <ScrollArea w={"100%"} h={"90%"}>
-             <Table
-               verticalSpacing={"md"}
-               horizontalSpacing={"md"}
-               p={"md"}
-               w={"100%"}
- 
-             >
-               <thead>
-                 <tr>
-                   <th>
-                     <Center c={AdminColor.white}>Username</Center>
-                   </th>
-                   <th>
-                     <Center c={AdminColor.white}>Name</Center>
-                   </th>
-                   <th>
-                     <Center c={AdminColor.white}>Nomor</Center>
-                   </th>
-                   <th>
-                     <Center c={AdminColor.white}>Email</Center>
-                   </th>
-                   <th>
-                     <Center c={AdminColor.white}>Konfirmasi Kehadiran</Center>
-                   </th>
-                 </tr>
-               </thead>
-               <tbody>{renderTableBody()}</tbody>
-             </Table>
-             {_.isEmpty(data) ? (
-               <ComponentAdminGlobal_IsEmptyData
-                 text="Tidak ada peserta"
-                 marginTop={100}
-               />
-             ) : (
-               ""
-             )}
-           </ScrollArea>
- 
-           <Center mt={"xl"}>
-             <Pagination
-               value={isActivePage}
-               total={isNPage}
-               onChange={(val) => {
-                 onPageClick(val);
-               }}
-             />
-           </Center>
-         </Paper>
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"75vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={"100%"}
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Username</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Name</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Nomor</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Email</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Konfirmasi Kehadiran</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
+          </Paper>
         )}
-       
       </Stack>
       {/* <pre>{JSON.stringify(dataPeserta, null, 2)}</pre> */}
     </>

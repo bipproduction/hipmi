@@ -36,6 +36,8 @@ import colab_funCreatePartisipan from "../../fun/create/fun_create_partisipan_by
 import { MODEL_COLLABORATION_PARTISIPASI } from "../../model/interface";
 import { Collaboration_SkeletonListPrtisipanIsUser } from "../skeleton_view";
 import ComponentColab_AuthorNameOnListPartisipan from "./header_author_list_partisipan";
+import { WibuRealtime } from "wibu-pkg";
+import { IRealtimeData } from "@/lib/global_state";
 
 export default function ComponentColab_DetailListPartisipasiUser({
   userLoginId,
@@ -103,37 +105,42 @@ export default function ComponentColab_DetailListPartisipasiUser({
       });
 
       if (res.status === 201) {
-        // const dataNotif = {
-        //   appId: res?.data?.ProjectCollaboration?.id,
-        //   userId: res?.data?.ProjectCollaboration?.userId,
-        //   pesan: res?.data?.ProjectCollaboration?.title,
-        //   status: "Partisipan Project",
-        //   kategoriApp: "COLLABORATION",
-        //   title: "Partisipan baru telah bergabung !",
-        // };
+        const dataNotifikasi: IRealtimeData = {
+          appId: res?.data?.ProjectCollaboration?.id,
+          userId: res?.data?.ProjectCollaboration?.userId as any,
+          pesan: res?.data?.ProjectCollaboration?.title,
+          status: "Partisipan Project" as any,
+          kategoriApp: "COLLABORATION",
+          title: "Partisipan baru telah bergabung !",
+        };
 
-        // const createNotifikasi = await notifikasiToUser_funCreate({
-        //   data: dataNotif as any,
-        // });
+        const createNotifikasi = await notifikasiToUser_funCreate({
+          data: dataNotifikasi as any,
+        });
 
-        // if (createNotifikasi.status === 201) {
-        //   mqtt_client.publish(
-        //     "USER",
-        //     JSON.stringify({
-        //       userId: dataNotif.userId,
-        //       count: 1,
-        //     })
-        //   );
-        // }
+        if (createNotifikasi.status === 201) {
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+          // mqtt_client.publish(
+          //   "USER",
+          //   JSON.stringify({
+          //     userId: dataNotif.userId,
+          //     count: 1,
+          //   })
+          // );
+        }
 
-        const respone = await apiGetOneCollaborationById({
+        const response = await apiGetOneCollaborationById({
           id: params.id,
           kategori: "list_partisipan",
           page: `${activePage}`,
         });
 
-        if (respone) {
-          setData(respone.data);
+        if (response) {
+          setData(response.data);
         }
 
         const cekPartisipan = await apiGetOneCollaborationById({
@@ -274,8 +281,8 @@ export default function ComponentColab_DetailListPartisipasiUser({
             }
             styles={{
               input: {
-                backgroundColor: MainColor.white
-              }
+                backgroundColor: MainColor.white,
+              },
             }}
             placeholder="Deskripsikan diri anda yang sesuai dengan proyek ini.."
             minRows={4}

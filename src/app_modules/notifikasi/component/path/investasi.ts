@@ -1,36 +1,23 @@
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { MODEL_NOTIFIKASI } from "../../model/interface";
-import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
-import { notifikasi_funDonasiCheckStatus } from "../../fun/check/fun_check_donasi_status";
-import notifikasi_getByUserId from "../../fun/get/get_notifiaksi_by_id";
-import notifikasi_countUserNotifikasi from "../../fun/count/fun_count_by_id";
-import notifikasi_funUpdateIsReadById from "../../fun/update/fun_update_is_read_by_user_id";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
-import { notifikasi_funInvestasiCheckStatus } from "../../fun/check/fun_check_investasi_status";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {
-  notifikasi_funGetStatusTransaksiById,
-  notifikasi_funInvestasiChecInvestaorStatus,
+  notifikasi_funInvestasiChecInvestaorStatus
 } from "../../fun";
+import { notifikasi_funInvestasiCheckStatus } from "../../fun/check/fun_check_investasi_status";
+import notifikasi_funUpdateIsReadById from "../../fun/update/fun_update_is_read_by_user_id";
 
 export async function redirectInvestasiPage({
   appId,
   dataId,
-  categoryPage,
   router,
-  onLoadDataEvent,
   onSetMenuId,
   onSetVisible,
-  onLoadCountNtf,
 }: {
   appId: string;
   dataId: string;
-  categoryPage: string;
   router: AppRouterInstance;
-  onLoadDataEvent: (val: any) => void;
   onSetMenuId(val: number): void;
   onSetVisible(val: boolean): void;
-  onLoadCountNtf(val: number): void;
 }) {
   const check = await notifikasi_funInvestasiCheckStatus({ id: appId });
   const checkInvestor = await notifikasi_funInvestasiChecInvestaorStatus({

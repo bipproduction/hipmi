@@ -6,6 +6,9 @@ export {
   apiGetAdminInvestasiById,
   apiGetAdminAllTransaksiById,
   apiGetAdminStatusTransaksi,
+  apiGetAdminDetailTransaksi
+  
+
 };
 const apiGetAdminInvestasiCountDashboard = async ({
   name,
@@ -58,6 +61,23 @@ const apiGetAdminInvestasiByStatus = async ({
   return await response.json().catch(() => null);
 };
 
+const apiGetAdminDetailTransaksi = async ({ id }: { id: string }) => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/admin/investasi/${id}/detail_transaksi`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
+}
+  
 const apiGetAdminInvestasiById = async ({ id }: { id: string }) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
@@ -94,7 +114,6 @@ const apiGetAdminAllTransaksiById = async ({
 
     // Fetch data
     const isStatus = status ? `&status=${status}` : "";
-    console.log("Ini status",isStatus);
     const isPage = page ? `?page=${page}` : "";
     const response = await fetch(
       `/api/admin/investasi/${id}/transaksi${isPage}${isStatus}`,
@@ -126,6 +145,7 @@ const apiGetAdminAllTransaksiById = async ({
   }
 };
 
+
 const apiGetAdminStatusTransaksi = async () => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);
@@ -142,3 +162,5 @@ const apiGetAdminStatusTransaksi = async () => {
 
   return await response.json().catch(() => null);
 };
+
+

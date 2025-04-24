@@ -34,6 +34,10 @@ export const RouterAdminDonasi_OLD = {
   pencairan_dana: "/dev/admin/donasi/pencairan_dana/",
 };
 
+export const RouterAdminColab = {
+  // detail
+  detail_publish: "/dev/admin/colab/detail/publish/",
+}
 
 
 export const RouterAdminAward = {

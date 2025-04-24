@@ -28,13 +28,19 @@ export default function ButtonDonasi({ donasiId }: { donasiId: string }) {
       <Footer
         height={70}
         px={"md"}
-        sx={{ borderStyle: "none", backgroundColor: "transparent" }}
+        style={{
+          borderStyle: "none",
+          backgroundColor: "transparent",
+          width: "100%",
+        }}
       >
         <Center h={70}>
           <Button
+            style={{
+              width: "100%",
+            }}
             loaderPosition="center"
             loading={isLoading ? true : false}
-            w={"100%"}
             radius={"xl"}
             onClick={() => onClick()}
             bg={MainColor.yellow}

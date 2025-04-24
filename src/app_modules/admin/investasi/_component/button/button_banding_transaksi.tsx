@@ -28,22 +28,22 @@ export function AdminInvestasi_ComponentButtonBandingTransaksi({
       lembarTerbeli,
     });
 
-    if (res.status == 200) {
-      try {
-        const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
-          investasiId,
-          page: 1,
-        });
-        onLoadData(dataTransaksi);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        ComponentAdminGlobal_NotifikasiBerhasil(res.message);
-        setLoading(true);
-      }
-    } else {
-      ComponentAdminGlobal_NotifikasiGagal(res.message);
-    }
+    // if (res.status == 200) {
+    //   try {
+    //     const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
+    //       investasiId,
+    //       page: 1,
+    //     });
+    //     onLoadData(dataTransaksi);
+    //   } catch (error) {
+    //     console.log(error);
+    //   } finally {
+    //     ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+    //     setLoading(true);
+    //   }
+    // } else {
+    //   ComponentAdminGlobal_NotifikasiGagal(res.message);
+    // }
   }
 
   return (

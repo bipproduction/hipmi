@@ -13,7 +13,11 @@ export async function adminInvestasi_funAcceptTransaksiById({
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-}) {
+  }) {
+  console.log("Ini invoiceid", invoiceId)
+  console.log("Ini investasid", investasiId)
+  console.log("Ini lembar terbeli", lembarTerbeli)
+
   const dataInvestasi: any = await prisma.investasi.findFirst({
     where: {
       id: investasiId,
@@ -24,7 +28,6 @@ export async function adminInvestasi_funAcceptTransaksiById({
       lembarTerbeli: true,
     },
   });
-
   // Hitung TOTAL SISA LEMBAR
   const investasi_sisaLembar = toNumber(dataInvestasi?.sisaLembar);
   const invoice_lembarTerbeli = toNumber(lembarTerbeli);
@@ -47,6 +50,7 @@ export async function adminInvestasi_funAcceptTransaksiById({
       statusInvoiceId: "1",
     },
   });
+  
 
   if (!updt) {
     return { status: 400, message: "Gagal Update Status" };
@@ -83,3 +87,6 @@ export async function adminInvestasi_funAcceptTransaksiById({
     };
   }
 }
+
+
+

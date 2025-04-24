@@ -12,16 +12,16 @@ export async function adminNotifikasi_findRouterJob({
   notifikasiId,
   router,
   activePage,
-  onLoadCountNotif,
-  onLoadDataNotifikasi,
+  // onLoadCountNotif,
+  // onLoadDataNotifikasi ,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   router: AppRouterInstance;
   activePage: number;
-  onLoadCountNotif: (val: any) => void;
-  onLoadDataNotifikasi: (val: any) => void;
+  // onLoadCountNotif: (val: any) => void;
+  // onLoadDataNotifikasi: (val: any) => void; 
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -35,13 +35,13 @@ export async function adminNotifikasi_findRouterJob({
     });
 
     if (udpateReadNotifikasi.status == 200) {
-      const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      onLoadCountNotif(loadCountNotif);
+      // const loadCountNotif = await adminNotifikasi_countNotifikasi();
+      // onLoadCountNotif(loadCountNotif);
 
-      const loadListNotifikasi = await adminNotifikasi_getByUserId({
-        page: 1,
-      });
-      onLoadDataNotifikasi(loadListNotifikasi);
+      // const loadListNotifikasi = await adminNotifikasi_getByUserId({
+      //   page: 1,
+      // });
+      // onLoadDataNotifikasi(loadListNotifikasi);
 
       const path = `/dev/admin/job/child/${check.statusName}`;
 

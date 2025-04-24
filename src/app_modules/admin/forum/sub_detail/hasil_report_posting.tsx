@@ -1,25 +1,26 @@
 "use client";
 
-import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import {
   MODEL_FORUM_POSTING,
   MODEL_FORUM_REPORT_POSTING,
 } from "@/app_modules/forum/model/interface";
+import mqtt_client from "@/util/mqtt_client";
 import {
   Button,
   Center,
   Group,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
   Stack,
   Table,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
@@ -28,12 +29,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
+import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
 import { adminForum_getListReportPostingById } from "../fun/get/get_list_report_posting_by_id";
-import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
-import mqtt_client from "@/util/mqtt_client";
-import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export default function AdminForum_HasilReportPosting({
   dataPosting,
@@ -45,12 +46,16 @@ export default function AdminForum_HasilReportPosting({
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_HeaderTamplate name="Forum: Hasil Report Posting" />
-        <Group position="apart">
-          <AdminGlobal_ComponentBackButton />
-          <ButtonDeletePosting dataPosting={dataPosting} />
-        </Group>
-        <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
+        <ComponentAdminGlobal_HeaderTamplate name="Forum: Report" />
+        <AdminGlobal_ComponentBackButton />
+
+        <Admin_V3_ComponentBreakpoint>
+          <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
+          <Group position="center">
+            <ButtonDeletePosting dataPosting={dataPosting} />
+          </Group>
+        </Admin_V3_ComponentBreakpoint>
+
         <HasilReportPosting
           listReport={listReport}
           postingId={dataPosting.id}
@@ -178,12 +183,12 @@ function HasilReportPosting({
   const TableRows = data?.map((e, i) => (
     <tr key={i}>
       <td>
-        <Center c={AdminColor.white} w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text>{e?.User?.username}</Text>
         </Center>
       </td>
       <td>
-        <Center c={AdminColor.white} w={200}>
+        <Center c={AdminColor.white} w={150}>
           <Text>
             {e?.ForumMaster_KategoriReport?.title
               ? e?.ForumMaster_KategoriReport?.title
@@ -193,10 +198,12 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center c={AdminColor.white} w={500}>
+        <Center c={AdminColor.white} w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
             {e?.ForumMaster_KategoriReport?.deskripsi ? (
-              <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
+              <Text style={{ textJustify: "auto", textAlign: "justify" }}>
+                {e?.ForumMaster_KategoriReport?.deskripsi}
+              </Text>
             ) : (
               <Text>-</Text>
             )}
@@ -205,9 +212,15 @@ function HasilReportPosting({
       </td>
 
       <td>
-        <Center c={AdminColor.white} w={500}>
+        <Center c={AdminColor.white} w={300}>
           <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
-            {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
+            {e?.deskripsi ? (
+              <Text style={{ textJustify: "auto", textAlign: "justify" }}>
+                {e?.deskripsi}
+              </Text>
+            ) : (
+              <Text>-</Text>
+            )}
           </Spoiler>
         </Center>
       </td>
@@ -239,7 +252,7 @@ function HasilReportPosting({
         {_.isEmpty(data) ? (
           <ComponentAdminGlobal_IsEmptyData />
         ) : (
-          <Paper p={"md"}  bg={AdminColor.softBlue} h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -247,21 +260,28 @@ function HasilReportPosting({
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center c={AdminColor.white}>Username</Center>
+                      <Center w={150} c={AdminColor.white}>
+                        Username
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Kategori</Center>
+                      <Center w={150} c={AdminColor.white}>
+                        Kategori
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Deskripsi</Center>
+                      <Center w={300} c={AdminColor.white}>
+                        Deskripsi
+                      </Center>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Deskripsi Lainnya</Center>
+                      <Center w={300} c={AdminColor.white}>
+                        Deskripsi Lainnya
+                      </Center>
                     </th>
                   </tr>
                 </thead>
@@ -269,15 +289,14 @@ function HasilReportPosting({
                 <tbody>{TableRows}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

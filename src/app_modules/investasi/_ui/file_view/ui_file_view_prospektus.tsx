@@ -2,6 +2,7 @@
 
 import { MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 import {
   apiGetPdfToImage,
   PageData,
@@ -9,6 +10,10 @@ import {
 import { UIGlobal_DrawerCustom } from "@/app_modules/_global/ui";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
+import UI_NewLayoutTamplate, {
+  UI_NewHeader,
+  UI_NewChildren,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { ActionIcon, Box, Stack, Text } from "@mantine/core";
 import { IconDotsVertical, IconDownload, IconX } from "@tabler/icons-react";
@@ -36,10 +41,13 @@ export function Investasi_UiFileViewProspektus() {
           setPdfPages(response.pages as any);
           setLoading(false);
         }
-      } catch (err) {
-        console.error("Error fetching PDF:", err);
-        setError(err instanceof Error ? err.message : "Unknown error occurred");
+      } catch (error) {
+        console.error("Error fetching PDF:", error);
+        setError(
+          error instanceof Error ? error.message : "Unknown error occurred"
+        );
         setLoading(false);
+        setPdfPages(null);
       }
     };
 
@@ -67,20 +75,26 @@ export function Investasi_UiFileViewProspektus() {
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Pratinjau Prospektus"
             iconLeft={<IconX />}
             customButtonRight={
-              <ActionIcon
-                variant="transparent"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <IconDotsVertical color="white" />
-              </ActionIcon>
+              loading ? (
+                <CustomSkeleton circle height={30} width={30} />
+              ) : error && error !== "" ? (
+                <ActionIcon disabled />
+              ) : (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  <IconDotsVertical color="white" />
+                </ActionIcon>
+              )
             }
           />
         }
@@ -88,10 +102,9 @@ export function Investasi_UiFileViewProspektus() {
         <Box mb="lg">
           {loading ? (
             <CustomSkeleton height={"80vh"} width={"100%"} />
-          ) : error ? (
+          ) : error && error !== "" ? (
             <Stack>
               <ComponentGlobal_IsEmptyData text="Maaf, PDF mengalami error" />
-              <ComponentGlobal_IsEmptyData text={error} />
             </Stack>
           ) : (
             <div
@@ -116,7 +129,65 @@ export function Investasi_UiFileViewProspektus() {
             </div>
           )}
         </Box>
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
+
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Pratinjau Prospektus"
+            iconLeft={<IconX />}
+            customButtonRight={
+              loading ? (
+                <CustomSkeleton circle height={30} width={30} />
+              ) : error && error !== "" ? (
+                <ActionIcon disabled />
+              ) : (
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  <IconDotsVertical color="white" />
+                </ActionIcon>
+              )
+            }
+          />
+        </UI_NewHeader>
+        <UI_NewChildren>
+          <Box mb="lg">
+            {loading ? (
+              <CustomSkeleton height={"80vh"} width={"100%"} />
+            ) : error && error !== "" ? (
+              <Stack>
+                <ComponentGlobal_IsEmptyData text="Maaf, PDF mengalami error" />
+                {/* <ComponentGlobal_IsEmptyData text={error} /> */}
+              </Stack>
+            ) : (
+              <div
+                ref={pdfsRef}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {pdfPages?.map((page, index) => (
+                  <Image
+                    key={`page-${index}`}
+                    src={page.imageUrl}
+                    alt={`Page ${page.pageNumber}`}
+                    className="pdf-page"
+                    width={500} // Adjust width as needed
+                    height={707} // Adjust height as needed
+                    style={{ width: "100%", marginBottom: "10px" }}
+                  />
+                ))}
+              </div>
+            )}
+          </Box>
+        </UI_NewChildren>
+      </UI_NewLayoutTamplate>
 
       <UIGlobal_DrawerCustom
         close={() => setOpen(false)}

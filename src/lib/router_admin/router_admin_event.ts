@@ -3,7 +3,10 @@ export const RouterAdminEvent = {
 
   // detail
   detail_peserta: "/dev/admin/event/detail/peserta/",
-  detail_publish: "/dev/admin/event/detail/publish/",
+  detail_publish: ({ id }: { id: string }) =>
+    `/dev/admin/event/detail/publish/${id}`,
+  new_detail: ({ id }: { id: string }) =>
+    `/dev/admin/event/${id}`,
   detail_sponsor: "/dev/admin/event/detail/detail_sponsor/",
 
   // child
@@ -14,7 +17,4 @@ export const RouterAdminEvent = {
   table_review: "/dev/admin/event/table/review",
   table_publish: "/dev/admin/event/table/publish",
   table_reject: "/dev/admin/event/table/reject",
-
-  
-  
 };

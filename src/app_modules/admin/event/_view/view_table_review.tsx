@@ -1,8 +1,5 @@
 import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
-import {
-  gs_adminEvent_triggerReview,
-  IRealtimeData,
-} from "@/lib/global_state";
+import { gs_adminEvent_triggerReview, IRealtimeData } from "@/lib/global_state";
 import { AccentColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -15,6 +12,7 @@ import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_
 import { clientLogger } from "@/util/clientLogger";
 import {
   Affix,
+  Box,
   Button,
   Center,
   Group,
@@ -50,6 +48,9 @@ import { adminEvent_funGetListReview } from "../fun";
 import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminEvent_ComponentTableReview() {
   const [data, setData] = useState<MODEL_EVENT[] | null>(null);
@@ -162,11 +163,9 @@ export default function AdminEvent_ComponentTableReview() {
           });
 
           if (response?.success && response?.data?.data) {
-
             setData(response.data.data);
             setNPage(response.data.nPage || 1);
           } else {
-
             setData([]);
           }
         } catch (error) {
@@ -227,7 +226,6 @@ export default function AdminEvent_ComponentTableReview() {
         });
 
         if (response?.success && response?.data?.data) {
-
           setData(response.data.data);
           setNPage(response.data.nPage || 1);
         } else {
@@ -262,28 +260,21 @@ export default function AdminEvent_ComponentTableReview() {
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e?.Author?.username}</Text>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text>{e?.Author?.username}</Text>
+            </Box>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text lineClamp={2}>{e.title}</Text>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e.lokasi}</Text>
-          </Center>
-        </td>
-        <td>
-          <Center c={AdminColor.white} w={200}>
-            <Text>{e.EventMaster_TipeAcara.name}</Text>
-          </Center>
-        </td>
-
-        <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -298,7 +289,7 @@ export default function AdminEvent_ComponentTableReview() {
           </Center>
         </td>
         <td>
-          <Center c={AdminColor.white} w={200}>
+          <Center c={AdminColor.white}>
             <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
                 dateStyle: "full",
@@ -313,19 +304,7 @@ export default function AdminEvent_ComponentTableReview() {
           </Center>
         </td>
 
-        <td>
-          <Center c={AdminColor.white} w={400}>
-            <Spoiler
-              hideLabel="sembunyikan"
-              maxHeight={50}
-              showLabel="tampilkan"
-            >
-              {e.deskripsi}
-            </Spoiler>
-          </Center>
-        </td>
-
-        <td>
+        {/* <td>
           <Center>
             <Stack>
               <Button
@@ -362,11 +341,18 @@ export default function AdminEvent_ComponentTableReview() {
               </Button>
             </Stack>
           </Center>
+        </td> */}
+
+        <td>
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
+          </Center>
         </td>
       </tr>
     ));
   };
-
 
   return (
     <>
@@ -386,8 +372,6 @@ export default function AdminEvent_ComponentTableReview() {
             />
           }
         />
-
-
 
         {!data ? (
           <CustomSkeleton height={"80vh"} width="100%" />
@@ -416,12 +400,7 @@ export default function AdminEvent_ComponentTableReview() {
             )}
 
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1500}
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -430,22 +409,17 @@ export default function AdminEvent_ComponentTableReview() {
                     <th>
                       <Center c={AdminColor.white}>Judul</Center>
                     </th>
-                    <th>
-                      <Center c={AdminColor.white}>Lokasi</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tipe Acara</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Mulai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Tanggal & Waktu Selesai</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Deskripsi</Center>
-                    </th>
 
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Mulai
+                      </Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Selesai
+                      </Center>
+                    </th>
                     <th>
                       <Center c={AdminColor.white}>Aksi</Center>
                     </th>
@@ -455,15 +429,13 @@ export default function AdminEvent_ComponentTableReview() {
               </Table>
             </ScrollArea>
 
-            <Center mt={"xl"}>
-              <Pagination
+              <Admin_V3_ComponentPaginationBreakpoint
                 value={activePage}
                 total={isNPage}
                 onChange={(val) => {
                   onPageClick(val);
                 }}
               />
-            </Center>
           </Paper>
         )}
       </Stack>

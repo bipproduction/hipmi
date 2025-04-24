@@ -25,6 +25,9 @@ import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import adminDeveloper_funGetListAllUser from "./fun/get/fun_get_list_all_user";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { Admin_V3_ComponentBreakpoint } from "../_components_v3/comp_simple_grid_breakpoint";
+import { ComponentAdminGlobal_TitlePage } from "../_admin_global/_component";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminDeveloper({
   listUser,
@@ -46,17 +49,7 @@ export default function AdminDeveloper({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Super Admin" />
-        <SimpleGrid cols={2} spacing={50}>
-          {/* <TableAdmin
-            dataAdmin={dataAdmin}
-            setDataAdmin={setDataAdmin}
-            setDataUser={setDataUser}
-          /> */}
-          {/* <TableUser
-            dataUser={listUser}
-            setDataUser={setDataUser}
-            setDataAdmin={setDataAdmin}
-          /> */}
+        <Admin_V3_ComponentBreakpoint>
           <NewTableAdmin
             data={dataAdmin}
             nPage={pageAdmin}
@@ -73,7 +66,7 @@ export default function AdminDeveloper({
               setPageAdmin(val.nPage);
             }}
           />
-        </SimpleGrid>
+        </Admin_V3_ComponentBreakpoint>
       </Stack>
     </>
   );
@@ -143,72 +136,65 @@ function NewTableUser({
   return (
     <>
       <Stack spacing={"xs"}>
-        <Group
-          position="apart"
-          c={AdminColor.white}
-          bg={AdminColor.softBlue}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Table User</Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan username"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
-        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
-          <Table
-            verticalSpacing={"xs"}
-            horizontalSpacing={"md"}
-            p={"md"}
-            
-          >
-            <thead>
-              <tr>
-                <th>
-                  <Center c={AdminColor.white}>Username</Center>
-                </th>
-                <th>
-                  <Center c={AdminColor.white}>Nomor</Center>
-                </th>
-                <th>
-                  <Center c={AdminColor.white}>Aksi</Center>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataUser.map((v: any, i: any) => (
-                <tr key={v.id}>
-                  <td>
-                    <Center c={AdminColor.white}>{v.username}</Center>
-                  </td>
-                  <td>
-                    <Center c={AdminColor.white}>{v.nomor}</Center>
-                  </td>
-                  <td>
-                    <Center>
-                      <Button radius={"xl"} onClick={() => onAccess(v.id)}>
-                        Admin Access
-                      </Button>
-                    </Center>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Group sx={{ justifyContent: "flex-end" }} pt={10}>
-            <Pagination
-              value={isChoosePage}
+        <ComponentAdminGlobal_TitlePage
+          name="Table User"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan username"
               onChange={(val) => {
-                onPageClick(val);
+                onSearch(val.currentTarget.value);
               }}
-              total={isNPage}
             />
-          </Group>
+          }
+        />
+
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
+          <ScrollArea w={"100%"} h={"90%"}>
+            <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
+              <thead>
+                <tr>
+                  <th>
+                    <Center c={AdminColor.white}>Username</Center>
+                  </th>
+                  <th>
+                    <Center c={AdminColor.white}>Nomor</Center>
+                  </th>
+                  <th>
+                    <Center c={AdminColor.white}>Aksi</Center>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataUser.map((v: any, i: any) => (
+                  <tr key={v.id}>
+                    <td>
+                      <Center c={AdminColor.white}>{v.username}</Center>
+                    </td>
+                    <td>
+                      <Center c={AdminColor.white}>{v.nomor}</Center>
+                    </td>
+                    <td>
+                      <Center>
+                        <Button radius={"xl"} onClick={() => onAccess(v.id)}>
+                          Admin Access
+                        </Button>
+                      </Center>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </ScrollArea>
+          <Admin_V3_ComponentPaginationBreakpoint
+            value={isChoosePage}
+            onChange={(val) => {
+              onPageClick(val);
+            }}
+            total={isNPage}
+          />
         </Paper>
       </Stack>
     </>
@@ -258,9 +244,6 @@ function NewTableAdmin({
         page: isChoosePage,
       });
 
-      
-
-
       setDataAdmin(loadData.data);
       setNPage(loadData.nPage);
       const loadDataUser = await adminDeveloper_funGetListAllUser({ page: 1 });
@@ -281,76 +264,69 @@ function NewTableAdmin({
   return (
     <>
       <Stack spacing={"xs"}>
-        <Group
-          c={AdminColor.white}
-          position="apart"
-          bg={AdminColor.softBlue}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Table Admin</Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan username"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
-        <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
-          <Table
-            verticalSpacing={"xs"}
-            horizontalSpacing={"md"}
-            p={"md"}
-            
-          >
-            <thead>
-              <tr>
-                <th>
-                  <Center c={AdminColor.white}>Username</Center>
-                </th>
-                <th>
-                  <Center c={AdminColor.white}>Nomor</Center>
-                </th>
-                <th>
-                  <Center c={AdminColor.white}>Aksi</Center>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataAdmin.map((v: any, i: any) => (
-                <tr key={v.id}>
-                  <td>
-                    <Center c={AdminColor.white}>{v.username}</Center>
-                  </td>
-                  <td>
-                    <Center c={AdminColor.white}>{v.nomor}</Center>
-                  </td>
-                  <td>
-                    <Center>
-                      <Button
-                        radius={"xl"}
-                        color="red"
-                        onClick={() => onAccess(v.id)}
-                      >
-                        Delete Access
-                      </Button>
-                    </Center>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Group sx={{ justifyContent: "flex-end" }} pt={10}>
-            <Pagination
-              value={isChoosePage}
+        <ComponentAdminGlobal_TitlePage
+          name="Table Admin"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan username"
               onChange={(val) => {
-                onPageClick(val);
+                onSearch(val.currentTarget.value);
               }}
-              total={isNPage}
             />
-          </Group>
+          }
+        />
+
+        <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
+          <ScrollArea w={"100%"} h={"90%"}>
+            <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
+              <thead>
+                <tr>
+                  <th>
+                    <Center c={AdminColor.white}>Username</Center>
+                  </th>
+                  <th>
+                    <Center c={AdminColor.white}>Nomor</Center>
+                  </th>
+                  <th>
+                    <Center c={AdminColor.white}>Aksi</Center>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataAdmin.map((v: any, i: any) => (
+                  <tr key={v.id}>
+                    <td>
+                      <Center c={AdminColor.white}>{v.username}</Center>
+                    </td>
+                    <td>
+                      <Center c={AdminColor.white}>{v.nomor}</Center>
+                    </td>
+                    <td>
+                      <Center>
+                        <Button
+                          radius={"xl"}
+                          color="red"
+                          onClick={() => onAccess(v.id)}
+                        >
+                          Delete Access
+                        </Button>
+                      </Center>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </ScrollArea>
+          <Admin_V3_ComponentPaginationBreakpoint
+            value={isChoosePage}
+            onChange={(val) => {
+              onPageClick(val);
+            }}
+            total={isNPage}
+          />
         </Paper>
       </Stack>
     </>
@@ -409,7 +385,9 @@ function TableAdmin({
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title c={AdminColor.white} order={4}>Table Admin</Title>
+          <Title c={AdminColor.white} order={4}>
+            Table Admin
+          </Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
@@ -417,12 +395,7 @@ function TableAdmin({
           />
         </Group>
         <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
-          <Table
-            verticalSpacing={"xs"}
-            horizontalSpacing={"md"}
-            p={"md"}
-            
-          >
+          <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
             <thead>
               <tr>
                 <th>
@@ -496,7 +469,9 @@ function TableUser({
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title c={AdminColor.white} order={4}>Table User</Title>
+          <Title c={AdminColor.white} order={4}>
+            Table User
+          </Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
@@ -504,12 +479,7 @@ function TableUser({
           />
         </Group>
         <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
-          <Table
-            verticalSpacing={"xs"}
-            horizontalSpacing={"md"}
-            p={"md"}
-            
-          >
+          <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
             <thead>
               <tr>
                 <th>

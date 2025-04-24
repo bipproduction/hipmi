@@ -22,6 +22,7 @@ import {
 import { IconPhone, IconUser, IconUserCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Admin_ComponentModal } from "./comp_admin_modal";
 
 export function Admin_ComponentButtonUserCircle({
   dataUser,
@@ -36,7 +37,7 @@ export function Admin_ComponentButtonUserCircle({
 
   async function onClickLogout() {
     setLoadingLogout(true);
-    const res = await fetch(`/api/auth/logout?id=${dataUser.id}`, {
+    const res = await fetch(`/api/auth/logout?id=${dataUser?.id}`, {
       method: "GET",
     });
 
@@ -68,7 +69,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconUser />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>{dataUser.username}</Text>
+                <Text lineClamp={1}>{dataUser?.username}</Text>
               </Grid.Col>
             </Grid>
 
@@ -77,7 +78,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconPhone />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>+{dataUser.nomor}</Text>
+                <Text lineClamp={1}>+{dataUser?.nomor}</Text>
               </Grid.Col>
             </Grid>
 
@@ -102,7 +103,7 @@ export function Admin_ComponentButtonUserCircle({
         </Popover.Dropdown>
       </Popover>
 
-      <Modal
+      {/* <Modal
         opened={openModal}
         onClose={() => setOpenModal(false)}
         centered
@@ -132,7 +133,38 @@ export function Admin_ComponentButtonUserCircle({
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </Modal> */}
+
+      <Admin_ComponentModal
+        opened={openModal}
+        onClose={() => setOpenModal(false)}
+        title={"Anda yakin ingin keluar ?"}
+        withCloseButton={false}
+        closeOnClickOutside={false}
+      >
+        <Stack>
+          <Group align="center" position="center">
+            <Button
+              onClick={() => {
+                setOpenModal(false);
+              }}
+              radius={50}
+            >
+              Batal
+            </Button>
+            <Button
+              loaderPosition="center"
+              loading={loadingLogout ? true : false}
+              radius={50}
+              bg={Warna.merah}
+              color="red"
+              onClick={() => onClickLogout()}
+            >
+              Keluar
+            </Button>
+          </Group>
+        </Stack>
+      </Admin_ComponentModal>
     </>
   );
 
@@ -176,7 +208,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconUser />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>{dataUser.username}</Text>
+                <Text lineClamp={1}>{dataUser?.username}</Text>
               </Grid.Col>
             </Grid>
           </Menu.Item>
@@ -186,7 +218,7 @@ export function Admin_ComponentButtonUserCircle({
                 <IconPhone />
               </Grid.Col>
               <Grid.Col span={"auto"}>
-                <Text lineClamp={1}>+{dataUser.nomor}</Text>
+                <Text lineClamp={1}>+{dataUser?.nomor}</Text>
               </Grid.Col>
             </Grid>
           </Menu.Item>

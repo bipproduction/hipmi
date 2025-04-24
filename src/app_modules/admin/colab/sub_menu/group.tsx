@@ -1,37 +1,30 @@
 "use client";
 
-import {
-  Stack,
-  Group,
-  Title,
-  Paper,
-  ScrollArea,
-  Table,
-  Center,
-  Text,
-  Badge,
-  Spoiler,
-  Pagination,
-  Button,
-  Modal,
-  SimpleGrid,
-  Box,
-} from "@mantine/core";
-import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import {
-  MODEL_COLLABORATION,
-  MODEL_COLLABORATION_ROOM_CHAT,
-} from "@/app_modules/colab/model/interface";
-import { IconBan, IconCircleDot, IconEye } from "@tabler/icons-react";
-import { useState } from "react";
-import adminColab_getOneByColabId from "../fun/get/get_one_by_colab_id";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import ComponentAdminColab_DetailData from "../component/detail_data";
-import adminColab_getOneRoomChatById from "../fun/get/get_one_room_chat_by_id";
-import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { MODEL_COLLABORATION_ROOM_CHAT } from "@/app_modules/colab/model/interface";
+import {
+  Box,
+  Center,
+  Modal,
+  Paper,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Table,
+  Text,
+  Title
+} from "@mantine/core";
+import { IconCircleDot } from "@tabler/icons-react";
+import { useState } from "react";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import ComponentAdminColab_DetailData from "../component/detail_data";
+import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
+import adminColab_getOneRoomChatById from "../fun/get/get_one_room_chat_by_id";
 
 export default function AdminColab_TableGroup({
   listGroup,
@@ -83,65 +76,40 @@ function TableMenu({ listGroup }: { listGroup: any }) {
   }
 
   const tableRow = data.map((e, i) => (
-    <tr key={i}>
-      <td>
+    <tr key={i} style={{ color: AdminColor.white }}>
+      {/* <td>
         <Center c={AdminColor.white}>{noAwal++}</Center>
-      </td>
+      </td> */}
       <td>
-        <Center c={AdminColor.white}>
+        <Box w={150}>
           <Text lineClamp={1}>
             {e?.ProjectCollaboration?.Author?.Profile?.name}
           </Text>
-        </Center>
+        </Box>
       </td>
       <td>
-        <Center c={AdminColor.white}>
+        <Box w={150}>
           <Text lineClamp={1}>{e?.name}</Text>
-        </Center>
+        </Box>
       </td>
       <td>
-        <Center c={AdminColor.white}>
+        <Box w={150}>
           <Text>
             {e?.ProjectCollaboration?.ProjectCollaborationMaster_Industri?.name}
           </Text>
-        </Center>
+        </Box>
       </td>
       <td>
-        <Center c={AdminColor.white}>
+        <Center>
           <Text>{e?.ProjectCollaboration_AnggotaRoomChat.length}</Text>
         </Center>
       </td>
       <td>
         <Center>
           <Stack>
-            <Button
-              loading={
-                idProject === e?.id ? (loadingDetail ? true : false) : false
-              }
-              leftIcon={<IconEye />}
-              loaderPosition="center"
-              radius={"xl"}
-              color="green"
-              onClick={() => {
-                onDetailData(e?.id);
-              }}
-            >
-              Detail
-            </Button>
-            {/* <Button
-              // loading={
-              //   idProject === e?.id ? (loadingReject ? true : false) : false
-              // }
-              leftIcon={<IconBan />}
-              loaderPosition="center"
-              radius={"xl"}
-              color="red"
-              // onClick={() => {
-              //   onRejected(e.id);
-              // }}
-            >
-              Reject
-            </Button> */}
+            <Admin_DetailButton
+              path={`/dev/admin/colab/detail/group/${e.id}`}
+            />
           </Stack>
         </Center>
       </td>
@@ -154,32 +122,25 @@ function TableMenu({ listGroup }: { listGroup: any }) {
         <ComponentAdminGlobal_TitlePage
           name="Group Chat"
           color={AdminColor.softBlue}
-          component={
-            <></>
-          }
+          component={<></>}
         />
         <Paper p={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <ScrollArea h={"65vh"}>
-              <Table
-                verticalSpacing={"xs"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                
-              >
+              <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
-                    <th>
+                    {/* <th>
                       <Center c={AdminColor.white}>No</Center>
+                    </th> */}
+                    <th>
+                      <Text c={AdminColor.white}>Admin Room</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Admin Room</Center>
+                      <Text c={AdminColor.white}>Nama Group</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>Nama Group</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Industri</Center>
+                      <Text c={AdminColor.white}>Industri</Text>
                     </th>
                     <th>
                       <Center c={AdminColor.white}>Anggota Group</Center>
@@ -192,8 +153,7 @@ function TableMenu({ listGroup }: { listGroup: any }) {
                 <tbody>{tableRow}</tbody>
               </Table>
             </ScrollArea>
-            <Pagination
-              position="center"
+            <Admin_V3_ComponentPaginationBreakpoint
               total={isNPage}
               value={activePage}
               onChange={(val) => {
@@ -205,6 +165,7 @@ function TableMenu({ listGroup }: { listGroup: any }) {
       </Stack>
 
       <Modal
+        styles={{ body: { backgroundColor: AccentColor.darkblue } }}
         opened={openDetail}
         onClose={() => setOpenDetail(false)}
         centered
@@ -212,26 +173,28 @@ function TableMenu({ listGroup }: { listGroup: any }) {
         withCloseButton={false}
       >
         <SimpleGrid cols={2}>
-          <Paper bg={"gray.1"} p={"md"} h={500}>
+          <Paper bg={AdminColor.softBlue} p={"md"} h={500}>
             <ScrollArea h={"100%"} w={"100%"}>
               <ComponentAdminColab_DetailData
                 data={detailData?.ProjectCollaboration as any}
               />
             </ScrollArea>
           </Paper>
-          <Paper bg={"gray.1"} p={"md"} h={500}>
+          <Paper bg={AdminColor.softBlue} p={"md"} h={500}>
             <ScrollArea h={"100%"}>
               <Stack>
                 <Center>
-                  <Title order={4}>Anggota</Title>
+                  <Title c={AdminColor.white} order={4}>
+                    Anggota
+                  </Title>
                 </Center>
                 <Stack>
                   {detailData?.ProjectCollaboration_AnggotaRoomChat?.map(
                     (e, i) => (
                       <Box key={i}>
                         <Text lineClamp={1}>
-                          <IconCircleDot size={10} />{" "}
-                          <Text span inherit>
+                          <IconCircleDot color={AdminColor.white} size={10} />{" "}
+                          <Text c={AdminColor.white} span inherit>
                             {e?.User?.Profile?.name}
                           </Text>
                         </Text>
@@ -244,7 +207,6 @@ function TableMenu({ listGroup }: { listGroup: any }) {
           </Paper>
         </SimpleGrid>
       </Modal>
-      {/* <pre>{JSON.stringify(detailData, null, 2)}</pre> */}
     </>
   );
 }

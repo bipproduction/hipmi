@@ -24,7 +24,7 @@ import {
 import { IconCamera } from "@tabler/icons-react";
 import _, { toNumber } from "lodash";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentAdminDonasi_TombolKembali from "../../component/tombol_kembali";
 import { AdminDonasi_funCreatePencairanDana } from "../../fun/create/fun_create_pencairan_dana";
@@ -33,34 +33,69 @@ import { AdminDonasi_AkumulasiPencairanById } from "../../fun/update/fun_update_
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
 import { DIRECTORY_ID } from "@/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminDonasiById } from "../../lib/api_fetch_admin_donasi";
+import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { clientLogger } from "@/util/clientLogger";
+import { useShallowEffect } from "@mantine/hooks";
+import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
 
-export default function AdminDonasi_PencairanDana({
-  donasiId,
-  danaTerkumpul,
-  totalPencairan,
-}: {
-  donasiId: string;
-  danaTerkumpul: string;
-  totalPencairan: number;
-}) {
-  const [terkumpul, setTerkumpul] = useState(danaTerkumpul);
-  const [total, setTotal] = useState(totalPencairan);
+export default function AdminDonasi_PencairanDana() {
+  const params = useParams<{ id: string }>();
+  const donasiId = params.id;
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
+  // const [terkumpul, setTerkumpul] = useState(data?.terkumpul);
+  // const [total, setTotal] = useState(data?.totalPencairan);
+
+  useShallowEffect(() => {
+    loadInitialData();
+  }, [])
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminDonasiById({
+        id: donasiId,
+      })
+
+      if (response?.success && response?.data) {
+        setData(response.data)
+        console.log("ini respone data", response.data)
+        // setTerkumpul(response.data.terkumpul)
+        // setTotal(response.data.totalPencairan)
+      } else {
+        setData(null)
+        // setTerkumpul("")
+        // setTotal(0)
+      }
+    } catch (error) {
+      clientLogger.error("Invalid data format recieved:", error);
+      setData(null);
+      // setTerkumpul("");
+      // setTotal(0);
+    }
+  }
 
   return (
     <>
       <Stack>
         <ComponentAdminDonasi_TombolKembali />
-        <TotalDanaView danaTerkumpul={terkumpul} totalPencairan={total} />
-        <FormView
-          danaTerkumpul={terkumpul}
-          donasiId={donasiId}
-          totalPencairan={total}
-          onSuccess={(val) => {
-            setTerkumpul(val.terkumpul);
-            setTotal(val.totalPencairan);
-          }}
-        />
-      </Stack>
+        {!data ?
+          (  
+            <CustomSkeletonAdmin height={500} />)
+          : (
+          <>
+            <TotalDanaView danaTerkumpul={data?.terkumpul as string} totalPencairan={data?.totalPencairan as number} />
+              <FormView
+              donasiId={donasiId}  
+              danaTerkumpul={data?.terkumpul as string}
+              totalPencairan={data?.totalPencairan as number}
+              onSuccess={(val) => {
+                // setTerkumpul(val.terkumpul);
+                // setTotal(val.totalPencairan);
+              }}
+            />
+          </>
+        )}
+      </Stack >
     </>
   );
 }
@@ -74,6 +109,8 @@ function TotalDanaView({
 }) {
   const terkumpul = toNumber(danaTerkumpul);
   const sisaDana = terkumpul - totalPencairan;
+  console.log("Sisa dana", sisaDana);
+  console.log("Terkumpul", terkumpul);
 
   return (
     <>
@@ -81,11 +118,10 @@ function TotalDanaView({
         <Paper
           p={"md"}
           w={{ base: 200, sm: 200, md: 300, lg: 400 }}
-          withBorder
-          bg={"gray.2"}
+          bg={AdminColor.softBlue}
         >
           <Stack spacing={0} align="center">
-            <Text fw={"bold"}>Dana Tersisa</Text>
+            <Text c={AdminColor.white} fw={"bold"}>Dana Tersisa</Text>
             <Title>
               {
                 <ComponentAdminGlobal_TampilanRupiahDonasi
@@ -111,7 +147,9 @@ function FormView({
   danaTerkumpul: string;
   totalPencairan: number;
   onSuccess: (val: any) => void;
-}) {
+  }) {
+  
+ 
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [images, setImages] = useState<any | null>();
@@ -158,17 +196,20 @@ function FormView({
         body.nominalCair as any
       );
       if (res2.status === 200) {
-        const loadData = await AdminDonasi_getOneById(donasiId);
+        const loadData = await apiGetAdminDonasiById({id: donasiId});
         onSuccess(loadData);
+        console.log("load Data", loadData);
 
         const dataNotif = {
-          appId: loadData?.id,
-          userId: loadData?.authorId,
-          pesan: loadData?.title as any,
+          appId: loadData?.data?.id,
+          userId: loadData?.data?.authorId,
+          pesan: loadData?.data?.title as any,
           status: "Pencairan Dana",
           kategoriApp: "DONASI",
           title: "Dana donasi berhasil dicairkan",
         };
+
+        console.log("Data Notif", dataNotif);
 
         const notif = await adminNotifikasi_funCreateToUser({
           data: dataNotif as any,
@@ -197,13 +238,14 @@ function FormView({
   return (
     <>
       <Center>
-        <Paper p={"md"} w={{ base: 300, sm: 350, md: 400, lg: 500 }} withBorder>
+        <Paper p={"md"} w={{ base: 300, sm: 350, md: 400, lg: 500 }} bg={AdminColor.softBlue}>
           <Center mb={"lg"}>
-            <Title order={5}>Form Pencairan Dana</Title>
+            <Title c={AdminColor.white} order={5}>Form Pencairan Dana</Title>
           </Center>
           <Stack>
             <TextInput
               icon={<Text fw={"bold"}>Rp.</Text>}
+              styles={{ label: { color: AdminColor.white } }}
               withAsterisk
               placeholder="0"
               label="Nominal"
@@ -245,6 +287,7 @@ function FormView({
               }}
             />
             <TextInput
+              styles={{ label: { color: AdminColor.white } }}
               withAsterisk
               placeholder="Masukan judul"
               label="Judul"
@@ -258,6 +301,7 @@ function FormView({
             />
             <Stack spacing={5}>
               <Textarea
+                styles={{ label: { color: AdminColor.white } }}
                 withAsterisk
                 placeholder="Masukan deskripsi"
                 label="Deskripsi"
@@ -288,7 +332,7 @@ function FormView({
                       const buffer = URL.createObjectURL(
                         new Blob([new Uint8Array(await files.arrayBuffer())])
                       );
-                   
+
                       setImages(buffer);
                       setFile(files);
                     } catch (error) {

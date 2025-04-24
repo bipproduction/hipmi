@@ -37,7 +37,6 @@ export default function Vote_Status() {
   return (
     <>
       <Tabs
-        mt={1}
         variant="pills"
         radius={"xl"}
         value={params.id}

@@ -1,4 +1,4 @@
-export { apiGetPdfToImage };
+export { apiGetPdfToImage, apiCreatedNotificationToAdmin, apiGetSeasonUserId };
 
 export interface PageData {
   imageUrl: string;
@@ -35,10 +35,7 @@ const apiGetPdfToImage = async ({ id }: { id: string }) => {
     // Check if the response is OK
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      console.error(
-        "Error get admin contact:",
-        errorData?.message || "Unknown error"
-      );
+      console.error("Failed get file", errorData?.message || "Unknown error");
 
       return null;
     }
@@ -46,7 +43,72 @@ const apiGetPdfToImage = async ({ id }: { id: string }) => {
     const jsonData: PdfResponse = await response.json();
     return jsonData;
   } catch (error) {
-    console.error("Error get admin contact:", error);
+    console.error("Error get file", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+const apiCreatedNotificationToAdmin = async ({ data }: { data: any }) => {
+  try {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/notifications/to-admin`, {
+      method: "POST",
+      body: JSON.stringify({ data }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to created notifications",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to created notifications");
+    }
+
+    // Return the JSON response
+    return await response.json();
+  } catch (error) {
+    console.error("Error to created notifications", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+const apiGetSeasonUserId = async () => {
+  try {
+    const response = await fetch(`/api/season`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to created notifications",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to created notifications");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error get user id", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };

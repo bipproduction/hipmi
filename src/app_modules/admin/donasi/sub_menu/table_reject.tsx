@@ -1,34 +1,33 @@
 "use client";
 
-import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { AccentColor } from "@/app_modules/_global/color";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DONASI } from "@/app_modules/donasi/model/interface";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Button,
+  Box,
   Center,
   Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Stack,
   Table,
   Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconEyeEdit, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import adminDonasi_getListReject from "../fun/get/get_list_reject";
-import { IconEyeCheck } from "@tabler/icons-react";
-import { clientLogger } from "@/util/clientLogger";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { apiGetAdminDonasiByStatus } from "../lib/api_fetch_admin_donasi";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function AdminDonasi_TableReject() {
   return (
@@ -51,15 +50,14 @@ function TableStatus() {
   const [isActivePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
-
   useShallowEffect(() => {
     const loadInitialData = async () => {
       try {
         const response = await apiGetAdminDonasiByStatus({
           name: "Reject",
           page: `${isActivePage}`,
-          search: isSearch
-        })
+          search: isSearch,
+        });
 
         if (response?.success && response?.data.data) {
           setData(response.data.data);
@@ -72,19 +70,18 @@ function TableStatus() {
         clientLogger.error("Invalid data format recieved:", error);
         setData([]);
       }
-    }
+    };
     loadInitialData();
-  }, [isActivePage, isSearch])
-
+  }, [isActivePage, isSearch]);
 
   const onSearch = (searchTerm: string) => {
     setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
   const onPageClick = (page: number) => {
     setActivePage(page);
-  }
+  };
 
   const renderTableBody = () => {
     if (!Array.isArray(data) || data.length === 0) {
@@ -96,48 +93,49 @@ function TableStatus() {
             </Center>
           </td>
         </tr>
-      )
+      );
     }
     return data.map((e, i) => (
       <tr key={i}>
         <td>
-          <Center c={AccentColor.white}>{e?.Author?.username}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.title}</Center>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
         </td>
         <td>
           <Center c={AccentColor.white}>
-            <ComponentGlobal_TampilanRupiah  nominal={+e.target} />
+            <ComponentGlobal_TampilanRupiah nominal={+e.target} />
           </Center>
         </td>
         <td>
           <Center c={AccentColor.white}>{e?.DonasiMaster_Ketegori.name}</Center>
         </td>
         <td>
-          <Center c={AccentColor.white}>{e?.DonasiMaster_Durasi.name} hari</Center>
+          <Center c={AccentColor.white}>
+            {e?.DonasiMaster_Durasi.name} hari
+          </Center>
         </td>
         <td>
           <Center>
-            <Button
-              style={{ backgroundColor: MainColor.green }}
-              color={AccentColor.white}
-              leftIcon={<IconEyeCheck />}
-              radius={"xl"}
-              onClick={() =>
-                router.push(RouterAdminDonasi_OLD.detail_reject + `${e.id}`)
-              }
-            >
-              Lihat Alasan
-            </Button>
+            <Admin_DetailButton
+              path={RouterAdminDonasi_OLD.detail_reject + e.id}
+            />
           </Center>
 
           {/* <ModalReject opened={opened} close={close} /> */}
         </td>
       </tr>
     ));
-  }
-
+  };
 
   return (
     <>
@@ -177,17 +175,9 @@ function TableStatus() {
         {!data ? (
           <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-
-
           <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg" h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={1500}
-
-              >
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
                 <thead>
                   <tr>
                     <th>
@@ -206,24 +196,21 @@ function TableStatus() {
                       <Center c={AccentColor.white}>Durasi</Center>
                     </th>
                     <th>
-                      <Center c={AccentColor.white}>Alasan</Center>
+                      <Center c={AccentColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
                 <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            {/* <ScrollArea>
-          </ScrollArea> */}
-            <Center mt={"xl"}>
-              <Pagination
-                value={isActivePage}
-                total={isNPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={isActivePage}
+              total={isNPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>
