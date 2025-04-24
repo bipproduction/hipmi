@@ -17,11 +17,34 @@ export async function forum_funCreateKomentar(
         forum_PostingId: postingId,
         authorId: userLoginId,
       },
+      select: {
+        id: true,
+        isActive: true,
+        komentar: true,
+        createdAt: true,
+        Author: {
+          select: {
+            id: true,
+            username: true,
+            Profile: {
+              select: {
+                name: true,
+                imageId: true,
+              },
+            },
+          },
+        },
+        authorId: true,
+      },
     });
 
     if (!create) return { status: 400, message: "Gagal menambahkan komentar" };
 
-    return { status: 201, message: "Berhasil menambahkan komentar" };
+    return {
+      status: 201,
+      message: "Berhasil menambahkan komentar",
+      data: create,
+    };
   } catch (error) {
     console.log(error);
     return {

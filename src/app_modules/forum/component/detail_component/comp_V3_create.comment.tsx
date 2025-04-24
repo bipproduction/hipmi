@@ -24,7 +24,10 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { forum_funCreateKomentar } from "../../fun/create/fun_create_komentar";
-import { MODEL_FORUM_POSTING } from "../../model/interface";
+import {
+  MODEL_FORUM_KOMENTAR,
+  MODEL_FORUM_POSTING,
+} from "../../model/interface";
 import dynamic from "next/dynamic";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { listStiker } from "@/app_modules/_global/lib/stiker";
@@ -58,12 +61,12 @@ export default function Forum_V3_CreateKomentar({
   postingId,
   data,
   userLoginId,
-  onSetNewKomentar,
+  onSetLoadData,
 }: {
   postingId: string;
   data: MODEL_FORUM_POSTING;
   userLoginId: string;
-  onSetNewKomentar: (val: boolean) => void;
+  onSetLoadData: (val: string) => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [isComment, setIsComment] = useState(false);
@@ -85,8 +88,15 @@ export default function Forum_V3_CreateKomentar({
         postingId,
         editorContent
       );
+
       if (createComment.status === 201) {
-        onSetNewKomentar(true);
+        const newCommentar: MODEL_FORUM_KOMENTAR | any = {
+          komentar: editorContent,
+          Author: createComment.data?.Author,
+          createdAt: data.createdAt,
+          id: createComment.data?.id,
+        };
+        onSetLoadData(newCommentar);
         setEditorContent("");
         ComponentGlobal_NotifikasiBerhasil(createComment.message, 2000);
 
@@ -114,12 +124,12 @@ export default function Forum_V3_CreateKomentar({
           }
         }
       } else {
-        setLoading(false);
         ComponentGlobal_NotifikasiGagal(createComment.message);
       }
     } catch (error) {
-      setLoading(false);
       clientLogger.error("Error create komentar forum", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -215,8 +225,11 @@ export default function Forum_V3_CreateKomentar({
           <Stack>
             <Paper p="sm" withBorder shadow="lg" mah={300} bg={MainColor.white}>
               <Group position="right">
-                <ActionIcon onClick={() => setIsComment(false)} variant="transparent">
-                  <IconX size={25} color={MainColor.darkblue}/>
+                <ActionIcon
+                  onClick={() => setIsComment(false)}
+                  variant="transparent"
+                >
+                  <IconX size={25} color={MainColor.darkblue} />
                 </ActionIcon>
               </Group>
               <ScrollArea h={250}>
