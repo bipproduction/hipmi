@@ -1,31 +1,30 @@
 "use client";
 
-import { Box, Center, Group, Loader, Stack, TextInput } from "@mantine/core";
-import _ from "lodash";
-import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "../model/interface";
+import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
+import { Box, Center, Loader, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { ScrollOnly } from "next-scroll-loader";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import "react-quill/dist/quill.bubble.css";
-import ComponentForum_DetailCreateKomentar from "../component/detail_component/detail_create_komentar";
-import ComponentForum_KomentarView from "../component/detail_component/detail_list_komentar";
-import ComponentForum_DetailForumView from "../component/detail_component/detail_view";
-import { ScrollOnly } from "next-scroll-loader";
-import { forum_funGetAllKomentarById } from "../fun/get/get_all_komentar_by_id";
 import {
   apiGetKomentarForumById,
   apiGetOneForumById,
 } from "../component/api_fetch_forum";
-import { useParams } from "next/navigation";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Forum_V3_CreateKomentar from "../component/detail_component/comp_V3_create.comment";
+import ComponentForum_KomentarView from "../component/detail_component/detail_list_komentar";
+import ComponentForum_DetailForumView from "../component/detail_component/detail_view";
 import {
   Forum_SkeletonKomentar,
   Forum_SkeletonListKomentar,
 } from "../component/skeleton_view";
-import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "../model/interface";
 
-export default function Forum_MainDetail({
+export default function Forum_V3_MainDetail({
   userLoginId,
 }: {
   userLoginId: string;
@@ -38,7 +37,6 @@ export default function Forum_MainDetail({
     MODEL_FORUM_KOMENTAR[] | null
   >(null);
   const [activePage, setActivePage] = useState(1);
-  const [newKomentar, setNewKomentar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useShallowEffect(() => {
@@ -67,7 +65,7 @@ export default function Forum_MainDetail({
 
   useShallowEffect(() => {
     handleLoadDataKomentar();
-  }, [newKomentar]);
+  }, []);
 
   const handleLoadDataKomentar = async () => {
     try {
@@ -87,7 +85,9 @@ export default function Forum_MainDetail({
     }
   };
 
-  const handleMoreDataKomentar = async () => {
+  const handleMoreDataKomentar = async (
+    currentKomentarList: MODEL_FORUM_KOMENTAR[]
+  ): Promise<MODEL_FORUM_KOMENTAR[]> => {
     try {
       const nextPage = activePage + 1;
       const response = await apiGetKomentarForumById({
@@ -97,13 +97,20 @@ export default function Forum_MainDetail({
 
       if (response.success) {
         setActivePage(nextPage);
-        return response.data;
+        const filteredData = response.data.filter(
+          (itemBaru: MODEL_FORUM_KOMENTAR) =>
+            !currentKomentarList.some(
+              (itemLama: MODEL_FORUM_KOMENTAR) => itemLama.id === itemBaru.id
+            )
+        );
+
+        return filteredData;
       } else {
-        return null;
+        return [];
       }
     } catch (error) {
       clientLogger.error("Error get data komentar forum", error);
-      return null;
+      return [];
     }
   };
 
@@ -132,7 +139,7 @@ export default function Forum_MainDetail({
   return (
     <>
       <Stack>
-        {!dataPosting ? (
+        {!dataPosting || isLoading ? (
           <CustomSkeleton height={200} width={"100%"} />
         ) : (
           <ComponentForum_DetailForumView
@@ -149,12 +156,12 @@ export default function Forum_MainDetail({
           <Forum_SkeletonKomentar />
         ) : (
           (dataPosting?.ForumMaster_StatusPosting?.id as any) === 1 && (
-            <ComponentForum_DetailCreateKomentar
+            <Forum_V3_CreateKomentar
               postingId={dataPosting?.id}
               data={dataPosting}
               userLoginId={userLoginId}
-              onSetNewKomentar={(val) => {
-                setNewKomentar(val);
+              onSetLoadData={(val) => {
+                setListKomentar((prev: any) => [val, ...prev]);
               }}
             />
           )
@@ -173,9 +180,9 @@ export default function Forum_MainDetail({
                   <Loader color={"yellow"} />
                 </Center>
               )}
-              data={listKomentar}
+              data={listKomentar || []}
               setData={setListKomentar as any}
-              moreData={handleMoreDataKomentar}
+              moreData={() => handleMoreDataKomentar(listKomentar as any)}
             >
               {(item) => (
                 <ComponentForum_KomentarView

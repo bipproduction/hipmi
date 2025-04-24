@@ -27,7 +27,7 @@ import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
-import { Component_SetInnerHtml } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function AdminForum_TablePosting() {
   return (
@@ -134,7 +134,7 @@ function TablePublish() {
               hideLabel="sembunyikan"
               showLabel="tampilkan"
             >
-              <Component_SetInnerHtml props={e?.diskusi} />
+              <Comp_DangerouslySetInnerHTML props={e?.diskusi} />
             </Spoiler>
           </Box>
         </td>

@@ -35,7 +35,7 @@ import { ComponentMap_ButtonUpdateDataMap } from "../_component";
 import { defaultMapZoom } from "../lib/default_lat_long";
 import { MODEL_MAP } from "../lib/interface";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/maximal_setting";
 
 export function UiMap_EditMap({
   mapboxToken,
