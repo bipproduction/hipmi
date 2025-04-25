@@ -1,6 +1,14 @@
 "use client";
 
-import { Modal, Stack, Title, Group, Button, Box, ActionIcon } from "@mantine/core";
+import {
+  Modal,
+  Stack,
+  Title,
+  Group,
+  Button,
+  Box,
+  ActionIcon,
+} from "@mantine/core";
 import { MainColor, AccentColor } from "../color/color_pallet";
 import React from "react";
 import { IconX } from "@tabler/icons-react";
@@ -12,7 +20,7 @@ export default function UIGlobal_Modal({
   buttonKiri,
   buttonKanan,
   children,
-  closeButton
+  closeButton,
 }: {
   opened: any;
   close: any;
@@ -20,14 +28,14 @@ export default function UIGlobal_Modal({
   buttonKiri?: any;
   buttonKanan?: any;
   children?: React.ReactNode;
-  closeButton?: boolean
+  closeButton?: boolean;
 }) {
   return (
     <>
       <Modal
         opened={opened}
         onClose={() => {
-          close(); 
+          close();
         }}
         centered
         withCloseButton={false}
@@ -41,16 +49,22 @@ export default function UIGlobal_Modal({
         <Stack spacing={"lg"}>
           <Group position="apart">
             <Title order={6} color={MainColor.white} align="center">
-            {title}
-          </Title>
-          {closeButton ? <ActionIcon onClick={close} variant="transparent">
-            <IconX color="white" size={25}/>
-          </ActionIcon> : null}
+              {title}
+            </Title>
+            {closeButton ? (
+              <ActionIcon onClick={close} variant="transparent">
+                <IconX color="white" size={25} />
+              </ActionIcon>
+            ) : null}
           </Group>
-          {children ? children : <Group position="center">
-            <Box>{buttonKiri}</Box>
-            <Box>{buttonKanan}</Box>
-          </Group>}
+          {children ? (
+            children
+          ) : (
+            <Group position="center">
+              <Box>{buttonKiri}</Box>
+              <Box>{buttonKanan}</Box>
+            </Group>
+          )}
         </Stack>
       </Modal>
     </>

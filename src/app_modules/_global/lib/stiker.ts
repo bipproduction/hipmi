@@ -32,7 +32,7 @@ const dummyStiker = [
   {
     id: 7,
     name: "stiker7",
-    url: "https://play-lh.googleusercontent.com/MHPScwJ_owQJtf26PpiANC83sGj8d_cPz_83R3XhmFN9nJUuoWHJ0Y-GaEsKhXk4sA",
+    url: "https://down-id.img.susercontent.com/file/39fbca466b027a644d8386f265330365",
   },
   {
     id: 8,

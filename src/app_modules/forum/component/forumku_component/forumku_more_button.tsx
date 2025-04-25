@@ -178,6 +178,7 @@ export default function ComponentForum_ForumkuMoreButton({
               border: `1px solid ${AccentColor.yellow}`,
             }}
             radius={"xl"}
+            c="black"
             onClick={close}
           >
             Batal

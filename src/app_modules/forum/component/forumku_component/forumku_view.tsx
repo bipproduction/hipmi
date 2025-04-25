@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_ForumkuHeaderCard from "./forumku_header";
+import { Comp_V3_SetHtmlWithSticker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function ComponentForum_ForumkuMainCardView({
   data,
@@ -25,6 +27,22 @@ export default function ComponentForum_ForumkuMainCardView({
 }) {
   const router = useRouter();
   const [visable, setVisible] = useState(false);
+
+    useShallowEffect(() => {
+      // Add custom style for stickers inside Quill editor
+      const style = document.createElement("style");
+      style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+      document.head.appendChild(style);
+      return () => {
+        // Clean up when component unmounts
+        document.head.removeChild(style);
+      };
+    }, []);
 
   return (
     <>
@@ -47,7 +65,10 @@ export default function ComponentForum_ForumkuMainCardView({
             }}
           >
             <Text c={"white"} fz={"sm"} lineClamp={4}>
-              <div dangerouslySetInnerHTML={{ __html: data?.diskusi }} />
+              <Comp_V3_SetHtmlWithSticker
+                props={data?.diskusi}
+                className="chat-content"
+              />
             </Text>
           </Box>
 
