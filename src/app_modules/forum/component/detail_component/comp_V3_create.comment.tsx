@@ -4,28 +4,23 @@ import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
-import { listStiker } from "@/app_modules/_global/lib/stiker";
+import { Component_V3_TextEditorWithSticker } from "@/app_modules/_global/lib/stiker/comp_V3_text_editor_stiker";
+import { Comp_ButtonSticker } from "@/app_modules/_global/lib/stiker/comp_button_sticker";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { UIGlobal_Modal } from "@/app_modules/_global/ui";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
 import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
 import {
   ActionIcon,
-  Box,
   Button,
   Group,
-  Image,
   Paper,
-  ScrollArea,
-  SimpleGrid,
   Stack,
-  Text,
-  Tooltip,
+  Text
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { IconMoodSmileFilled, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { forum_funCreateKomentar } from "../../fun/create/fun_create_komentar";
@@ -158,53 +153,6 @@ export default function Forum_V3_CreateKomentar({
     };
   }, []);
 
-  // Custom toolbar options for ReactQuill
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "image",
-  ];
-
-  const insertSticker = (stickerUrl: string) => {
-    if (!quillRef.current) return;
-
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection(true);
-
-    // Custom image insertion with size
-    // Use custom blot or HTML string with size attributes
-    const stickerHtml = `<img src="${stickerUrl}" alt="sticker" style="width: 40px; height: 40px;">`;
-
-    // Insert HTML at cursor position
-    quill.clipboard.dangerouslyPasteHTML(range.index, stickerHtml);
-
-    // Move cursor after inserted sticker
-    quill.setSelection(range.index + 1, 0);
-
-    // Focus back on editor
-    quill.focus();
-
-    // Close sticker modal
-    close();
-  };
-
   //  // Function to send message
   //  const sendMessage = () => {
   //    if (editorContent.trim() !== "") {
@@ -218,7 +166,7 @@ export default function Forum_V3_CreateKomentar({
       <Stack>
         {isComment ? (
           <Stack>
-            <Paper p="sm" withBorder shadow="lg" mah={300} bg={MainColor.white}>
+            <Paper p={5} shadow="lg" bg={MainColor.white}>
               <Group position="right">
                 <ActionIcon
                   onClick={() => setIsComment(false)}
@@ -227,23 +175,14 @@ export default function Forum_V3_CreateKomentar({
                   <IconX size={25} color={MainColor.darkblue} />
                 </ActionIcon>
               </Group>
-              <ScrollArea h={250}>
-                {quillLoaded && (
-                  <ReactQuill
-                    forwardedRef={quillRef}
-                    theme="snow"
-                    value={editorContent}
-                    onChange={setEditorContent}
-                    modules={modules}
-                    formats={formats}
-                    placeholder="Ketik pesan di sini atau tambahkan stiker..."
-                    style={{
-                      marginBottom: 40,
-                      backgroundColor: MainColor.white,
-                    }}
-                  />
-                )}
-              </ScrollArea>
+
+              {quillLoaded && (
+                <Component_V3_TextEditorWithSticker
+                  quillRef={quillRef}
+                  data={editorContent}
+                  onSetData={setEditorContent}
+                />
+              )}
             </Paper>
             <Group position="apart">
               <ComponentGlobal_InputCountDown
@@ -252,9 +191,12 @@ export default function Forum_V3_CreateKomentar({
               />
 
               <Group position="right">
-                <ActionIcon onClick={open} variant="transparent">
-                  <IconMoodSmileFilled color={MainColor.white} size={30} />
-                </ActionIcon>
+                <Comp_ButtonSticker
+                  open={open}
+                  close={close}
+                  opened={opened}
+                  quillRef={quillRef}
+                />
 
                 <Button
                   style={{
@@ -289,34 +231,10 @@ export default function Forum_V3_CreateKomentar({
             bg={MainColor.white}
           >
             <Text fs={"italic"} c={"gray.8"} fz={12}>
-              Ketik pesan di sini atau tambahkan stiker...
+              Buka kolom komentar untuk menambahkan komentar ...
             </Text>
           </Paper>
         )}
-
-        <UIGlobal_Modal
-          opened={opened}
-          close={close}
-          title="Pilih Stiker"
-          closeButton
-        >
-          <SimpleGrid cols={3} spacing="md">
-            {listStiker.map((item) => (
-              <Box key={item.id}>
-                <Tooltip label={item.name}>
-                  <Image
-                    src={item.url}
-                    height={100}
-                    width={100}
-                    alt={item.name}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => insertSticker(item.url)}
-                  />
-                </Tooltip>
-              </Box>
-            ))}
-          </SimpleGrid>
-        </UIGlobal_Modal>
       </Stack>
     </>
   );

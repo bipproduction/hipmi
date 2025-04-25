@@ -1,53 +1,16 @@
 "use client";
 
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Group,
-  Image,
-  Paper,
-  ScrollArea,
-  SimpleGrid,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
-import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
-import { listStiker } from "@/app_modules/_global/lib/stiker";
-import {
-  ComponentGlobal_NotifikasiBerhasil,
-  ComponentGlobal_NotifikasiGagal,
-} from "@/app_modules/_global/notif_global";
-import { UIGlobal_Modal } from "@/app_modules/_global/ui";
-import { IconMoodSmileFilled } from "@tabler/icons-react";
-import { forum_funCreate } from "../fun/create/fun_create";
-
-const ReactQuill = dynamic(
-  async () => {
-    const { default: RQ } = await import("react-quill");
-    // Tidak perlu import CSS dengan import statement
-    return function comp({ forwardedRef, ...props }: any) {
-      return <RQ ref={forwardedRef} {...props} />;
-    };
-  },
-  {
-    ssr: false,
-    loading: () => (
-      <Text fs={"italic"} c={"gray.8"} fz={12}>
-        Ketik pesan di sini atau tambahkan stiker...
-      </Text>
-    ),
-  }
-);
+import { Component_V3_TextEditorWithSticker } from "@/app_modules/_global/lib/stiker/comp_V3_text_editor_stiker";
+import { Comp_ButtonSticker } from "@/app_modules/_global/lib/stiker/comp_button_sticker";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Group, Stack } from "@mantine/core";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import Forum_ButtonCreatePosting from "../component/button/button_create_posting";
 
 export function Forum_V3_Create() {
   const router = useRouter();
@@ -95,76 +58,16 @@ export function Forum_V3_Create() {
     };
   }, []);
 
-  // Custom toolbar options for ReactQuill
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "image",
-  ];
-
-  const insertSticker = (stickerUrl: string) => {
-    if (!quillRef.current) return;
-
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection(true);
-
-    // Custom image insertion with size
-    // Use custom blot or HTML string with size attributes
-    const stickerHtml = `<img src="${stickerUrl}" alt="sticker" style="width: 40px; height: 40px;">`;
-
-    // Insert HTML at cursor position
-    quill.clipboard.dangerouslyPasteHTML(range.index, stickerHtml);
-
-    // Move cursor after inserted sticker
-    quill.setSelection(range.index + 1, 0);
-
-    // Focus back on editor
-    quill.focus();
-
-    // Close sticker modal
-    close();
-  };
-
   return (
     <>
       {isReady ? (
         <Stack>
           {quillLoaded && (
-            <Paper p="sm" withBorder shadow="lg" mah={300} bg={MainColor.white}>
-              <ScrollArea h={280}>
-                <ReactQuill
-                  forwardedRef={quillRef}
-                  theme="snow"
-                  value={editorContent}
-                  onChange={setEditorContent}
-                  modules={modules}
-                  formats={formats}
-                  placeholder="Ketik pesan di sini atau tambahkan stiker..."
-                  style={{
-                    color: "black",
-                    backgroundColor: MainColor.white,
-                    border: "none",
-                  }}
-                />
-              </ScrollArea>
-            </Paper>
+            <Component_V3_TextEditorWithSticker
+              quillRef={quillRef}
+              data={editorContent}
+              onSetData={setEditorContent}
+            />
           )}
 
           <Group position="apart">
@@ -174,92 +77,20 @@ export function Forum_V3_Create() {
             />
 
             <Group position="right">
-              <ActionIcon onClick={open} variant="transparent">
-                <IconMoodSmileFilled color={MainColor.white} size={30} />
-              </ActionIcon>
+              <Comp_ButtonSticker
+                open={open}
+                close={close}
+                opened={opened}
+                quillRef={quillRef}
+              />
 
-              <ButtonAction value={editorContent} />
+              <Forum_ButtonCreatePosting value={editorContent} />
             </Group>
           </Group>
-
-          <UIGlobal_Modal
-            opened={opened}
-            close={close}
-            title="Pilih Stiker"
-            closeButton
-          >
-            <SimpleGrid cols={3} spacing="md">
-              {listStiker.map((item) => (
-                <Box key={item.id}>
-                  <Tooltip label={item.name}>
-                    <Image
-                      src={item.url}
-                      height={100}
-                      width={100}
-                      alt={item.name}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => insertSticker(item.url)}
-                    />
-                  </Tooltip>
-                </Box>
-              ))}
-            </SimpleGrid>
-          </UIGlobal_Modal>
         </Stack>
       ) : (
         <CustomSkeleton height={300} />
       )}
     </>
-  );
-}
-
-interface ButtonActionProps {
-  value: string;
-}
-
-function ButtonAction({ value }: ButtonActionProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  async function onCreate() {
-    try {
-      setLoading(true);
-      const create = await forum_funCreate(value);
-      if (create.status === 201) {
-        ComponentGlobal_NotifikasiBerhasil(create.message);
-        router.back();
-
-        mqtt_client.publish(
-          "Forum_create_new",
-          JSON.stringify({ isNewPost: true, count: 1 })
-        );
-      } else {
-        ComponentGlobal_NotifikasiGagal(create.message);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <Button
-      style={{ transition: "all 0.5s" }}
-      disabled={
-        value === "<p><br></p>" ||
-        value === "" ||
-        funReplaceHtml({ html: value }).length > maxInputLength
-      }
-      bg={MainColor.yellow}
-      color="yellow"
-      c="black"
-      radius="xl"
-      loading={loading}
-      loaderPosition="center"
-      onClick={onCreate}
-    >
-      Posting
-    </Button>
   );
 }

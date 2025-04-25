@@ -124,9 +124,10 @@ export default function ComponentForum_KomentarButtonMore({
               border: `1px solid ${AccentColor.yellow}`,
             }}
             radius={"xl"}
+            c="black"
             onClick={close}
           >
-            Batal
+            <Text c="black">Batal </Text>
           </Button>
         </Stack>
       </Drawer>

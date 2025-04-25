@@ -30,7 +30,7 @@ export default function Forum_Forumku({
   const params = useParams<{ id: string }>();
   const userId = params.id;
   const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
-  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[]>([]);
+  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
 
@@ -108,11 +108,11 @@ export default function Forum_Forumku({
         ) : (
           <ComponentForum_ViewForumProfile
             auhtorSelectedData={dataUser}
-            totalPosting={dataPosting.length}
+            totalPosting={dataPosting?.length || 0}
           />
         )}
 
-        {!dataPosting.length && isLoading ? (
+        {!dataPosting || isLoading ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(dataPosting) ? (
           <Forum_ComponentIsDataEmpty />
@@ -125,8 +125,8 @@ export default function Forum_Forumku({
                 <Loader color={"yellow"} />
               </Center>
             )}
-            data={dataPosting}
-            setData={setDataPosting}
+            data={dataPosting as MODEL_FORUM_POSTING[]}
+            setData={setDataPosting as any}
             moreData={handleMoreData}
           >
             {(item) => (
@@ -136,7 +136,7 @@ export default function Forum_Forumku({
                 onLoadData={(val) => {
                   setDataPosting(val);
                 }}
-                allData={dataPosting}
+                allData={dataPosting || []}
               />
             )}
           </ScrollOnly>

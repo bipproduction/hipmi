@@ -180,7 +180,7 @@ export default function ComponentForum_BerandaMoreButton({
             radius={"xl"}
             onClick={close}
           >
-            <Text c={"white"}>Batal</Text>
+            <Text c="black">Batal </Text>
           </Button>
         </Stack>
       </Drawer>
