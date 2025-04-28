@@ -8,6 +8,7 @@ import {
 import { Box, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export function ComponentEvent_CardBeranda({ data }: { data: any }) {
   const router = useRouter();
@@ -43,7 +44,7 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
             </Group>
 
             <Text c={MainColor.white} fz={"sm"} lineClamp={2}>
-              {data.deskripsi}
+              <Comp_DangerouslySetInnerHTML props={data.deskripsi} />
             </Text>
           </Stack>
 

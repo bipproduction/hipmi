@@ -1,14 +1,15 @@
 "use client";
 
-import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Card, Group, Stack, Text, Title } from "@mantine/core";
+import { Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_EVENT } from "../_lib/interface";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function ComponentEvent_BoxListStatus({
   data,
@@ -44,7 +45,7 @@ export default function ComponentEvent_BoxListStatus({
           </Group>
 
           <Text c={MainColor.white} fz={"sm"} lineClamp={2}>
-            {data.deskripsi}
+            <Comp_DangerouslySetInnerHTML props={data.deskripsi} />
           </Text>
         </Stack>
         {visible && eventId !== "" ? (

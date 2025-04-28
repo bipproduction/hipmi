@@ -14,6 +14,8 @@ import { WibuRealtime } from "wibu-pkg";
 import { Event_funCreate } from "../../fun/create/fun_create";
 import { gs_event_hotMenu } from "../../global_state";
 import { clientLogger } from "@/util/clientLogger";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function Event_ComponentCreateButton({
   value,
@@ -82,14 +84,16 @@ export default function Event_ComponentCreateButton({
         disabled={
           value.title === "" ||
           value.lokasi === "" ||
-          value.deskripsi === "" ||
           value.eventMaster_TipeAcaraId === 0 ||
           value.tanggal === "function Date() { [native code] }" ||
           // moment(value.tanggal).diff(moment(), "minutes") < 0
-          diffTimeEnd - 1 < diffTimeStart
+          diffTimeEnd - 1 < diffTimeStart ||
+          // value.deskripsi === "" ||
+          funReplaceHtml({ html: value.deskripsi }).length > maxInputLength ||
+          funReplaceHtml({ html: value.deskripsi }).length === 0
         }
         loaderPosition="center"
-        loading={isLoading ? true : false}
+        loading={isLoading}
         radius={"xl"}
         mt={"xl"}
         onClick={() => {

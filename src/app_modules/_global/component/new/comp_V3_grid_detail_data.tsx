@@ -1,7 +1,7 @@
 import { MainColor } from "@/app_modules/_global/color";
 import { Grid, Paper, Text } from "@mantine/core";
 
-export function Admin_V3_ComponentDetail({
+export function Component_V3_GridDetailData({
   item,
 }: {
   item: Record<string, any>;

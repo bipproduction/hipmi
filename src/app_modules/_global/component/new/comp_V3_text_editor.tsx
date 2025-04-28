@@ -12,13 +12,9 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 export function Component_V3_TextEditor({
   data,
   onSetData,
-//   lengthData,
-  onSetLengthData,
 }: {
   data: string;
   onSetData: (value: string) => void;
-//   lengthData: number;
-  onSetLengthData: (value: number) => void;
 }) {
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -31,14 +27,13 @@ export function Component_V3_TextEditor({
     // if (text.length <= maxInputLength) {
     // }
     onSetData(input);
-    onSetLengthData(text.length);
     // Input diabaikan jika panjang > maxLength
   };
 
   return (
     <>
       {isReady ? (
-        <Paper p="sm" withBorder shadow="lg" mah={300} bg={MainColor.white} >
+        <Paper p={5} withBorder shadow="lg" mah={300} bg={MainColor.white} >
           <ScrollArea h={280}>
             <ReactQuill
               placeholder="Apa yang sedang ingin dibahas ?"
