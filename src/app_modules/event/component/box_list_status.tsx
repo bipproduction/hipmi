@@ -44,7 +44,7 @@ export default function ComponentEvent_BoxListStatus({
             </Text>
           </Group>
 
-          <Text c={MainColor.white} fz={"sm"} lineClamp={2}>
+          <Text c={MainColor.white} fz={"sm"} lineClamp={4}>
             <Comp_DangerouslySetInnerHTML props={data.deskripsi} />
           </Text>
         </Stack>

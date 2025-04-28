@@ -1,12 +1,12 @@
 import { MainColor } from "../../color";
 
-export function Comp_DangerouslySetInnerHTML({
+export const Comp_DangerouslySetInnerHTML= ({
   props,
   color,
 }: {
   props: string | undefined;
   color?: string;
-}) {
+}) =>  {
   return (
     <>
       <div

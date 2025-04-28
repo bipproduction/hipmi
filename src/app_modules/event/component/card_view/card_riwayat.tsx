@@ -43,7 +43,7 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
               </Text>
             </Group>
 
-            <Text fz={"sm"} lineClamp={2}>
+            <Text fz={"sm"} lineClamp={4}>
               <Comp_DangerouslySetInnerHTML props={data.deskripsi}/>
             </Text>
           </Stack>
