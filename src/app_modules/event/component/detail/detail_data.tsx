@@ -5,12 +5,14 @@ import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Grid, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
+import { Component_V3_MomentDateAndTime } from "@/app_modules/_global/component/new/comp_V3_moment_date_and_time";
+import { SimpleGrid, Stack, Title } from "@mantine/core";
+import "moment/locale/id";
 import { MODEL_EVENT } from "../../_lib/interface";
 import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 import Event_ComponentBoxDaftarPeserta from "./comp_box_daftar_peserta";
-import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";
-
 export default function ComponentEvent_DetailData({
   isDaftarPeserta,
   isReport,
@@ -20,114 +22,61 @@ export default function ComponentEvent_DetailData({
   isReport?: boolean;
   data: MODEL_EVENT | null;
 }) {
+  const listData = [
+    {
+      title: "Lokasi",
+      value: data?.lokasi ?? "-",
+    },
+    {
+      title: "Tipe Acara",
+      value: `${data?.EventMaster_TipeAcara?.name}`,
+    },
+    {
+      title: "Tanggal Mulai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggal} />,
+    },
+    {
+      title: "Tanggal Selesai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggalSelesai} />,
+    },
+    {
+      title: "Deskripsi",
+      value: <Comp_DangerouslySetInnerHTML props={data?.deskripsi ?? ""} />,
+    },
+  ];
+
   return (
     <>
       {!data ? (
         <Event_ComponentSkeletonDetail />
       ) : (
         <Stack>
-          {isReport && (
+          {isReport && data.catatan  ? (
             <ComponentGlobal_BoxInformation
               isReport
               informasi={data?.catatan}
             />
+          ) : (
+            ""
           )}
 
           <ComponentGlobal_CardStyles marginBottom={"16px"}>
             <Stack>
-              <Stack px={"sm"} spacing={"xl"}>
+              <Stack spacing={"xl"}>
                 <Title
                   color={MainColor.white}
-                  lineClamp={2}
+                  // lineClamp={2}
                   align="center"
                   w={"100%"}
                   order={4}
                 >
                   {data ? data?.title : null}
                 </Title>
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>
-                      Lokasi
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={1}>:</Grid.Col>
-                  <Grid.Col span={"auto"}>
-                    <Text c={MainColor.white}>
-                      {data ? data?.lokasi : null}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>
-                      Tipe Acara
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={1}>:</Grid.Col>
-                  <Grid.Col span={"auto"}>
-                    <Text c={MainColor.white}>
-                      {data ? data.EventMaster_TipeAcara?.name : null}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Stack spacing={"xs"}>
-                  <Text c={MainColor.white} fw={"bold"}>
-                    Tanggal & Waktu
-                  </Text>
-                  <Grid>
-                    <Grid.Col span={4}>
-                      <Text c={MainColor.white} fw={"bold"}>
-                        Mulai
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={"auto"}>
-                      <Text c={MainColor.white}>
-                        {" "}
-                        {new Intl.DateTimeFormat("id-ID", {
-                          dateStyle: "full",
-                        }).format(new Date(data?.tanggal))}
-                        ,{" "}
-                        <Text span inherit c={MainColor.white}>
-                          {new Intl.DateTimeFormat("id-ID", {
-                            timeStyle: "short",
-                          }).format(new Date(data?.tanggal))}
-                        </Text>
-                      </Text>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid>
-                    <Grid.Col span={4}>
-                      <Text c={MainColor.white} fw={"bold"}>
-                        Selesai
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={"auto"}>
-                      <Text c={MainColor.white}>
-                        {" "}
-                        {new Intl.DateTimeFormat("id-ID", {
-                          dateStyle: "full",
-                        }).format(new Date(data?.tanggalSelesai))}
-                        ,{" "}
-                        <Text span inherit c={MainColor.white}>
-                          {new Intl.DateTimeFormat("id-ID", {
-                            timeStyle: "short",
-                          }).format(new Date(data?.tanggalSelesai))}
-                        </Text>
-                      </Text>
-                    </Grid.Col>
-                  </Grid>
-                </Stack>
 
-                <Stack spacing={2}>
-                  <Text c={MainColor.white} fw={"bold"}>
-                    Deskripsi
-                  </Text>
-                  <Text c={MainColor.white}>
-                    {data ? data?.deskripsi : null}
-                  </Text>
+                <Stack>
+                  {listData.map((e, i) => (
+                    <Component_V3_GridDetailData item={e} key={i} />
+                  ))}
                 </Stack>
               </Stack>
 
@@ -140,7 +89,7 @@ export default function ComponentEvent_DetailData({
                   ]}
                 >
                   <Event_ComponentBoxDaftarPeserta />
-                  <Event_ComponentBoxDaftarSponsor />
+                  {/* <Event_ComponentBoxDaftarSponsor /> */}
                 </SimpleGrid>
               )}
             </Stack>

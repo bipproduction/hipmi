@@ -25,6 +25,9 @@ import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
 import { MODEL_EVENT } from "../_lib/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
 import { clientLogger } from "@/util/clientLogger";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function Event_Edit({
   dataEvent,
@@ -57,8 +60,8 @@ export default function Event_Edit({
               backgroundColor: MainColor.white,
             },
             required: {
-              color: MainColor.red
-            }
+              color: MainColor.red,
+            },
           }}
           label="Judul"
           placeholder="judul"
@@ -89,7 +92,7 @@ export default function Event_Edit({
               backgroundColor: MainColor.white,
             },
             required: {
-              color: MainColor.red
+              color: MainColor.red,
             },
             dropdown: {
               backgroundColor: MainColor.white,
@@ -122,8 +125,8 @@ export default function Event_Edit({
               backgroundColor: MainColor.white,
             },
             required: {
-              color: MainColor.red
-            }
+              color: MainColor.red,
+            },
           }}
           label="Lokasi"
           placeholder="lokasi acara"
@@ -164,8 +167,8 @@ export default function Event_Edit({
               backgroundColor: MainColor.white,
             },
             required: {
-              color: MainColor.red
-            }
+              color: MainColor.red,
+            },
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -208,8 +211,8 @@ export default function Event_Edit({
               backgroundColor: MainColor.white,
             },
             required: {
-              color: MainColor.red
-            }
+              color: MainColor.red,
+            },
           }}
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
@@ -247,6 +250,34 @@ export default function Event_Edit({
         />
 
         <Stack spacing={5}>
+          <Text c={MainColor.white} fz={"sm"}>
+            Deskripsi
+            <Text inherit span c={"red"} px={5}>
+              *
+            </Text>
+          </Text>
+
+          <Component_V3_TextEditor
+            data={value.deskripsi}
+            onSetData={(val) => {
+              setValue({
+                ...value,
+                deskripsi: val.trim(),
+              });
+            }}
+          />
+
+          {funReplaceHtml({ html: value.deskripsi }).length === 0 && (
+            <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
+          )}
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: value.deskripsi }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -256,8 +287,8 @@ export default function Event_Edit({
                 backgroundColor: MainColor.white,
               },
               required: {
-                color: MainColor.red
-              }
+                color: MainColor.red,
+              },
             }}
             label="Deskripsi"
             placeholder="Deskripsikan acara yang akan di selenggarakan"
@@ -283,7 +314,7 @@ export default function Event_Edit({
             maxInput={300}
             lengthInput={value.deskripsi.length}
           />
-        </Stack>
+        </Stack> */}
 
         <Button
           style={{
@@ -292,10 +323,11 @@ export default function Event_Edit({
           disabled={
             value.title === "" ||
             value.lokasi === "" ||
-            value.deskripsi === "" ||
             value.eventMaster_TipeAcaraId === 0 ||
             moment(value.tanggalSelesai?.toISOString().toString()) <
-              moment(value.tanggal.toISOString().toString())
+              moment(value.tanggal.toISOString().toString()) ||
+            funReplaceHtml({ html: value.deskripsi }).length > maxInputLength ||
+            funReplaceHtml({ html: value.deskripsi }).length === 0
           }
           loaderPosition="center"
           loading={isLoading ? true : false}
@@ -325,13 +357,13 @@ async function onUpdate(
     setLoading(true);
     const res = await Event_funEditById(value);
 
-  if (res.status === 200) {
-    ComponentGlobal_NotifikasiBerhasil(res.message);
-    router.back();
-  } else {
-    setLoading(false);
-    ComponentGlobal_NotifikasiGagal(res.message);
-  }
+    if (res.status === 200) {
+      ComponentGlobal_NotifikasiBerhasil(res.message);
+      router.back();
+    } else {
+      setLoading(false);
+      ComponentGlobal_NotifikasiGagal(res.message);
+    }
   } catch (error) {
     setLoading(false);
     clientLogger.error("Error update event", error);

@@ -1,30 +1,28 @@
 "use client";
 
-import { gs_eventTriggerBeranda } from "@/lib/global_state";
-import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { AccentColor } from "@/app_modules/_global/color";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { API_RouteEvent } from "@/lib/api_user_router/route_api_event";
+import { gs_eventTriggerBeranda } from "@/lib/global_state";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import {
   Affix,
   Box,
   Button,
   Center,
   Loader,
-  rem,
-  Skeleton,
-  Paper,
+  rem
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
-import { ComponentEvent_CardBeranda } from "../component/card_view/card_beranda";
-import { event_getListAllPublish } from "../fun/get/get_list_all_publish";
 import { MODEL_EVENT } from "../_lib/interface";
 import { Event_ComponentSkeletonBeranda } from "../component";
-import { API_RouteEvent } from "@/lib/api_user_router/route_api_event";
+import { ComponentEvent_CardBeranda } from "../component/card_view/card_beranda";
+import { event_getListAllPublish } from "../fun/get/get_list_all_publish";
 
 export default function Event_Beranda() {
   const [data, setData] = useState<MODEL_EVENT[] | null>(null);

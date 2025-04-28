@@ -1,6 +1,7 @@
-import { Center, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { AccentColor, MainColor } from "../color/color_pallet";
+import { Grid, Stack, Text } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { MainColor } from "../color/color_pallet";
+import { ComponentGlobal_CardStyles } from "./comp_card_box_and_background";
 
 export default function ComponentGlobal_BoxInformation({
   informasi,
@@ -13,15 +14,7 @@ export default function ComponentGlobal_BoxInformation({
 }) {
   return (
     <>
-      <Paper
-        bg={"blue.3"}
-        p={10}
-        style={{
-          backgroundColor: AccentColor.blue,
-          border: `2px solid ${AccentColor.softblue}`,
-          borderRadius: "10px",
-        }}
-      >
+      <ComponentGlobal_CardStyles>
         {isReport ? (
           <Stack spacing={0}>
             <Text
@@ -54,7 +47,7 @@ export default function ComponentGlobal_BoxInformation({
             </Grid.Col>
           </Grid>
         )}
-      </Paper>
+      </ComponentGlobal_CardStyles>
     </>
   );
 }

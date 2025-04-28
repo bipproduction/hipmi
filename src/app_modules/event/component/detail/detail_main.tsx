@@ -5,18 +5,19 @@ import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
+import { Component_V3_MomentDateAndTime } from "@/app_modules/_global/component/new/comp_V3_moment_date_and_time";
 import { clientLogger } from "@/util/clientLogger";
-import { Grid, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Stack, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import moment from "moment";
 import "moment/locale/id";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { apiGetEventDetailById } from "../../_lib/api_event";
 import { MODEL_EVENT } from "../../_lib/interface";
+import { Event_ComponentDaftarPesertaDanSponsor } from "../button/comp_daftar_peserta_dan_sponsor";
 import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
-import Event_ComponentBoxDaftarPeserta from "./comp_box_daftar_peserta";
-import Event_ComponentBoxDaftarSponsor from "./comp_box_sponsor";
 
 export default function ComponentEvent_DetailMainData() {
   const params = useParams<{ id: string }>();
@@ -41,13 +42,36 @@ export default function ComponentEvent_DetailMainData() {
     }
   }
 
+  const listData = [
+    {
+      title: "Lokasi",
+      value: data?.lokasi ?? "-",
+    },
+    {
+      title: "Tipe Acara",
+      value: `${data?.EventMaster_TipeAcara?.name}`,
+    },
+    {
+      title: "Tanggal Mulai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggal} />,
+    },
+    {
+      title: "Tanggal Selesai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggalSelesai} />,
+    },
+    {
+      title: "Deskripsi",
+      value: <Comp_DangerouslySetInnerHTML props={data?.deskripsi ?? ""} />,
+    },
+  ];
+
   return (
     <>
       {data == null ? (
         <Event_ComponentSkeletonDetail />
       ) : (
         <ComponentGlobal_CardStyles>
-          <Stack px={"xs"} spacing={"xl"}>
+          <Stack  spacing={"xl"}>
             <ComponentGlobal_AvatarAndUsername
               profile={data?.Author?.Profile as any}
             />
@@ -56,87 +80,12 @@ export default function ComponentEvent_DetailMainData() {
               <Title color={MainColor.white} align="center" order={4}>
                 {data ? data.title : null}
               </Title>
-              <Grid>
-                <Grid.Col span={4}>
-                  <Text c={MainColor.white} fw={"bold"}>
-                    Lokasi
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={1}>:</Grid.Col>
-                <Grid.Col span={"auto"}>
-                  <Text c={MainColor.white}>{data ? data.lokasi : null}</Text>
-                </Grid.Col>
-              </Grid>
-              <Grid>
-                <Grid.Col span={4}>
-                  <Text c={MainColor.white} fw={"bold"}>
-                    Tipe Acara
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={1}>:</Grid.Col>
-                <Grid.Col span={"auto"}>
-                  <Text c={MainColor.white}>
-                    {data ? data.EventMaster_TipeAcara.name : null}
-                  </Text>
-                </Grid.Col>
-              </Grid>
-
-              <Stack spacing={"xs"}>
-                <Text c={MainColor.white} fw={"bold"}>
-                  Tanggal & Waktu
-                </Text>
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>
-                      Mulai
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={1}>:</Grid.Col>
-                  <Grid.Col span={"auto"}>
-                    <Text c={MainColor.white}>
-                      {moment(
-                        data.tanggal?.toLocaleString("id-ID", {
-                          dateStyle: "full",
-                        })
-                      ).format("dddd, DD MMMM YYYY, LT")}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Text c={MainColor.white} fw={"bold"}>
-                      Selesai
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={1}>:</Grid.Col>
-                  <Grid.Col span={"auto"}>
-                    <Text c={MainColor.white}>
-                      {moment(
-                        data.tanggalSelesai?.toLocaleString("id-ID", {
-                          dateStyle: "full",
-                        })
-                      ).format("dddd, DD MMMM YYYY, LT")}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
+              <Stack>
+                {listData.map((e, i) => (
+                  <Component_V3_GridDetailData item={e} key={i} />
+                ))}
               </Stack>
-
-              <Stack spacing={2}>
-                <Text c={MainColor.white} fw={"bold"}>
-                  Deskripsi
-                </Text>
-                <Text c={MainColor.white}>{data ? data?.deskripsi : null}</Text>
-              </Stack>
-              <SimpleGrid
-                cols={2}
-                breakpoints={[
-                  { maxWidth: "48rem", cols: 2, spacing: "sm" },
-                  { maxWidth: "36rem", cols: 1, spacing: "sm" },
-                ]}
-              >
-                <Event_ComponentBoxDaftarPeserta />
-                <Event_ComponentBoxDaftarSponsor />
-              </SimpleGrid>
+              <Event_ComponentDaftarPesertaDanSponsor />
             </Stack>
           </Stack>
         </ComponentGlobal_CardStyles>

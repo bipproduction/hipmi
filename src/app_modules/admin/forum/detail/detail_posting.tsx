@@ -1,21 +1,20 @@
 "use client";
 
-import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
-import ComponentAdminDonasi_TombolKembali from "@/app_modules/admin/donasi/component/tombol_kembali";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_POSTING,
 } from "@/app_modules/forum/model/interface";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import {
-  Badge,
   Box,
   Button,
   Center,
-  Grid,
   Group,
-  Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
@@ -25,27 +24,21 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconSearch, IconTrash } from "@tabler/icons-react";
-import { IconFlag3 } from "@tabler/icons-react";
-import _ from "lodash";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
-import { adminForum_getListKomentarById } from "../fun/get/get_list_komentar_by_id";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
-import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
-import { apiAdminGetKomentarForumById } from "../lib/api_fetch_admin_forum";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { IconFlag3, IconSearch, IconTrash } from "@tabler/icons-react";
 import moment from "moment";
 import "moment/locale/id";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
+import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
+import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
+import { apiAdminGetKomentarForumById } from "../lib/api_fetch_admin_forum";
+import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 
 export default function AdminForum_DetailPosting({
   dataPosting,
@@ -54,11 +47,12 @@ export default function AdminForum_DetailPosting({
 }) {
   return (
     <>
-      {/* <pre>{JSON.stringify(listKomentar, null, 2)}</pre> */}
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Detail" />
         <AdminGlobal_ComponentBackButton />
-        <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
+        <Admin_V3_ComponentBreakpoint>
+          <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
+        </Admin_V3_ComponentBreakpoint>
         <TableKomentar postingId={dataPosting.id} />
       </Stack>
     </>
@@ -90,6 +84,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
       if (response && response.success) {
         setData(response.data.data);
         setDelete(false);
+        setNPage(response.data.nCount || 1);
       }
     } catch (error) {
       console.error("Invalid data format received:", error);
@@ -106,6 +101,22 @@ function TableKomentar({ postingId }: { postingId: string }) {
     setActivePage(p);
   }
 
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const rowTable = () => {
     if (!Array.isArray(data) || data.length === 0) {
       return (
@@ -120,26 +131,17 @@ function TableKomentar({ postingId }: { postingId: string }) {
     }
 
     return data?.map((e, i) => (
-      <tr key={i} >
+      <tr key={i}>
         <td>
           <Box c={AdminColor.white} w={100}>
             <Text lineClamp={1}>{e?.Author?.username}</Text>
           </Box>
         </td>
         <td>
-          <Box w={200}>
-            <Spoiler
-              c={AdminColor.white}
-              maxHeight={50}
-              hideLabel="sembunyikan"
-              showLabel="tampilkan"
-            >
-              <div
-                style={{ textAlign: "justify", textJustify: "auto" }}
-                dangerouslySetInnerHTML={{ __html: e?.komentar }}
-              />
-            </Spoiler>
-          </Box>
+          <AdminForum_CompTableSetHtmlStiker
+            data={e.komentar}
+            classname="chat-content"
+          />
         </td>
         <td>
           <Box c={AdminColor.white} w={100}>

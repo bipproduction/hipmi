@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { forum_funCreate } from "../fun/create/fun_create";
-import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 
 export default function Forum_NewCreate() {
   const [data, setData] = useState<string>("");
@@ -19,7 +18,7 @@ export default function Forum_NewCreate() {
 
   return (
     <Stack>
-      <Component_V3_TextEditor
+      {/* <Component_V3_TextEditor
         data={data}
         onSetData={(val) => {
           setData(val);
@@ -27,7 +26,7 @@ export default function Forum_NewCreate() {
         onSetLengthData={(val) => {
           setLengthData(val);
         }}
-      />
+      /> */}
 
       <Group position="apart">
         <ComponentGlobal_InputCountDown
