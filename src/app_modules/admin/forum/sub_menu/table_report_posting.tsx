@@ -17,7 +17,7 @@ import {
   Stack,
   Table,
   Text,
-  TextInput
+  TextInput,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconFlag3, IconSearch } from "@tabler/icons-react";
@@ -26,6 +26,7 @@ import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { apiGetAdminForumReportPosting } from "../lib/api_fetch_admin_forum";
+import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
 
 export default function AdminForum_TableReportPosting() {
   return (
@@ -45,6 +46,22 @@ function TableView() {
   const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
+
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
 
   useShallowEffect(() => {
     const loadInitialData = async () => {
@@ -106,20 +123,10 @@ function TableView() {
         </td>
 
         <td>
-          <Box w={150}>
-            <Spoiler
-              // w={400}
-              maxHeight={50}
-              hideLabel="sembunyikan"
-              showLabel="tampilkan"
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: e?.Forum_Posting.diskusi,
-                }}
-              />
-            </Spoiler>
-          </Box>
+          <AdminForum_CompTableSetHtmlStiker
+            data={e.Forum_Posting.diskusi}
+            classname="chat-content"
+          />
         </td>
 
         <td>
@@ -187,9 +194,7 @@ function TableView() {
                       <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
-                      <Center c={AdminColor.white}>
-                        Status Posting
-                      </Center>
+                      <Center c={AdminColor.white}>Status Posting</Center>
                     </th>
 
                     <th>
