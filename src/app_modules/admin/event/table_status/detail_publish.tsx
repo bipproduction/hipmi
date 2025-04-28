@@ -1,13 +1,11 @@
 'use client'
-import { useAtom } from 'jotai';
-import React from 'react';
-import { gs_admin_event_menu_publish } from '../_lib/global_state';
-import { IconCircleCheck } from '@tabler/icons-react';
 import { Button, Group, Stack } from '@mantine/core';
+import { IconCircleCheck } from '@tabler/icons-react';
+import { useAtom } from 'jotai';
 import AdminGlobal_ComponentBackButton from '../../_admin_global/back_button';
-import { AdminEvent_ViewDetailPeserta } from '../_view';
 import AdminEvent_ComponentDetailPublish from '../_component/comp_detail_publish';
-import AdminEvent_DetailDataSponsor from '../_component/detail_data_sponsor';
+import { gs_admin_event_menu_publish } from '../_lib/global_state';
+import { AdminEvent_ViewDetailPeserta } from '../_view';
 
 function AdminEvent_DetailPublish() {
   const [selectPage, setSelectPage] = useAtom(gs_admin_event_menu_publish);

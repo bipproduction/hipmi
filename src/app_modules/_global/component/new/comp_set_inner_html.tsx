@@ -4,7 +4,7 @@ export function Comp_DangerouslySetInnerHTML({
   props,
   color,
 }: {
-  props: string;
+  props: string | undefined;
   color?: string;
 }) {
   return (
@@ -15,7 +15,7 @@ export function Comp_DangerouslySetInnerHTML({
         }}
         // className="chat-content"
         dangerouslySetInnerHTML={{
-          __html: props,
+          __html: props ?? "",
         }}
       />
     </>
