@@ -13,7 +13,7 @@ export async function GET(
     const { name } = params;
     const { searchParams } = new URL(request.url);
     const page = searchParams.get("page");
-    const takeData = 6;
+    const takeData = 10;
     const skipData = Number(page) * takeData - takeData;
 
     const userLoginId = await funGetUserIdByToken();
@@ -51,7 +51,7 @@ export async function GET(
         take: takeData,
         skip: skipData,
         orderBy: {
-          tanggal: "asc",
+          updatedAt: "desc",
         },
         where: {
           active: true,

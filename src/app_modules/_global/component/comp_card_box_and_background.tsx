@@ -4,7 +4,7 @@ import React from "react";
 
 /**
  * ComponentGlobal_CardStyles
- * 
+ *
  * A React component that renders a customizable card element.
  *
  * Props:
@@ -24,6 +24,7 @@ export function ComponentGlobal_CardStyles({
   height,
   color,
   onClickHandler,
+  style,
 }: {
   children: React.ReactNode;
   backgroundColor?: string;
@@ -32,11 +33,13 @@ export function ComponentGlobal_CardStyles({
   height?: string | number;
   color?: string;
   onClickHandler?: React.MouseEventHandler<HTMLDivElement>;
+  style?: React.CSSProperties;
 }) {
   return (
     <>
       <Card
         style={{
+          ...style,
           backgroundColor: backgroundColor
             ? backgroundColor
             : AccentColor.darkblue,
