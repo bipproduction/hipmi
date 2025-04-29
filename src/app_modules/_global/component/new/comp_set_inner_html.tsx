@@ -1,23 +1,30 @@
 import { MainColor } from "../../color";
 
-export const Comp_DangerouslySetInnerHTML= ({
+export const Comp_DangerouslySetInnerHTML = ({
   props,
   color,
+  style,
 }: {
   props: string | undefined;
   color?: string;
-}) =>  {
+  style?: React.CSSProperties;
+}) => {
+  const baseStyle: React.CSSProperties = {
+    color: color ?? MainColor.white,
+  };
+
   return (
     <>
       <div
         style={{
-          color: color ? color : MainColor.white,
+          ...baseStyle,
+          ...style,
+          // wordBreak: "break-word",
         }}
-        // className="chat-content"
         dangerouslySetInnerHTML={{
           __html: props ?? "",
         }}
       />
     </>
   );
-}
+};

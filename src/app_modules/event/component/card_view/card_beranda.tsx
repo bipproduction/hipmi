@@ -17,7 +17,9 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
 
   return (
     <>
-      <ComponentGlobal_CardStyles marginBottom={"15px"}>
+      <ComponentGlobal_CardStyles
+        marginBottom={"15px"}
+      >
         <Stack>
           <ComponentGlobal_AvatarAndUsername
             profile={data?.Author?.Profile as any}
@@ -36,15 +38,13 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
               <Title c={MainColor.white} order={5} lineClamp={1}>
                 {data.title}
               </Title>
-              {/* <Text align="right" fz={"sm"} lineClamp={1}>
-                {new Intl.DateTimeFormat("id-ID", {
-                  dateStyle: "medium",
-                }).format(data?.tanggal)}
-              </Text> */}
             </Group>
 
             <Text c={MainColor.white} fz={"sm"} lineClamp={4}>
-              <Comp_DangerouslySetInnerHTML props={data.deskripsi} />
+              <Comp_DangerouslySetInnerHTML
+                props={data.deskripsi}
+                style={{ height: 50 }}
+              />
             </Text>
           </Stack>
 

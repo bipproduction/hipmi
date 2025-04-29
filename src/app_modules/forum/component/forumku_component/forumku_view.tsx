@@ -68,6 +68,9 @@ export default function ComponentForum_ForumkuMainCardView({
               <Comp_V3_SetHtmlWithSticker
                 props={data?.diskusi}
                 className="chat-content"
+                style={{
+                  height: 100,
+                }}
               />
             </Text>
           </Box>

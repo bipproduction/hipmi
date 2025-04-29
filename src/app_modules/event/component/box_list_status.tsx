@@ -5,7 +5,7 @@ import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Group, Stack, Text, Title } from "@mantine/core";
+import { Box, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_EVENT } from "../_lib/interface";
@@ -31,6 +31,11 @@ export default function ComponentEvent_BoxListStatus({
           setVisible(true);
           router.push(path + data.id);
         }}
+        // style={{
+        //   maxHeight: 200,
+        //   overflow: "hidden",
+        //   position: "relative",
+        // }}
       >
         <Stack>
           <Group w={"100%"} position="apart" grow>
@@ -43,17 +48,52 @@ export default function ComponentEvent_BoxListStatus({
               }).format(new Date(data.tanggal))}
             </Text>
           </Group>
-
-          <Text c={MainColor.white} fz={"sm"} lineClamp={4}>
-            <Comp_DangerouslySetInnerHTML props={data.deskripsi} />
+          <Text fz={"sm"} lineClamp={2}>
+            <Comp_DangerouslySetInnerHTML
+              props={data.deskripsi}
+              style={{ height: 50 }}
+            />
           </Text>
         </Stack>
-        {visible && eventId !== "" ? (
-          <ComponentGlobal_CardLoadingOverlay />
-        ) : (
-          ""
-        )}
+        {visible && eventId !== "" && <ComponentGlobal_CardLoadingOverlay />}
       </ComponentGlobal_CardStyles>
+
+      {/* <Box
+        pos="relative"
+        mah={200}
+        mx="auto"
+        p="md"
+        bg="#002860"
+        style={{
+          overflow: "hidden",
+          borderRadius: 12,
+          border: "1px solid #1346a1",
+        }}
+      >
+        <div
+          style={{
+            color: "white",
+            wordBreak: "break-word",
+          }}
+          dangerouslySetInnerHTML={{
+            __html: data.deskripsi.trim(),
+          }}
+        />
+
+
+        <Box
+        pos="absolute"
+        bottom={0}
+        left={0}
+        right={0}
+        h={50}
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #002860 100%)", // warna fade cocokkan dengan background box
+          pointerEvents: "none",
+        }}
+      />
+      </Box> */}
     </>
   );
 }
