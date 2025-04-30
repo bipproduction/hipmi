@@ -6,7 +6,8 @@ import { IconMessageCircle, IconMessageCircleX } from "@tabler/icons-react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_DetailHeader from "./detail_header";
 import { useShallowEffect } from "@mantine/hooks";
-import { Comp_V3_SetHtmlWithSticker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_DetailForumView({
   data,
@@ -19,21 +20,21 @@ export default function ComponentForum_DetailForumView({
   userLoginId: string;
   onLoadData: (val: any) => void;
 }) {
-  useShallowEffect(() => {
-    // Add custom style for stickers inside Quill editor
-    const style = document.createElement("style");
-    style.textContent = `
-        .chat-content img {
-        max-width: 70px !important;
-        max-height: 70px !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      // Clean up when component unmounts
-      document.head.removeChild(style);
-    };
-  }, []);
+  // useShallowEffect(() => {
+  //   // Add custom style for stickers inside Quill editor
+  //   const style = document.createElement("style");
+  //   style.textContent = `
+  //       .chat-content img {
+  //       max-width: 70px !important;
+  //       max-height: 70px !important;
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
+  //   return () => {
+  //     // Clean up when component unmounts
+  //     document.head.removeChild(style);
+  //   };
+  // }, []);
 
   return (
     <>
@@ -49,12 +50,18 @@ export default function ComponentForum_DetailForumView({
           />
 
           {/* CONTENT */}
-          <Box p={"lg"}>
+          <Box
+            style={{
+              backgroundColor: MainColor.soft_darkblue,
+              padding: 10,
+              borderRadius: 8,
+            }}
+          >
             <Text fz={"sm"} color="white">
               {data?.diskusi ? (
-                <Comp_V3_SetHtmlWithSticker
+                <Comp_V3_SetInnerHTML
                   props={data?.diskusi}
-                  className="chat-content"
+                  // className="chat-content"
                 />
               ) : (
                 ""

@@ -11,8 +11,8 @@ export const Comp_DangerouslySetInnerHTML = ({
 }) => {
   const baseStyle: React.CSSProperties = {
     color: color ?? MainColor.white,
-    wordBreak: "break-word",
-    overflow: "hidden",
+    // wordBreak: "break-word",
+    // overflow: "hidden",
   };
  
   return (
@@ -22,7 +22,6 @@ export const Comp_DangerouslySetInnerHTML = ({
           ...baseStyle,
           ...styleInput,
         }}
-        className="rich-html-content"
         dangerouslySetInnerHTML={{
           __html: props ?? "",
         }}
