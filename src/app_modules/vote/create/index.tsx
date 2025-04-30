@@ -29,6 +29,10 @@ import { WibuRealtime } from "wibu-pkg";
 import { Vote_funCreate } from "../fun/create/create_vote";
 import { gs_vote_hotMenu } from "../global_state";
 import { clientLogger } from "@/util/clientLogger";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 
 export default function Vote_Create() {
   const router = useRouter();
@@ -102,17 +106,14 @@ export default function Vote_Create() {
           setHotMenu(2);
           router.replace(RouterVote.status({ id: "2" }));
           ComponentGlobal_NotifikasiBerhasil(res.message);
-
         }
       } else {
         setIsLoading(false);
         ComponentGlobal_NotifikasiGagal(res.message);
       }
-
     } catch (error) {
       setIsLoading(false);
       clientLogger.error("Error create voting", error);
-
     }
   }
 
@@ -130,7 +131,7 @@ export default function Vote_Create() {
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             label="Judul"
             withAsterisk
@@ -143,7 +144,27 @@ export default function Vote_Create() {
               });
             }}
           />
+
           <Stack spacing={5}>
+            <Component_V3_Label_TextInput text="Deskripsi" />
+
+            <Component_V3_TextEditor
+              data={data.deskripsi}
+              onSetData={(val) => {
+                setData({
+                  ...data,
+                  deskripsi: val,
+                });
+              }}
+            />
+
+            <ComponentGlobal_InputCountDown
+              lengthInput={funReplaceHtml({ html: data.deskripsi }).length}
+              maxInput={maxInputLength}
+            />
+          </Stack>
+
+          {/* <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
@@ -174,7 +195,7 @@ export default function Vote_Create() {
               maxInput={300}
               lengthInput={data.deskripsi.length}
             />
-          </Stack>
+          </Stack> */}
 
           <DatePickerInput
             styles={{
@@ -186,7 +207,7 @@ export default function Vote_Create() {
               },
               required: {
                 color: MainColor.red,
-              }
+              },
             }}
             label="Jangka Waktu"
             placeholder="Masukan jangka waktu voting"
@@ -227,7 +248,7 @@ export default function Vote_Create() {
                       },
                       required: {
                         color: MainColor.red,
-                      }
+                      },
                     }}
                     label={e.name}
                     withAsterisk
@@ -283,12 +304,11 @@ export default function Vote_Create() {
         <Button
           disabled={
             !data.title ||
-              !data.deskripsi ||
-              !data.awalVote ||
-              !data.akhirVote ||
-              listVote.map((e, i) => e.value).includes("")
-              ? true
-              : false
+            !data.awalVote ||
+            !data.akhirVote ||
+            listVote.map((e, i) => e.value).includes("") ||
+            funReplaceHtml({ html: data.deskripsi }).length > maxInputLength ||
+            funReplaceHtml({ html: data.deskripsi }).length === 0
           }
           loaderPosition="center"
           loading={isLoading ? true : false}

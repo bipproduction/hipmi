@@ -19,6 +19,7 @@ import { MainColor } from "@/app_modules/_global/color";
 import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 
 export default function Event_Create({
   listTipeAcara,
@@ -220,12 +221,7 @@ export default function Event_Create({
         />
 
         <Stack spacing={5}>
-          <Text c={MainColor.white} fz={"sm"}>
-            Deskripsi
-            <Text inherit span c={"red"} px={5}>
-              *
-            </Text>
-          </Text>
+          <Component_V3_Label_TextInput text="Deskripsi" />
 
           <Component_V3_TextEditor
             data={value.deskripsi}

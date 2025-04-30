@@ -28,7 +28,7 @@ import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/com
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
 import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
-import { Comp_V3_SetHtmlWithSticker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
 
 export default function AdminForum_TablePosting() {

@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_ForumkuHeaderCard from "./forumku_header";
-import { Comp_V3_SetHtmlWithSticker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { useShallowEffect } from "@mantine/hooks";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_ForumkuMainCardView({
   data,
@@ -57,15 +58,18 @@ export default function ComponentForum_ForumkuMainCardView({
           />
 
           <Box
-            sx={{ zIndex: 0 }}
-            p={"lg"}
+            style={{
+              backgroundColor: MainColor.soft_darkblue,
+              padding: 10,
+              borderRadius: 8,
+            }}
             onClick={() => {
               setVisible(true);
               router.push(RouterForum.main_detail + data?.id);
             }}
           >
             <Text c={"white"} fz={"sm"} lineClamp={4}>
-              <Comp_V3_SetHtmlWithSticker
+              <Comp_V3_SetInnerHTML
                 props={data?.diskusi}
                 className="chat-content"
                 style={{

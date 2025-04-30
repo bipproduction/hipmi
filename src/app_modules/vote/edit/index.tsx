@@ -14,7 +14,7 @@ import {
   Stack,
   Text,
   TextInput,
-  Textarea
+  Textarea,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useShallowEffect } from "@mantine/hooks";
@@ -32,6 +32,10 @@ import {
   MODEL_VOTING_DAFTAR_NAMA_VOTE,
 } from "../model/interface";
 import { clientLogger } from "@/util/clientLogger";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function Vote_Edit({
   dataVote,
@@ -88,6 +92,28 @@ export default function Vote_Edit({
         />
 
         <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Deskripsi" />
+
+          <Component_V3_TextEditor
+            data={data.deskripsi}
+            onSetData={(val) => {
+              setData({
+                ...data,
+                deskripsi: val,
+              });
+            }}
+          />
+          {funReplaceHtml({ html: data.deskripsi }).length === 0 && (
+            <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
+          )}
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: data.deskripsi }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -126,19 +152,19 @@ export default function Vote_Edit({
             lengthInput={data.deskripsi.length}
             maxInput={300}
           />
-        </Stack>
+        </Stack> */}
 
         <DatePickerInput
           styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              },
+            label: {
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
+            },
+            required: {
+              color: MainColor.red,
+            },
           }}
           label="Jangka Waktu"
           placeholder="Masukan jangka waktu voting"
@@ -284,17 +310,20 @@ function ButtonAction({
           ComponentGlobal_NotifikasiGagal(res.message);
         }
       });
-    
     } catch (error) {
       setIsLoading(false);
-    clientLogger.error("Error update voting", error);
-    } 
+      clientLogger.error("Error update voting", error);
+    }
   }
 
   return (
     <>
       <Button
-        disabled={!data.title || !data.deskripsi ? true : false}
+        disabled={
+          !data.title ||
+          funReplaceHtml({ html: data.deskripsi }).length > maxInputLength ||
+          funReplaceHtml({ html: data.deskripsi }).length === 0
+        }
         loaderPosition="center"
         loading={isLoading ? true : false}
         mt={"lg"}

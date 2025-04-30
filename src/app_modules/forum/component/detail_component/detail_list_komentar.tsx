@@ -1,10 +1,12 @@
 "use client";
 
-import { Card, Divider, Spoiler, Stack, Text } from "@mantine/core";
+import { Box, Card, Divider, Spoiler, Stack, Text } from "@mantine/core";
 import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 import ComponentForum_KomentarAuthorNameOnHeader from "../komentar_component/komentar_author_header_name";
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { useShallowEffect } from "@mantine/hooks";
+import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_KomentarView({
   data,
@@ -18,7 +20,6 @@ export default function ComponentForum_KomentarView({
   userLoginId: string;
 }) {
   useShallowEffect(() => {
-   
     // Add custom style for stickers inside Quill editor
     const style = document.createElement("style");
     style.textContent = `
@@ -44,34 +45,42 @@ export default function ComponentForum_KomentarView({
   return (
     <>
       <ComponentGlobal_CardStyles>
-        <ComponentForum_KomentarAuthorNameOnHeader
-          tglPublish={data?.createdAt}
-          userId={data?.Author?.id}
-          komentarId={data?.id}
-          isMoreButton={true}
-          setKomentar={setKomentar}
-          postingId={postingId}
-          userLoginId={userLoginId}
-          profile={data.Author.Profile}
-        />
+        <Stack>
+          <ComponentForum_KomentarAuthorNameOnHeader
+            tglPublish={data?.createdAt}
+            userId={data?.Author?.id}
+            komentarId={data?.id}
+            isMoreButton={true}
+            setKomentar={setKomentar}
+            postingId={postingId}
+            userLoginId={userLoginId}
+            profile={data.Author.Profile}
+          />
 
-        <Stack spacing={"xs"} sx={{ zIndex: 0 }} p={"sm"}>
-          <Text fz={"sm"} lineClamp={4} c={"white"}>
-            {data.komentar ? (
-              <Spoiler
-                hideLabel="sembunyikan"
-                maxHeight={100}
-                showLabel="tampilkan"
-              >
-                <div
-                  className="chat-content"
-                  dangerouslySetInnerHTML={{ __html: data.komentar }}
-                />
-              </Spoiler>
-            ) : (
-              ""
-            )}
-          </Text>
+          <Box
+            style={{
+              backgroundColor: MainColor.soft_darkblue,
+              padding: 10,
+              borderRadius: 8,
+            }}
+          >
+            <Text fz={"sm"} lineClamp={4} c={"white"}>
+              {data.komentar ? (
+                <Spoiler
+                  hideLabel="sembunyikan"
+                  maxHeight={100}
+                  showLabel="tampilkan"
+                >
+                  <Comp_V3_SetInnerHTML
+                    props={data?.komentar}
+                    className="chat-content"
+                  />
+                </Spoiler>
+              ) : (
+                ""
+              )}
+            </Text>
+          </Box>
         </Stack>
       </ComponentGlobal_CardStyles>
     </>
