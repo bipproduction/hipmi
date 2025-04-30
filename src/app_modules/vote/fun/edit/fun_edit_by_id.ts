@@ -19,7 +19,7 @@ export async function Vote_funEditById(
     },
     data: {
       title: data.title,
-      deskripsi: data.deskripsi,
+      deskripsi: data.deskripsi.trim(),
       awalVote: data.awalVote,
       akhirVote: data.akhirVote,
     },

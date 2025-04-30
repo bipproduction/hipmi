@@ -42,6 +42,7 @@ import { Voting_ComponentSkeletonDetail } from "../../component/skeleton_view";
 import { Vote_funCreateHasil } from "../../fun/create/create_hasil";
 import { MODEL_VOTING } from "../../model/interface";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function Vote_MainDetail({
   userLoginId,
@@ -222,7 +223,7 @@ export default function Vote_MainDetail({
                   {data?.title}
                 </Title>
               </Center>
-              <Text>{data?.deskripsi}</Text>
+              <Comp_DangerouslySetInnerHTML props={data?.deskripsi} />
 
               <Stack spacing={0}>
                 <Stack align="center" spacing={"xs"}>

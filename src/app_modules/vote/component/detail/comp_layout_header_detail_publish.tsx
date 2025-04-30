@@ -27,7 +27,6 @@ import { MODEL_VOTING } from "../../model/interface";
 import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
 import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 
-
 export function Voting_ComponentLayoutHeaderDetailPublish({
   votingId,
   title,
@@ -42,8 +41,10 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
   const [data, setData] = useState<MODEL_VOTING>(dataVoting);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function onUpdateStatusArsip({ isArsip }: { isArsip: boolean }) {
+    setIsLoading(true);
     const res = await voting_funUpdateIsArsipById({
       votingId,
       isArsip: isArsip,
@@ -57,9 +58,11 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
       } finally {
         setOpenModal(false);
         ComponentGlobal_NotifikasiBerhasil(res.message);
+        setIsLoading(false);
       }
     } else {
       ComponentGlobal_NotifikasiGagal(res.message);
+      setIsLoading(false);
     }
   }
 
@@ -139,6 +142,8 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
         title={`Anda yakin ingin ${data?.isArsip ? "mempublish" : "mengarsipkan"} voting?`}
         buttonKanan={
           <Button
+            loading={isLoading}
+            loaderPosition="center"
             onClick={() => {
               data?.isArsip
                 ? onUpdateStatusArsip({ isArsip: false })

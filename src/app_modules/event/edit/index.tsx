@@ -3,17 +3,20 @@
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Button,
   Select,
   Stack,
   Text,
-  TextInput,
-  Textarea,
+  TextInput
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import _ from "lodash";
@@ -21,13 +24,10 @@ import moment from "moment";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
 import { MODEL_EVENT } from "../_lib/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
-import { clientLogger } from "@/util/clientLogger";
-import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 
 export default function Event_Edit({
   dataEvent,
@@ -250,12 +250,7 @@ export default function Event_Edit({
         />
 
         <Stack spacing={5}>
-          <Text c={MainColor.white} fz={"sm"}>
-            Deskripsi
-            <Text inherit span c={"red"} px={5}>
-              *
-            </Text>
-          </Text>
+          <Component_V3_Label_TextInput text="Deskripsi" />
 
           <Component_V3_TextEditor
             data={value.deskripsi}
