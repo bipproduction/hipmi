@@ -14,6 +14,10 @@ import {
   MODEL_COLLABORATION_MASTER,
 } from "../model/interface";
 import { clientLogger } from "@/util/clientLogger";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function Colab_Edit({
   selectedData,
@@ -25,8 +29,7 @@ export default function Colab_Edit({
   const [value, setValue] = useState(selectedData);
   return (
     <>
-      <Stack px={"xl"} py={"md"}>
-        {/* <pre>{JSON.stringify(value, null, 2)}</pre> */}
+      <Stack px={"xs"} py={"md"}>
         <TextInput
           maxLength={100}
           styles={{
@@ -38,7 +41,7 @@ export default function Colab_Edit({
             },
             required: {
               color: MainColor.red,
-            }
+            },
           }}
           label="Judul"
           withAsterisk
@@ -63,7 +66,7 @@ export default function Colab_Edit({
             },
             required: {
               color: MainColor.red,
-            }
+            },
           }}
           label="Lokasi"
           withAsterisk
@@ -90,7 +93,7 @@ export default function Colab_Edit({
             },
             dropdown: {
               backgroundColor: MainColor.white,
-            }
+            },
           }}
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
@@ -112,26 +115,45 @@ export default function Colab_Edit({
           }
         />
 
-        {/* <TextInput
-          description={
-            <Text fz={10}>
-              minimal partisipan yang akan di pilih untuk mendiskusikan proyek
-            </Text>
-          }
-          type="number"
-          withAsterisk
-          label="Jumlah Partisipan"
-          placeholder={"2"}
-          value={value.jumlah_partisipan ? value.jumlah_partisipan : ""}
-          onChange={(val) => {
-            setValue({
-              ...value,
-              jumlah_partisipan: + val.currentTarget.value
-            });
-          }}
-        /> */}
+        <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Tujuan Proyek" />
+
+          <Component_V3_TextEditor
+            data={value.purpose}
+            onSetData={(val) => {
+              setValue({
+                ...value,
+                purpose: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: value.purpose }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
 
         <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Keuntungan" />
+
+          <Component_V3_TextEditor
+            data={value.benefit}
+            onSetData={(val) => {
+              setValue({
+                ...value,
+                benefit: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: value.benefit }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -160,9 +182,9 @@ export default function Colab_Edit({
             lengthInput={value.purpose.length}
             maxInput={500}
           />
-        </Stack>
+        </Stack> */}
 
-        <Stack spacing={5}>
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -187,7 +209,7 @@ export default function Colab_Edit({
             lengthInput={value.benefit.length}
             maxInput={500}
           />
-        </Stack>
+        </Stack> */}
 
         <ButtonAction value={value as any} />
       </Stack>
@@ -211,18 +233,18 @@ function ButtonAction({ value }: { value: any }) {
     // if (value.jumlah_partisipan < 2)
     //   return ComponentGlobal_NotifikasiPeringatan("Minimal Ada 2 Partisipan");
 
+    setLoading(true);
     await colab_funEditById(value as any).then((res) => {
       try {
-        setLoading(true);
         if (res.status === 200) {
           router.back();
           ComponentGlobal_NotifikasiBerhasil(res.message);
         } else {
-        setLoading(false)
+          setLoading(false);
           ComponentGlobal_NotifikasiGagal(res.message);
         }
       } catch (error) {
-        setLoading(false)
+        setLoading(false);
         clientLogger.error("Error update proyek", error);
       }
     });
@@ -234,11 +256,11 @@ function ButtonAction({ value }: { value: any }) {
         disabled={
           !value.title ||
           !value.lokasi ||
-          !value.purpose ||
-          !value.benefit ||
-          value.projectCollaborationMaster_IndustriId === 0
-            ? true
-            : false
+          value.projectCollaborationMaster_IndustriId === 0 ||
+          funReplaceHtml({ html: value.purpose }).length > maxInputLength ||
+          funReplaceHtml({ html: value.purpose }).length === 0 ||
+          funReplaceHtml({ html: value.benefit }).length > maxInputLength ||
+          funReplaceHtml({ html: value.benefit }).length === 0
         }
         loaderPosition="center"
         loading={loading ? true : false}

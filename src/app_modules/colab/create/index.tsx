@@ -2,12 +2,16 @@
 
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
-import { Button, Select, Stack, TextInput, Textarea } from "@mantine/core";
+import { Button, Select, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,14 +20,21 @@ import { apiGetMasterCollaboration } from "../component/lib/api_collaboration";
 import colab_funCreateProyek from "../fun/create/fun_create_proyek";
 import { MODEL_COLLABORATION_MASTER } from "../model/interface";
 
+interface IValue {
+  title: string;
+  lokasi: string;
+  purpose: string;
+  benefit: string;
+  projectCollaborationMaster_IndustriId: number;
+}
+
 export default function Colab_Create() {
-  const [value, setValue] = useState({
+  const [value, setValue] = useState<IValue>({
     title: "",
     lokasi: "",
     purpose: "",
     benefit: "",
     projectCollaborationMaster_IndustriId: 0,
-    // jumlah_partisipan: 0,
   });
 
   const [listIndustri, setListIndustri] = useState<
@@ -55,7 +66,7 @@ export default function Colab_Create() {
 
   return (
     <>
-      <Stack px={"xl"} pb={"md"}>
+      <Stack px={"xs"} pb={"md"}>
         <TextInput
           maxLength={100}
           styles={{
@@ -115,6 +126,44 @@ export default function Colab_Create() {
         />
 
         <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Tujuan Proyek" />
+
+          <Component_V3_TextEditor
+            data={value.purpose}
+            onSetData={(val) => {
+              setValue({
+                ...value,
+                purpose: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: value.purpose }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Keuntungan" />
+
+          <Component_V3_TextEditor
+            data={value.benefit}
+            onSetData={(val) => {
+              setValue({
+                ...value,
+                benefit: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: value.benefit }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: { color: MainColor.white },
@@ -137,9 +186,9 @@ export default function Colab_Create() {
             lengthInput={value.purpose.length}
             maxInput={500}
           />
-        </Stack>
+        </Stack> */}
 
-        <Stack spacing={5}>
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: { color: MainColor.white },
@@ -160,7 +209,7 @@ export default function Colab_Create() {
             lengthInput={value.benefit.length}
             maxInput={500}
           />
-        </Stack>
+        </Stack> */}
 
         <ButtonAction value={value as any} />
       </Stack>
@@ -168,7 +217,7 @@ export default function Colab_Create() {
   );
 }
 
-function ButtonAction({ value }: { value: any }) {
+function ButtonAction({ value }: { value: IValue }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -190,7 +239,7 @@ function ButtonAction({ value }: { value: any }) {
     try {
       setLoading(true);
 
-      const res = await colab_funCreateProyek(value);
+      const res = await colab_funCreateProyek(value as any);
       if (res.status === 201) {
         router.back();
         ComponentGlobal_NotifikasiBerhasil(res.message);
@@ -210,11 +259,13 @@ function ButtonAction({ value }: { value: any }) {
         disabled={
           !value.title ||
           !value.lokasi ||
-          !value.purpose ||
-          !value.benefit ||
-          value.projectCollaborationMaster_IndustriId === 0
-            ? true
-            : false
+          value.projectCollaborationMaster_IndustriId === 0 ||
+          // value.purpose
+          // value.benefit
+          funReplaceHtml({ html: value.purpose }).length > maxInputLength ||
+          funReplaceHtml({ html: value.purpose }).length === 0 ||
+          funReplaceHtml({ html: value.benefit }).length > maxInputLength ||
+          funReplaceHtml({ html: value.benefit }).length === 0
         }
         loaderPosition="center"
         loading={loading ? true : false}
