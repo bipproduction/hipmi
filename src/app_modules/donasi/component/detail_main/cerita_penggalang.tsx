@@ -3,7 +3,15 @@
 import { useRouter } from "next/navigation";
 import { MODEL_DONASI } from "../../model/interface";
 import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
-import { Stack, Title, Paper, Group, ActionIcon, Text } from "@mantine/core";
+import {
+  Stack,
+  Title,
+  Paper,
+  Group,
+  ActionIcon,
+  Text,
+  Box,
+} from "@mantine/core";
 import { IconCircleChevronRight } from "@tabler/icons-react";
 import moment from "moment";
 import { useState } from "react";
@@ -12,6 +20,8 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 
 export default function ComponentDonasi_CeritaPenggalangMain({
   donasi,
@@ -63,7 +73,9 @@ export default function ComponentDonasi_CeritaPenggalangMain({
                 )}
               </ActionIcon>
             </Group>
-            <Text lineClamp={4}>{donasi?.CeritaDonasi.cerita}</Text>
+            <Text lineClamp={4}>
+              {funReplaceHtml({ html: donasi?.CeritaDonasi.cerita })}
+            </Text>
             {/* <Text c={"blue"}>Baca selengkapnya</Text> */}
           </Stack>
         </Paper>

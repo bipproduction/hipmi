@@ -41,18 +41,11 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
   const [openModal, setOpenModal] = useState(false);
 
   async function onChangeStatus() {
+    setLoading(true);
     const check = await donasi_checkStatus({ id: donasi.id });
     if (check) {
       const res = await Donasi_funGantiStatus(donasi.id, "3");
       if (res.status === 200) {
-        // const dataNotif = {
-        //   appId: res.data?.id as any,
-        //   status: res.data?.DonasiMaster_Status?.name as any,
-        //   userId: res.data?.authorId as any,
-        //   pesan: res.data?.title as any,
-        //   kategoriApp: "DONASI",
-        //   title: "Membatalkan review",
-        // };
 
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.id as any,
@@ -80,13 +73,14 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
           });
 
           ComponentGlobal_NotifikasiBerhasil("Berhasil Dibatalkan");
-          setLoading(true);
           router.push(RouterDonasi.status_galang_dana({ id: "3" }));
         }
       } else {
+        setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(res.message);
       }
     } else {
+      setLoading(false);
       ComponentGlobal_NotifikasiPeringatan("Donasi telah direview admin");
     }
   }
@@ -96,10 +90,9 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         mt={"lg"}
         style={{
           transition: "0.5s",
-          backgroundColor: MainColor.orange
+          backgroundColor: MainColor.orange,
         }}
         radius={"xl"}
-        
         c={MainColor.darkblue}
         onClick={() => setOpenModal(true)}
       >
@@ -111,14 +104,18 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
         opened={openModal}
         close={() => setOpenModal(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue }}
-          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModal(false)}
+          >
             Batal
           </Button>
         }
         buttonKanan={
           <Button
-          style={{ backgroundColor: AccentColor.yellow }}
+            style={{ backgroundColor: AccentColor.yellow }}
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}

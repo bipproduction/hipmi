@@ -5,7 +5,7 @@ import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 import ComponentForum_KomentarAuthorNameOnHeader from "../komentar_component/komentar_author_header_name";
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { useShallowEffect } from "@mantine/hooks";
-import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_KomentarView({
@@ -71,7 +71,7 @@ export default function ComponentForum_KomentarView({
                   maxHeight={100}
                   showLabel="tampilkan"
                 >
-                  <Comp_V3_SetInnerHTML
+                  <Comp_V3_SetInnerHTMLWithStiker
                     props={data?.komentar}
                     className="chat-content"
                   />

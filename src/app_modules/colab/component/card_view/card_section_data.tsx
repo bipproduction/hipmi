@@ -1,13 +1,13 @@
 "use client";
 
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { Card, Center, Grid, Stack, Text, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { MODEL_COLLABORATION } from "../../model/interface";
-import { useState } from "react";
+import { MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
 import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
-import { MainColor } from "@/app_modules/_global/color";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { Card, Center, Stack, Title } from "@mantine/core";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { MODEL_COLLABORATION } from "../../model/interface";
 
 export default function ComponentColab_CardSectionData({
   colabId,

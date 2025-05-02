@@ -1,6 +1,6 @@
 import { MainColor } from "../../color";
 
-export function Comp_V3_SetInnerHTML({
+export function Comp_V3_SetInnerHTMLWithStiker({
   props,
   className,
   color,

@@ -3,7 +3,7 @@
 import { Stack, Box, Center, Title, Grid, Text } from "@mantine/core";
 import ComponentColab_AuthorNameOnHeader from "../header_author_name";
 import { MODEL_COLLABORATION } from "../../model/interface";
-import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
 
 export default function ComponentColab_DetailData({
@@ -25,11 +25,11 @@ export default function ComponentColab_DetailData({
     },
     {
       title: "Tujuan Proyek",
-      value: <Comp_V3_SetInnerHTML props={data?.purpose} />,
+      value: <Comp_V3_SetInnerHTMLWithStiker props={data?.purpose} />,
     },
     {
       title: "Keuntungan Proyek",
-      value: <Comp_V3_SetInnerHTML props={data?.benefit} />,
+      value: <Comp_V3_SetInnerHTMLWithStiker props={data?.benefit} />,
     },
   ];
 
