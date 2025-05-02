@@ -30,6 +30,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Donasi_funUpdateCerita } from "../../fun/update/fun_update_cerita_donasi";
 import { MODEL_CERITA_DONASI } from "../../model/interface";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function EditCeritaPenggalangDonasi({
   dataCerita,
@@ -109,6 +113,25 @@ export default function EditCeritaPenggalangDonasi({
     <>
       <Stack px={"sm"}>
         <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Pembukaan cerita" />
+
+          <Component_V3_TextEditor
+            data={data.pembukaan}
+            onSetData={(val) => {
+              setData({
+                ...data,
+                pembukaan: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: data.pembukaan }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -141,7 +164,7 @@ export default function EditCeritaPenggalangDonasi({
             lengthInput={data.pembukaan.length}
             maxInput={500}
           />
-        </Stack>
+        </Stack> */}
 
         <Stack spacing={0}>
           <ComponentGlobal_BoxUploadImage>
@@ -173,6 +196,25 @@ export default function EditCeritaPenggalangDonasi({
         </Stack>
 
         <Stack spacing={5}>
+          <Component_V3_Label_TextInput text="Inti cerita" />
+
+          <Component_V3_TextEditor
+            data={data.cerita}
+            onSetData={(val) => {
+              setData({
+                ...data,
+                cerita: val,
+              });
+            }}
+          />
+
+          <ComponentGlobal_InputCountDown
+            lengthInput={funReplaceHtml({ html: data.cerita }).length}
+            maxInput={maxInputLength}
+          />
+        </Stack>
+
+        {/* <Stack spacing={5}>
           <Textarea
             styles={{
               label: {
@@ -205,7 +247,7 @@ export default function EditCeritaPenggalangDonasi({
             lengthInput={data.cerita.length}
             maxInput={1000}
           />
-        </Stack>
+        </Stack> */}
 
         <Button
           my={"lg"}
@@ -214,7 +256,14 @@ export default function EditCeritaPenggalangDonasi({
           }}
           loaderPosition="center"
           loading={isLoading ? true : false}
-          disabled={data.cerita === "" || data.pembukaan === "" ? true : false}
+          disabled={
+            data.cerita === "" ||
+            data.pembukaan === "" ||
+            funReplaceHtml({ html: data.pembukaan }).length > maxInputLength ||
+            funReplaceHtml({ html: data.pembukaan }).length === 0 ||
+            funReplaceHtml({ html: data.cerita }).length > maxInputLength ||
+            funReplaceHtml({ html: data.cerita }).length === 0
+          }
           w={"100%"}
           radius={"xl"}
           onClick={() => {

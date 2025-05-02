@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import { RouterColab } from "@/lib/router_hipmi/router_colab";
 
 export default async function colab_funEditById(value: MODEL_COLLABORATION) {
-  console.log(value);
   const updt = await prisma.projectCollaboration.update({
     where: {
       id: value.id,

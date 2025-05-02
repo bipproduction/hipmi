@@ -6,7 +6,7 @@ import { IconMessageCircle, IconMessageCircleX } from "@tabler/icons-react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_DetailHeader from "./detail_header";
 import { useShallowEffect } from "@mantine/hooks";
-import { Comp_V3_SetInnerHTML } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_DetailForumView({
@@ -59,7 +59,7 @@ export default function ComponentForum_DetailForumView({
           >
             <Text fz={"sm"} color="white">
               {data?.diskusi ? (
-                <Comp_V3_SetInnerHTML
+                <Comp_V3_SetInnerHTMLWithStiker
                   props={data?.diskusi}
                   // className="chat-content"
                 />

@@ -12,7 +12,7 @@ export default function ComponentColab_JumlahPartisipan({
     <>
       <Card.Section px={"md"} >
         <Stack>
-          <Divider />
+          {/* <Divider /> */}
           <Center>
             <Grid>
               <Grid.Col span={"content"}>
