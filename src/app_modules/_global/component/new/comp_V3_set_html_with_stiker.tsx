@@ -18,7 +18,7 @@ export function Comp_V3_SetInnerHTMLWithStiker({
   return (
     <>
       <div
-        // className={className}
+        className={className}
         style={{ ...baseStyle, ...style }}
         dangerouslySetInnerHTML={{ __html: props ?? "" }}
       />
@@ -42,10 +42,10 @@ export function Comp_V3_SetInnerHTMLWithStiker({
         margin-bottom: 4px;
       }
 
-      img {
-        max-width: 70px !important;
-        max-height: 70px !important;
-      }
+      // img {
+      //   max-width: 70px !important;
+      //   max-height: 70px !important;
+      // }
     `}
       </style>
     </>

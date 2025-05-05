@@ -20,21 +20,21 @@ export default function ComponentForum_DetailForumView({
   userLoginId: string;
   onLoadData: (val: any) => void;
 }) {
-  // useShallowEffect(() => {
-  //   // Add custom style for stickers inside Quill editor
-  //   const style = document.createElement("style");
-  //   style.textContent = `
-  //       .chat-content img {
-  //       max-width: 70px !important;
-  //       max-height: 70px !important;
-  //     }
-  //   `;
-  //   document.head.appendChild(style);
-  //   return () => {
-  //     // Clean up when component unmounts
-  //     document.head.removeChild(style);
-  //   };
-  // }, []);
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function ComponentForum_DetailForumView({
               {data?.diskusi ? (
                 <Comp_V3_SetInnerHTMLWithStiker
                   props={data?.diskusi}
-                  // className="chat-content"
+                  className="chat-content"
                 />
               ) : (
                 ""

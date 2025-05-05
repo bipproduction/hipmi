@@ -33,6 +33,7 @@ export default function Forum_V3_MainDetail({
   const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING | null>(
     null
   );
+  const [countNewComment, setCountNewComment] = useState(false);
   const [listKomentar, setListKomentar] = useState<
     MODEL_FORUM_KOMENTAR[] | null
   >(null);
@@ -114,6 +115,22 @@ export default function Forum_V3_MainDetail({
     }
   };
 
+  async function handlerCountComment({
+    count,
+    trigger,
+  }: {
+    count: number;
+    trigger: boolean;
+  }) {
+    if (trigger && dataPosting) {
+      const cloneData = _.clone(dataPosting);
+      const newCount = count - 1;
+      cloneData.count = newCount;
+      setDataPosting(cloneData);
+      setCountNewComment(false);
+    }
+  }
+
   useShallowEffect(() => {
     mqtt_client.subscribe("Forum_detail_ganti_status");
 
@@ -187,7 +204,14 @@ export default function Forum_V3_MainDetail({
               {(item) => (
                 <ComponentForum_KomentarView
                   data={item}
-                  setKomentar={setListKomentar}
+                  listKomentar={listKomentar as any}
+                  setKomentar={(val: any) => (
+                    setListKomentar(val.filterComment as any),
+                    handlerCountComment({
+                      count: dataPosting?.count as number,
+                      trigger: val.triggerCount,
+                    })
+                  )}
                   postingId={dataPosting?.id as any}
                   userLoginId={userLoginId}
                 />
