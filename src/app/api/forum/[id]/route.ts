@@ -27,7 +27,11 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         },
         _count: {
           select: {
-            Forum_Komentar: true,
+            Forum_Komentar: {
+              where: {
+                isActive: true,
+              },
+            },
           },
         },
         ForumMaster_StatusPosting: true,
@@ -38,7 +42,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
     const fixData = {
       ...data,
       count: data?._count.Forum_Komentar,
-    }
+    };
 
     return NextResponse.json({
       success: true,

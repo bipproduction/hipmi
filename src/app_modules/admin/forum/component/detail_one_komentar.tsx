@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_POSTING,

@@ -13,6 +13,7 @@ import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { data } from "autoprefixer";
 import { MODEL_PROFILE } from "@/app_modules/katalog/profile/model/interface";
 import moment from "moment";
+import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 
 export default function ComponentForum_KomentarAuthorNameOnHeader({
   userId,
@@ -24,6 +25,7 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
   postingId,
   userLoginId,
   profile,
+  listKomentar,
 }: {
   userId?: string;
   komentarId?: string;
@@ -34,6 +36,7 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
   postingId?: string;
   userLoginId: string;
   profile: MODEL_PROFILE;
+  listKomentar?: MODEL_FORUM_KOMENTAR[];
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -107,9 +110,10 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
                   <ComponentForum_KomentarButtonMore
                     userId={userId}
                     komentarId={komentarId}
-                    setKomentar={setKomentar}
                     postingId={postingId}
                     userLoginId={userLoginId}
+                    setKomentar={setKomentar}
+                    listKomentar={listKomentar}
                   />
                 </Group>
               ) : (

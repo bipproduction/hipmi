@@ -4,7 +4,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
 import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 function AdminEvent_ComponentDetailData({
   data,
@@ -57,7 +57,7 @@ function AdminEvent_ComponentDetailData({
     },
     {
       label: "Deskripsi",
-      value: <Comp_DangerouslySetInnerHTML props={data?.deskripsi} />,
+      value: <Comp_SetInnerHTML props={data?.deskripsi} />,
     },
   ];
 

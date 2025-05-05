@@ -27,6 +27,9 @@ import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { forum_funDeleteKomentarById } from "../../fun/delete/fun_delete_komentar_by_id";
 import { forum_funGetAllKomentarById } from "../../fun/get/get_all_komentar_by_id";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
+import _ from "lodash";
 
 export default function ComponentForum_KomentarButtonMore({
   userId,
@@ -34,12 +37,14 @@ export default function ComponentForum_KomentarButtonMore({
   setKomentar,
   postingId,
   userLoginId,
+  listKomentar,
 }: {
   userId: any;
   komentarId: any;
   setKomentar?: any;
   postingId?: string;
   userLoginId: string;
+  listKomentar?: MODEL_FORUM_KOMENTAR[];
 }) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
@@ -151,6 +156,7 @@ export default function ComponentForum_KomentarButtonMore({
           setOpenDel={setOpenDel}
           setKomentar={setKomentar}
           postingId={postingId}
+          listKomentar={listKomentar}
         />
       </Modal>
 
@@ -166,29 +172,39 @@ function ButtonDelete({
   setOpenDel,
   setKomentar,
   postingId,
+  listKomentar,
 }: {
   komentarId?: string;
   setOpenDel: any;
   setKomentar?: any;
   postingId?: string;
+  listKomentar?: MODEL_FORUM_KOMENTAR[];
 }) {
   const [loading, setLoading] = useState(false);
 
-  if (loading) return <ComponentGlobal_V2_LoadingPage />;
-
   async function onDelete() {
-    await forum_funDeleteKomentarById(komentarId as any).then(async (res) => {
-      if (res.status === 200) {
-        await forum_funGetAllKomentarById(postingId as any).then((val) => {
-          setKomentar(val);
+    try {
+      setLoading(true);
+      await forum_funDeleteKomentarById(komentarId as any).then(async (res) => {
+        if (res.status === 200) {
+          const cloneList = _.clone(listKomentar);
+          const filterData = cloneList?.filter(
+            (item) => item.id !== komentarId
+          );
+
+          setKomentar({ filterComment: filterData, triggerCount: true });
+
           setOpenDel(false);
-          setLoading(true);
           ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
-        });
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
-      }
-    });
+        } else {
+          ComponentGlobal_NotifikasiPeringatan(res.message);
+        }
+      });
+    } catch (error) {
+      ComponentGlobal_NotifikasiGagal("Gagal menghapus data");
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <>
@@ -202,7 +218,7 @@ function ButtonDelete({
           </Button>
           <Button
             loaderPosition="center"
-            loading={loading ? true : false}
+            loading={loading}
             color="red"
             radius={"xl"}
             onClick={() => {
@@ -212,6 +228,7 @@ function ButtonDelete({
             Hapus
           </Button>
         </Group>
+        {/* {JSON.stringify(listKomentar, null, 2)} */}
       </Stack>
     </>
   );

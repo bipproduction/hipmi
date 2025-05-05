@@ -8,7 +8,7 @@ import { Badge, Center, Group, Stack, Text, Title } from "@mantine/core";
 import { MODEL_VOTING } from "../../model/interface";
 import moment from "moment"
 import "moment/locale/id"
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function ComponentVote_DetailDataSetelahPublish({
   data,
@@ -34,7 +34,7 @@ export default function ComponentVote_DetailDataSetelahPublish({
                 {data?.title}
               </Title>
             </Center>
-            <Comp_DangerouslySetInnerHTML props={data?.deskripsi} />
+            <Comp_SetInnerHTML props={data?.deskripsi} />
 
             <Stack spacing={0} pb={authorName ? 0 : "xs"}>
               <Stack align="center" spacing={"xs"}>

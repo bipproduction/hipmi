@@ -8,16 +8,14 @@ import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
 import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
-  Box,
   Button,
   Center,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconFlag3, IconSearch } from "@tabler/icons-react";
@@ -25,8 +23,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
-import { apiGetAdminForumReportPosting } from "../lib/api_fetch_admin_forum";
 import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
+import { apiGetAdminForumReportPosting } from "../lib/api_fetch_admin_forum";
 
 export default function AdminForum_TableReportPosting() {
   return (
@@ -34,7 +32,6 @@ export default function AdminForum_TableReportPosting() {
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum" />
         <TableView />
-        {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
       </Stack>
     </>
   );
