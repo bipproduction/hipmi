@@ -9,7 +9,7 @@ import { Box, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_EVENT } from "../_lib/interface";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function ComponentEvent_BoxListStatus({
   data,
@@ -49,7 +49,7 @@ export default function ComponentEvent_BoxListStatus({
             </Text>
           </Group>
           <Text fz={"sm"} lineClamp={2}>
-            <Comp_DangerouslySetInnerHTML
+            <Comp_SetInnerHTML
               props={data.deskripsi}
               style={{ height: 50 }}
             />

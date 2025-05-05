@@ -1,6 +1,6 @@
 import { MainColor } from "../../color";
 
-export const Comp_DangerouslySetInnerHTML = ({
+export const Comp_SetInnerHTML = ({
   props,
   color,
   style: styleInput,

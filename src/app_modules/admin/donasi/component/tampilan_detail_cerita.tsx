@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { Admin_ComponentLoadImageLandscape } from "../../_admin_global";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function ComponentAdminDonasi_CeritaPenggalangDana({
   cerita,
@@ -28,13 +28,13 @@ export default function ComponentAdminDonasi_CeritaPenggalangDana({
           <Title c={AdminColor.white} order={5}>
             Cerita Penggalang Dana
           </Title>
-          <Comp_DangerouslySetInnerHTML props={cerita.pembukaan} />
+          <Comp_SetInnerHTML props={cerita.pembukaan} />
 
           <Box>
             <Admin_ComponentLoadImageLandscape fileId={cerita.imageId} />
           </Box>
 
-          <Comp_DangerouslySetInnerHTML props={cerita.cerita} />
+          <Comp_SetInnerHTML props={cerita.cerita} />
         </Stack>
       </Paper>
     </>

@@ -11,7 +11,7 @@ import {
 import { IconCircle } from "@tabler/icons-react";
 import { MODEL_VOTING } from "../../model/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export default function ComponentVote_DetailDataSebelumPublish
 ({
@@ -37,7 +37,7 @@ export default function ComponentVote_DetailDataSebelumPublish
                 {data?.title}
               </Title>
             </Center>
-            <Comp_DangerouslySetInnerHTML props={data?.deskripsi} />
+            <Comp_SetInnerHTML props={data?.deskripsi} />
 
             <Stack spacing={0} align="center">
               <Center>

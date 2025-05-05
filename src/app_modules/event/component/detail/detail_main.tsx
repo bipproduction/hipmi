@@ -5,7 +5,7 @@ import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Comp_DangerouslySetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
 import { Component_V3_MomentDateAndTime } from "@/app_modules/_global/component/new/comp_V3_moment_date_and_time";
 import { clientLogger } from "@/util/clientLogger";
@@ -61,7 +61,7 @@ export default function ComponentEvent_DetailMainData() {
     },
     {
       title: "Deskripsi",
-      value: <Comp_DangerouslySetInnerHTML props={data?.deskripsi ?? ""} />,
+      value: <Comp_SetInnerHTML props={data?.deskripsi ?? ""} />,
     },
   ];
 
