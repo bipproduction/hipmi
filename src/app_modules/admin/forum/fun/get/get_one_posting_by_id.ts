@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import _ from "lodash";
 
 export async function adminForum_getOnePostingById(postingId: string) {
   const data = await prisma.forum_Posting.findFirst({
@@ -28,10 +29,18 @@ export async function adminForum_getOnePostingById(postingId: string) {
           },
         },
       },
+      Forum_Komentar: {
+        where: {
+          isActive: true
+        }
+      }
     },
   });
 
-  //   console.log(data);
+  const result = {
+    ..._.omit(data, "Forum_Komentar"),
+    Forum_Komentar: data?.Forum_Komentar.length,
+  };
 
-  return data;
+  return result;
 }

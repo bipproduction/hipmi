@@ -53,13 +53,13 @@ export default function AdminForum_DetailPosting({
         <Admin_V3_ComponentBreakpoint>
           <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
         </Admin_V3_ComponentBreakpoint>
-        <TableKomentar postingId={dataPosting.id} />
+        <TableKomentar postingId={dataPosting.id} totalComments={dataPosting.Forum_Komentar as any} />
       </Stack>
     </>
   );
 }
 
-function TableKomentar({ postingId }: { postingId: string }) {
+function TableKomentar({ postingId, totalComments }: { postingId: string, totalComments: number }) {
   const router = useRouter();
   const [data, setData] = useState<MODEL_FORUM_KOMENTAR[] | null>(null);
   const [nPage, setNPage] = useState<number>(1);
@@ -84,7 +84,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
       if (response && response.success) {
         setData(response.data.data);
         setDelete(false);
-        setNPage(response.data.nCount || 1);
+        setNPage(response.data.nPage || 1);
       }
     } catch (error) {
       console.error("Invalid data format received:", error);
@@ -201,7 +201,7 @@ function TableKomentar({ postingId }: { postingId: string }) {
                 Komentar:
               </Title>
               <Title order={4} c={"white"}>
-                {data?.length}
+                {totalComments}
               </Title>
             </Group>
           }

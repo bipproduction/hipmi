@@ -18,7 +18,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <AdminForum_LihatSemuaKomentar
-
         dataPosting={dataPosting as any}
       />
     </>
