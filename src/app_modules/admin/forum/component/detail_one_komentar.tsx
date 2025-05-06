@@ -43,8 +43,7 @@ export default function ComponentAdminForum_ViewOneDetailKomentar({
 
   return (
     <>
-      <Stack spacing={"xs"} h={"100%"}>
-        <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue}>
+      <Paper p={"md"} radius={"md"} bg={AdminColor.softBlue}>
           <Stack>
             <Stack spacing={5}>
               <Group position="apart">
@@ -64,8 +63,7 @@ export default function ComponentAdminForum_ViewOneDetailKomentar({
               maxHeight={100}
             />
           </Stack>
-        </Paper>
-      </Stack>
+      </Paper>
     </>
   );
 }
