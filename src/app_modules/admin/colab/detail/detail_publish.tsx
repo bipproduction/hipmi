@@ -28,6 +28,7 @@ import { apiGetAdminCollaborationById } from "../lib/api_fetch_admin_collaborati
 import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
 import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 
 function DetailPublish() {
   const router = useRouter();
@@ -98,11 +99,11 @@ function DetailPublish() {
     },
     {
       label: "Tujuan",
-      value: data?.purpose,
+      value: <Comp_V3_SetInnerHTMLWithStiker props={data?.purpose} />,
     },
     {
       label: "Keuntungan",
-      value: data?.benefit,
+      value: <Comp_V3_SetInnerHTMLWithStiker props={data?.benefit} />,
     },
   ];
 
@@ -115,11 +116,11 @@ function DetailPublish() {
         {!data ? (
           <Admin_V3_ComponentSkeletonBreakpoint />
         ) : (
-          <Admin_V3_ComponentBreakpoint >
+          <Admin_V3_ComponentBreakpoint>
             <Admin_ComponentBoxStyle>
-              <Stack >
+              <Stack>
                 {listData.map((e, i) => (
-                  <Admin_V3_ComponentDetail key={i} item={e}/>
+                  <Admin_V3_ComponentDetail key={i} item={e} />
                 ))}
 
                 <Group position="center">

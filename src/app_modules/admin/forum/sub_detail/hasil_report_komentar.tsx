@@ -22,7 +22,7 @@ import {
   Stack,
   Table,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
@@ -68,9 +68,8 @@ export default function AdminForum_HasilReportKomentar({
             />
           </Group>
         </Admin_V3_ComponentBreakpoint>
-
+        
         <HasilReportPosting listReport={listReport} komentarId={komentarId} />
-        {/* <pre>{JSON.stringify(listReport, null, 2)}</pre> */}
       </Stack>
     </>
   );
