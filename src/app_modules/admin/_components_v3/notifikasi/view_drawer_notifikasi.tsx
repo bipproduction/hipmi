@@ -1,30 +1,30 @@
+import {
+  MainColor
+} from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import {
-  Box,
   Button,
   Center,
+  Divider,
   Group,
   Loader,
-  Paper,
   Stack,
-  Text,
+  Text
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
-import adminNotifikasi_getByUserId from "../../notifikasi/fun/get/get_notifikasi_by_user_id";
 import { useState } from "react";
 import {
   apiGetNotifikasiByUserId,
   apiPostIsReadNotifikasi,
 } from "../../notifikasi/lib/api_fetch_notifikasi";
-import AdminNotifikasi_ViewCardDrawer from "../../notifikasi/view_card_drawer";
-import Admin_V3_ComponentCardNotifikasi from "./comp_card_notifikasi";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
-  IAdmin_ActivePage,
   IAdmin_ActiveChildId,
+  IAdmin_ActivePage,
 } from "../../notifikasi/route_setting/type_of_select_page";
+import Admin_V3_ComponentCardNotifikasi from "./comp_card_notifikasi";
 
 export function Admin_V3_ViewDrawerNotifikasi({
   userLoginId,
@@ -158,8 +158,12 @@ export function Admin_V3_ViewDrawerNotifikasi({
   return (
     <>
       <Stack pt={"sm"} pb={"xl"}>
-        <Group>
+        <Group position="right">
           <Button
+          size="xs"
+            bg={MainColor.yellow}
+            color="yellow"
+            c={"black"}
             radius={"xl"}
             onClick={() => {
               handleUpdateReadAll();
@@ -176,6 +180,7 @@ export function Admin_V3_ViewDrawerNotifikasi({
             Tandai belum baca
           </Button>
         </Group>
+        <Divider color={MainColor.white}/>
 
         {_.isEmpty(data) ? (
           <Center>
