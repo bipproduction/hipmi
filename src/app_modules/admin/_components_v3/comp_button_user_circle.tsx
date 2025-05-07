@@ -82,11 +82,11 @@ export function Admin_V3_ComponentButtonUserCircle({
       label: "Notifikasi",
       color: "",
       onClick: () => {
-        // ComponentAdminGlobal_NotifikasiPeringatan(
-        //   "Notifikasi: Masih dalam pengembangan",
-        //   2000
-        // );
-        setDrawerNotifikasi(true);
+        ComponentAdminGlobal_NotifikasiPeringatan(
+          "Notifikasi: Masih dalam pengembangan",
+          2000
+        );
+        // setDrawerNotifikasi(true);
       },
     },
     {
@@ -109,11 +109,11 @@ export function Admin_V3_ComponentButtonUserCircle({
       label: "Notifikasi",
       color: "",
       onClick: () => {
-        // ComponentAdminGlobal_NotifikasiPeringatan(
-        //   "Notifikasi: Masih dalam pengembangan",
-        //   2000
-        // );
-        setDrawerNotifikasi(true);
+        ComponentAdminGlobal_NotifikasiPeringatan(
+          "Notifikasi: Masih dalam pengembangan",
+          2000
+        );
+        // setDrawerNotifikasi(true);
       },
     },
     {

@@ -27,6 +27,7 @@ import { new_status_transaksi_investasi } from "@/bin/seeder/investasi";
 import { master_nama_bank } from "@/bin/seeder/master";
 import { master_status_transaksi } from "@/bin/seeder/master";
 import pLimit from "p-limit";
+import { master_new_bidang_bisnis } from "@/bin/seeder/master";
 
 async function masterUserRole() {
   for (let i of userRole) {
@@ -70,23 +71,72 @@ async function seederUser() {
   console.log("user seeder success");
 }
 
-async function masterBisnis() {
-  for (let i of bidangBisnis) {
-    await prisma.masterBidangBisnis.upsert({
-      where: {
-        id: i.id.toString(),
-      },
-      update: {
-        id: i.id.toString(),
-        name: i.name,
-      },
-      create: {
-        id: i.id.toString(),
-        name: i.name,
-      },
-    });
+// async function masterBisnis() {
+//   for (let i of bidangBisnis) {
+//     await prisma.masterBidangBisnis.upsert({
+//       where: {
+//         id: i.id.toString(),
+//       },
+//       update: {
+//         id: i.id.toString(),
+//         name: i.name,
+//       },
+//       create: {
+//         id: i.id.toString(),
+//         name: i.name,
+//       },
+//     });
+//   }
+//   console.log("masterBisnis success");
+// }
+
+async function masterNewBidangBisnis() {
+  for (let i of master_new_bidang_bisnis) {
+    try {
+      // Upsert MasterBidangBisnis
+      const masterBidangBisnis = await prisma.masterBidangBisnis.upsert({
+        where: {
+          id: i.id.toString(),
+        },
+        update: {
+          name: i.name,
+          slug: i.slug,
+        },
+        create: {
+          id: i.id.toString(),
+          name: i.name,
+          slug: i.slug,
+        },
+      });
+
+      // Upsert untuk setiap subBidangBisnis dengan await untuk memastikan urutan tetap terjaga
+      for (let sub of i.subBidangBisnis) {
+        await prisma.masterSubBidangBisnis.upsert({
+          where: {
+            id: sub.id,
+          },
+          update: {
+            name: sub.name,
+            slug: sub.slug,
+            masterBidangBisnisId: masterBidangBisnis.id,
+          },
+          create: {
+            id: sub.id,
+            name: sub.name,
+            slug: sub.slug,
+            masterBidangBisnisId: masterBidangBisnis.id,
+          },
+        });
+      }
+    } catch (error) {
+      console.error(
+        `Terjadi error saat upserting bidang bisnis ${i.name}:`,
+        error
+      );
+    }
   }
-  console.log("masterBisnis success");
+
+  console.log("Semua masterBidangBisnis dan subBidangBisnis berhasil di-seed");
 }
 
 async function masterPencarianInvestor() {
@@ -567,7 +617,8 @@ async function masterStatusTransaksi() {
 const listSeederQueue = [
   masterUserRole,
   seederUser,
-  masterBisnis,
+  // masterBisnis,
+  masterNewBidangBisnis,
   masterPencarianInvestor,
   masterPembagianDeviden,
   masterPeriodeDeviden,
