@@ -15,6 +15,7 @@ import {
 import { useShallowEffect } from "@mantine/hooks";
 import {
   IconBuildingSkyscraper,
+  IconCaretRightFilled,
   IconListDetails,
   IconMapPin,
   IconPhoneCall,
@@ -39,6 +40,7 @@ export default function Portofolio_UiDetailDataNew() {
       setLoading(true);
       const response = await apiGetOnePortofolioById(param.id, "bisnis");
       if (response) {
+        console.log(response.data);
         setDataPorto(response.data);
       }
     } catch (error) {
@@ -104,6 +106,7 @@ export default function Portofolio_UiDetailDataNew() {
                       <Text>{dataPorto?.namaBisnis}</Text>
                     </Grid.Col>
                   </Grid>
+
                   <Grid>
                     <Grid.Col span={2}>
                       <IconListDetails />
@@ -112,6 +115,25 @@ export default function Portofolio_UiDetailDataNew() {
                       <Text>{dataPorto?.bidangBisnis}</Text>
                     </Grid.Col>
                   </Grid>
+                  {dataPorto?.subBidangBisnis.map((item, index) => (
+                    <Grid key={index} ml={2}>
+                      <Grid.Col span={2}>
+                        <IconCaretRightFilled />
+                      </Grid.Col>
+                      <Grid.Col span={"auto"}>
+                        <Text>{item}</Text>
+                      </Grid.Col>
+                    </Grid>
+                  ))}
+                  {/* <Grid>
+                    <Grid.Col span={2}>
+                      <IconListDetails />
+                    </Grid.Col>
+                    <Grid.Col span={"auto"}>
+                      <Text>{dataPorto?.subBidangBisnis}</Text>
+                    </Grid.Col>
+                  </Grid> */}
+
                   <Grid>
                     <Grid.Col span={2}>
                       <IconPhoneCall />
