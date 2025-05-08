@@ -1,27 +1,18 @@
-import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 import { admin_funCheckStatusJob } from "../fun/get/fun_check_status_job";
 import adminNotifikasi_funUpdateIsReadById from "../fun/update/fun_update_is_read_by_id";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import adminNotifikasi_countNotifikasi from "../fun/count/count_is_read";
-import adminNotifikasi_getByUserId from "../fun/get/get_notifikasi_by_user_id";
-import { IAdmin_ActivePage, IAdmin_ActiveChildId } from "./type_of_select_page";
+import { IAdmin_ActiveChildId, IAdmin_ActivePage } from "./type_of_select_page";
 
 export async function adminNotifikasi_findRouterJob({
   appId,
   notifikasiId,
   router,
-  activePage,
-  // onLoadCountNotif,
-  // onLoadDataNotifikasi ,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   router: AppRouterInstance;
-  activePage: number;
-  // onLoadCountNotif: (val: any) => void;
-  // onLoadDataNotifikasi: (val: any) => void; 
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -35,14 +26,6 @@ export async function adminNotifikasi_findRouterJob({
     });
 
     if (udpateReadNotifikasi.status == 200) {
-      // const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      // onLoadCountNotif(loadCountNotif);
-
-      // const loadListNotifikasi = await adminNotifikasi_getByUserId({
-      //   page: 1,
-      // });
-      // onLoadDataNotifikasi(loadListNotifikasi);
-
       const path = `/dev/admin/job/child/${check.statusName}`;
 
       if (check.statusName == "draft") {

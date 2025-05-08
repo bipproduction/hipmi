@@ -34,6 +34,7 @@ export interface MODEL_PORTOFOLIO_BIDANG_BISNIS {
   id: string;
   name: string;
   active: boolean;
+  slug: string
 }
 
 export interface MODEL_PORTOFOLIO_MEDSOS {

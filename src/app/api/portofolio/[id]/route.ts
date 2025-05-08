@@ -155,6 +155,28 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    for (let i of data.subBidang) {
+      // console.log("sub bidang", i.id)
+      const createSubBidang =
+        await prisma.portofolio_BidangDanSubBidangBisnis.create({
+          data: {
+            portofolioId: createPortofolio.id,
+            masterBidangBisnisId: data.masterBidangBisnisId,
+            masterSubBidangBisnisId: i.id,
+          },
+        });
+
+
+      if (!createSubBidang)
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Gagal membuat sub bidang bisnis",
+          },
+          { status: 400 }
+        );
+    }
+
     if (!createPortofolio)
       return NextResponse.json(
         {

@@ -5,7 +5,7 @@ import {
   gs_adminVoting_triggerReview,
   ITypeStatusNotifikasi,
 } from "@/lib/global_state";
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
@@ -263,11 +263,12 @@ export default function AdminNotifikasi_ViewCardDrawer({
       <Card
         style={{
           transition: "0.5s",
+          border: `2px solid ${MainColor.soft_darkblue}`,
         }}
         mb={"15px"}
         c={"white"}
         key={data.id}
-        bg={data.isRead ? "gray" : AccentColor.darkblue}
+        bg={data.isRead ? "gray" : MainColor.darkblue}
         sx={{
           borderColor: AccentColor.blue,
           borderStyle: "solid",

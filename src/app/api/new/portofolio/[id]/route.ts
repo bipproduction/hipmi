@@ -36,6 +36,15 @@ export async function GET(
               userId: true,
             },
           },
+          Portofolio_BidangDanSubBidangBisnis: {
+            select: {
+              MasterSubBidangBisnis: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -47,6 +56,7 @@ export async function GET(
         deskripsi: data?.deskripsi,
         logoId: data?.logoId,
         bidangBisnis: data?.MasterBidangBisnis?.name,
+        subBidangBisnis: data?.Portofolio_BidangDanSubBidangBisnis?.map((item) => item.MasterSubBidangBisnis?.name),
         authorId: data?.Profile?.userId,
       };
     } else if (kategori == "lokasi") {

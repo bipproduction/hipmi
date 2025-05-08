@@ -1,26 +1,27 @@
+import { AccentColor } from "@/app_modules/_global/color";
+import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
+import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import {
   gs_adminDonasi_triggerReview,
   gs_adminEvent_triggerReview,
   gs_adminJob_triggerReview,
-  gs_adminVoting_triggerReview,
-  ITypeStatusNotifikasi,
+  gs_adminVoting_triggerReview
 } from "@/lib/global_state";
-import { AccentColor } from "@/app_modules/_global/color";
-import { ComponentGlobal_CardLoadingOverlay } from "@/app_modules/_global/component";
-import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
+import { clientLogger } from "@/util/clientLogger";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconCheck, IconChecks, IconSpeakerphone } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { clientLogger } from "@/util/clientLogger";
 import moment from "moment";
 import "moment/locale/id";
-import {
-  IAdmin_ActivePage,
-  IAdmin_ActiveChildId,
-} from "../../notifikasi/route_setting/type_of_select_page";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
+import adminNotifikasi_findRouterForum from "../../notifikasi/route_setting/forum";
 import { adminNotifikasi_findRouterJob } from "../../notifikasi/route_setting/job";
+import {
+  IAdmin_ActiveChildId,
+  IAdmin_ActivePage,
+} from "../../notifikasi/route_setting/type_of_select_page";
 
 export default function Admin_V3_ComponentCardNotifikasi({
   data,
@@ -70,13 +71,6 @@ export default function Admin_V3_ComponentCardNotifikasi({
           appId: data.appId,
           notifikasiId: data.id,
           router: router,
-          activePage: activePage,
-          // onLoadCountNotif(val) {
-          //   onLoadCountNotif(val);
-          // },
-          // onLoadDataNotifikasi(val) {
-          //   onLoadDataNotifikasi(val);
-          // },
           onChangeNavbar(val) {
             onChangeNavbar({
               id: val.id,
@@ -95,6 +89,30 @@ export default function Admin_V3_ComponentCardNotifikasi({
         return;
       }
       // ========================== JOB ========================== //
+
+      // ========================== FORUM ==============================//
+
+      if (data.kategoriApp === "FORUM") {
+        setDataId(data.id);
+
+        const checkForum = await adminNotifikasi_findRouterForum({
+          data: data,
+          router: router,
+          onChangeNavbar(val) {
+            onChangeNavbar(val);
+          },
+        });
+
+        if (checkForum !== "") {
+          router.push(checkForum);
+          setDataId("");
+          setVisible(false);
+          onToggleNavbar(false);
+        } else {
+          ComponentAdminGlobal_NotifikasiPeringatan("Gagal memuat forum");
+        }
+      }
+      // ========================== FORUM ==============================//
 
       // ========================== EVENT ========================== //
 
@@ -236,18 +254,7 @@ export default function Admin_V3_ComponentCardNotifikasi({
       //   return;
       // }
 
-      // // FORUM
-      // e?.kategoriApp === "FORUM" &&
-      //   adminNotifikasi_findRouterForum({
-      //     data: e,
-      //     router: router,
-      //     onChangeNavbar(val) {
-      //       onChangeNavbar(val);
-      //     },
-      //     onToggleNavbar(val) {
-      //       onToggleNavbar(val);
-      //     },
-      //   });
+      // ========================== INVESTASI ========================== //
     } catch (error) {
       clientLogger.error("Error notifikasi function", error);
     } finally {
@@ -260,9 +267,10 @@ export default function Admin_V3_ComponentCardNotifikasi({
       <Card
         style={{
           transition: "0.5s",
+          cursor: "pointer",
         }}
         mb={"15px"}
-        c={"white"}
+        c={data.isRead ? "gray" : "white"}
         key={data.id}
         bg={data.isRead ? AccentColor.blackgray : AccentColor.darkblue}
         sx={{
@@ -306,9 +314,9 @@ export default function Admin_V3_ComponentCardNotifikasi({
             <Text lineClamp={2} fw={"bold"} fz={"xs"}>
               {data.title}
             </Text>
-            <Text lineClamp={2} fz={"xs"}>
+            {/* <Text lineClamp={2} fz={"xs"}>
               {data.pesan}
-            </Text>
+            </Text> */}
           </Stack>
         </Card.Section>
         <Card.Section p={"sm"}>

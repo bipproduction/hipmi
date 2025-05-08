@@ -83,7 +83,6 @@ export function Admin_V3_MainLayout({
   const [opened, handlers] = useDisclosure(false);
   const [openedDrawer, handlersDrawer] = useDisclosure(false);
 
-
   return (
     <>
       <AppShell
@@ -171,7 +170,7 @@ export function Admin_V3_MainLayout({
             color: AccentColor.white,
           },
           header: {
-            backgroundColor: AccentColor.darkblue,
+            backgroundColor: MainColor.darkblue,
             color: AccentColor.white,
           },
           close: {
@@ -202,7 +201,7 @@ export function Admin_V3_MainLayout({
             setActiveChildId(val.childId);
           }}
           onToggleNavbar={(val: any) => {
-            handlersDrawer.close
+            val === false && handlersDrawer.close();
           }}
         />
         {/* <ComponentAdmin_UIDrawerNotifikasi

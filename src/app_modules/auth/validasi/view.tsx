@@ -107,17 +107,18 @@ export default function Validasi() {
           ComponentGlobal_NotifikasiBerhasil("Admin berhasil login");
         }
 
-        // try {
-        //   const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
-        //     id: idCode,
-        //   });
+        try {
+          const responeDelete = await apiDeleteAktivasiKodeOtpByNomor({
+            id: idCode,
+          });
 
-        //   if (responeDelete) {
-        //     localStorage.removeItem("hipmi_auth_code_id");
-        //   }
-        // } catch (error) {
-        //   clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
-        // }
+          if (responeDelete) {
+            localStorage.removeItem("hipmi_auth_code_id");
+          }
+        } catch (error) {
+          clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
+        }
+        // localStorage.removeItem("hipmi_auth_code_id");
       } else if (respone && respone.success == false) {
         router.push("/register", { scroll: false });
         ComponentGlobal_NotifikasiBerhasil(respone.message);
@@ -125,9 +126,6 @@ export default function Validasi() {
     } catch (error) {
       setLoading(false);
       clientLogger.error("Error validasi:", error);
-    } finally {
-            localStorage.removeItem("hipmi_auth_code_id");
-
     }
   }
 
