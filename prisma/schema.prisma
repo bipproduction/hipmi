@@ -171,7 +171,7 @@ model Portofolio_BidangDanSubBidangBisnis {
 model MasterBidangBisnis {
   id                                  String                                @id @default(uuid())
   name                                String
-  slug                                String                                @unique @default("NULL")
+  slug                                String                                @default("NULL")
   active                              Boolean                               @default(true)
   createdAt                           DateTime                              @default(now())
   updatedAt                           DateTime                              @default(now()) @updatedAt
@@ -183,7 +183,7 @@ model MasterBidangBisnis {
 model MasterSubBidangBisnis {
   id                                  String                                @id @default(cuid())
   name                                String
-  slug                                String                                @unique @default("NULL")
+  slug                                String                                @default("NULL")
   isActive                            Boolean                               @default(true)
   createdAt                           DateTime                              @default(now())
   updatedAt                           DateTime                              @default(now()) @updatedAt

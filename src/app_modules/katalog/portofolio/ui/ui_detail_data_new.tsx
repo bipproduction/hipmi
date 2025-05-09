@@ -3,6 +3,7 @@ import { ComponentGlobal_LoadImage } from "@/app_modules/_global/component";
 import {
   Box,
   Button,
+  Center,
   Divider,
   Grid,
   Group,
@@ -40,7 +41,6 @@ export default function Portofolio_UiDetailDataNew() {
       setLoading(true);
       const response = await apiGetOnePortofolioById(param.id, "bisnis");
       if (response) {
-        console.log(response.data);
         setDataPorto(response.data);
       }
     } catch (error) {
@@ -81,23 +81,32 @@ export default function Portofolio_UiDetailDataNew() {
             </Group>
             <Stack>
               <SimpleGrid
-                cols={2}
+                cols={1}
                 spacing={"md"}
-                breakpoints={[
-                  { maxWidth: "62rem", cols: 2, spacing: "md" },
-                  { maxWidth: "48rem", cols: 1, spacing: "sm" },
-                  { maxWidth: "36rem", cols: 1, spacing: "sm" },
-                ]}
+                // breakpoints={[
+                //   { maxWidth: "62rem", cols: 2, spacing: "md" },
+                //   { maxWidth: "48rem", cols: 1, spacing: "sm" },
+                //   { maxWidth: "36rem", cols: 1, spacing: "sm" },
+                // ]}
               >
-                <Box>
-                  <Paper>
+                <Center>
+                  <Box
+                    style={{
+                      background: "gray",
+                      width: 200,
+                      height: 200,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      overflow: "hidden",
+                    }}
+                  >
                     <ComponentGlobal_LoadImage
                       fileId={String(dataPorto?.logoId)}
                     />
-                  </Paper>
-                </Box>
+                  </Box>
+                </Center>
 
-                <Box>
+                <Stack>
                   <Grid>
                     <Grid.Col span={2}>
                       <IconBuildingSkyscraper />
@@ -107,24 +116,6 @@ export default function Portofolio_UiDetailDataNew() {
                     </Grid.Col>
                   </Grid>
 
-                  <Grid>
-                    <Grid.Col span={2}>
-                      <IconListDetails />
-                    </Grid.Col>
-                    <Grid.Col span={"auto"}>
-                      <Text>{dataPorto?.bidangBisnis}</Text>
-                    </Grid.Col>
-                  </Grid>
-                  {dataPorto?.subBidangBisnis.map((item, index) => (
-                    <Grid key={index} ml={2}>
-                      <Grid.Col span={2}>
-                        <IconCaretRightFilled />
-                      </Grid.Col>
-                      <Grid.Col span={"auto"}>
-                        <Text>{item}</Text>
-                      </Grid.Col>
-                    </Grid>
-                  ))}
                   {/* <Grid>
                     <Grid.Col span={2}>
                       <IconListDetails />
@@ -156,7 +147,26 @@ export default function Portofolio_UiDetailDataNew() {
                       <Text>{dataPorto?.alamatKantor}</Text>
                     </Grid.Col>
                   </Grid>
-                </Box>
+
+                  <Grid>
+                    <Grid.Col span={2}>
+                      <IconListDetails />
+                    </Grid.Col>
+                    <Grid.Col span={"auto"}>
+                      <Text>{dataPorto?.bidangBisnis}</Text>
+                    </Grid.Col>
+                  </Grid>
+                  {dataPorto?.subBidangBisnis.map((item, index) => (
+                    <Grid key={index} ml={2}>
+                      <Grid.Col span={2}>
+                        <IconCaretRightFilled />
+                      </Grid.Col>
+                      <Grid.Col span={"auto"}>
+                        <Text>{item}</Text>
+                      </Grid.Col>
+                    </Grid>
+                  ))}
+                </Stack>
               </SimpleGrid>
             </Stack>
 

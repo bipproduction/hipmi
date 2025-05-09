@@ -102,7 +102,6 @@ export function Portofolio_ComponentButtonSelanjutnya({
     if (!validateData()) return;
 
     try {
-      console.log("listSubBidangSelected>>", listSubBidangSelected);
       setLoading(true);
 
 
