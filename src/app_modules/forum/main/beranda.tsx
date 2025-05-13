@@ -173,7 +173,9 @@ export default function Forum_Beranda({
           }}
         />
 
-        {!data.length || isLoading ? (
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+
+        {!data.length && isLoading ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(data) ? (
           <Forum_ComponentIsDataEmpty />
