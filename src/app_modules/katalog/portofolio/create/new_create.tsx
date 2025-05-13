@@ -36,6 +36,7 @@ import { Portofolio_ComponentButtonSelanjutnya } from "../component";
 import { apiGetSubBidangBisnis } from "../lib/api_portofolio";
 import { MODEL_PORTOFOLIO_BIDANG_BISNIS } from "../model/interface";
 
+
 export default function Portofolio_V3_Create() {
   const params = useParams<{ id: string }>();
   const profileId = params.id;
@@ -172,9 +173,6 @@ export default function Portofolio_V3_Create() {
               setDataPortofolio({
                 ...dataPortofolio,
                 masterBidangBisnisId: val,
-                // masterSubBidangBisnisId: isSameBidang
-                //   ? dataPortofolio.masterSubBidangBisnisId
-                //   : "",
               });
 
               // Jika berbeda bidang, reset sub bidang ke satu input kosong
