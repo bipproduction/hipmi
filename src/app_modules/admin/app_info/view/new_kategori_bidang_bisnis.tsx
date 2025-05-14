@@ -4,38 +4,36 @@ import {
   AdminColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
 import {
   Box,
   Button,
   Center,
-  Group,
   Paper,
   ScrollArea,
   Stack,
   Switch,
   Table,
   Text,
-  TextInput,
-  Title,
 } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconCirclePlus, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
-import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 import {
   adminAppInformation_funCreateBidangBisnis,
   adminAppInformation_funGetBidangBisnis,
   adminAppInformation_funUpdateBidangBisnis,
 } from "../fun";
-import { useShallowEffect } from "@mantine/hooks";
 import { apiGetMasterAdminBidangBisnis } from "../lib/api_fetch_master";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useRouter } from "next/navigation";
+import { RouterAdminAppInformation } from "@/lib/router_admin/router_app_information";
 
-export function AdminAppInformation_ViewKategoriPortofolio() {
+export function AdminAppInformation_V3_ViewKategoriBidangBisnis() {
+  const router = useRouter();
   const [data, setData] = useState<MODEL_DEFAULT_MASTER_OLD[] | null>(null);
 
   useShallowEffect(() => {
@@ -219,103 +217,25 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
       <Stack>
         <ComponentAdminGlobal_TitlePage name="Kategori Bidang Bisnis" />
 
-        <Admin_V3_ComponentBreakpoint>
-          <div>
-            {/* Form Create */}
-            {isCreate ? (
-              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
-                <Stack>
-                  <Center>
-                    <Title c={AdminColor.white} order={5}>
-                      Tambah Bidang Bisnis
-                    </Title>
-                  </Center>
+        <Button
+          w={120}
+          radius={"xl"}
+          leftIcon={<IconCirclePlus />}
+          onClick={() => {
+            router.push(RouterAdminAppInformation.createBidangBisnis);
+          }}
+        >
+          Tambah
+        </Button>
 
-                  <TextInput
-                    placeholder="Masukan nama bidang bisnis"
-                    value={newData}
-                    onChange={(val) => {
-                      setNewData(val.currentTarget.value);
-                    }}
-                  />
-
-                  <Group position="right" align="flex-end">
-                    <Button
-                      loading={isLoadingCreate}
-                      loaderPosition="center"
-                      style={{ transition: "0.5s" }}
-                      disabled={newData == "" || !data}
-                      radius={"xl"}
-                      color="green"
-                      onClick={() => {
-                        onCreate();
-                      }}
-                    >
-                      Simpan
-                    </Button>
-                  </Group>
-                </Stack>
-              </Paper>
-            ) : (
-              ""
-            )}
-
-            {/* Form Update */}
-            {isUpdate ? (
-              <Paper p={"md"} bg={AdminColor.softBlue} shadow="lg">
-                <Stack>
-                  <Center>
-                    <Title c={AdminColor.white} order={5}>
-                      Update Bidang Bisnis
-                    </Title>
-                  </Center>
-                  <TextInput
-                    placeholder="Masukan bidang bisnis"
-                    value={updateData.name}
-                    onChange={(val) => {
-                      const value = val.currentTarget.value;
-                      setUpdateData({ ...updateData, name: value });
-                    }}
-                  />
-
-                  <Group position="right">
-                    <Button
-                      radius={"xl"}
-                      onClick={() => {
-                        setIsUpdate(false);
-                        setIsCreate(true);
-                      }}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      loading={isLoadingUpdate}
-                      loaderPosition="center"
-                      style={{ transition: "0.5s" }}
-                      disabled={updateData?.name === ""}
-                      radius={"xl"}
-                      color="green"
-                      onClick={() => {
-                        onUpdate();
-                      }}
-                    >
-                      Update
-                    </Button>
-                  </Group>
-                </Stack>
-              </Paper>
-            ) : (
-              ""
-            )}
-          </div>
-
+        <div>
           {!data ? (
             <CustomSkeleton height={"80vh"} width="100%" />
           ) : (
-            <Paper p={"md"} bg={AdminColor.softBlue} h={"65vh"}>
-              <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
+            <Paper p={"md"} bg={AdminColor.softBlue} h={"65dvh"}>
+              <ScrollArea w={"100%"} h={"100%"} scrollbarSize={"md"}>
                 <Table
-                  verticalSpacing={"xs"}
+                  verticalSpacing={"md"}
                   horizontalSpacing={"md"}
                   p={"md"}
                   w={"100%"}
@@ -338,49 +258,8 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
               </ScrollArea>
             </Paper>
           )}
-        </Admin_V3_ComponentBreakpoint>
+        </div>
       </Stack>
-
-      {/* Activasi bank */}
-      <Admin_ComponentModal
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
-      >
-        <Stack align="center">
-          <Title order={5} c={MainColor.white}>
-            Anda ingin{" "}
-            {updateStatus.active ? (
-              <Text span inherit>
-                mengaktifkan
-              </Text>
-            ) : (
-              <Text span inherit>
-                menonaktifkan
-              </Text>
-            )}{" "}
-            Bidang Bisnis ini ?
-          </Title>
-          <Group>
-            <Button radius={"xl"} onClick={() => setOpenModal(false)}>
-              Batal
-            </Button>
-            <Button
-              loading={isLoadingActivation}
-              loaderPosition="center"
-              color="green"
-              radius={"xl"}
-              onClick={() => {
-                onUpdateActivation({
-                  id: updateStatus.id,
-                  active: updateStatus.active as any,
-                });
-              }}
-            >
-              Iya
-            </Button>
-          </Group>
-        </Stack>
-      </Admin_ComponentModal>
     </>
   );
 }

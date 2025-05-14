@@ -1,5 +1,5 @@
 "use client";
-import AdminGlobal_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
+import Admin_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_INVOICE_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { clientLogger } from "@/util/clientLogger";
@@ -110,7 +110,7 @@ function DetailTransaksi() {
   return (
     <Stack>
       <ComponentAdminGlobal_HeaderTamplate name={"Detail Transaksi"} />
-      <AdminGlobal_ComponentBackButton />
+      <Admin_ComponentBackButton />
 
       <>
         {!data ? (

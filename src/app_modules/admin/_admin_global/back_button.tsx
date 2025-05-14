@@ -6,7 +6,7 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function AdminGlobal_ComponentBackButton({
+export default function Admin_ComponentBackButton({
   path,
 }: {
   path?: string;

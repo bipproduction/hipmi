@@ -17,7 +17,7 @@ import {
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { apiGetAdminCollaborationGroupById } from "../lib/api_fetch_admin_collaboration";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
@@ -85,7 +85,7 @@ function DetailGroup() {
   return (
     <Stack>
       <ComponentAdminGlobal_HeaderTamplate name={`Detail group`} />
-      <AdminGlobal_ComponentBackButton />
+      <Admin_ComponentBackButton />
 
       {!data ? (
         <Admin_V3_ComponentSkeletonBreakpoint skeletonRequest={2} />

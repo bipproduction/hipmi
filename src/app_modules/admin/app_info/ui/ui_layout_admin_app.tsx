@@ -24,17 +24,11 @@ export default function AdminAppInformation_Layout({
 }) {
   const pathname = usePathname();
   const listPage = [
-    // {
-    //   id: "1",
-    //   name: "Whatsapp",
-    // },
     {
-      id: "2",
       name: "Informasi Bank",
       path: "/dev/admin/app-information/info-bank",
     },
     {
-      id: "3",
       name: "Bidang Bisnis",
       path: "/dev/admin/app-information/bidang-bisnis",
     },
@@ -58,8 +52,9 @@ export default function AdminAppInformation_Layout({
               component={Link}
               href={e.path}
               radius={"xl"}
-              c={isActive(e.path) ? AdminColor.white : "gray"}
-              bg={isActive(e.path) ? AccentColor.blue : AccentColor.blackgray}
+              c={isActive(e.path) ? MainColor.black : MainColor.white}
+              color="yellow"
+              bg={isActive(e.path) ? AccentColor.yellow : AccentColor.blackgray}
               style={{
                 transition: "all 0.5s",
               }}

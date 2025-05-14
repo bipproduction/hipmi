@@ -4,7 +4,7 @@ import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
 import { Admin_ComponentLoadImageLandscape } from "@/app_modules/admin/_admin_global";
 import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
-import AdminGlobal_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
+import Admin_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
 import {
   MODEL_DONASI,
   MODEL_DONASI_PENCAIRAN_DANA,
@@ -71,7 +71,7 @@ export default function AdminDonasi_DetailPublish({
       {/* <pre>{JSON.stringify(pencairan, null, 2)}</pre> */}
       <Stack>
         <>
-          <AdminGlobal_ComponentBackButton
+          <Admin_ComponentBackButton
             path={RouterAdminDonasi.table_publish}
           />
           {!data ? (

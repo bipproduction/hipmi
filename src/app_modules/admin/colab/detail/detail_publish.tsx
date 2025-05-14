@@ -21,7 +21,7 @@ import { IconCheck, IconFlag2Off } from "@tabler/icons-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import adminColab_funReportProjectById from "../fun/edit/fun_report_project_by_id";
 import { apiGetAdminCollaborationById } from "../lib/api_fetch_admin_collaboration";
@@ -111,7 +111,7 @@ function DetailPublish() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={`Detail publish`} />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         {!data ? (
           <Admin_V3_ComponentSkeletonBreakpoint />

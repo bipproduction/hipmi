@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
@@ -49,7 +49,7 @@ export default function AdminForum_DetailPosting({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Detail" />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
         <Admin_V3_ComponentBreakpoint>
           <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
         </Admin_V3_ComponentBreakpoint>
