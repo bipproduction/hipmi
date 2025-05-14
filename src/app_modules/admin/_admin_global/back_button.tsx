@@ -19,6 +19,7 @@ export default function Admin_ComponentBackButton({
       <Group>
         <Button
           c={AccentColor.white}
+          radius={7}
           leftIcon={
             isLoading ? (
               <Loader size={"xs"} color={"gray"} />
