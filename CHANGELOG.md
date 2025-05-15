@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.0](https://github.com/bipproduction/hipmi/compare/v1.2.126...v1.3.0) (2025-05-15)
+
+
+### Features
+
+* admin app information ([bc10b80](https://github.com/bipproduction/hipmi/commit/bc10b80139833966d3e39b52cabf577930552052))
+* tampilan upload stiker di admin ([fbea35e](https://github.com/bipproduction/hipmi/commit/fbea35eef96a656e1b474959aa3fb8198c7d2b0e))
+
 ## [1.2.126](https://github.com/bipproduction/hipmi/compare/v1.2.125...v1.2.126) (2025-05-13)
 
 ## [1.2.125](https://github.com/bipproduction/hipmi/compare/v1.2.124...v1.2.125) (2025-05-09)
