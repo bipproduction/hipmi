@@ -1,0 +1,17 @@
+[
+  { "value": "senang", "label": "Senang" },
+  { "value": "sedih", "label": "Sedih" },
+  { "value": "marah", "label": "Marah" },
+  { "value": "takut", "label": "Takut" },
+  { "value": "terkejut", "label": "Terkejut" },
+  { "value": "cinta", "label": "Cinta" },
+  { "value": "malas", "label": "Malas" },
+  { "value": "bangga", "label": "Bangga" },
+  { "value": "penasaran", "label": "Penasaran" },
+  { "value": "malu", "label": "Malu" },
+  { "value": "iri", "label": "Iri" },
+  { "value": "kesal", "label": "Kesal" },
+  { "value": "kaget", "label": "Kaget" },
+  { "value": "bingung", "label": "Bingung" },
+  { "value": "lega", "label": "Lega" }
+]

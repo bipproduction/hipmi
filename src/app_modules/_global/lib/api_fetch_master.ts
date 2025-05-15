@@ -3,6 +3,7 @@ export {
   apiGetMasterBidangBisnis,
   apiGetMasterStatusTransaksi,
   apiGetAdminContact,
+  apiGetMasterEmotions,
 };
 
 const apiGetMasterBank = async () => {
@@ -89,4 +90,21 @@ const apiGetAdminContact = async () => {
     console.error("Error get admin contact:", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
+};
+
+const apiGetMasterEmotions = async () => {
+  const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+  if (!token) return await token.json().catch(() => null);
+
+  const response = await fetch(`/api/master/emotions`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json().catch(() => null);
 };

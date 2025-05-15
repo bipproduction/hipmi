@@ -28,6 +28,7 @@ import { master_nama_bank } from "@/bin/seeder/master";
 import { master_status_transaksi } from "@/bin/seeder/master";
 import pLimit from "p-limit";
 import { master_new_bidang_bisnis } from "@/bin/seeder/master";
+import { master_emotions } from "@/bin/seeder/master";
 
 async function masterUserRole() {
   for (let i of userRole) {
@@ -614,6 +615,20 @@ async function masterStatusTransaksi() {
   console.log("masterStatusTransaksi success");
 }
 
+async function masterEmotions() {
+  await Promise.all(
+    master_emotions.map((a) =>
+      prisma.masterEmotions.upsert({
+        where: { value: a.value },
+        create: { value: a.value, label: a.label },
+        update: { value: a.value, label: a.label },
+      })
+    )
+  );
+
+  console.log("masterEmotions success");
+}
+
 const listSeederQueue = [
   masterUserRole,
   seederUser,
@@ -643,6 +658,7 @@ const listSeederQueue = [
   masterKategoriApp,
   masterInvestasiNewTransaksiStatus,
   masterStatusTransaksi,
+  masterEmotions,
 ];
 const limit = pLimit(1);
 
