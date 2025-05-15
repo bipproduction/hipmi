@@ -152,8 +152,6 @@ model Portofolio_MediaSosial {
   portofolioId String?     @unique
 }
 
-// ------------------- MASTER -------------------------- //
-
 model Portofolio_BidangDanSubBidangBisnis {
   id        String   @id @default(cuid())
   isActive  Boolean  @default(true)
@@ -167,6 +165,8 @@ model Portofolio_BidangDanSubBidangBisnis {
   MasterSubBidangBisnis   MasterSubBidangBisnis? @relation(fields: [masterSubBidangBisnisId], references: [id])
   masterSubBidangBisnisId String?
 }
+
+// ------------------- MASTER -------------------------- //
 
 model MasterBidangBisnis {
   id                                  String                                @id @default(uuid())
@@ -220,6 +220,16 @@ model MasterStatusTransaksi {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   EventTransaksi EventTransaksi[]
+}
+
+model MasterEmotions {
+  id        Int       @id @default(autoincrement())
+  label     String
+  value     String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Sticker   Sticker[] @relation("StikerEmotions")
 }
 
 // -------------------- INVESTASI --------------------- //
@@ -1045,4 +1055,17 @@ model EventTransaksi {
 
   MasterStatusTransaksi   MasterStatusTransaksi? @relation(fields: [masterStatusTransaksiId], references: [id])
   masterStatusTransaksiId String?
+}
+
+model Sticker {
+  id        String   @id @default(cuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+  fileName  String?
+  fileExt   String?
+  fileId    String
+
+  MasterEmotions MasterEmotions[] @relation("StikerEmotions")
 }

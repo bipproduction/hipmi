@@ -1,7 +1,7 @@
 'use client'
 import { ActionIcon, Badge, Button, Center, Group, Paper, ScrollArea, Select, Stack, Table, Title } from '@mantine/core';
 import React from 'react';
-import AdminGlobal_ComponentBackButton from '../../_admin_global/back_button';
+import Admin_ComponentBackButton from '../../_admin_global/back_button';
 import { IconImageInPicture, IconReload } from '@tabler/icons-react';
 
 const tableRows = [
@@ -54,7 +54,7 @@ function AdminEvent_DetailSponsor() {
   return (
     <>
       <Stack>
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
         <Stack spacing={"xs"} h={"100%"}>
           <Group
             position='apart'

@@ -20,7 +20,7 @@ import {
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import React, { useState } from "react";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminDonasi_CeritaPenggalangDana from "../component/tampilan_detail_cerita";
 import ComponentAdminDonasi_TampilanDetailDonasi from "../component/tampilan_detail_donasi";
 import { AdminDonasi_getOneById } from "../fun/get/get_one_by_id";
@@ -122,7 +122,7 @@ function ButtonOnHeader({
     <>
       <Stack>
         <Group position="apart">
-          <AdminGlobal_ComponentBackButton />
+          <Admin_ComponentBackButton />
           <Button
             radius={"xl"}
             bg={"orange"}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import {
   Button,
   Flex,
@@ -116,7 +116,7 @@ function DetailReject() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={`Detail reject`} />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         {!data ? (
           <Admin_V3_ComponentSkeletonBreakpoint />

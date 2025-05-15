@@ -3,4 +3,5 @@ export const pathAssetImage = {
   avatar: "/aset/global/avatar.png",
   main_background: "/aset/global/main_background.png",
   new_loader: "/aset/global/loading.gif",
+  dummy_image: "/aset/global/dummy-image.jpg",  
 };

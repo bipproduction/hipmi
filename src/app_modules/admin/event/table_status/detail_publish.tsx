@@ -2,7 +2,7 @@
 import { Button, Group, Stack } from '@mantine/core';
 import { IconCircleCheck } from '@tabler/icons-react';
 import { useAtom } from 'jotai';
-import AdminGlobal_ComponentBackButton from '../../_admin_global/back_button';
+import Admin_ComponentBackButton from '../../_admin_global/back_button';
 import AdminEvent_ComponentDetailPublish from '../_component/comp_detail_publish';
 import { gs_admin_event_menu_publish } from '../_lib/global_state';
 import { AdminEvent_ViewDetailPeserta } from '../_view';
@@ -29,7 +29,7 @@ function AdminEvent_DetailPublish() {
   return (
     <>
       <Stack>
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         <Group>
           {listPage.map((e) => (

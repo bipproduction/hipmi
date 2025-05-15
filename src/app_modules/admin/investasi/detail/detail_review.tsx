@@ -15,7 +15,7 @@ import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_adm
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 import { ComponentAdminInvestasi_DetailDataAuthor } from "../_component/detail_data_author";
 import { ComponentAdminInvestasi_DetailData } from "../_component/detail_data_investasi";
@@ -177,7 +177,7 @@ export default function AdminInvestasi_DetailReview() {
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Investasi: Review" />
         <Group position="apart">
-          <AdminGlobal_ComponentBackButton />
+          <Admin_ComponentBackButton />
 
           {data?.masterStatusInvestasiId === "2" ? (
             <Group>

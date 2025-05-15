@@ -25,6 +25,9 @@ const DIRECTORY_ID = {
   // Event
   event_sponsor: "cm65zlbyf001udvmggnd6i0oh",
   event_bukti_transfer: "cm65zlehy001wdvmgnobur2zh",
+
+  // Sticker
+  sticker: "cmanquv32002fcesbk49cj07g",
 };
 
 export default DIRECTORY_ID;

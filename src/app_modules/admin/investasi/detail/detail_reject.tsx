@@ -2,7 +2,7 @@
 
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import { ComponentAdminInvestasi_DetailDataAuthor } from "../_component/detail_data_author";
 import { ComponentAdminInvestasi_DetailData } from "../_component/detail_data_investasi";
 import { ComponentAdminInvestasi_DetailGambar } from "../_component/detail_gambar_investasi";
@@ -46,7 +46,7 @@ export function AdminInvestasi_DetailReject() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={"Investasi: Reject"} />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         {!data ? (
           <CustomSkeleton h={200} w={"50%"} />

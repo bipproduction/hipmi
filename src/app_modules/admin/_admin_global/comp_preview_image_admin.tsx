@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Center, Image, ScrollArea, Skeleton, Stack, Text } from "@mantine/core";
-import AdminGlobal_ComponentBackButton from "./back_button";
+import Admin_ComponentBackButton from "./back_button";
 import { APIs, pathAssetImage } from "@/lib";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
@@ -34,7 +34,7 @@ export function Admin_ComponentPreviewImageAdmin({
   return (
     <>
       <Stack>
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
         <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"}>
           {isImage === null ? (
             <Center>

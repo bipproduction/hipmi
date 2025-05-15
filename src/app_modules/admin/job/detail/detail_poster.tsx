@@ -2,7 +2,7 @@
 
 import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { Center, Image, Stack } from "@mantine/core";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import { APIs } from "@/lib";
 import { useState } from "react";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
@@ -17,7 +17,7 @@ export default function AdminJob_DetailPoster({
   return (
     <>
       <Stack>
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
         <Center>
           <Image
             onLoad={() => setLoading(false)}
