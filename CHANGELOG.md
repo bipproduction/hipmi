@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.0](https://github.com/bipproduction/hipmi/compare/v1.3.1...v1.4.0) (2025-05-16)
+
+
+### Features
+
+* admin sticker ([2a8c79f](https://github.com/bipproduction/hipmi/commit/2a8c79fd09c3f7fd7ee58ac6896b17802dfe0147))
+* admin stiker ([e7858a2](https://github.com/bipproduction/hipmi/commit/e7858a281223a81037219afec58e5f6b9e04be15))
+
 ## [1.3.1](https://github.com/bipproduction/hipmi/compare/v1.3.0...v1.3.1) (2025-05-16)
 
 ## [1.3.0](https://github.com/bipproduction/hipmi/compare/v1.2.126...v1.3.0) (2025-05-15)

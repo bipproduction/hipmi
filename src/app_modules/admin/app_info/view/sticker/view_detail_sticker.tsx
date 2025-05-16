@@ -168,11 +168,6 @@ export default function AdminAppInformation_ViewStickerDetail() {
           fileId: data?.fileId as string,
         });
 
-        if (!deleteFile.success) {
-          ComponentGlobal_NotifikasiPeringatan("Gagal delete gambar");
-          return;
-        }
-
         setLoadingDelete(false);
         ComponentAdminGlobal_NotifikasiBerhasil("Berhasil dihapus");
         router.back();

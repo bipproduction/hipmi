@@ -32,7 +32,7 @@ export const apiAdminCreateSticker = async ({ data }: { data: any }) => {
   }
 };
 
-export const apiAdminGetSticker = async () => {
+export const apiAdminGetSticker = async ({ page }: { page: number }) => {
   try {
     // Fetch token from cookie
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -41,7 +41,7 @@ export const apiAdminGetSticker = async () => {
       return null;
     }
 
-    const response = await fetch(`/api/sticker`, {
+    const response = await fetch(`/api/sticker?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -162,6 +162,40 @@ export const apiAdminDeleteSticker = async ({ id }: { id: string }) => {
         return await response.json();
     } catch (error) {
         console.error("Error delete sticker", error);
+        throw error; // Re-throw the error to handle it in the calling function
+    }
+};
+
+export const apiAdminUpdateStatusStickerById = async ({ data }: { data: any }) => {
+    try {
+        // Fetch token from cookie
+        const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+        if (!token) {
+            console.error("No token found");
+            return null;
+        }
+
+        const response = await fetch(`/api/sticker/${data.id}/activation`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        // Check if the response is OK
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            console.error("Failed to update status sticker", response.statusText, errorData);
+            throw new Error(errorData?.message || "Failed to update status sticker");
+        }
+
+        // Return the JSON response
+        return await response.json();
+    } catch (error) {
+        console.error("Error update status sticker", error);
         throw error; // Re-throw the error to handle it in the calling function
     }
 };
