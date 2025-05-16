@@ -61,6 +61,9 @@ async function GET(request: Request) {
 
   try {
     const sticker = await prisma.sticker.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
       include: {
         MasterEmotions: true,
       },
