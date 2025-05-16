@@ -19,8 +19,9 @@ import {
   ScrollArea,
   Spoiler,
   Stack,
+  Switch,
   Table,
-  Text
+  Text,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconPencil, IconPlus } from "@tabler/icons-react";
@@ -29,18 +30,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
-import { apiAdminGetSticker } from "../lib/api_fetch_stiker";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
+import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
+import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
+import {
+  apiAdminGetSticker,
+  apiAdminUpdateStatusStickerById,
+} from "../lib/api_fetch_stiker";
 
 export default function AdminAppInformation_ViewSticker() {
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState<string | null>(null);
   const [dataSticker, setDataSticker] = useState<ISticker[] | null>(null);
-  const [isActivation, setIsActivation] = useState(false);
-  const [updateStatus, setUpdateStatus] = useState({
+  const [dataUpdate, setDataUpdate] = useState({
     id: "",
-    active: false,
+    isActive: false,
   });
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [opened, setOpened] = useState(false);
 
   useShallowEffect(() => {
     const fetchData = async () => {
@@ -56,6 +64,44 @@ export default function AdminAppInformation_ViewSticker() {
 
     fetchData();
   }, []);
+
+  const handleUpdateActivation = async ({
+    id,
+    value,
+  }: {
+    id: string;
+    value: boolean;
+  }) => {
+    const data = {
+      id: id,
+      isActive: value,
+    };
+
+
+    try {
+      setLoadingUpdate(true);
+      const updt = await apiAdminUpdateStatusStickerById({
+        data: data as any,
+      });
+
+      if (updt.success) {
+        const cloneData = [...(dataSticker || [])];
+        const index = cloneData.findIndex((e) => e.id === id);
+        if (index !== -1) {
+          cloneData[index].isActive = value;
+          setDataSticker([...cloneData]);
+        }
+
+        ComponentAdminGlobal_NotifikasiBerhasil(updt.message);
+      } else {
+        ComponentAdminGlobal_NotifikasiGagal(updt.message);
+      }
+    } catch (error) {
+      console.log("Error update status sticker", error);
+    } finally {
+      setLoadingUpdate(false);
+    }
+  };
 
   return (
     <>
@@ -94,9 +140,9 @@ export default function AdminAppInformation_ViewSticker() {
                     <th>
                       <Center c={AdminColor.white}>Aksi</Center>
                     </th>
-                    {/* <th>
+                    <th>
                       <Center c={AdminColor.white}>Status</Center>
-                    </th> */}
+                    </th>
 
                     <th>
                       <Center c={AdminColor.white}>Stiker</Center>
@@ -112,10 +158,9 @@ export default function AdminAppInformation_ViewSticker() {
                     router,
                     loadingDetail,
                     setLoadingDetail,
-                    isActivation,
-                    setIsActivation,
-                    updateStatus,
-                    setUpdateStatus,
+                    setOpened,
+                    dataUpdate,
+                    setDataUpdate,
                   })}
                 </tbody>
               </Table>
@@ -123,6 +168,41 @@ export default function AdminAppInformation_ViewSticker() {
           </Admin_ComponentBoxStyle>
         )}
       </Stack>
+
+      <Admin_ComponentModal opened={opened} onClose={() => setOpened(false)}>
+        <Stack>
+          <Text fw={500} c={AdminColor.white}>
+            Apakah anda yakin ingin mengubah status stiker ini ?
+          </Text>
+          <Group position="center">
+            <Button
+              radius={"xl"}
+              onClick={() => {
+                setOpened(false);
+                setLoadingUpdate(false);
+              }}
+            >
+              Tidak
+            </Button>
+            <Button
+              loading={loadingUpdate}
+              loaderPosition="center"
+              radius={"xl"}
+              bg={MainColor.green}
+              color="green"
+              onClick={() => {
+                handleUpdateActivation({
+                  id: dataUpdate.id,
+                  value: dataUpdate.isActive,
+                });
+                setOpened(false);
+              }}
+            >
+              Ya
+            </Button>
+          </Group>
+        </Stack>
+      </Admin_ComponentModal>
     </>
   );
 }
@@ -132,10 +212,12 @@ type RowTableProps = {
   router: AppRouterInstance;
   loadingDetail: string | null;
   setLoadingDetail: (val: string | null) => void;
-  isActivation: boolean;
-  setIsActivation: (val: boolean) => void;
-  updateStatus: { id: string; active: boolean };
-  setUpdateStatus: (val: { id: string; active: boolean }) => void;
+  setOpened: (val: boolean) => void;
+  dataUpdate: {
+    id: string;
+    isActive: boolean;
+  };
+  setDataUpdate: (val: { id: string; isActive: boolean }) => void;
 };
 
 const rowTable = ({
@@ -143,10 +225,9 @@ const rowTable = ({
   router,
   loadingDetail,
   setLoadingDetail,
-  isActivation,
-  setIsActivation,
-  updateStatus,
-  setUpdateStatus,
+  setOpened,
+  dataUpdate,
+  setDataUpdate,
 }: RowTableProps) => {
   if (!Array.isArray(dataSticker) || dataSticker.length === 0) {
     return (
@@ -184,23 +265,20 @@ const rowTable = ({
           </Button>
         </Center>
       </td>
-      {/* <td>
+      <td>
         <Center>
           <Switch
             checked={e.isActive}
-            color="green"
+            color="yellow"
             onLabel="ON"
             offLabel="OFF"
             onChange={(val) => {
-              setIsActivation(true);
-              setUpdateStatus({
-                id: e?.id,
-                active: val.currentTarget.checked as any,
-              });
+              setDataUpdate({ id: e.id, isActive: val.currentTarget.checked });
+              setOpened(true);
             }}
           />
         </Center>
-      </td> */}
+      </td>
       <td>
         <Center>
           <Paper bg="gray" p={"xs"}>

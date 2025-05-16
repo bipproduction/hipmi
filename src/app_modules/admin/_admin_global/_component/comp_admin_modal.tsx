@@ -32,7 +32,7 @@ export function Admin_ComponentModal({
         centered
         title={title}
         withCloseButton={withCloseButton ? withCloseButton : false}
-        closeOnClickOutside={closeOnClickOutside}
+        closeOnClickOutside={closeOnClickOutside ? closeOnClickOutside : false}
       >
         {children}
       </Modal>
