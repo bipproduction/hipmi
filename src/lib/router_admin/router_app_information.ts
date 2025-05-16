@@ -6,4 +6,5 @@ export const RouterAdminAppInformation = {
   // Sticker
   sticker: "/dev/admin/app-information/sticker",
   createSticker: "/dev/admin/app-information/sticker/create",
+  detailSticker: ({ id }: { id: string }) => `/dev/admin/app-information/sticker/${id}`,
 };

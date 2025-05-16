@@ -261,7 +261,6 @@ export default function AdminAppInformation_ViewCreateSticker() {
                     <Button
                       color="green"
                       bg={MainColor.green}
-                      disabled={loading}
                       loading={loading}
                       loaderPosition="center"
                       radius="xl"

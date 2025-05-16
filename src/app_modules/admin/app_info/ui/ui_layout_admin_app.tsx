@@ -55,7 +55,7 @@ export default function AdminAppInformation_Layout({
 
   const handleClick = async (path: string) => {
     if (path === pathname) return; // kalau sudah di halaman itu, jangan reload
-    setLoadingPath(path);
+    // setLoadingPath(path);
     router.push(path);
   };
 
