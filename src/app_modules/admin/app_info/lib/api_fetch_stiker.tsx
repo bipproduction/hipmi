@@ -32,7 +32,7 @@ export const apiAdminCreateSticker = async ({ data }: { data: any }) => {
   }
 };
 
-export const apiAdminGetSticker = async () => {
+export const apiAdminGetSticker = async ({ page }: { page: number }) => {
   try {
     // Fetch token from cookie
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -41,7 +41,7 @@ export const apiAdminGetSticker = async () => {
       return null;
     }
 
-    const response = await fetch(`/api/sticker`, {
+    const response = await fetch(`/api/sticker?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

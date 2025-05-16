@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import { data } from "autoprefixer";
+import _ from "lodash";
+import { NextResponse } from "next/server";
 
-export { POST, GET };
+export { GET, POST };
 
 interface IPostSticker {
   fileId: string;
@@ -49,7 +51,6 @@ async function POST(request: Request) {
   }
 }
 
-
 async function GET(request: Request) {
   const method = request.method;
   if (method !== "GET") {
@@ -59,18 +60,66 @@ async function GET(request: Request) {
     );
   }
 
+  let fixData;
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search");
+  const page = searchParams.get("page");
+  const dataTake = 10
+  const dataSkip = Number(page) * dataTake - dataTake;
+
   try {
-    const sticker = await prisma.sticker.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        MasterEmotions: true,
-      },
-    });
+    if (!page) {
+      fixData = await prisma.sticker.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          MasterEmotions: true,
+        },
+      });
+    } else {
+      const data = await prisma.sticker.findMany({
+        skip: dataSkip,
+        take: dataTake,
+        where: {
+          MasterEmotions: {
+            some: {
+              value: {
+                contains: search ? search : "",
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          MasterEmotions: true,
+        },
+      });
+
+      const nCount = await prisma.sticker.count({
+        where: {
+          MasterEmotions: {
+            some: {
+              value: {
+                contains: search ? search : "",
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      });
+
+      fixData = {
+        data: data,
+        nPage: _.ceil(nCount / dataTake),
+      };
+    }
 
     return NextResponse.json(
-      { success: true, message: "Success get data sticker", data: sticker },
+      { success: true, message: "Success get data sticker", data: fixData },
       { status: 200 }
     );
   } catch (error) {

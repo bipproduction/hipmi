@@ -22,9 +22,10 @@ import {
   Switch,
   Table,
   Text,
+  TextInput,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconPencil, IconPlus } from "@tabler/icons-react";
+import { IconFilter, IconPencil, IconPlus } from "@tabler/icons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -37,6 +38,7 @@ import {
   apiAdminGetSticker,
   apiAdminUpdateStatusStickerById,
 } from "../lib/api_fetch_stiker";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
 export default function AdminAppInformation_ViewSticker() {
   const router = useRouter();
@@ -49,21 +51,31 @@ export default function AdminAppInformation_ViewSticker() {
   });
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [opened, setOpened] = useState(false);
+  const [nPage, setNPage] = useState(1);
+  const [activePage, setActivePage] = useState(1);
 
   useShallowEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await apiAdminGetSticker();
-        if (response.success) {
-          setDataSticker(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
+    handleLoadData();
+  }, [activePage]);
 
-    fetchData();
-  }, []);
+  const handleLoadData = async () => {
+    try {
+      const response = await apiAdminGetSticker({ page: activePage });
+      if (response.success) {
+        setDataSticker(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        setDataSticker([]);
+      }
+    } catch (error) {
+      console.error("Error fetching data", error);
+      setDataSticker([]);
+    }
+  };
+
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
 
   const handleUpdateActivation = async ({
     id,
@@ -76,7 +88,6 @@ export default function AdminAppInformation_ViewSticker() {
       id: id,
       isActive: value,
     };
-
 
     try {
       setLoadingUpdate(true);
@@ -108,63 +119,73 @@ export default function AdminAppInformation_ViewSticker() {
       <Stack>
         <ComponentAdminGlobal_TitlePage name="Stiker " />
 
-        <Button
-          loading={loadingCreate}
-          loaderPosition="center"
-          w={120}
-          radius={"xl"}
-          leftIcon={<IconPlus size={20} />}
-          onClick={() => {
-            router.push(RouterAdminAppInformation.createSticker);
-            setLoadingCreate(true);
-          }}
-        >
-          Tambah
-        </Button>
+        <Group position="right">
+          {/* <Button radius={"xl"} leftIcon={<IconFilter size={20} />}> Filter</Button> */}
+          <Button
+            loading={loadingCreate}
+            loaderPosition="center"
+            w={120}
+            radius={"xl"}
+            leftIcon={<IconPlus size={20} />}
+            onClick={() => {
+              router.push(RouterAdminAppInformation.createSticker);
+              setLoadingCreate(true);
+            }}
+          >
+            Tambah
+          </Button>
+        </Group>
 
         {!dataSticker ? (
           <CustomSkeleton height={"65dvh"} />
         ) : (
           <Admin_ComponentBoxStyle
-            style={{ height: "65dvh", overflow: "hidden" }}
+          // style={{ height: "65dvh", overflow: "hidden" }}
           >
-            <ScrollArea w={"100%"} h={"100%"} scrollbarSize={"md"}>
-              <Table
-                verticalSpacing={"md"}
-                horizontalSpacing={"md"}
-                p={"md"}
-                w={"100%"}
-              >
-                <thead>
-                  <tr>
-                    <th>
-                      <Center c={AdminColor.white}>Aksi</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Status</Center>
-                    </th>
+            <Stack>
+              <ScrollArea w={"100%"} scrollbarSize={"md"} h={"65dvh"}>
+                <Table
+                  verticalSpacing={"md"}
+                  horizontalSpacing={"md"}
+                  p={"md"}
+                  w={"100%"}
+                >
+                  <thead>
+                    <tr>
+                      <th>
+                        <Center c={AdminColor.white}>Aksi</Center>
+                      </th>
+                      <th>
+                        <Center c={AdminColor.white}>Status</Center>
+                      </th>
 
-                    <th>
-                      <Center c={AdminColor.white}>Stiker</Center>
-                    </th>
-                    <th>
-                      <Text c={AdminColor.white}>Kategori</Text>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rowTable({
-                    dataSticker,
-                    router,
-                    loadingDetail,
-                    setLoadingDetail,
-                    setOpened,
-                    dataUpdate,
-                    setDataUpdate,
-                  })}
-                </tbody>
-              </Table>
-            </ScrollArea>
+                      <th>
+                        <Center c={AdminColor.white}>Stiker</Center>
+                      </th>
+                      <th>
+                        <Text c={AdminColor.white}>Kategori</Text>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rowTable({
+                      dataSticker,
+                      router,
+                      loadingDetail,
+                      setLoadingDetail,
+                      setOpened,
+                      dataUpdate,
+                      setDataUpdate,
+                    })}
+                  </tbody>
+                </Table>
+              </ScrollArea>
+              <Admin_V3_ComponentPaginationBreakpoint
+                value={activePage}
+                total={nPage}
+                onChange={onPageClick}
+              />
+            </Stack>
           </Admin_ComponentBoxStyle>
         )}
       </Stack>
@@ -296,7 +317,7 @@ const rowTable = ({
         </Center>
       </td>
       <td>
-        <Box maw={300}>
+        <Box maw={300} miw={200}>
           <Spoiler maxHeight={70} hideLabel="Sembunyikan" showLabel="Tampilkan">
             <Group>
               {e.MasterEmotions.map((e) => (
