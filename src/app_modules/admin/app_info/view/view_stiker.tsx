@@ -19,9 +19,8 @@ import {
   ScrollArea,
   Spoiler,
   Stack,
-  Switch,
   Table,
-  Text,
+  Text
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconPencil, IconPlus } from "@tabler/icons-react";
