@@ -1,6 +1,9 @@
 "use client";
 
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
+import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
@@ -23,8 +26,6 @@ import {
   Forum_SkeletonListKomentar,
 } from "../component/skeleton_view";
 import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "../model/interface";
-import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
-import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 
 export default function Forum_V3_MainDetail({
   userLoginId,
@@ -41,26 +42,40 @@ export default function Forum_V3_MainDetail({
   >(null);
   const [activePage, setActivePage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
   const [sticker, setSticker] = useState<ISticker[] | null>(null);
-  const [emotion, setEmotion] = useState<any>([]);
 
   useShallowEffect(() => {
-    onLoadSticker();
+    onLoadDataSticker();
   }, []);
 
-  async function onLoadSticker() {
+  async function onLoadDataSticker() {
     try {
-      const response = await apiGetStickerForUser({ emotion: "" });
-      if (response.success) {
-        setSticker(response.res.data);
+      const responseDataProfile = await apiGetUserById({
+        id: userLoginId,
+      });
+
+      if (responseDataProfile.success) {
+        try {
+          const response = await apiGetStickerForUser({
+            gender: responseDataProfile?.data?.Profile?.jenisKelamin,
+          });
+          if (response.success) {
+            setSticker(response.res.data);
+          } else {
+            console.error("Failed to get sticker", response.message);
+            setSticker([]);
+          }
+        } catch (error) {
+          console.error("Error get sticker", error);
+          setSticker([]);
+        }
       } else {
-        console.error("Failed to get sticker", response.message);
-        setSticker([]);
+        console.error("Failed to get profile", responseDataProfile.message);
+        setSticker(null);
       }
     } catch (error) {
-      console.error("Error get sticker", error);
-      setSticker([]);
+      console.error("Error get profile", error);
+      setSticker(null);
     }
   }
 

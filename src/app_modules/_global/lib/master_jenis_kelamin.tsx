@@ -1,4 +1,4 @@
 export const masterJenisKelamin = [
-  { value: "Laki-laki", label: "Laki-laki" },
-  { value: "Perempuan", label: "Perempuan" },
+  { value: "laki-laki", label: "Laki-laki" },
+  { value: "perempuan", label: "Perempuan" },
 ];

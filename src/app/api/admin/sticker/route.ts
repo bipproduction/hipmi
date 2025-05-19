@@ -82,16 +82,7 @@ async function GET(request: Request) {
       const data = await prisma.sticker.findMany({
         skip: dataSkip,
         take: dataTake,
-        where: {
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: search ? search : "",
-                mode: "insensitive",
-              },
-            },
-          },
-        },
+
         orderBy: {
           createdAt: "desc",
         },
@@ -100,18 +91,7 @@ async function GET(request: Request) {
         },
       });
 
-      const nCount = await prisma.sticker.count({
-        where: {
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: search ? search : "",
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-      });
+      const nCount = await prisma.sticker.count({});
 
       fixData = {
         data: data,

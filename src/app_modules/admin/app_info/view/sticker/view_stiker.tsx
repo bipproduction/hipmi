@@ -104,15 +104,17 @@ export default function AdminAppInformation_ViewSticker() {
           cloneData[index].isActive = value;
           setDataSticker([...cloneData]);
         }
-
+        setOpened(false);
+        setLoadingUpdate(false);
         ComponentAdminGlobal_NotifikasiBerhasil(updt.message);
       } else {
+        setOpened(false);
+        setLoadingUpdate(false);
         ComponentAdminGlobal_NotifikasiGagal(updt.message);
       }
     } catch (error) {
-      console.log("Error update status sticker", error);
-    } finally {
       setLoadingUpdate(false);
+      console.log("Error update status sticker", error);
     }
   };
 
@@ -197,13 +199,21 @@ export default function AdminAppInformation_ViewSticker() {
         )}
       </Stack>
 
-      <Admin_ComponentModal opened={opened} onClose={() => setOpened(false)}>
+      <Admin_ComponentModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        closeOnClickOutside={false}
+      >
         <Stack>
           <Text fw={500} c={AdminColor.white}>
             Apakah anda yakin ingin mengubah status stiker ini ?
           </Text>
           <Group position="center">
             <Button
+              style={{
+                transition: "all 0.3s ease-in-out",
+              }}
+              disabled={loadingUpdate}
               radius={"xl"}
               onClick={() => {
                 setOpened(false);
@@ -213,6 +223,9 @@ export default function AdminAppInformation_ViewSticker() {
               Tidak
             </Button>
             <Button
+              style={{
+                transition: "all 0.3s ease-in-out",
+              }}
               loading={loadingUpdate}
               loaderPosition="center"
               radius={"xl"}
@@ -223,7 +236,6 @@ export default function AdminAppInformation_ViewSticker() {
                   id: dataUpdate.id,
                   value: dataUpdate.isActive,
                 });
-                setOpened(false);
               }}
             >
               Ya

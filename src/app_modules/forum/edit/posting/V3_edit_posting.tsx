@@ -16,8 +16,13 @@ import Forum_ButtonUpdatePosting from "../../component/button/button_update_post
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 
-export default function Forum_V3_EditPosting() {
+export default function Forum_V3_EditPosting({
+  userLoginId,
+}: {
+  userLoginId: string;
+}) {
   const param = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_FORUM_POSTING | null>(null);
 
@@ -29,24 +34,40 @@ export default function Forum_V3_EditPosting() {
   const [sticker, setSticker] = useState<ISticker[] | null>(null);
   const [emotion, setEmotion] = useState<any>([]);
 
-   useShallowEffect(() => {
-      onLoadSticker();
-    }, []);
-  
-    async function onLoadSticker() {
-      try {
-        const response = await apiGetStickerForUser({ emotion: "" });
-        if (response.success) {
-          setSticker(response.res.data);
-        } else {
-          console.error("Failed to get sticker", response.message);
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const responseDataProfile = await apiGetUserById({
+        id: userLoginId,
+      });
+
+      if (responseDataProfile.success) {
+        try {
+          const response = await apiGetStickerForUser({
+            gender: responseDataProfile?.data?.Profile?.jenisKelamin,
+          });
+          if (response.success) {
+            setSticker(response.res.data);
+          } else {
+            console.error("Failed to get sticker", response.message);
+            setSticker([]);
+          }
+        } catch (error) {
+          console.error("Error get sticker", error);
           setSticker([]);
         }
-      } catch (error) {
-        console.error("Error get sticker", error);
-        setSticker([]);
+      } else {
+        console.error("Failed to get profile", responseDataProfile.message);
+        setSticker(null);
       }
+    } catch (error) {
+      console.error("Error get profile", error);
+      setSticker(null);
     }
+  }
 
   useShallowEffect(() => {
     handleLoadData();

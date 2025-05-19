@@ -15,7 +15,7 @@ async function GET(request: Request) {
 
   let fixData;
   const { searchParams } = new URL(request.url);
-  const emotion = searchParams.get("emotion");
+  const gender = searchParams.get("gender");
   const page = searchParams.get("page");
   const dataTake = 10;
   const dataSkip = Number(page) * dataTake - dataTake;
@@ -29,13 +29,9 @@ async function GET(request: Request) {
         },
         where: {
           isActive: true,
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: emotion ? emotion : "",
-                mode: "insensitive",
-              },
-            },
+          jenisKelamin: {
+            mode: "insensitive",
+            contains: gender ?? "",
           },
         },
         include: {
@@ -53,13 +49,9 @@ async function GET(request: Request) {
         take: dataTake,
         where: {
           isActive: true,
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: emotion ? emotion : "",
-                mode: "insensitive",
-              },
-            },
+          jenisKelamin: {
+            mode: "insensitive",
+            contains: gender ?? "",
           },
         },
         orderBy: {
@@ -73,13 +65,9 @@ async function GET(request: Request) {
       const nCount = await prisma.sticker.count({
         where: {
           isActive: true,
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: emotion ? emotion : "",
-                mode: "insensitive",
-              },
-            },
+          jenisKelamin: {
+            mode: "insensitive",
+            contains: gender ?? "",
           },
         },
       });

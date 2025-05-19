@@ -112,7 +112,10 @@ export default function CreateProfile() {
             withAsterisk
             label="Jenis Kelamin"
             placeholder="Pilih satu"
-            data={masterJenisKelamin}
+            data={[
+              { value: "Laki-laki", label: "Laki-laki" },
+              { value: "Perempuan", label: "Perempuan" },
+            ]}
             onChange={(val) => {
               setValue({
                 ...value,

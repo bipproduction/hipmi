@@ -212,7 +212,10 @@ export default function EditProfile() {
           withAsterisk
           label="Jenis Kelamin"
           value={data?.jenisKelamin}
-          data={masterJenisKelamin}
+          data={[
+            { value: "Laki-laki", label: "Laki-laki" },
+            { value: "Perempuan", label: "Perempuan" },
+          ]}
           onChange={(val: any) => {
             setData({
               ...data,
