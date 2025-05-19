@@ -21,7 +21,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
-import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { forum_funCreateKomentar } from "../../fun/create/fun_create_komentar";
 import {
@@ -29,24 +28,6 @@ import {
   MODEL_FORUM_POSTING,
 } from "../../model/interface";
 import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
-
-const ReactQuill = dynamic(
-  async () => {
-    const { default: RQ } = await import("react-quill");
-    // Tidak perlu import CSS dengan import statement
-    return function comp({ forwardedRef, ...props }: any) {
-      return <RQ ref={forwardedRef} {...props} />;
-    };
-  },
-  {
-    ssr: false,
-    loading: () => (
-      <Text fs={"italic"} c={"gray.8"} fz={12}>
-        Ketik pesan di sini atau tambahkan stiker...
-      </Text>
-    ),
-  }
-);
 
 export default function Forum_V3_CreateKomentar({
   postingId,

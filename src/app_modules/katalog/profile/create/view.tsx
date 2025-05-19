@@ -9,6 +9,7 @@ import { emailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
 export default function CreateProfile() {
   const [filePP, setFilePP] = useState<File | null>(null);
@@ -111,10 +112,7 @@ export default function CreateProfile() {
             withAsterisk
             label="Jenis Kelamin"
             placeholder="Pilih satu"
-            data={[
-              { value: "Laki-laki", label: "Laki-laki" },
-              { value: "Perempuan", label: "Perempuan" },
-            ]}
+            data={masterJenisKelamin}
             onChange={(val) => {
               setValue({
                 ...value,

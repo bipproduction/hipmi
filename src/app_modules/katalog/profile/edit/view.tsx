@@ -18,6 +18,7 @@ import {
   apiUpdateProfile,
 } from "../lib/api_fetch_profile";
 import { MODEL_PROFILE } from "../model/interface";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
 export default function EditProfile() {
   const router = useRouter();
@@ -211,10 +212,7 @@ export default function EditProfile() {
           withAsterisk
           label="Jenis Kelamin"
           value={data?.jenisKelamin}
-          data={[
-            { value: "Laki-laki", label: "Laki-laki" },
-            { value: "Perempuan", label: "Perempuan" },
-          ]}
+          data={masterJenisKelamin}
           onChange={(val: any) => {
             setData({
               ...data,
