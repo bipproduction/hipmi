@@ -28,6 +28,7 @@ import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_POSTING,
 } from "../../model/interface";
+import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 
 const ReactQuill = dynamic(
   async () => {
@@ -52,11 +53,13 @@ export default function Forum_V3_CreateKomentar({
   data,
   userLoginId,
   onSetLoadData,
+  dataSticker,
 }: {
   postingId: string;
   data: MODEL_FORUM_POSTING;
   userLoginId: string;
   onSetLoadData: (val: string) => void;
+  dataSticker: ISticker[] | null;
 }) {
   const [loading, setLoading] = useState(false);
   const [isComment, setIsComment] = useState(false);
@@ -196,6 +199,7 @@ export default function Forum_V3_CreateKomentar({
                   close={close}
                   opened={opened}
                   quillRef={quillRef}
+                  dataSticker={dataSticker}
                 />
 
                 <Button

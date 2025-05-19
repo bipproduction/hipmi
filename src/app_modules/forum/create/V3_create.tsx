@@ -13,6 +13,9 @@ import React, { useState } from "react";
 import Forum_ButtonCreatePosting from "../component/button/button_create_posting";
 import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 import { apiGetMasterEmotions } from "@/app_modules/_global/lib/api_fetch_master";
+import pLimit from "p-limit";
+import global_limit from "@/lib/limit";
+import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 
 export function Forum_V3_Create() {
   const router = useRouter();
@@ -21,18 +24,32 @@ export function Forum_V3_Create() {
   const quillRef = React.useRef<any>(null);
   const [quillLoaded, setQuillLoaded] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [sticker, setSticker] = useState<any>([]);
+  const [sticker, setSticker] = useState<ISticker[] | null>(null);
   const [emotion, setEmotion] = useState<any>([]);
+
+  // useShallowEffect(() => {
+  //   handleLoadData();
+  // }, []);
+
+  // async function handleLoadData() {
+  //   const listLoadData = [
+  //     global_limit(onLoadEmotion),
+  //     global_limit(onLoadSticker),
+  //   ];
+  //   await Promise.all(listLoadData);
+  // }
+
+  // useShallowEffect(() => {
+  //   onLoadEmotion();
+  // }, []);
 
   useShallowEffect(() => {
     onLoadSticker();
-    onLoadEmotion();
   }, []);
 
   async function onLoadSticker() {
     try {
       const response = await apiGetStickerForUser({ emotion });
-      console.log("response >>", response);
       if (response.success) {
         setSticker(response.res.data);
       } else {
@@ -48,7 +65,6 @@ export function Forum_V3_Create() {
   async function onLoadEmotion() {
     try {
       const response = await apiGetMasterEmotions();
-      console.log("response >>", response);
       if (response.success) {
         setEmotion(response.data);
       } else {
@@ -124,7 +140,12 @@ export function Forum_V3_Create() {
                 opened={opened}
                 quillRef={quillRef}
                 dataSticker={sticker}
-                listEmotions={emotion}
+                // listEmotions={emotion}
+                // onEmotionSelect={(val) => {
+                //   console.log("val >>", val);
+                //   // setEmotion(val ? [val] : []);
+                //   // onLoadSticker(val ? [val] : []);
+                // }}
               />
 
               <Forum_ButtonCreatePosting value={editorContent} />

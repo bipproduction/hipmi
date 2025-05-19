@@ -23,6 +23,8 @@ import {
   Forum_SkeletonListKomentar,
 } from "../component/skeleton_view";
 import { MODEL_FORUM_KOMENTAR, MODEL_FORUM_POSTING } from "../model/interface";
+import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
+import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 
 export default function Forum_V3_MainDetail({
   userLoginId,
@@ -39,6 +41,28 @@ export default function Forum_V3_MainDetail({
   >(null);
   const [activePage, setActivePage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [sticker, setSticker] = useState<ISticker[] | null>(null);
+  const [emotion, setEmotion] = useState<any>([]);
+
+  useShallowEffect(() => {
+    onLoadSticker();
+  }, []);
+
+  async function onLoadSticker() {
+    try {
+      const response = await apiGetStickerForUser({ emotion: "" });
+      if (response.success) {
+        setSticker(response.res.data);
+      } else {
+        console.error("Failed to get sticker", response.message);
+        setSticker([]);
+      }
+    } catch (error) {
+      console.error("Error get sticker", error);
+      setSticker([]);
+    }
+  }
 
   useShallowEffect(() => {
     handleLoadData();
@@ -180,6 +204,7 @@ export default function Forum_V3_MainDetail({
               onSetLoadData={(val) => {
                 setListKomentar((prev: any) => [val, ...prev]);
               }}
+              dataSticker={sticker}
             />
           )
         )}
