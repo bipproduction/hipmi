@@ -7,7 +7,7 @@ export const apiAdminCreateSticker = async ({ data }: { data: any }) => {
       return null;
     }
 
-    const response = await fetch(`/api/sticker`, {
+    const response = await fetch(`/api/admin/sticker`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export const apiAdminGetSticker = async ({ page }: { page: number }) => {
       return null;
     }
 
-    const response = await fetch(`/api/sticker?page=${page}`, {
+    const response = await fetch(`/api/admin/sticker?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export const apiAdminGetStickerById = async ({ id }: { id: string }) => {
             return null;
         }
 
-        const response = await fetch(`/api/sticker/${id}`, {
+        const response = await fetch(`/api/admin/sticker/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -108,7 +108,7 @@ export const apiAdminUpdateSticker = async ({ data }: { data: any }) => {
             return null;
         }
 
-        const response = await fetch(`/api/sticker/${data.id}`, {
+        const response = await fetch(`/api/admin/sticker/${data.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -142,7 +142,7 @@ export const apiAdminDeleteSticker = async ({ id }: { id: string }) => {
             return null;
         }
 
-        const response = await fetch(`/api/sticker/${id}`, {
+        const response = await fetch(`/api/admin/sticker/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export const apiAdminUpdateStatusStickerById = async ({ data }: { data: any }) =
             return null;
         }
 
-        const response = await fetch(`/api/sticker/${data.id}/activation`, {
+        const response = await fetch(`/api/admin/sticker/${data.id}/activation`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
