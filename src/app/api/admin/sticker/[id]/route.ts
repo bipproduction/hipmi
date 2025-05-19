@@ -60,6 +60,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           MasterEmotions: {
             set: data.emotions.map((value: string) => ({ value })), // ✅ replace relasi
           },
+          jenisKelamin: data.jenisKelamin,
         },
       });
 
@@ -78,6 +79,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         MasterEmotions: {
           set: data.emotions.map((value: string) => ({ value })), // ✅ replace relasi
         },
+        jenisKelamin: data.jenisKelamin,
       },
     });
 

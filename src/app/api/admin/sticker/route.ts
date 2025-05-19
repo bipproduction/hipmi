@@ -1,5 +1,4 @@
 import { prisma } from "@/lib";
-import { data } from "autoprefixer";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -8,6 +7,7 @@ export { GET, POST };
 interface IPostSticker {
   fileId: string;
   emotions: string[];
+  gender: "Laki-laki" | "Perempuan" | null;
 }
 
 async function POST(request: Request) {
@@ -20,7 +20,7 @@ async function POST(request: Request) {
   }
 
   try {
-    const { fileId, emotions } = await request.json();
+    const { fileId, emotions, gender } = await request.json();
 
     const newStiker = await prisma.sticker.create({
       data: {
@@ -28,6 +28,7 @@ async function POST(request: Request) {
         MasterEmotions: {
           connect: emotions.map((value: string) => ({ value })), // id = number[]
         },
+        jenisKelamin: gender,
       },
     });
 
@@ -81,16 +82,7 @@ async function GET(request: Request) {
       const data = await prisma.sticker.findMany({
         skip: dataSkip,
         take: dataTake,
-        where: {
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: search ? search : "",
-                mode: "insensitive",
-              },
-            },
-          },
-        },
+
         orderBy: {
           createdAt: "desc",
         },
@@ -99,18 +91,7 @@ async function GET(request: Request) {
         },
       });
 
-      const nCount = await prisma.sticker.count({
-        where: {
-          MasterEmotions: {
-            some: {
-              value: {
-                contains: search ? search : "",
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-      });
+      const nCount = await prisma.sticker.count({});
 
       fixData = {
         data: data,

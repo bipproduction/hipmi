@@ -8,55 +8,46 @@ import {
   Chip,
   Group,
   Image,
-  Paper,
   Select,
-  Stack,
-  TextInput,
+  Stack
 } from "@mantine/core";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
-import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
-import { DIRECTORY_ID, pathAssetImage } from "@/lib";
-import Admin_ComponentBackButton from "../../_admin_global/back_button";
-import { IconCheck, IconPhoto, IconUpload } from "@tabler/icons-react";
+
 import {
-  AdminColor,
-  MainColor,
+  MainColor
 } from "@/app_modules/_global/color/color_pallet";
-import { baseStylesTextInput } from "@/app_modules/_global/lib/base_style_text_input";
-import { useState } from "react";
-import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 import {
-  ComponentGlobal_BoxInformation,
   ComponentGlobal_BoxUploadImage,
-  ComponentGlobal_ButtonUploadFileImage,
+  ComponentGlobal_ButtonUploadFileImage
 } from "@/app_modules/_global/component";
-import { useRouter } from "next/navigation";
-import { apiGetMasterEmotions } from "@/app_modules/_global/lib/api_fetch_master";
-import { useShallowEffect } from "@mantine/hooks";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { apiGetMasterEmotions } from "@/app_modules/_global/lib/api_fetch_master";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
-import { apiAdminCreateSticker } from "../lib/api_fetch_stiker";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { Admin_ComponentBoxStyle } from "@/app_modules/admin/_admin_global/_component/comp_admin_boxstyle";
+import { ComponentAdminGlobal_NotifikasiPeringatan } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_peringatan";
+import Admin_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
+import { Admin_V3_ComponentBreakpoint } from "@/app_modules/admin/_components_v3/comp_simple_grid_breakpoint";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { DIRECTORY_ID } from "@/lib";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconCheck, IconPhoto } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { apiAdminCreateSticker } from "../../lib/api_fetch_stiker";
+import { baseStylesTextInput } from "@/app_modules/_global/lib/base_style_text_input";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
-interface IData {
-  name: string;
-  //   jenis_kelamin: "Laki-laki" | "Perempuan" | null;
-}
 export default function AdminAppInformation_ViewCreateSticker() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>(null);
   const [valueEmotion, setValueEmotion] = useState(["senang"]);
-  const [data, setData] = useState<IData>({
-    name: "",
-    // jenis_kelamin: null,
-  });
+  const [gender, setGender] = useState<string | null>(null);
 
   const [listEmotion, setListEmotion] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -88,6 +79,11 @@ export default function AdminAppInformation_ViewCreateSticker() {
       return false;
     }
 
+    if (!gender) {
+      ComponentAdminGlobal_NotifikasiPeringatan("Pilih jenis kelamin");
+      return false;
+    }
+
     return true;
   };
 
@@ -115,6 +111,7 @@ export default function AdminAppInformation_ViewCreateSticker() {
         data: {
           emotions: valueEmotion,
           fileId: fileId,
+          gender: gender as string,
         },
       });
 
@@ -199,23 +196,7 @@ export default function AdminAppInformation_ViewCreateSticker() {
                 </Stack>
 
                 <Stack>
-                  {/* <TextInput
-                    required
-                    placeholder="Masukkan nama stiker"
-                    label="Nama stiker"
-                    styles={{
-                      ...baseStylesTextInput,
-                      required: { color: MainColor.red },
-                    }}
-                    onChange={(val) => {
-                      setData({
-                        ...data,
-                        name: val.target.value,
-                      });
-                    }}
-                  /> */}
-
-                  {/* <Select
+                  <Select
                   required
                   placeholder="Pilih jenis kelamin"
                   label="Jenis kelamin"
@@ -223,17 +204,11 @@ export default function AdminAppInformation_ViewCreateSticker() {
                     ...baseStylesTextInput,
                     required: { color: MainColor.red },
                   }}
-                  data={[
-                    { value: "Laki-laki", label: "Laki-laki" },
-                    { value: "Perempuan", label: "Perempuan" },
-                  ]}
+                  data={masterJenisKelamin}
                   onChange={(val: any) => {
-                    setData({
-                      ...data,
-                      jenis_kelamin: val,
-                    });
+                   setGender(val)
                   }}
-                /> */}
+                />
 
                   <Stack>
                     <Component_V3_Label_TextInput text="Pilih emosi stiker" />

@@ -1058,14 +1058,15 @@ model EventTransaksi {
 }
 
 model Sticker {
-  id        String   @id @default(cuid())
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String?
-  fileName  String?
-  fileExt   String?
-  fileId    String
+  id           String   @id @default(cuid())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String?
+  fileName     String?
+  fileExt      String?
+  fileId       String
+  jenisKelamin String?
 
   MasterEmotions MasterEmotions[] @relation("StikerEmotions")
 }

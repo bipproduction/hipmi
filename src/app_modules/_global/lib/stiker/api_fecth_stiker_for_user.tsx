@@ -1,4 +1,4 @@
-export const apiGetStickerForUser = async ({  emotion }: {  emotion?: string }) => {
+export const apiGetStickerForUser = async ({ gender }: { gender: string }) => {
   try {
     // Fetch token from cookie
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
@@ -7,7 +7,7 @@ export const apiGetStickerForUser = async ({  emotion }: {  emotion?: string }) 
       return null;
     }
 
-    const response = await fetch(`/api/sticker?emotion=${emotion || ""}`, {
+    const response = await fetch(`/api/sticker?gender=${gender}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

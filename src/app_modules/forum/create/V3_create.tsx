@@ -2,78 +2,58 @@
 
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 import { Component_V3_TextEditorWithSticker } from "@/app_modules/_global/lib/stiker/comp_V3_text_editor_stiker";
 import { Comp_ButtonSticker } from "@/app_modules/_global/lib/stiker/comp_button_sticker";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { Group, Stack } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Forum_ButtonCreatePosting from "../component/button/button_create_posting";
-import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
-import { apiGetMasterEmotions } from "@/app_modules/_global/lib/api_fetch_master";
-import pLimit from "p-limit";
-import global_limit from "@/lib/limit";
-import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 
-export function Forum_V3_Create() {
-  const router = useRouter();
+export function Forum_V3_Create({ userLoginId }: { userLoginId: string }) {
   const [editorContent, setEditorContent] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
   const quillRef = React.useRef<any>(null);
   const [quillLoaded, setQuillLoaded] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [sticker, setSticker] = useState<ISticker[] | null>(null);
-  const [emotion, setEmotion] = useState<any>([]);
-
-  // useShallowEffect(() => {
-  //   handleLoadData();
-  // }, []);
-
-  // async function handleLoadData() {
-  //   const listLoadData = [
-  //     global_limit(onLoadEmotion),
-  //     global_limit(onLoadSticker),
-  //   ];
-  //   await Promise.all(listLoadData);
-  // }
-
-  // useShallowEffect(() => {
-  //   onLoadEmotion();
-  // }, []);
 
   useShallowEffect(() => {
-    onLoadSticker();
+    onLoadData();
   }, []);
 
-  async function onLoadSticker() {
+  async function onLoadData() {
     try {
-      const response = await apiGetStickerForUser({ emotion });
-      if (response.success) {
-        setSticker(response.res.data);
-      } else {
-        console.error("Failed to get sticker", response.message);
-        setSticker([]);
-      }
-    } catch (error) {
-      console.error("Error get sticker", error);
-      setSticker([]);
-    }
-  }
+      const responseDataProfile = await apiGetUserById({
+        id: userLoginId,
+      });
 
-  async function onLoadEmotion() {
-    try {
-      const response = await apiGetMasterEmotions();
-      if (response.success) {
-        setEmotion(response.data);
+      if (responseDataProfile.success) {
+        try {
+          const response = await apiGetStickerForUser({
+            gender: responseDataProfile?.data?.Profile?.jenisKelamin,
+          });
+          if (response.success) {
+            setSticker(response.res.data);
+          } else {
+            console.error("Failed to get sticker", response.message);
+            setSticker([]);
+          }
+        } catch (error) {
+          console.error("Error get sticker", error);
+          setSticker([]);
+        }
       } else {
-        console.error("Failed to get emotion", response.message);
-        setEmotion([]);
+        console.error("Failed to get profile", responseDataProfile.message);
+        setSticker(null);
       }
     } catch (error) {
-      console.error("Error get emotion", error);
-      setEmotion([]);
+      console.error("Error get profile", error);
+      setSticker(null);
     }
   }
 
