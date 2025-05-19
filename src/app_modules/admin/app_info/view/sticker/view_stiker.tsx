@@ -5,6 +5,12 @@ import {
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
+import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { Admin_ComponentBoxStyle } from "@/app_modules/admin/_admin_global/_component/comp_admin_boxstyle";
+import { Admin_ComponentModal } from "@/app_modules/admin/_admin_global/_component/comp_admin_modal";
+import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
+import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { APIs, pathAssetImage } from "@/lib";
 import { RouterAdminAppInformation } from "@/lib/router_admin/router_app_information";
@@ -29,16 +35,11 @@ import { IconFilter, IconPencil, IconPlus } from "@tabler/icons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
-import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
-import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
-import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
-import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import {
   apiAdminGetSticker,
   apiAdminUpdateStatusStickerById,
-} from "../lib/api_fetch_stiker";
-import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+} from "../../lib/api_fetch_stiker";
+import loading from "@/app/dev/(user)/investasi/dialog_page/create/loading";
 
 export default function AdminAppInformation_ViewSticker() {
   const router = useRouter();
@@ -53,6 +54,7 @@ export default function AdminAppInformation_ViewSticker() {
   const [opened, setOpened] = useState(false);
   const [nPage, setNPage] = useState(1);
   const [activePage, setActivePage] = useState(1);
+  const [loadingImg, setLoadingImg] = useState(false);
 
   useShallowEffect(() => {
     handleLoadData();
@@ -117,24 +119,27 @@ export default function AdminAppInformation_ViewSticker() {
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_TitlePage name="Stiker " />
-
-        <Group position="right">
-          {/* <Button radius={"xl"} leftIcon={<IconFilter size={20} />}> Filter</Button> */}
-          <Button
-            loading={loadingCreate}
-            loaderPosition="center"
-            w={120}
-            radius={"xl"}
-            leftIcon={<IconPlus size={20} />}
-            onClick={() => {
-              router.push(RouterAdminAppInformation.createSticker);
-              setLoadingCreate(true);
-            }}
-          >
-            Tambah
-          </Button>
-        </Group>
+        <ComponentAdminGlobal_TitlePage
+          name="Stiker "
+          component={
+            <Group position="right">
+              {/* <Button radius={"xl"} leftIcon={<IconFilter size={20} />}> Filter</Button> */}
+              <Button
+                loading={loadingCreate}
+                loaderPosition="center"
+                w={120}
+                radius={"xl"}
+                leftIcon={<IconPlus size={20} />}
+                onClick={() => {
+                  router.push(RouterAdminAppInformation.createSticker);
+                  setLoadingCreate(true);
+                }}
+              >
+                Tambah
+              </Button>
+            </Group>
+          }
+        />
 
         {!dataSticker ? (
           <CustomSkeleton height={"65dvh"} />
@@ -176,6 +181,8 @@ export default function AdminAppInformation_ViewSticker() {
                       setOpened,
                       dataUpdate,
                       setDataUpdate,
+                      setLoadingImg,
+                      loadingImg,
                     })}
                   </tbody>
                 </Table>
@@ -239,6 +246,8 @@ type RowTableProps = {
     isActive: boolean;
   };
   setDataUpdate: (val: { id: string; isActive: boolean }) => void;
+  setLoadingImg: (val: boolean) => void;
+  loadingImg: boolean;
 };
 
 const rowTable = ({
@@ -249,6 +258,8 @@ const rowTable = ({
   setOpened,
   dataUpdate,
   setDataUpdate,
+  setLoadingImg,
+  loadingImg,
 }: RowTableProps) => {
   if (!Array.isArray(dataSticker) || dataSticker.length === 0) {
     return (
@@ -302,6 +313,7 @@ const rowTable = ({
       </td>
       <td>
         <Center>
+          {loadingImg && <CustomSkeleton height={100} width={100} />}
           <Paper bg="gray" p={"xs"}>
             <Image
               src={
@@ -312,6 +324,11 @@ const rowTable = ({
               alt="Sticker"
               width={100}
               height={100}
+              imageProps={{
+                onLoad: () => setLoadingImg(false),
+                onError: () => setLoadingImg(false),
+                style: { display: loadingImg ? "none" : "block" },
+              }}
             />
           </Paper>
         </Center>

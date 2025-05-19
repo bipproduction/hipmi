@@ -30,6 +30,7 @@ import {
   Chip,
   Group,
   Image,
+  Select,
   Stack,
   Text,
   Title,
@@ -44,6 +45,7 @@ import {
   apiAdminUpdateSticker,
 } from "../../lib/api_fetch_stiker";
 import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
 export default function AdminAppInformation_ViewStickerDetail() {
   const router = useRouter();
@@ -120,6 +122,7 @@ export default function AdminAppInformation_ViewStickerDetail() {
           emotions: valueEmotion,
           fileId: fileId || "",
           id: param.id,
+          jenisKelamin: data?.jenisKelamin,
         },
       });
 
@@ -242,6 +245,19 @@ export default function AdminAppInformation_ViewStickerDetail() {
                 </Stack>
 
                 <Stack>
+                  <Select
+                    required
+                    placeholder="Pilih jenis kelamin"
+                    value={data.jenisKelamin || ""}
+                    onChange={(val) =>
+                      setData({
+                        ...data,
+                        jenisKelamin: val,
+                      })
+                    }
+                    data={masterJenisKelamin}
+                  />
+
                   <Stack>
                     <Component_V3_Label_TextInput text="Pilih emosi stiker" />
                     <Group style={{ display: "flex", flexWrap: "wrap" }}>
