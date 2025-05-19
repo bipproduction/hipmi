@@ -21,6 +21,7 @@ export default function UIGlobal_Modal({
   buttonKanan,
   children,
   closeButton,
+  closeOnClickOutside,
 }: {
   opened: any;
   close: any;
@@ -29,6 +30,7 @@ export default function UIGlobal_Modal({
   buttonKanan?: any;
   children?: React.ReactNode;
   closeButton?: boolean;
+  closeOnClickOutside?: boolean;
 }) {
   return (
     <>
@@ -39,6 +41,7 @@ export default function UIGlobal_Modal({
         }}
         centered
         withCloseButton={false}
+        closeOnClickOutside={closeOnClickOutside}
         styles={{
           content: {
             backgroundColor: MainColor.darkblue,
