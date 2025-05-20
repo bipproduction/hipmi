@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.4](https://github.com/bipproduction/hipmi/compare/v1.4.3...v1.4.4) (2025-05-20)
+
+
+### Bug Fixes
+
+* button sticker ([3743008](https://github.com/bipproduction/hipmi/commit/37430081d8718b4b2b06f5c3c09f13935bf413c4))
+* event ([02bbdfd](https://github.com/bipproduction/hipmi/commit/02bbdfd5f6a2d299b8d527b9211f7b6ff598602f))
+
 ## [1.4.3](https://github.com/bipproduction/hipmi/compare/v1.4.2...v1.4.3) (2025-05-20)
 
 ## [1.4.2](https://github.com/bipproduction/hipmi/compare/v1.4.1...v1.4.2) (2025-05-19)
