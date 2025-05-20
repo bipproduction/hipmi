@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 
 export async function Event_funJoinEvent(data: MODEL_EVENT_PESERTA) {
   try {
-    console.log("Data >", data)
     const res = await prisma.event_Peserta.create({
       data: {
         eventId: data.eventId,
