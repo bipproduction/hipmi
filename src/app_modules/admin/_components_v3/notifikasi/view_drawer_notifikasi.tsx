@@ -31,6 +31,7 @@ export function Admin_V3_ViewDrawerNotifikasi({
   openedDrawer,
   onChangeNavbar,
   onToggleNavbar,
+  onLoadCountNotif,
 }: {
   userLoginId: string;
   openedDrawer: boolean;
@@ -39,6 +40,7 @@ export function Admin_V3_ViewDrawerNotifikasi({
     childId: IAdmin_ActiveChildId;
   }) => void;
   onToggleNavbar: (val: any) => void;
+  onLoadCountNotif: (val: boolean) => void;
 }) {
   //   newAdminNtf,
   //   listNotifikasi,
@@ -171,14 +173,14 @@ export function Admin_V3_ViewDrawerNotifikasi({
           >
             Tandai baca semua
           </Button>
-          <Button
+          {/* <Button
             radius={"xl"}
             onClick={() => {
               handleUpdateUnRead();
             }}
           >
             Tandai belum baca
-          </Button>
+          </Button> */}
         </Group>
         <Divider color={MainColor.white}/>
 
@@ -206,7 +208,9 @@ export function Admin_V3_ViewDrawerNotifikasi({
                 activePage={activePage}
                 onChangeNavbar={(val) => onChangeNavbar(val)}
                 onToggleNavbar={(val) => onToggleNavbar(val)}
-                // onLoadCountNotif={(val) => onLoadCountNotif(val)}
+                onLoadCountNotif={(val) => {
+                  onLoadCountNotif(val)
+                }}
                 // onLoadDataNotifikasi={(val) => setData(val)}
               />
             )}

@@ -12,17 +12,11 @@ export async function adminNotifikasi_findRouterVoting({
   appId,
   notifikasiId,
   router,
-  activePage,
-  onLoadCountNotif,
-  onLoadDataNotifikasi,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   router: AppRouterInstance;
-  activePage: number;
-  onLoadCountNotif: (val: any) => void;
-  onLoadDataNotifikasi: (val: any) => void;
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -36,13 +30,6 @@ export async function adminNotifikasi_findRouterVoting({
     });
 
     if (updateReadNotifikasi.status == 200) {
-      const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      onLoadCountNotif(loadCountNotif);
-
-      const loadListNotifikasi = await adminNotifikasi_getByUserId({
-        page: 1,
-      });
-      onLoadDataNotifikasi(loadListNotifikasi);
 
       const path = `/dev/admin/vote/child/table_${check.statusName}`;
 

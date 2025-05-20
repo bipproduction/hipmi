@@ -5,7 +5,8 @@ import {
   gs_adminDonasi_triggerReview,
   gs_adminEvent_triggerReview,
   gs_adminJob_triggerReview,
-  gs_adminVoting_triggerReview
+  gs_adminVoting_triggerReview,
+  ITypeStatusNotifikasi,
 } from "@/lib/global_state";
 import { clientLogger } from "@/util/clientLogger";
 import { Badge, Card, Divider, Group, Stack, Text } from "@mantine/core";
@@ -16,19 +17,23 @@ import "moment/locale/id";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
+import adminNotifikasi_findRouterDonasi from "../../notifikasi/route_setting/donasi";
+import { adminNotifikasi_findRouterEvent } from "../../notifikasi/route_setting/event";
 import adminNotifikasi_findRouterForum from "../../notifikasi/route_setting/forum";
+import adminNotifikasi_findRouterInvestasi from "../../notifikasi/route_setting/investasi";
 import { adminNotifikasi_findRouterJob } from "../../notifikasi/route_setting/job";
 import {
   IAdmin_ActiveChildId,
   IAdmin_ActivePage,
 } from "../../notifikasi/route_setting/type_of_select_page";
+import { adminNotifikasi_findRouterVoting } from "../../notifikasi/route_setting/voting";
 
 export default function Admin_V3_ComponentCardNotifikasi({
   data,
   activePage,
   onChangeNavbar,
   onToggleNavbar,
-  //   onLoadCountNotif,
+  onLoadCountNotif,
   //   onLoadDataNotifikasi,
 }: {
   data: MODEL_NOTIFIKASI;
@@ -38,7 +43,7 @@ export default function Admin_V3_ComponentCardNotifikasi({
     childId: IAdmin_ActiveChildId;
   }) => void;
   onToggleNavbar: (val: any) => void;
-  //   onLoadCountNotif: (val: any) => void;
+  onLoadCountNotif: (val: boolean) => void;
   //   onLoadDataNotifikasi: (val: any) => void;
 }) {
   const router = useRouter();
@@ -84,6 +89,7 @@ export default function Admin_V3_ComponentCardNotifikasi({
           setVisible(false);
           setDataId("");
           onToggleNavbar(false);
+          onLoadCountNotif(true);
         }
 
         return;
@@ -108,6 +114,7 @@ export default function Admin_V3_ComponentCardNotifikasi({
           setDataId("");
           setVisible(false);
           onToggleNavbar(false);
+          onLoadCountNotif(true);
         } else {
           ComponentAdminGlobal_NotifikasiPeringatan("Gagal memuat forum");
         }
@@ -116,143 +123,121 @@ export default function Admin_V3_ComponentCardNotifikasi({
 
       // ========================== EVENT ========================== //
 
-      // if (data.kategoriApp == "EVENT") {
-      //   setDataId(data.id);
+      if (data.kategoriApp == "EVENT") {
+        setDataId(data.id);
 
-      //   const checkEvent = await adminNotifikasi_findRouterEvent({
-      //     appId: data.appId,
-      //     notifikasiId: data.id,
-      //     router: router,
-      //     activePage: activePage,
-      //     onLoadCountNotif(val) {
-      //       onLoadCountNotif(val);
-      //     },
-      //     onLoadDataNotifikasi(val) {
-      //       onLoadDataNotifikasi(val);
-      //     },
-      //     onChangeNavbar(val) {
-      //       onChangeNavbar({
-      //         id: val.id,
-      //         childId: val.childId,
-      //       });
-      //     },
-      //   });
+        const checkEvent = await adminNotifikasi_findRouterEvent({
+          appId: data.appId,
+          notifikasiId: data.id,
+          router: router,
+          onChangeNavbar(val) {
+            onChangeNavbar({
+              id: val.id,
+              childId: val.childId,
+            });
+          },
+        });
 
-      //   if (checkEvent) {
-      //     setIsAdminEvent_TriggerReview(false);
-      //     setVisible(false);
-      //     setDataId("");
-      //     onToggleNavbar(false);
-      //   }
+        if (checkEvent) {
+          setIsAdminEvent_TriggerReview(false);
+          setVisible(false);
+          setDataId("");
+          onToggleNavbar(false);
+          onLoadCountNotif(true);
+        }
 
-      //   return;
-      // }
+        return;
+      }
       // ========================== EVENT ========================== //
 
       // ========================== VOTING ========================== //
 
-      // if (data.kategoriApp == "VOTING") {
-      //   setDataId(data.id);
+      if (data.kategoriApp == "VOTING") {
+        setDataId(data.id);
 
-      //   const checkVoting = await adminNotifikasi_findRouterVoting({
-      //     router: router,
-      //     appId: data.appId,
-      //     notifikasiId: data.id,
-      //     activePage: activePage,
-      //     onLoadCountNotif(val) {
-      //       onLoadCountNotif(val);
-      //     },
-      //     onLoadDataNotifikasi(val) {
-      //       onLoadDataNotifikasi(val);
-      //     },
-      //     onChangeNavbar(val) {
-      //       onChangeNavbar({
-      //         id: val.id,
-      //         childId: val.childId,
-      //       });
-      //     },
-      //   });
+        const checkVoting = await adminNotifikasi_findRouterVoting({
+          router: router,
+          appId: data.appId,
+          notifikasiId: data.id,
+          onChangeNavbar(val) {
+            onChangeNavbar({
+              id: val.id,
+              childId: val.childId,
+            });
+          },
+        });
 
-      //   if (checkVoting) {
-      //     setIsAdminVoting_TriggerReview(false);
-      //     setVisible(false);
-      //     setDataId("");
-      //     onToggleNavbar(false);
-      //   }
+        if (checkVoting) {
+          setIsAdminVoting_TriggerReview(false);
+          setVisible(false);
+          setDataId("");
+          onToggleNavbar(false);
+          onLoadCountNotif(true);
+        }
 
-      //   return;
-      // }
+        return;
+      }
       // ========================== VOTING ========================== //
 
       // ========================== DONASI ========================== //
 
-      // if (data.kategoriApp == "DONASI") {
-      //   setDataId(data.id);
+      if (data.kategoriApp == "DONASI") {
+        setDataId(data.id);
 
-      //   const checkDonasi = await adminNotifikasi_findRouterDonasi({
-      //     appId: data.appId,
-      //     notifikasiId: data.id,
-      //     router: router,
-      //     status: data.status as ITypeStatusNotifikasi,
-      //     onLoadCountNotif(val) {
-      //       onLoadCountNotif(val);
-      //     },
-      //     onLoadDataNotifikasi(val) {
-      //       onLoadDataNotifikasi(val);
-      //     },
-      //     onChangeNavbar(val) {
-      //       onChangeNavbar({
-      //         id: val.id,
-      //         childId: val.childId,
-      //       });
-      //     },
-      //   });
+        const checkDonasi = await adminNotifikasi_findRouterDonasi({
+          appId: data.appId,
+          notifikasiId: data.id,
+          router: router,
+          status: data.status as ITypeStatusNotifikasi,
+          onChangeNavbar(val) {
+            onChangeNavbar({
+              id: val.id,
+              childId: val.childId,
+            });
+          },
+        });
 
-      //   if (checkDonasi) {
-      //     setIsAdminDonasi_TriggerReview(false);
-      //     setVisible(false);
-      //     setDataId("");
-      //     onToggleNavbar(false);
-      //   }
+        if (checkDonasi) {
+          setIsAdminDonasi_TriggerReview(false);
+          setVisible(false);
+          setDataId("");
+          onToggleNavbar(false);
+          onLoadCountNotif(true);
+        }
 
-      //   return;
-      // }
+        return;
+      }
 
       // ========================== DONASI ========================== //
 
       // ========================== INVESTASI ========================== //
 
-      // if (data.kategoriApp == "INVESTASI") {
-      //   setDataId(data.id);
+      if (data.kategoriApp == "INVESTASI") {
+        setDataId(data.id);
 
-      //   const checkInvestasi = await adminNotifikasi_findRouterInvestasi({
-      //     appId: data.appId,
-      //     notifikasiId: data.id,
-      //     status: data.status as ITypeStatusNotifikasi,
-      //     router: router,
-      //     onLoadCountNotif(val) {
-      //       onLoadCountNotif(val);
-      //     },
-      //     onLoadDataNotifikasi(val) {
-      //       onLoadDataNotifikasi(val);
-      //     },
-      //     onChangeNavbar(val) {
-      //       onChangeNavbar({
-      //         id: val.id,
-      //         childId: val.childId,
-      //       });
-      //     },
-      //   });
+        const checkInvestasi = await adminNotifikasi_findRouterInvestasi({
+          appId: data.appId,
+          notifikasiId: data.id,
+          status: data.status as ITypeStatusNotifikasi,
+          router: router,
+          onChangeNavbar(val) {
+            onChangeNavbar({
+              id: val.id,
+              childId: val.childId,
+            });
+          },
+        });
 
-      //   if (checkInvestasi) {
-      //     setIsAdminDonasi_TriggerReview(false);
-      //     setVisible(false);
-      //     setDataId("");
-      //     onToggleNavbar(false);
-      //   }
+        if (checkInvestasi) {
+          setIsAdminDonasi_TriggerReview(false);
+          setVisible(false);
+          setDataId("");
+          onToggleNavbar(false);
+          onLoadCountNotif(true);
+        }
 
-      //   return;
-      // }
+        return;
+      }
 
       // ========================== INVESTASI ========================== //
     } catch (error) {
@@ -311,7 +296,7 @@ export default function Admin_V3_ComponentCardNotifikasi({
         </Card.Section>
         <Card.Section px={"sm"} pb={"sm"}>
           <Stack spacing={0}>
-            <Text lineClamp={2} fw={"bold"} fz={"xs"}>
+            <Text lineClamp={2} fw={"bold"}>
               {data.title}
             </Text>
             {/* <Text lineClamp={2} fz={"xs"}>

@@ -120,12 +120,6 @@ export function Forum_V3_Create({ userLoginId }: { userLoginId: string }) {
                 opened={opened}
                 quillRef={quillRef}
                 dataSticker={sticker}
-                // listEmotions={emotion}
-                // onEmotionSelect={(val) => {
-                //   console.log("val >>", val);
-                //   // setEmotion(val ? [val] : []);
-                //   // onLoadSticker(val ? [val] : []);
-                // }}
               />
 
               <Forum_ButtonCreatePosting value={editorContent} />
