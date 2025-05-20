@@ -10,6 +10,7 @@ import {
   Center,
   Divider,
   Group,
+  Indicator,
   MediaQuery,
   Popover,
   SimpleGrid,
@@ -38,6 +39,7 @@ export function Admin_V3_ComponentButtonUserCircle({
   setOpenPop,
   setNavbarOpen,
   setDrawerNotifikasi,
+  countNotifikasi,
 }: {
   dataUser: MODEL_USER | null;
   openPop: boolean;
@@ -47,6 +49,7 @@ export function Admin_V3_ComponentButtonUserCircle({
   // setNavbarOpen: (open: boolean) => void;
   setDrawerNotifikasi: React.Dispatch<React.SetStateAction<boolean>>;
   // setDrawerNotifikasi: (open: boolean) => void;
+  countNotifikasi: number;
 }) {
   const router = useRouter();
 
@@ -82,11 +85,11 @@ export function Admin_V3_ComponentButtonUserCircle({
       label: "Notifikasi",
       color: "",
       onClick: () => {
-        ComponentAdminGlobal_NotifikasiPeringatan(
-          "Notifikasi: Masih dalam pengembangan",
-          2000
-        );
-        // setDrawerNotifikasi(true);
+        // ComponentAdminGlobal_NotifikasiPeringatan(
+        //   "Notifikasi: Masih dalam pengembangan",
+        //   2000
+        // );
+        setDrawerNotifikasi(true);
       },
     },
     {
@@ -109,11 +112,11 @@ export function Admin_V3_ComponentButtonUserCircle({
       label: "Notifikasi",
       color: "",
       onClick: () => {
-        ComponentAdminGlobal_NotifikasiPeringatan(
-          "Notifikasi: Masih dalam pengembangan",
-          2000
-        );
-        // setDrawerNotifikasi(true);
+        // ComponentAdminGlobal_NotifikasiPeringatan(
+        //   "Notifikasi: Masih dalam pengembangan",
+        //   2000
+        // );
+        setDrawerNotifikasi(true);
       },
     },
     {
@@ -233,7 +236,23 @@ export function Admin_V3_ComponentButtonUserCircle({
                     key={i}
                   >
                     <Group onClick={e.onClick}>
-                      <e.icon size={18} color={e.color || "white"} />
+                      {e.label == "Notifikasi" ? (
+                        countNotifikasi == 0 ||
+                        dataUser?.masterUserRoleId == "3" ? (
+                          <IconBell color="white" />
+                        ) : (
+                          <Indicator
+                            
+                            color="yellow"
+                            processing
+                            label={<Text c="black" fz={10}>{countNotifikasi}</Text>}
+                          >
+                            <IconBell color="white" />
+                          </Indicator>
+                        )
+                      ) : (
+                        <e.icon size={18} color={e.color || "white"} />
+                      )}
                       <Text c={e.color || "white"} lineClamp={1}>
                         {e.label}
                       </Text>
@@ -257,7 +276,22 @@ export function Admin_V3_ComponentButtonUserCircle({
                         cursor: "pointer",
                       }}
                     >
-                      <e.icon size={18} color={e.color || "white"} />
+                      {e.label == "Notifikasi" ? (
+                        countNotifikasi == 0 ||
+                        dataUser?.masterUserRoleId == "3" ? (
+                          <IconBell size={18} color={e.color || "white"} />
+                        ) : (
+                          <Indicator
+                            color="yellow"
+                            processing
+                            label={<Text c="black" fz={10}>{countNotifikasi}</Text>}
+                          >
+                            <IconBell size={18} color={e.color || "white"} />
+                          </Indicator>
+                        )
+                      ) : (
+                        <e.icon size={18} color={e.color || "white"} />
+                      )}
                       <Text c={e.color || "white"} lineClamp={1}>
                         {e.label}
                       </Text>

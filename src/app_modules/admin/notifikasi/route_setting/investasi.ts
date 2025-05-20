@@ -1,28 +1,22 @@
 import { ITypeStatusNotifikasi } from "@/lib/global_state";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
-import adminNotifikasi_countNotifikasi from "../fun/count/count_is_read";
 import { admin_funInvestasiCheckStatus } from "../fun/get/fun_investasi_check_status";
-import adminNotifikasi_getByUserId from "../fun/get/get_notifikasi_by_user_id";
 import adminNotifikasi_funUpdateIsReadById from "../fun/update/fun_update_is_read_by_id";
 import { IAdmin_ActiveChildId, IAdmin_ActivePage } from "./type_of_select_page";
-import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 
 export default async function adminNotifikasi_findRouterInvestasi({
   appId,
   notifikasiId,
   status,
   router,
-  onLoadCountNotif,
-  onLoadDataNotifikasi,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   status: ITypeStatusNotifikasi;
   router: AppRouterInstance;
-  onLoadCountNotif: (val: any) => void;
-  onLoadDataNotifikasi: (val: any) => void;
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -38,13 +32,6 @@ export default async function adminNotifikasi_findRouterInvestasi({
       notifId: notifikasiId,
     });
     if (udpateReadNotifikasi.status == 200) {
-      const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      onLoadCountNotif(loadCountNotif);
-
-      const loadListNotifikasi = await adminNotifikasi_getByUserId({
-        page: 1,
-      });
-      onLoadDataNotifikasi(loadListNotifikasi);
       const path = RouterAdminInvestasi.detail_publish + appId;
       router.push(path, { scroll: false });
 
@@ -67,14 +54,6 @@ export default async function adminNotifikasi_findRouterInvestasi({
       });
 
       if (udpateReadNotifikasi.status == 200) {
-        const loadCountNotif = await adminNotifikasi_countNotifikasi();
-        onLoadCountNotif(loadCountNotif);
-
-        const loadListNotifikasi = await adminNotifikasi_getByUserId({
-          page: 1,
-        });
-        onLoadDataNotifikasi(loadListNotifikasi);
-
         const path = `/dev/admin/investasi/sub-menu/${check.statusName}`;
 
         if (check.statusName == "draft") {
