@@ -22,7 +22,7 @@ import {
   Stack,
   Table,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
@@ -30,7 +30,7 @@ import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
@@ -54,7 +54,7 @@ export default function AdminForum_HasilReportKomentar({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Report" />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         <Admin_V3_ComponentBreakpoint>
           <ComponentAdminForum_ViewOneDetailKomentar dataKomentar={data} />
@@ -68,9 +68,8 @@ export default function AdminForum_HasilReportKomentar({
             />
           </Group>
         </Admin_V3_ComponentBreakpoint>
-
+        
         <HasilReportPosting listReport={listReport} komentarId={komentarId} />
-        {/* <pre>{JSON.stringify(listReport, null, 2)}</pre> */}
       </Stack>
     </>
   );

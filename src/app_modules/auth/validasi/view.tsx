@@ -118,6 +118,7 @@ export default function Validasi() {
         } catch (error) {
           clientLogger.error("Error apiDeleteAktivasiKodeOtpByNomor:", error);
         }
+        // localStorage.removeItem("hipmi_auth_code_id");
       } else if (respone && respone.success == false) {
         router.push("/register", { scroll: false });
         ComponentGlobal_NotifikasiBerhasil(respone.message);

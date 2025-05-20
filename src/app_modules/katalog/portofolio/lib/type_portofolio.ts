@@ -13,6 +13,7 @@ export interface IDetailPortofolioBisnis {
    deskripsi: string
    logoId: string
    bidangBisnis: string
+   subBidangBisnis: string[]
    authorId: string
 }
 

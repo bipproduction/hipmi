@@ -1,6 +1,9 @@
 "use client";
 
-import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  AdminColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
@@ -20,14 +23,14 @@ import {
   Stack,
   Table,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
@@ -35,6 +38,8 @@ import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_cre
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
 import { adminForum_getListReportPostingById } from "../fun/get/get_list_report_posting_by_id";
+import { UIGlobal_Modal } from "@/app_modules/_global/ui";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 
 export default function AdminForum_HasilReportPosting({
   dataPosting,
@@ -47,7 +52,7 @@ export default function AdminForum_HasilReportPosting({
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Report" />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         <Admin_V3_ComponentBreakpoint>
           <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
@@ -60,7 +65,6 @@ export default function AdminForum_HasilReportPosting({
           listReport={listReport}
           postingId={dataPosting.id}
         />
-        {/* <pre>{JSON.stringify(listReport, null, 2)}</pre> */}
       </Stack>
     </>
   );
@@ -73,9 +77,7 @@ function ButtonDeletePosting({
 }) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-
   const [loadingDel2, setLoadingDel2] = useState(false);
-
   async function onDelete() {
     const del = await adminForum_funDeletePostingById(dataPosting.id);
     if (del.status === 200) {
@@ -108,15 +110,15 @@ function ButtonDeletePosting({
   }
   return (
     <>
-      <Modal
+      <Admin_ComponentModal
         opened={opened}
         onClose={close}
-        centered
         withCloseButton={false}
-        closeOnClickOutside={false}
       >
         <Stack>
-          <Title order={5}>Anda yakin menghapus posting ini</Title>
+          <Title order={5} c={MainColor.white}>
+            Anda yakin menghapus ini ?
+          </Title>
           <Group position="center">
             <Button
               radius={"xl"}
@@ -140,7 +142,7 @@ function ButtonDeletePosting({
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </Admin_ComponentModal>
       <Button
         radius={"xl"}
         color="red"

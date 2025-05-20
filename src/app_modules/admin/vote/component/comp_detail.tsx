@@ -1,7 +1,8 @@
 "use client";
 
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
-import { Badge, ScrollArea, Stack, Text } from "@mantine/core";
+import { Badge, Stack, Text } from "@mantine/core";
 import moment from "moment";
 import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
@@ -23,7 +24,7 @@ export function AdminVoting_ComponentDetail({ data }: Props) {
     },
     {
       title: "Deskripsi",
-      value: data.deskripsi,
+      value: <Comp_V3_SetInnerHTMLWithStiker props={data.deskripsi} />,
     },
     {
       title: "Awal voting",

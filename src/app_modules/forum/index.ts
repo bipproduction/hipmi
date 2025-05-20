@@ -5,7 +5,6 @@ import Forum_Forumku from "./forumku";
 import Forum_Create from "./create";
 import LayoutForum_Create from "./create/layout";
 import LayoutForum_Forumku from "./forumku/layout";
-import Forum_MainDetail from "./detail/main_detail";
 import LayoutForum_Detail from "./detail/layout";
 import Forum_EditPosting from "./edit/posting";
 import LayoutForum_EditPosting from "./edit/posting/layout";
@@ -28,7 +27,6 @@ export {
   Forum_Create,
   LayoutForum_Create,
   LayoutForum_Forumku,
-  Forum_MainDetail as Forum_Detail,
   LayoutForum_Detail,
   Forum_EditPosting,
   LayoutForum_EditPosting,

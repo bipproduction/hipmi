@@ -23,7 +23,7 @@ import {
   Image,
   Stack,
   TextInput,
-  Textarea
+  Textarea,
 } from "@mantine/core";
 import { IconPhoto } from "@tabler/icons-react";
 import { useAtom } from "jotai";
@@ -34,6 +34,10 @@ import { WibuRealtime } from "wibu-pkg";
 import { Donasi_funCreate } from "../fun/create/fun_create_donasi";
 import { gs_donasi_hot_menu } from "../global_state";
 import { MODEL_DONASI_TEMPORARY } from "../model/interface";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function CreateCeritaPenggalangDonasi({
   dataTemporary,
@@ -138,11 +142,48 @@ export default function CreateCeritaPenggalangDonasi({
   return (
     <>
       <Stack spacing={50} px={"xl"} pb={"md"}>
-        {/* <pre>{JSON.stringify(dataTempo, null, 2)}</pre> */}
         <Stack spacing={"sm"}>
           <ComponentGlobal_BoxInformation informasi="Cerita Anda adalah kunci untuk menginspirasi kebaikan. Jelaskan dengan jujur dan jelas tujuan penggalangan dana ini agar calon donatur memahami dampak positif yang dapat mereka wujudkan melalui kontribusi mereka." />
 
           <Stack spacing={5}>
+            <Component_V3_Label_TextInput text="Pembukaan cerita" />
+
+            <Component_V3_TextEditor
+              data={data.pembukaan}
+              onSetData={(val) => {
+                setData({
+                  ...data,
+                  pembukaan: val,
+                });
+              }}
+            />
+
+            <ComponentGlobal_InputCountDown
+              lengthInput={funReplaceHtml({ html: data.pembukaan }).length}
+              maxInput={maxInputLength}
+            />
+          </Stack>
+
+          <Stack spacing={5}>
+            <Component_V3_Label_TextInput text="Inti cerita" />
+
+            <Component_V3_TextEditor
+              data={data.cerita}
+              onSetData={(val) => {
+                setData({
+                  ...data,
+                  cerita: val,
+                });
+              }}
+            />
+
+            <ComponentGlobal_InputCountDown
+              lengthInput={funReplaceHtml({ html: data.cerita }).length}
+              maxInput={maxInputLength}
+            />
+          </Stack>
+
+          {/* <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
@@ -173,9 +214,9 @@ export default function CreateCeritaPenggalangDonasi({
               maxInput={500}
               lengthInput={data.pembukaan.length}
             />
-          </Stack>
+          </Stack> */}
 
-          <Stack spacing={5}>
+          {/* <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
@@ -206,7 +247,7 @@ export default function CreateCeritaPenggalangDonasi({
               maxInput={1000}
               lengthInput={data.cerita.length}
             />
-          </Stack>
+          </Stack> */}
 
           <Stack spacing={5}>
             <ComponentGlobal_BoxUploadImage>
@@ -289,7 +330,14 @@ export default function CreateCeritaPenggalangDonasi({
           style={{
             transition: "0.5s",
           }}
-          disabled={_.values(data).includes("") || file === null ? true : false}
+          disabled={
+            _.values(data).includes("") ||
+            file === null ||
+            funReplaceHtml({ html: data.pembukaan }).length > maxInputLength ||
+            funReplaceHtml({ html: data.pembukaan }).length === 0 ||
+            funReplaceHtml({ html: data.cerita }).length > maxInputLength ||
+            funReplaceHtml({ html: data.cerita }).length === 0
+          }
           loaderPosition="center"
           loading={isLoading ? true : false}
           w={"100%"}

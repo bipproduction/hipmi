@@ -2,6 +2,70 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.4](https://github.com/bipproduction/hipmi/compare/v1.4.3...v1.4.4) (2025-05-20)
+
+
+### Bug Fixes
+
+* button sticker ([3743008](https://github.com/bipproduction/hipmi/commit/37430081d8718b4b2b06f5c3c09f13935bf413c4))
+* event ([02bbdfd](https://github.com/bipproduction/hipmi/commit/02bbdfd5f6a2d299b8d527b9211f7b6ff598602f))
+
+## [1.4.3](https://github.com/bipproduction/hipmi/compare/v1.4.2...v1.4.3) (2025-05-20)
+
+## [1.4.2](https://github.com/bipproduction/hipmi/compare/v1.4.1...v1.4.2) (2025-05-19)
+
+
+### Bug Fixes
+
+* admin app info ([117dbe6](https://github.com/bipproduction/hipmi/commit/117dbe6157fbb74d359db1c8baffe3c4985fab4a))
+* admin app info ([0cbcee8](https://github.com/bipproduction/hipmi/commit/0cbcee87bd52f6a7b596e260841deef9d4615016))
+
+## [1.4.1](https://github.com/bipproduction/hipmi/compare/v1.4.0...v1.4.1) (2025-05-19)
+
+## [1.4.0](https://github.com/bipproduction/hipmi/compare/v1.3.1...v1.4.0) (2025-05-16)
+
+
+### Features
+
+* admin sticker ([2a8c79f](https://github.com/bipproduction/hipmi/commit/2a8c79fd09c3f7fd7ee58ac6896b17802dfe0147))
+* admin stiker ([e7858a2](https://github.com/bipproduction/hipmi/commit/e7858a281223a81037219afec58e5f6b9e04be15))
+
+## [1.3.1](https://github.com/bipproduction/hipmi/compare/v1.3.0...v1.3.1) (2025-05-16)
+
+## [1.3.0](https://github.com/bipproduction/hipmi/compare/v1.2.126...v1.3.0) (2025-05-15)
+
+
+### Features
+
+* admin app information ([bc10b80](https://github.com/bipproduction/hipmi/commit/bc10b80139833966d3e39b52cabf577930552052))
+* tampilan upload stiker di admin ([fbea35e](https://github.com/bipproduction/hipmi/commit/fbea35eef96a656e1b474959aa3fb8198c7d2b0e))
+
+## [1.2.126](https://github.com/bipproduction/hipmi/compare/v1.2.125...v1.2.126) (2025-05-13)
+
+## [1.2.125](https://github.com/bipproduction/hipmi/compare/v1.2.124...v1.2.125) (2025-05-09)
+
+## [1.2.124](https://github.com/bipproduction/hipmi/compare/v1.2.123...v1.2.124) (2025-05-08)
+
+## [1.2.123](https://github.com/bipproduction/hipmi/compare/v1.2.122...v1.2.123) (2025-05-06)
+
+## [1.2.122](https://github.com/bipproduction/hipmi/compare/v1.2.121...v1.2.122) (2025-05-06)
+
+## [1.2.121](https://github.com/bipproduction/hipmi/compare/v1.2.120...v1.2.121) (2025-05-05)
+
+## [1.2.120](https://github.com/bipproduction/hipmi/compare/v1.2.119...v1.2.120) (2025-05-05)
+
+## [1.2.119](https://github.com/bipproduction/hipmi/compare/v1.2.118...v1.2.119) (2025-05-02)
+
+## [1.2.118](https://github.com/bipproduction/hipmi/compare/v1.2.117...v1.2.118) (2025-04-30)
+
+## [1.2.117](https://github.com/bipproduction/hipmi/compare/v1.2.116...v1.2.117) (2025-04-29)
+
+## [1.2.116](https://github.com/bipproduction/hipmi/compare/v1.2.115...v1.2.116) (2025-04-28)
+
+## [1.2.115](https://github.com/bipproduction/hipmi/compare/v1.2.114...v1.2.115) (2025-04-28)
+
+## [1.2.114](https://github.com/bipproduction/hipmi/compare/v1.2.113...v1.2.114) (2025-04-23)
+
 ## [1.2.113](https://github.com/bipproduction/hipmi/compare/v1.2.112...v1.2.113) (2025-04-21)
 
 ## [1.2.112](https://github.com/bipproduction/hipmi/compare/v1.2.111...v1.2.112) (2025-04-17)

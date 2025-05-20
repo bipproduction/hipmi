@@ -1,7 +1,17 @@
 "use client";
 
-import { Modal, Stack, Title, Group, Button, Box } from "@mantine/core";
+import {
+  Modal,
+  Stack,
+  Title,
+  Group,
+  Button,
+  Box,
+  ActionIcon,
+} from "@mantine/core";
 import { MainColor, AccentColor } from "../color/color_pallet";
+import React from "react";
+import { IconX } from "@tabler/icons-react";
 
 export default function UIGlobal_Modal({
   opened,
@@ -9,12 +19,18 @@ export default function UIGlobal_Modal({
   title,
   buttonKiri,
   buttonKanan,
+  children,
+  closeButton,
+  closeOnClickOutside,
 }: {
   opened: any;
   close: any;
   title: any;
-  buttonKiri: any;
-  buttonKanan: any;
+  buttonKiri?: any;
+  buttonKanan?: any;
+  children?: React.ReactNode;
+  closeButton?: boolean;
+  closeOnClickOutside?: boolean;
 }) {
   return (
     <>
@@ -25,6 +41,7 @@ export default function UIGlobal_Modal({
         }}
         centered
         withCloseButton={false}
+        closeOnClickOutside={closeOnClickOutside}
         styles={{
           content: {
             backgroundColor: MainColor.darkblue,
@@ -32,14 +49,25 @@ export default function UIGlobal_Modal({
           },
         }}
       >
-        <Stack>
-          <Title order={6} color={MainColor.white} align="center">
-            {title}
-          </Title>
-          <Group position="center">
-            <Box>{buttonKiri}</Box>
-            <Box>{buttonKanan}</Box>
+        <Stack spacing={"lg"}>
+          <Group position="apart">
+            <Title order={6} color={MainColor.white} align="center">
+              {title}
+            </Title>
+            {closeButton ? (
+              <ActionIcon onClick={close} variant="transparent">
+                <IconX color="white" size={25} />
+              </ActionIcon>
+            ) : null}
           </Group>
+          {children ? (
+            children
+          ) : (
+            <Group position="center">
+              <Box>{buttonKiri}</Box>
+              <Box>{buttonKanan}</Box>
+            </Group>
+          )}
         </Stack>
       </Modal>
     </>

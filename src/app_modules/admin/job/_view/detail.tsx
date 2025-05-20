@@ -6,7 +6,7 @@ import { Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
 import { AdminJob_DetailPublish } from "../_components/detail/publish";
@@ -40,7 +40,7 @@ export function AdminJob_ViewDetailPublish() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={`Detail data`} />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         {!data ? (
           <Admin_V3_ComponentSkeletonBreakpoint />

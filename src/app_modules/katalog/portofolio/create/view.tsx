@@ -13,7 +13,7 @@ import {
   funGlobal_UploadToStorage,
 } from "@/app_modules/_global/fun";
 import { MAX_SIZE } from "@/app_modules/_global/lib";
-import { PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/max_size";
+import { maxInputLength, PemberitahuanMaksimalFile } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { BIDANG_BISNIS_OLD } from "@/app_modules/model_global/portofolio";
 import {
@@ -210,7 +210,7 @@ export default function CreatePortofolio() {
                   color: MainColor.red,
                 },
               }}
-              maxLength={300}
+              maxLength={maxInputLength}
               autosize
               minRows={2}
               maxRows={5}
@@ -225,7 +225,7 @@ export default function CreatePortofolio() {
               }}
             />
             <ComponentGlobal_InputCountDown
-              maxInput={300}
+              maxInput={maxInputLength}
               lengthInput={dataPortofolio.deskripsi.length}
             />
           </Stack>

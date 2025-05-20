@@ -128,3 +128,35 @@ export const apiGetOneSponsorEventById = async ({ id }: { id: string }) => {
 
   return await response.json().catch(() => null);
 };
+
+export const apiGetEventKonfirmasiById = async ({ id, userId }: { id: string; userId: string }) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/event/${id}/konfirmasi?userId=${userId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error("Failed to get event konfirmasi", response.statusText, errorData);
+      throw new Error(errorData?.message || "Failed to get event konfirmasi");
+    }
+
+    // Return the JSON response
+    return await response.json();
+  } catch (error) {
+    console.error("Error get event konfirmasi", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};

@@ -1,6 +1,6 @@
 import { clientLogger } from "@/util/clientLogger";
 import { MAX_SIZE } from "../../lib";
-import { PemberitahuanMaksimalFile } from "../../lib/max_size";
+import { PemberitahuanMaksimalFile } from "../../lib/maximal_setting";
 import { ComponentGlobal_NotifikasiPeringatan } from "../../notif_global";
 import { funDeteleteFileById } from "../delete/fun_delete_file_by_id";
 import { funUploadFileToStorage } from "./fun_upload_to_storage";

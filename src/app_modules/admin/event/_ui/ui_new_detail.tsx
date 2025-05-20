@@ -6,7 +6,7 @@ import { SimpleGrid, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { apiGetAdminDetailEventById } from "../_lib/api_fecth_admin_event";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
@@ -47,7 +47,7 @@ export function AdminEvent_UiNewDetail() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Detail event" />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         {data === undefined ? (
          <Admin_V3_ComponentSkeletonBreakpoint/>

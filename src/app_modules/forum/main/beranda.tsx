@@ -3,6 +3,7 @@
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
+import mqtt_client from "@/util/mqtt_client";
 import {
   Affix,
   Box,
@@ -22,8 +23,6 @@ import ComponentForum_BerandaCardView from "../component/main_component/card_vie
 import { Forum_ComponentIsDataEmpty } from "../component/other_component";
 import { Forum_SkeletonCard } from "../component/skeleton_view";
 import { MODEL_FORUM_POSTING } from "../model/interface";
-import mqtt_client from "@/util/mqtt_client";
-import { AccentColor } from "@/app_modules/_global/color";
 
 export default function Forum_Beranda({
   userLoginId,
@@ -174,14 +173,15 @@ export default function Forum_Beranda({
           }}
         />
 
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+
         {!data.length && isLoading ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(data) ? (
           <Forum_ComponentIsDataEmpty />
         ) : (
           // --- Main component --- //
-          <Box
-          >
+          <Box>
             <ScrollOnly
               height="80vh"
               renderLoading={() => (

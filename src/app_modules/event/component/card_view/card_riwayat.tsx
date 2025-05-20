@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_EVENT } from "../../_lib/interface";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
   const router = useRouter();
@@ -42,8 +43,11 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
               </Text>
             </Group>
 
-            <Text fz={"sm"} lineClamp={2}>
-              {data.deskripsi}
+            <Text fz={"sm"} lineClamp={4}>
+              <Comp_SetInnerHTML
+                props={data.deskripsi}
+                style={{ height: 50 }}
+              />
             </Text>
           </Stack>
 

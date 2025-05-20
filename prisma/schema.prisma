@@ -129,11 +129,13 @@ model Portofolio {
   updatedAt              DateTime                @default(now()) @updatedAt
   Profile                Profile?                @relation(fields: [profileId], references: [id])
   profileId              String?
-  MasterBidangBisnis     MasterBidangBisnis      @relation(fields: [masterBidangBisnisId], references: [id])
-  masterBidangBisnisId   String
   Portofolio_MediaSosial Portofolio_MediaSosial?
   BusinessMaps           BusinessMaps?
   logoId                 String?
+
+  MasterBidangBisnis                  MasterBidangBisnis                    @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId                String
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
 }
 
 model Portofolio_MediaSosial {
@@ -150,16 +152,45 @@ model Portofolio_MediaSosial {
   portofolioId String?     @unique
 }
 
-model MasterBidangBisnis {
-  id         String       @id
-  name       String
-  active     Boolean      @default(true)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @default(now()) @updatedAt
-  Portofolio Portofolio[]
+model Portofolio_BidangDanSubBidangBisnis {
+  id        String   @id @default(cuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Portofolio              Portofolio?            @relation(fields: [portofolioId], references: [id])
+  portofolioId            String?
+  MasterBidangBisnis      MasterBidangBisnis?    @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId    String?
+  MasterSubBidangBisnis   MasterSubBidangBisnis? @relation(fields: [masterSubBidangBisnisId], references: [id])
+  masterSubBidangBisnisId String?
 }
 
 // ------------------- MASTER -------------------------- //
+
+model MasterBidangBisnis {
+  id                                  String                                @id @default(uuid())
+  name                                String
+  slug                                String                                @default("NULL")
+  active                              Boolean                               @default(true)
+  createdAt                           DateTime                              @default(now())
+  updatedAt                           DateTime                              @default(now()) @updatedAt
+  Portofolio                          Portofolio[]
+  MasterSubBidangBisnis               MasterSubBidangBisnis[]
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
+}
+
+model MasterSubBidangBisnis {
+  id                                  String                                @id @default(cuid())
+  name                                String
+  slug                                String                                @default("NULL")
+  isActive                            Boolean                               @default(true)
+  createdAt                           DateTime                              @default(now())
+  updatedAt                           DateTime                              @default(now()) @updatedAt
+  MasterBidangBisnis                  MasterBidangBisnis?                   @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId                String?
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
+}
 
 model MasterBank {
   id                String              @id @default(cuid())
@@ -189,6 +220,16 @@ model MasterStatusTransaksi {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   EventTransaksi EventTransaksi[]
+}
+
+model MasterEmotions {
+  id        Int       @id @default(autoincrement())
+  label     String
+  value     String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Sticker   Sticker[] @relation("StikerEmotions")
 }
 
 // -------------------- INVESTASI --------------------- //
@@ -1014,4 +1055,18 @@ model EventTransaksi {
 
   MasterStatusTransaksi   MasterStatusTransaksi? @relation(fields: [masterStatusTransaksiId], references: [id])
   masterStatusTransaksiId String?
+}
+
+model Sticker {
+  id           String   @id @default(cuid())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String?
+  fileName     String?
+  fileExt      String?
+  fileId       String
+  jenisKelamin String?
+
+  MasterEmotions MasterEmotions[] @relation("StikerEmotions")
 }

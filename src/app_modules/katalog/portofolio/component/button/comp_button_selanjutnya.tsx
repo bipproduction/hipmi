@@ -16,6 +16,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiCreatePortofolio } from "../api_fetch_portofolio";
 
+
+type SubBidang = {
+  id: string;
+};
 interface ICreatePortofolio {
   namaBisnis: string;
   masterBidangBisnisId: string;
@@ -28,18 +32,23 @@ interface ICreatePortofolio {
   instagram: string;
   tiktok: string;
   youtube: string;
+  subBidang: SubBidang[];
 }
+
+
 
 export function Portofolio_ComponentButtonSelanjutnya({
   profileId,
   dataPortofolio,
   dataMedsos,
   file,
+  listSubBidangSelected,
 }: {
   profileId: string;
   dataPortofolio: MODEL_PORTOFOLIO_OLD;
   dataMedsos: any;
   file: File;
+  listSubBidangSelected?: SubBidang[];
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -62,6 +71,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
     const newData: ICreatePortofolio = {
       namaBisnis: dataPortofolio.namaBisnis,
       masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
+      // masterSubBidangBisnisId: dataPortofolio.masterSubBidangBisnisId as string,
       alamatKantor: dataPortofolio.alamatKantor,
       tlpn: dataPortofolio.tlpn,
       deskripsi: dataPortofolio.deskripsi,
@@ -71,6 +81,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
       tiktok: dataMedsos.tiktok,
       youtube: dataMedsos.youtube,
       fileId: fileId,
+      subBidang: listSubBidangSelected || []
     };
 
     const response = await apiCreatePortofolio({
@@ -93,6 +104,7 @@ export function Portofolio_ComponentButtonSelanjutnya({
     try {
       setLoading(true);
 
+
       const uploadFile = await funGlobal_UploadToStorage({
         file: file,
         dirId: DIRECTORY_ID.portofolio_logo,
@@ -107,14 +119,25 @@ export function Portofolio_ComponentButtonSelanjutnya({
     } catch (error) {
       setLoading(false);
       ComponentGlobal_NotifikasiGagal("Gagal disimpan");
-      clientLogger.error("Error create portofolio", error);
+      console.error("Error create portofolio", error);
     }
   };
 
   return (
     <>
+      {/* <pre style={{ color: "white" }}>
+        {JSON.stringify(dataPortofolio, null, 2)}
+      </pre>
+      <pre style={{ color: "white" }}>
+        {JSON.stringify(listSubBidangSelected, null, 2)}
+      </pre> */}
+
       <Button
-        disabled={_.values(dataPortofolio).includes("") || !file}
+        disabled={
+          _.values(dataPortofolio).includes("") ||
+          !file ||
+          listSubBidangSelected?.some((item) => !item.id)
+        }
         mt={"md"}
         radius={50}
         loading={loading}

@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_FORUM_POSTING } from "../../model/interface";
 import ComponentForum_ForumkuHeaderCard from "./forumku_header";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { useShallowEffect } from "@mantine/hooks";
+import { MainColor } from "@/app_modules/_global/color";
 
 export default function ComponentForum_ForumkuMainCardView({
   data,
@@ -26,6 +29,22 @@ export default function ComponentForum_ForumkuMainCardView({
   const router = useRouter();
   const [visable, setVisible] = useState(false);
 
+    useShallowEffect(() => {
+      // Add custom style for stickers inside Quill editor
+      const style = document.createElement("style");
+      style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+      document.head.appendChild(style);
+      return () => {
+        // Clean up when component unmounts
+        document.head.removeChild(style);
+      };
+    }, []);
+
   return (
     <>
       <ComponentGlobal_CardStyles>
@@ -39,15 +58,24 @@ export default function ComponentForum_ForumkuMainCardView({
           />
 
           <Box
-            sx={{ zIndex: 0 }}
-            p={"lg"}
+            style={{
+              backgroundColor: MainColor.soft_darkblue,
+              padding: 10,
+              borderRadius: 8,
+            }}
             onClick={() => {
               setVisible(true);
               router.push(RouterForum.main_detail + data?.id);
             }}
           >
             <Text c={"white"} fz={"sm"} lineClamp={4}>
-              <div dangerouslySetInnerHTML={{ __html: data?.diskusi }} />
+              <Comp_V3_SetInnerHTMLWithStiker
+                props={data?.diskusi}
+                className="chat-content"
+                style={{
+                  height: 100,
+                }}
+              />
             </Text>
           </Box>
 

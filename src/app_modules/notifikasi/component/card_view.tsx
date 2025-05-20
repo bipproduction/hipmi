@@ -26,6 +26,9 @@ import { redirectInvestasiPage } from "./path/investasi";
 import { notifikasi_jobCheckStatus } from "./path/job";
 import { notifikasi_votingCheckStatus } from "./path/voting";
 import { redirectDetailCollaborationPage } from "./path/collaboration";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { useShallowEffect } from "@mantine/hooks";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export function ComponentNotifiaksi_CardView({
   data,
@@ -40,6 +43,22 @@ export function ComponentNotifiaksi_CardView({
   const [votingMenu, setVotingMenu] = useAtom(gs_vote_hotMenu);
   const [donasiMenu, setDonasiMenu] = useAtom(gs_donasi_hot_menu);
   const [investasiMenu, setInvestasiMenu] = useAtom(gs_investas_menu);
+
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <>
@@ -202,14 +221,19 @@ export function ComponentNotifiaksi_CardView({
             <Text lineClamp={2} fw={"bold"}>
               {data?.title}
             </Text>
-            {data.kategoriApp === "FORUM" ? (
-              <div
-                style={{ fontSize: 12 }}
-                dangerouslySetInnerHTML={{ __html: data?.pesan }}
-              />
+            {/* {data.kategoriApp === "FORUM" ? (
+              <Text lineClamp={4}>
+                <Comp_V3_SetInnerHTMLWithStiker
+                  props={data?.pesan}
+                  className="chat-content"
+                  style={{ height: 100 }}
+                />
+              </Text>
             ) : (
-              <Text lineClamp={2}>{data?.pesan}</Text>
-            )}
+              <Text lineClamp={2}>
+                <Comp_SetInnerHTML props={data?.pesan} />
+              </Text>
+            )} */}
           </Stack>
         </Card.Section>
         <Card.Section p={"sm"}>

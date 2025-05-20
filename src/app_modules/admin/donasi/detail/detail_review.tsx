@@ -17,7 +17,7 @@ import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_adm
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import adminNotifikasi_funCreateToAllUser from "../../notifikasi/fun/create/fun_create_notif_to_all_user";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 
@@ -235,7 +235,7 @@ function ButtonOnHeader({
   return (
     <>
       <Group position="apart">
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
         {donasi.donasiMaster_StatusDonasiId === "2" ? (
           <Group>
             <Button

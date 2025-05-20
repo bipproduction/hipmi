@@ -2,6 +2,8 @@ import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { MODEL_IMAGES } from "@/app_modules/model_global/interface";
 import { MODEL_PROFILE } from "../../profile/model/interface";
 import { MODEL_MAP } from "@/app_modules/map/lib/interface";
+import { ISUB_BIDANG_BISNIS } from "@/app_modules/model_global/portofolio";
+import { Prisma } from "@prisma/client";
 
 export interface MODEL_PORTOFOLIO {
   id: string;
@@ -12,6 +14,7 @@ export interface MODEL_PORTOFOLIO {
   active: boolean;
   MasterBidangBisnis: MODEL_PORTOFOLIO_BIDANG_BISNIS;
   masterBidangBisnisId: string;
+  Portofolio_BidangDanSubBidangBisnis: Portofolio_BidangDanSubBidangBisnis;
   profileId: string;
   Logo: MODEL_LOGO;
   logoId: string;
@@ -34,6 +37,7 @@ export interface MODEL_PORTOFOLIO_BIDANG_BISNIS {
   id: string;
   name: string;
   active: boolean;
+  slug: string;
 }
 
 export interface MODEL_PORTOFOLIO_MEDSOS {
@@ -48,3 +52,29 @@ export interface MODEL_PORTOFOLIO_MEDSOS {
   updatedAt: Date;
   portofolioId: string;
 }
+
+export type Portofolio_BidangDanSubBidangBisnis =
+  Prisma.Portofolio_BidangDanSubBidangBisnisGetPayload<{
+    select: {
+      id: true,
+      masterBidangBisnisId?: true,
+      masterSubBidangBisnisId?: true,
+      isActive: true
+      MasterBidangBisnis: {
+        select: {
+          id?: true;
+          name?: true;
+        };
+      };
+      MasterSubBidangBisnis: {
+        select: {
+          id?: true;
+          name?: true;
+        };
+      };
+
+    };
+    // include: {
+
+    // };
+  }>;

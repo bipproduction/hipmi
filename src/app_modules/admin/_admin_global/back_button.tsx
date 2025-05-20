@@ -6,7 +6,7 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function AdminGlobal_ComponentBackButton({
+export default function Admin_ComponentBackButton({
   path,
 }: {
   path?: string;
@@ -19,6 +19,7 @@ export default function AdminGlobal_ComponentBackButton({
       <Group>
         <Button
           c={AccentColor.white}
+          radius={7}
           leftIcon={
             isLoading ? (
               <Loader size={"xs"} color={"gray"} />

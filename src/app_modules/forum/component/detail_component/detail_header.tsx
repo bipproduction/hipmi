@@ -278,6 +278,7 @@ function ComponentForum_DetailButtonMore_V2({
             }}
             radius={"xl"}
             onClick={close}
+            c={"black"}
           >
             Batal
           </Button>

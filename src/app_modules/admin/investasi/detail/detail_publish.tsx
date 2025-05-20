@@ -3,7 +3,7 @@
 import { Button, Group, Stack } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { gs_admin_invetasi_menu_publish } from "../_lib/global_state";
 import {
@@ -35,7 +35,7 @@ export function AdminInvestasi_DetailPublish() {
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name={"Investasi: Publish"} />
-        <AdminGlobal_ComponentBackButton />
+        <Admin_ComponentBackButton />
 
         <Group>
           {listPage.map((e) => (

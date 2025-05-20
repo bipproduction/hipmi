@@ -9,6 +9,7 @@ import { emailRegex } from "../../component/regular_expressions";
 import { Profile_ComponentCreateNewProfile } from "../_component";
 import Profile_ViewUploadBackground from "./view_upload_background";
 import Profile_ViewUploadFoto from "./view_upload_foto";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
 export default function CreateProfile() {
   const [filePP, setFilePP] = useState<File | null>(null);

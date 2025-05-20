@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AdminColor,
   MainColor,
@@ -182,22 +184,6 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
             >
               Edit
             </Button>
-            {/* <ActionIcon
-            radius={"xl"}
-            variant="transparent"
-            onClick={() => {
-              setIsUpdate(true);
-              setIsCreate(false);
-              setUpdateData({
-                id: e?.id,
-                name: e?.name,
-              });
-            }}
-          >
-            <Tooltip label="Edit">
-              <IconEdit color={AdminColor.white} />
-            </Tooltip>
-          </ActionIcon> */}
           </Stack>
         </td>
 
@@ -231,21 +217,7 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
   return (
     <>
       <Stack>
-        <ComponentAdminGlobal_TitlePage
-          name="Kategori Bidang Bisnis"
-          // component={
-          //   <Button
-          //     radius={"xl"}
-          //     leftIcon={<IconCirclePlus />}
-          //     onClick={() => {
-          //       setIsCreate(true);
-          //       setIsUpdate(false);
-          //     }}
-          //   >
-          //     Tambah
-          //   </Button>
-          // }
-        />
+        <ComponentAdminGlobal_TitlePage name="Kategori Bidang Bisnis" />
 
         <Admin_V3_ComponentBreakpoint>
           <div>
@@ -268,14 +240,6 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
                   />
 
                   <Group position="right" align="flex-end">
-                    {/* <Button
-                      radius={"xl"}
-                      onClick={() => {
-                        setIsCreate(false);
-                      }}
-                    >
-                      Batal
-                    </Button> */}
                     <Button
                       loading={isLoadingCreate}
                       loaderPosition="center"
@@ -359,10 +323,10 @@ export function AdminAppInformation_ViewKategoriPortofolio() {
                   <thead>
                     <tr>
                       <th>
-                        <Center c={AdminColor.white}>Status</Center>
+                        <Center c={AdminColor.white}>Aksi</Center>
                       </th>
                       <th>
-                        <Center c={AdminColor.white}>Aksi</Center>
+                        <Center c={AdminColor.white}>Status</Center>
                       </th>
                       <th>
                         <Text c={AdminColor.white}>Kategori</Text>

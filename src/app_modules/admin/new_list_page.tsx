@@ -283,7 +283,7 @@ export const newListAdminPage = [
   {
     id: "App Information",
     name: "App Information",
-    path: RouterAdminAppInformation.main,
+    path: RouterAdminAppInformation.infoBank,
     icon: <IconDeviceMobile />,
     child: [],
   },

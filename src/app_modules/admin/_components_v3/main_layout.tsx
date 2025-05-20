@@ -39,6 +39,7 @@ import {
 import { Admin_V3_ComponentButtonUserCircle } from "./comp_button_user_circle";
 import { Admin_V3_SkeletonNavbar } from "./skeleton_navbar";
 import { Admin_V3_ViewDrawerNotifikasi } from "./notifikasi/view_drawer_notifikasi";
+import { apiGetCountNotifikasiByUserId } from "../notifikasi/lib/api_fetch_notifikasi";
 
 export function Admin_V3_MainLayout({
   children,
@@ -60,6 +61,10 @@ export function Admin_V3_MainLayout({
   // Notifikasi
   const [countNtf, setCountNtf] = useState(countNotifikasi);
   const [newAdminNtf, setNewAdminNtf] = useAtom(gs_admin_ntf);
+  const [reloadNtf, setReloadNtf] = useState(false);
+  const [openPop, setOpenPop] = useState(false);
+  const [opened, handlers] = useDisclosure(false);
+  const [openedDrawer, handlersDrawer] = useDisclosure(false);
 
   useShallowEffect(() => {
     handleLoadUser();
@@ -79,10 +84,33 @@ export function Admin_V3_MainLayout({
       setDataUser(null);
     }
   }
-  const [openPop, setOpenPop] = useState(false);
-  const [opened, handlers] = useDisclosure(false);
-  const [openedDrawer, handlersDrawer] = useDisclosure(false);
 
+  useShallowEffect(() => {
+    setCountNtf((e) => e + newAdminNtf);
+    setNewAdminNtf(0);
+  }, [newAdminNtf, setNewAdminNtf]);
+
+  useShallowEffect(() => {
+    handleLoadCountNotifikasi();
+  }, [reloadNtf]);
+
+  async function handleLoadCountNotifikasi() {
+    try {
+      const response = await apiGetCountNotifikasiByUserId({ id: userLoginId });
+      if (response && response.success) {
+        setCountNtf(response.data);
+        setReloadNtf(false);
+      } else {
+        console.error("Failed to fetch count notifikasi", response);
+        setCountNtf(0);
+        setReloadNtf(false);
+      }
+    } catch (error) {
+      console.error("Error fetching count notifikasi", error);
+      setCountNtf(0);
+      setReloadNtf(false);
+    }
+  }
 
   return (
     <>
@@ -156,6 +184,7 @@ export function Admin_V3_MainLayout({
                 setOpenPop={setOpenPop}
                 setNavbarOpen={handlers.close}
                 setDrawerNotifikasi={handlersDrawer.toggle}
+                countNotifikasi={countNtf}
               />
             </Group>
           </Header>
@@ -171,7 +200,7 @@ export function Admin_V3_MainLayout({
             color: AccentColor.white,
           },
           header: {
-            backgroundColor: AccentColor.darkblue,
+            backgroundColor: MainColor.darkblue,
             color: AccentColor.white,
           },
           close: {
@@ -202,7 +231,10 @@ export function Admin_V3_MainLayout({
             setActiveChildId(val.childId);
           }}
           onToggleNavbar={(val: any) => {
-            handlersDrawer.close
+            val === false && handlersDrawer.close();
+          }}
+          onLoadCountNotif={(val: boolean) => {
+            setReloadNtf(val);
           }}
         />
         {/* <ComponentAdmin_UIDrawerNotifikasi

@@ -27,7 +27,9 @@ import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
 import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
-import { Component_SetInnerHtml } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
 
 export default function AdminForum_TablePosting() {
   return (
@@ -47,6 +49,22 @@ function TablePublish() {
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isDelete, setDelete] = useState(false);
+
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
 
   useShallowEffect(() => {
     const loadInitialData = async () => {
@@ -123,20 +141,11 @@ function TablePublish() {
               {e?.ForumMaster_StatusPosting?.status}
             </Badge>
           </Center>
-        </td>
+        </td> 
 
         {/* Deskripsi */}
         <td>
-          <Box w={250}>
-            <Spoiler
-              // w={400}
-              maxHeight={50}
-              hideLabel="sembunyikan"
-              showLabel="tampilkan"
-            >
-              <Component_SetInnerHtml props={e?.diskusi} />
-            </Spoiler>
-          </Box>
+          <AdminForum_CompTableSetHtmlStiker data={e.diskusi} classname="chat-content" />
         </td>
 
         {/* Jumlah komentar */}

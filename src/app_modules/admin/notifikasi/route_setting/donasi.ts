@@ -13,16 +13,12 @@ export default async function adminNotifikasi_findRouterDonasi({
   notifikasiId,
   status,
   router,
-  onLoadCountNotif,
-  onLoadDataNotifikasi,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   status: ITypeStatusNotifikasi;
   router: AppRouterInstance;
-  onLoadCountNotif: (val: any) => void;
-  onLoadDataNotifikasi: (val: any) => void;
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -39,13 +35,6 @@ export default async function adminNotifikasi_findRouterDonasi({
     });
 
     if (udpateReadNotifikasi.status == 200) {
-      const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      onLoadCountNotif(loadCountNotif);
-
-      const loadListNotifikasi = await adminNotifikasi_getByUserId({
-        page: 1,
-      });
-      onLoadDataNotifikasi(loadListNotifikasi);
       const path = RouterAdminDonasi_OLD.detail_publish + appId;
       router.push(path, { scroll: false });
       onChangeNavbar({
@@ -66,14 +55,6 @@ export default async function adminNotifikasi_findRouterDonasi({
       });
 
       if (udpateReadNotifikasi.status == 200) {
-        const loadCountNotif = await adminNotifikasi_countNotifikasi();
-        onLoadCountNotif(loadCountNotif);
-
-        const loadListNotifikasi = await adminNotifikasi_getByUserId({
-          page: 1,
-        });
-        onLoadDataNotifikasi(loadListNotifikasi);
-
         const path = `/dev/admin/donasi/sub-menu/${check.statusName}`;
 
         if (check.statusName == "draft") {
