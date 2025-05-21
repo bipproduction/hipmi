@@ -33,13 +33,13 @@ export default function Login({ version }: { version: string }) {
       setLoading(true);
       const respone = await apiFetchLogin({ nomor: nomor });
 
-      if (respone) {
+      if (respone && respone.success) {
         localStorage.setItem("hipmi_auth_code_id", respone.kodeId);
         ComponentGlobal_NotifikasiBerhasil(respone.message, 2000);
         router.push("/validasi", { scroll: false });
       } else {
         setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(respone.message);
+        ComponentGlobal_NotifikasiPeringatan(respone?.message);
       }
     } catch (error) {
       setLoading(false);

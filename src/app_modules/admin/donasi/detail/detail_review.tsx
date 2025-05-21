@@ -163,10 +163,11 @@ function ButtonOnHeader({
 
           const newData = await AdminDonasi_getOneById(donasi?.id);
           setData(newData);
-          // router.back()
           ComponentAdminGlobal_NotifikasiBerhasil(
             "Berhasil Mengubah Status Donasi"
           );
+          router.back()
+          setLoadingPublish(false);
         } else {
           setLoadingPublish(false);
           ComponentAdminGlobal_NotifikasiPeringatan(

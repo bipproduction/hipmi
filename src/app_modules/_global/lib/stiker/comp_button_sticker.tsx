@@ -57,8 +57,8 @@ export const Comp_ButtonSticker = ({
                   <Text fw={"bold"} color="gray">
                     Sticker belum tersedia
                   </Text>
-                  <Text color="gray" fw={"bold"}>
-                    Silahkan hubungi admin untuk info lebih lanjut
+                  <Text color="gray" fw={"bold"} align="center">
+                    Silahkan hubungi admin
                   </Text>
                 </Stack>
               </Center>
