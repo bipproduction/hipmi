@@ -27,11 +27,10 @@ import {
   Stack,
   Switch,
   Table,
-  Text,
-  TextInput,
+  Text
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { IconFilter, IconPencil, IconPlus } from "@tabler/icons-react";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -39,7 +38,6 @@ import {
   apiAdminGetSticker,
   apiAdminUpdateStatusStickerById,
 } from "../../lib/api_fetch_stiker";
-import loading from "@/app/dev/(user)/investasi/dialog_page/create/loading";
 
 export default function AdminAppInformation_ViewSticker() {
   const router = useRouter();
