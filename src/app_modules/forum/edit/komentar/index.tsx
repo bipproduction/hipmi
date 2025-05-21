@@ -1,24 +1,12 @@
 "use client";
 
-import {
-  ActionIcon,
-  Button,
-  Center,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-} from "@mantine/core";
-import "react-quill/dist/quill.snow.css";
-import "react-quill/dist/quill.bubble.css";
-import { IconPhotoUp } from "@tabler/icons-react";
-import { useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
-
-import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import { Button, Group, Paper, Stack } from "@mantine/core";
 import { useAtom } from "jotai";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import "react-quill/dist/quill.bubble.css";
+import "react-quill/dist/quill.snow.css";
 import { gs_forum_loading_edit_posting } from "../../global_state";
 const ReactQuill = dynamic(
   () => {
@@ -29,17 +17,6 @@ const ReactQuill = dynamic(
 
 export default function Forum_EditKomentar() {
   const [value, setValue] = useState("");
-  const [reload, setReload] = useState(false);
-  useShallowEffect(() => {
-    if (window && window.document) setReload(true);
-  }, []);
-
-  if (!reload)
-    return (
-      <>
-        <ComponentGlobal_V2_LoadingPage />
-      </>
-    );
 
   return (
     <>
@@ -55,9 +32,6 @@ export default function Forum_EditKomentar() {
           />
         </Paper>
         <Group position="right">
-          {/* <ActionIcon>
-            <IconPhotoUp />
-          </ActionIcon> */}
           <ButtonAction />
         </Group>
       </Stack>

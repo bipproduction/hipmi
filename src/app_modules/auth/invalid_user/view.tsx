@@ -21,11 +21,11 @@ export default function InvalidUser() {
         method: "GET",
       });
       router.push("/login", {scroll: false});
-    } catch (error) {
-      console.error("Gagal menghapus cookie:", error);
-    } finally {
       setIsLoading(false);
-    }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Gagal menghapus cookie:", error);
+    } 
   };
 
   return (
@@ -33,8 +33,7 @@ export default function InvalidUser() {
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" spacing="md" h={"100vh"}>
           <Title order={2} c={MainColor.white}>
-            {" "}
-            Invalid User
+            Maaf, Anda tidak memiliki izin untuk mengakses halaman ini. Silakan logout terlebih dahulu.
           </Title>
           <Button
             loading={isLoading}
@@ -44,7 +43,7 @@ export default function InvalidUser() {
               deleteCookie();
             }}
           >
-            Logout
+            Keluar
           </Button>
         </Stack>
       </UIGlobal_LayoutDefault>

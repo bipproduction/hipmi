@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import {
   ActionIcon,
   Button,
@@ -24,8 +24,6 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { IconSquareCheck } from "@tabler/icons-react";
 import { forum_funDeletePostingById } from "../../fun/delete/fun_delete_posting_by_id";
@@ -50,8 +48,6 @@ export default function ComponentForum_DetailMoreButton({
   // loading
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
-
-  //   if (loadingEdit) return <ComponentGlobal_V2_LoadingPage />;
 
   return (
     <>
@@ -193,8 +189,6 @@ function ButtonDelete({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  if (loading) return <ComponentGlobal_V2_LoadingPage />;
 
   async function onDelete() {
     setOpenDel(false);
