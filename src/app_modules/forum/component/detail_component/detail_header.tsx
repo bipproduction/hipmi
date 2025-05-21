@@ -1,57 +1,46 @@
 "use client";
 
-import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
-import {
-  Stack,
-  Grid,
-  Avatar,
-  Divider,
-  Text,
-  Group,
-  ThemeIcon,
-  ActionIcon,
-  Badge,
-  Button,
-  Drawer,
-  Loader,
-  Modal,
-  Title,
-} from "@mantine/core";
-import { useRouter } from "next/navigation";
-import moment from "moment";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
-import {
-  IconCircleFilled,
-  IconDots,
-  IconEdit,
-  IconFlag3,
-  IconMessageCircle,
-  IconSquareCheck,
-  IconSquareRoundedX,
-  IconTrash,
-} from "@tabler/icons-react";
-import { IconCircle } from "@tabler/icons-react";
-import ComponentForum_PostingButtonMore from "../more_button/posting_button_more";
-import ComponentForum_DetailMoreButton from "../more_button/detail_more_button";
-import { MODEL_FORUM_POSTING } from "../../model/interface";
-import { useDisclosure } from "@mantine/hooks";
-import ComponentGlobal_V2_LoadingPage from "@/app_modules/_global/loading_page_v2";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { useState } from "react";
-import { forum_funDeletePostingById } from "../../fun/delete/fun_delete_posting_by_id";
-import { forum_funEditStatusPostingById } from "../../fun/edit/fun_edit_status_posting_by_id";
-import { forum_getOnePostingById } from "../../fun/get/get_one_posting_by_id";
-import mqtt_client from "@/util/mqtt_client";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
+import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
+import mqtt_client from "@/util/mqtt_client";
+import {
+  ActionIcon,
+  Avatar,
+  Badge,
+  Button,
+  Drawer,
+  Grid,
+  Group,
+  Loader,
+  Modal,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconDots,
+  IconEdit,
+  IconFlag3,
+  IconSquareCheck,
+  IconSquareRoundedX,
+  IconTrash,
+} from "@tabler/icons-react";
 import _ from "lodash";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { forum_funDeletePostingById } from "../../fun/delete/fun_delete_posting_by_id";
+import { forum_funEditStatusPostingById } from "../../fun/edit/fun_edit_status_posting_by_id";
+import { MODEL_FORUM_POSTING } from "../../model/interface";
 
 export default function ComponentForum_DetailHeader({
   data,
@@ -341,8 +330,6 @@ function ButtonDelete({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  if (loading) return <ComponentGlobal_V2_LoadingPage />;
 
   async function onDelete() {
     try {
