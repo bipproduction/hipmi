@@ -28,6 +28,7 @@ import { WibuRealtime } from "wibu-pkg";
 import { apiGetUserAccess } from "../_lib/api_fetch_user_access";
 import adminUserAccess_funEditAccess from "../fun/edit/fun_edit_access";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 
 export default function AdminUserAccess_View() {
   const [data, setData] = useState<MODEL_USER[] | null>(null);
@@ -38,6 +39,8 @@ export default function AdminUserAccess_View() {
   const [isLoadingAccess, setIsLoadingAccess] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [userId, setUserId] = useState("");
+  const [openedModal, setOpenedModal] = useState(false);
+  const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
 
   useShallowEffect(() => {
     handleLoadData();
@@ -90,8 +93,10 @@ export default function AdminUserAccess_View() {
             dataMessage: dataNotifikasi,
           });
 
+          setOpenedModal(false);
           ComponentGlobal_NotifikasiBerhasil(res.message);
         } else {
+          setOpenedModal(false);
           ComponentGlobal_NotifikasiGagal(res.message);
         }
       });
@@ -111,8 +116,10 @@ export default function AdminUserAccess_View() {
         if (res.status === 200) {
           handleLoadData();
 
+          setOpenedModal(false);
           ComponentGlobal_NotifikasiBerhasil(res.message);
         } else {
+          setOpenedModal(false);
           ComponentGlobal_NotifikasiGagal(res.message);
         }
       });
@@ -153,12 +160,12 @@ export default function AdminUserAccess_View() {
           {e.active === false ? (
             <Center>
               <Button
-                loaderPosition="center"
-                loading={isLoadingAccess && userId === e.id}
                 radius={"xl"}
                 color="Green"
                 onClick={() => {
-                  onAccess(e.id, e.nomor);
+                  setOpenedModal(true);
+                  setDataUser(e);
+                  // onAccess(e.id, e.nomor);
                 }}
               >
                 Grand Access
@@ -167,12 +174,12 @@ export default function AdminUserAccess_View() {
           ) : (
             <Center>
               <Button
-                loaderPosition="center"
-                loading={isLoadingDelete && userId === e.id}
                 radius={"xl"}
                 color="red"
                 onClick={() => {
-                  onDelete(e.id);
+                  setOpenedModal(true);
+                  setDataUser(e);
+                  // onDelete(e.id);
                 }}
               >
                 Delete Access
@@ -237,6 +244,49 @@ export default function AdminUserAccess_View() {
           </Paper>
         )}
       </Stack>
+
+      <Admin_ComponentModal
+        opened={openedModal}
+        onClose={() => {
+          setOpenedModal(false);
+        }}
+      >
+        <Stack>
+          <Title order={4} c={AdminColor.white}>
+            Apakah anda akan{" "}
+            {dataUser?.active === true ? "menghapus" : "memberikan"} akses ke{" "}
+            {dataUser?.username} ?
+          </Title>
+          <Group position="center">
+            <Button
+              radius={"xl"}
+              onClick={() => {
+                setOpenedModal(false);
+              }}
+            >
+              Tidak
+            </Button>
+            <Button
+              color="green"
+              loaderPosition="center"
+              loading={
+                (isLoadingAccess && userId === dataUser?.id) ||
+                (isLoadingDelete && userId === dataUser?.id)
+              }
+              radius={"xl"}
+              onClick={() => {
+                if (dataUser?.active === true) {
+                  onDelete(dataUser?.id!);
+                } else {
+                  onAccess(dataUser?.id!, dataUser?.nomor!);
+                }
+              }}
+            >
+              Ya
+            </Button>
+          </Group>
+        </Stack>
+      </Admin_ComponentModal>
     </>
   );
 }

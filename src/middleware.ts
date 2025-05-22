@@ -137,7 +137,7 @@ export const middleware = async (req: NextRequest) => {
           "User validation failed:",
           userValidateResponse.statusText
         );
-        return setCorsHeaders(unauthorizedResponseAPIUserValidate());
+        return setCorsHeaders(unauthorizedResponseAPIUserValidate(req));
       }
 
       const userValidateJson = await userValidateResponse.json();
@@ -305,14 +305,17 @@ function unauthorizedResponseValidationAPIRequest() {
   );
 }
 
-function unauthorizedResponseAPIUserValidate() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized api user validate" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
+function unauthorizedResponseAPIUserValidate(req: NextRequest) {
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/waiting-room", req.url))
   );
+  // return new NextResponse(
+  //   JSON.stringify({ error: "Unauthorized api user validate" }),
+  //   {
+  //     status: 401,
+  //     headers: { "Content-Type": "application/json" },
+  //   }
+  // );
 }
 
 function unauthorizedResponseDataUserNotFound(req: NextRequest) {

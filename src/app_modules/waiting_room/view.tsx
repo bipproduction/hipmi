@@ -98,10 +98,12 @@ export default function WaitingRoom_View({
                       try {
                         setIsLoadingHome(true);
                         router.replace("/", { scroll: false });
+                        setTimeout(() => {
+                          setIsLoadingHome(false);
+                        }, 1000);
                       } catch (error) {
-                        clientLogger.error("Error button to home", error);
-                      } finally {
                         setIsLoadingHome(false);
+                        clientLogger.error("Error button to home", error);
                       }
                     }}
                   >
