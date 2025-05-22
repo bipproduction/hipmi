@@ -32,7 +32,7 @@ export default function InvalidUser() {
     <>
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" spacing="md" h={"100vh"}>
-          <Title order={2} c={MainColor.white}>
+          <Title order={3} c={MainColor.white} align="center">
             Maaf, Anda tidak memiliki izin untuk mengakses halaman ini. Silakan logout terlebih dahulu.
           </Title>
           <Button
