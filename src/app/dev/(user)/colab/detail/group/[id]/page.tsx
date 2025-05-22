@@ -4,6 +4,8 @@ import { Colab_GroupChatView } from "@/app_modules/colab";
 import colab_getMessageByRoomId from "@/app_modules/colab/fun/get/room_chat/get_message_by_room_id";
 import { user_getOneByUserId } from "@/app_modules/home/fun/get/get_one_user_by_id";
 import _ from "lodash";
+export const dynamic = "force-dynamic";
+
 
 export default async function Page({ params }: { params: { id: string } }) {
   const roomId = params.id;
