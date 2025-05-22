@@ -1,5 +1,6 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 type MiddlewareConfig = {
   apiPath: string;
@@ -12,25 +13,35 @@ type MiddlewareConfig = {
   log: boolean;
 };
 
-const CONFIG: MiddlewareConfig = {
+const middlewareConfig: MiddlewareConfig = {
   apiPath: "/api",
   loginPath: "/login",
   userPath: "/dev/home",
   publicRoutes: [
+    // API
     "/",
     "/api/voting/*",
     "/api/collaboration/*",
     "/api/notifikasi/*",
     "/api/logs/*",
     "/api/auth/*",
+    // "/api/origin-url",
+    // "/api/job*",
+
+    // ADMIN API
+    // >> buat dibawah sini <<
     "/api/admin/donasi/*",
     "/api/admin/investasi/*",
     "/api/admin/collaboration/*",
+
+    // Akses awal
     "/api/get-cookie",
     "/api/user/activation",
     "/api/user-validate",
     "/api/version",
     "/api/validation",
+
+    // PAGE
     "/login",
     "/register",
     "/validasi",
@@ -42,6 +53,8 @@ const CONFIG: MiddlewareConfig = {
     "/auth/api/login",
     "/waiting-room",
     "/zCoba/*",
+
+    // ASSETS
     "/aset/global/main_background.png",
     "/aset/logo/logo-hipmi.png",
   ],
@@ -52,14 +65,22 @@ const CONFIG: MiddlewareConfig = {
 };
 
 export const middleware = async (req: NextRequest) => {
-  const { apiPath, encodedKey, loginPath, publicRoutes, sessionKey, userPath } =
-    CONFIG;
+  const {
+    apiPath,
+    encodedKey,
+    loginPath,
+    publicRoutes,
+    sessionKey,
+    validationApiRoute,
+    userPath,
+  } = middlewareConfig;
 
   const { pathname } = req.nextUrl;
-
-  // Handle CORS preflight
   const corsResponse = handleCors(req);
-  if (corsResponse) return corsResponse;
+
+  if (corsResponse) {
+    return corsResponse;
+  }
 
   // Check if route is public
   const isPublicRoute = isRoutePublic(pathname, publicRoutes, loginPath);
@@ -67,7 +88,7 @@ export const middleware = async (req: NextRequest) => {
     return setCorsHeaders(NextResponse.next());
   }
 
-  // Get token from cookie or Authorization header
+  // Get token from cookies or Authorization header
   const token = getToken(req, sessionKey);
   const user = await verifyToken({ token, encodedKey });
 
@@ -75,83 +96,97 @@ export const middleware = async (req: NextRequest) => {
   if (pathname === loginPath) {
     if (user) {
       const response = NextResponse.redirect(new URL(userPath, req.url));
-      if (token) setTokenCookie(response, sessionKey, token);
+      // Preserve token in cookie when redirecting
+      if (token) {
+        response.cookies.set(sessionKey, token, {
+          // httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+        });
+      }
       return setCorsHeaders(response);
     }
     return setCorsHeaders(NextResponse.next());
   }
 
-  // Redirect to login if no valid user
+  // Redirect to login if no user found
   if (!user) {
     const response = NextResponse.redirect(new URL(loginPath, req.url));
-    deleteTokenCookie(response, sessionKey);
+    // Clear invalid token
+    response.cookies.delete(sessionKey);
     return setCorsHeaders(response);
   }
 
-  // Handle API requests under /api
+  // Handle API requests
   if (pathname.startsWith(apiPath)) {
-    if (!token) return setCorsHeaders(unauthorizedResponseTokenAPI());
+    // const reqToken = req.headers.get("Authorization")?.split(" ")[1];
+    if (!token) {
+      return setCorsHeaders(unauthorizedResponseTokenAPI());
+    }
 
     try {
+
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
-      const validationResponse = await fetch(
-        `${apiBaseUrl}${CONFIG.validationApiRoute}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const validationResponse = await fetch(`${apiBaseUrl}/api/validation`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!validationResponse.ok) {
         console.error("Validation failed:", validationResponse.statusText);
         return setCorsHeaders(unauthorizedResponseAPI());
       }
 
-      const validationData = await validationResponse.json();
-      if (validationData.success === false) {
+      const validationResponseJson = await validationResponse.json();
+
+      if (validationResponseJson.success === false) {
         return setCorsHeaders(unauthorizedResponseDataUserNotFound(req));
       }
     } catch (error) {
-      console.error("Error validating API request:", error);
+      console.error(
+        "Error validating API request:",
+        (error as Error).message || error
+      );
       return setCorsHeaders(unauthorizedResponseValidationAPIRequest());
     }
   }
 
-  // Handle /dev routes - active user check
+  // Handle /dev routes that require active status
   if (pathname.startsWith("/dev")) {
     try {
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
-      const userValidateResponse = await fetch(
-        `${apiBaseUrl}/api/user-validate`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      if (!userValidateResponse.ok) {
-        console.error(
-          "User validation failed:",
-          userValidateResponse.statusText
-        );
+      const userValidate = await fetch(`${apiBaseUrl}/api/user-validate`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!userValidate.ok) {
+        console.error("Validation failed:", userValidate.statusText);
         return setCorsHeaders(unauthorizedResponseAPIUserValidate());
       }
 
-      const userValidateJson = await userValidateResponse.json();
+      const userValidateJson = await userValidate.json();
 
-      if (userValidateJson.success === true && !userValidateJson.data) {
-        return setCorsHeaders(unauthorizedResponseDataUserNotFound(req));
+      if (userValidateJson.success == true && !userValidateJson.data) {
+        unauthorizedResponseDataUserNotFound(req);
       }
 
       if (!userValidateJson.data.active) {
         return setCorsHeaders(unauthorizedResponseUserNotActive(req));
       }
     } catch (error) {
-      console.error("Error during user validation API:", error);
-      if (!token) return setCorsHeaders(unauthorizedResponseTokenPAGE());
+      console.error("Error api user validate:", error);
+      if (!token) {
+        console.error("Token is undefined");
+        return setCorsHeaders(unauthorizedResponseTokenPAGE());
+      }
       return setCorsHeaders(
         await unauthorizedResponseValidationUser({
           loginPath,
@@ -163,13 +198,20 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
-  // Default: proceed with request and add CORS headers
+  // // Ensure token is preserved in cookie
+  // if (token) {
+  //   response.cookies.set(sessionKey, token, {
+  //     // httpOnly: true,
+  //     secure: process.env.NODE_ENV === "production",
+  //     sameSite: "lax",
+  //     path: "/",
+  //   });
+  // }
   const response = NextResponse.next();
   return setCorsHeaders(response);
 };
 
-// ========================== HELPERS ==========================
-
+//  ============================== RESPONSE HANDLERS ==============================//
 function isRoutePublic(
   pathname: string,
   publicRoutes: string[],
@@ -182,36 +224,112 @@ function isRoutePublic(
 }
 
 function getToken(req: NextRequest, sessionKey: string): string | undefined {
-  const tokenFromCookie = req.cookies.get(sessionKey)?.value;
-  if (tokenFromCookie) return tokenFromCookie;
+  return (
+    req.cookies.get(sessionKey)?.value ||
+    req.headers.get("Authorization")?.split(" ")[1]
+  );
+}
 
-  const authHeader = req.headers.get("Authorization");
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    return authHeader.split(" ")[1];
+function unauthorizedResponse() {
+  return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function unauthorizedResponseAPIUserValidate() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized api user validate" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseTokenAPI() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized token on API" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseTokenPAGE() {
+  return new NextResponse(JSON.stringify({ error: "Unauthorized  on page" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function unauthorizedResponseAPI() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized Response API" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseValidationAPIRequest() {
+  return new NextResponse(
+    JSON.stringify({ error: "Unauthorized validation api request" }),
+    {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+}
+
+function unauthorizedResponseDataUserNotFound(req: NextRequest) {
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/invalid-user", req.url))
+  );
+}
+
+function unauthorizedResponseUserNotActive(req: NextRequest) {
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/waiting-room", req.url))
+  );
+}
+
+async function unauthorizedResponseValidationUser({
+  loginPath,
+  sessionKey,
+  token,
+  req,
+}: {
+  loginPath: string;
+  sessionKey: string;
+  token: string;
+  req: NextRequest;
+}) {
+  const userLogout = await fetch(new URL("/api/auth/logout", req.url), {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (userLogout.ok) {
+    const response = NextResponse.redirect(new URL(loginPath, req.url));
+    // Clear invalid token
+    response.cookies.delete(sessionKey);
+    return setCorsHeaders(response);
   }
-  return undefined;
-}
-
-
-function cookieOptions() {
-  return {
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-    httpOnly: true,
-  };
-}
-
-function setTokenCookie(
-  response: NextResponse,
-  sessionKey: string,
-  token: string
-) {
-  response.cookies.set(sessionKey, token, cookieOptions());
-}
-
-function deleteTokenCookie(response: NextResponse, sessionKey: string) {
-  response.cookies.delete(sessionKey);
+  console.error("Error logging out user:", await userLogout.json());
+  return setCorsHeaders(
+    NextResponse.redirect(new URL("/invalid-user", req.url))
+  );
+  // return setCorsHeaders(
+  //   new NextResponse(JSON.stringify({ error: "Logout failed" }), {
+  //     status: 500,
+  //     headers: { "Content-Type": "application/json" },
+  //   })
+  // );
 }
 
 function setCorsHeaders(res: NextResponse): NextResponse {
@@ -253,108 +371,14 @@ async function verifyToken({
 
   try {
     const enc = new TextEncoder().encode(encodedKey);
-    const { payload } = await jwtVerify(token, enc, { algorithms: ["HS256"] });
-    return (payload.user as Record<string, unknown>) || null;
+    const { payload } = await jwtVerify(token, enc, {
+      algorithms: ["HS256"],
+    });
+    return (payload.user as Record<string, any>) || null;
   } catch (error) {
     console.error("Token verification failed:", error);
     return null;
   }
-}
-
-function unauthorizedResponse() {
-  return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-    status: 401,
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
-function unauthorizedResponseTokenAPI() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized token on API" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-}
-
-function unauthorizedResponseTokenPAGE() {
-  return new NextResponse(JSON.stringify({ error: "Unauthorized on page" }), {
-    status: 401,
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
-function unauthorizedResponseAPI() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized Response API" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-}
-
-function unauthorizedResponseValidationAPIRequest() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized validation api request" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-}
-
-function unauthorizedResponseAPIUserValidate() {
-  return new NextResponse(
-    JSON.stringify({ error: "Unauthorized api user validate" }),
-    {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-}
-
-function unauthorizedResponseDataUserNotFound(req: NextRequest) {
-  return setCorsHeaders(
-    NextResponse.redirect(new URL("/invalid-user", req.url))
-  );
-}
-
-function unauthorizedResponseUserNotActive(req: NextRequest) {
-  return setCorsHeaders(
-    NextResponse.redirect(new URL("/waiting-room", req.url))
-  );
-}
-
-async function unauthorizedResponseValidationUser({
-  loginPath,
-  sessionKey,
-  token,
-  req,
-}: {
-  loginPath: string;
-  sessionKey: string;
-  token: string;
-  req: NextRequest;
-}) {
-  const userLogout = await fetch(new URL("/api/auth/logout", req.url), {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (userLogout.ok) {
-    const response = NextResponse.redirect(new URL(loginPath, req.url));
-    deleteTokenCookie(response, sessionKey);
-    return setCorsHeaders(response);
-  }
-
-  console.error("Error logging out user:", await userLogout.json());
-  return setCorsHeaders(
-    NextResponse.redirect(new URL("/invalid-user", req.url))
-  );
 }
 
 export const config = {

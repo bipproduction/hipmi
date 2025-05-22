@@ -2,22 +2,15 @@ import { decrypt } from "@/app/(auth)/_lib/decrypt";
 import { prisma } from "@/lib";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
     const SESSIONKEY = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
-    const TOKENKEY = process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!;
-    const cookieStore = cookies();
-
-    const authHeader = req.headers.get("Authorization") || "";
-    const bearerToken = authHeader.startsWith("Bearer ")
-      ? authHeader.split(" ")[1]
-      : undefined;
-
-    const token = cookieStore.get(SESSIONKEY)?.value || bearerToken;
-
+    // const token = req.headers.get("Authorization")?.split(" ")[1]
+    const token =
+      cookies().get(SESSIONKEY)?.value ||
+      req.headers.get("Authorization")?.split(" ")[1];
     if (!token) {
       return NextResponse.json(
         {
@@ -28,16 +21,17 @@ export async function GET(req: Request) {
       );
     }
 
-    const decrypted = await decrypt({
-      token,
-      encodedKey: TOKENKEY,
+    const decripted = await decrypt({
+      token: token!,
+      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
     });
 
-    if (!decrypted?.id) {
+    if (!decripted) {
+      await prisma.$disconnect();
       return NextResponse.json(
         {
           success: false,
-          message: "Unauthorized: invalid token data",
+          message: "Unauthorized",
         },
         { status: 401 }
       );
@@ -45,30 +39,11 @@ export async function GET(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: {
-        id: decrypted.id,
+        id: decripted.id,
       },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User tidak ditemukan",
-        },
-        { status: 404 }
-      );
-    }
-
-    if (!user.active) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User belum aktif",
-          data: user,
-        },
-        { status: 403 }
-      );
-    }
+    // Disconnect after successful query
 
     return NextResponse.json({
       success: true,
@@ -76,6 +51,8 @@ export async function GET(req: Request) {
       data: user,
     });
   } catch (error) {
+    // Ensure connection is closed even if error occurs
+
     console.error("Error in user validation:", error);
     return NextResponse.json(
       {
