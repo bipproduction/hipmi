@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const sessionKey = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
+  const sessionKey = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!; // Gunakan environment variable yang tidak diekspos ke client-side
   if (!sessionKey) {
     return NextResponse.json(
       { success: false, message: "Session key tidak ditemukan" },
@@ -23,20 +23,11 @@ export async function GET() {
   }
 
   try {
-    const response = NextResponse.json({
-      success: true,
-      message: "Logout berhasil",
-    });
-
-    // Menghapus cookie dengan set maxAge 0
-    response.cookies.set({
-      name: sessionKey,
-      value: "",
-      path: "/",
-      maxAge: 0,
-    });
-
-    return response;
+    cookieStore.delete(sessionKey);
+    return NextResponse.json(
+      { success: true, message: "Logout berhasil" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Gagal menghapus cookie:", error);
     return NextResponse.json(

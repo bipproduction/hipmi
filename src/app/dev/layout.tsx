@@ -1,13 +1,13 @@
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { RealtimeProvider } from "../../lib";
 import { ServerEnv } from "../../lib/server_env";
+export const dynamic = "force-dynamic";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
   const userId = await funGetUserIdByToken();
 
   return (
