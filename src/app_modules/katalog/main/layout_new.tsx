@@ -1,5 +1,6 @@
 "use client";
 import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import UI_NewLayoutTamplate, {
   UI_NewChildren,
   UI_NewHeader,
@@ -13,22 +14,23 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import DrawerKatalogNew from "../component/drawer_katalog_new";
 
-export default function LayoutKatalogNew({
-  children,
-  userLoginId,
-}: {
-  children: any;
-  userLoginId: string;
-}) {
+export default function LayoutKatalogNew({ children }: { children: any }) {
   const param = useParams<{ id: string }>();
   const [authorId, setAuthorId] = useState("");
   const [userRoleId, setUserRoleId] = useState("");
   const [opened, { open, close }] = useDisclosure();
   const [loading, setLoading] = useState(true);
+  const [userLoginId, setUserLoginId] = useState("");
 
-  async function getProfile() {
+  async function handleLoadDataUser() {
     try {
       setLoading(true);
+
+      const reponseUser = await apiNewGetUserIdByToken();
+      if (reponseUser.success) {
+        setUserLoginId(reponseUser.userId);
+      }
+
       const response = await apiGetUserProfile(`?profile=${param.id}`);
 
       if (response) {
@@ -43,38 +45,11 @@ export default function LayoutKatalogNew({
   }
 
   useShallowEffect(() => {
-    getProfile();
+    handleLoadDataUser();
   }, []);
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="KATALOG"
-            customButtonRight={
-              loading ? (
-                <ActionIcon disabled variant="transparent">
-                  <CustomSkeleton h={20} w={20} radius={"100%"} />
-                </ActionIcon>
-              ) : authorId == userLoginId ? (
-                <ActionIcon
-                  c="white"
-                  variant="transparent"
-                  onClick={() => open()}
-                >
-                  <IconDotsVertical />
-                </ActionIcon>
-              ) : (
-                <ActionIcon disabled variant="transparent"></ActionIcon>
-              )
-            }
-          />
-        }
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header
