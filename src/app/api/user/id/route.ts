@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "@/app/(auth)/_lib/decrypt";
 
@@ -7,7 +7,11 @@ export async function GET() {
 
   if (!SESSION_KEY) {
     return NextResponse.json(
-      { success: false, error: "Session key not configured" },
+      {
+        success: false,
+        error: "Session key not configured",
+        message: "Session key not configured",
+      },
       { status: 500 }
     );
   }
@@ -17,7 +21,7 @@ export async function GET() {
 
   if (!token) {
     return NextResponse.json(
-      { success: false, error: "No token found" },
+      { success: false, error: "No token found", message: "No token found" },
       { status: 401 }
     );
   }
@@ -30,19 +34,24 @@ export async function GET() {
 
     if (!decoded) {
       return NextResponse.json(
-        { success: false, error: "Invalid token" },
+        { success: false, error: "Invalid token", message: "Invalid token" },
         { status: 401 }
       );
     }
 
     return NextResponse.json({
       success: true,
+      message: "Berhasil mendapatkan data",
       userId: decoded.id,
     });
   } catch (error) {
     console.error("Error decoding token:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to decode token" },
+      {
+        success: false,
+        error: "Failed to decode token",
+        message: "Failed to decode token",
+      },
       { status: 500 }
     );
   }

@@ -8,19 +8,11 @@ import UI_NewLayoutTamplate, {
 
 export default function CreatePortofolioLayout({
   children,
-  profileId,
 }: {
   children: any;
-  profileId: any;
 }) {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Tambah Portofolio" />}
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Tambah Portofolio" />

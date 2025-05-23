@@ -5,29 +5,38 @@ import UI_NewLayoutTamplate, {
   UI_NewHeader,
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import ComponentPortofolio_ButtonMoreNew from "../component/button_more_new";
+import { useState } from "react";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
 export default function PortofolioLayoutNew({
   children,
-  userLoginId,
 }: {
   children: any;
-  userLoginId: string;
 }) {
+  const [userLoginId, setUserLoginId] = useState("");
+
+  useShallowEffect(() => {
+    onLoadDataUser();
+  }, []);
+
+  async function onLoadDataUser() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        console.error("Error get user id", response.message);
+        setUserLoginId("");
+      }
+    } catch (error) {
+      console.error("Error get user id", error);
+      setUserLoginId("");
+    }
+  }
+
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Detail Portofolio"
-            customButtonRight={
-              <ComponentPortofolio_ButtonMoreNew userLoginId={userLoginId} />
-            }
-          />
-        }
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header
