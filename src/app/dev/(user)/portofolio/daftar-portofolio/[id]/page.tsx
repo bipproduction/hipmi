@@ -1,6 +1,6 @@
 import { ListDetailPortofolioNew } from "@/app_modules/katalog/portofolio";
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <ListDetailPortofolioNew />
