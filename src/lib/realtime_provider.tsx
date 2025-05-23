@@ -20,6 +20,7 @@ import {
   gs_votingTiggerBeranda,
   IRealtimeData,
 } from "./global_state";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
 // const WIBU_REALTIME_TOKEN: string | undefined =
 //   process.env.NEXT_PUBLIC_WIBU_REALTIME_TOKEN;
@@ -32,14 +33,19 @@ export type TypeNotification = {
   userId?: string;
 };
 
+type IResponseAPIGetUser = {
+  success: boolean;
+  userId: string;
+};
+
 // Tambahkan flag global untuk mencegah inisialisasi ulang
 let isWibuRealtimeInitialized = false;
 
 export default function RealtimeProvider({
-  userId,
+  // userId,
   WIBU_REALTIME_TOKEN,
 }: {
-  userId: string;
+  // userId: string;
   WIBU_REALTIME_TOKEN: string;
 }) {
   const [dataRealtime, setDataRealtime] = useAtom(gs_realtimeData);
@@ -88,9 +94,14 @@ export default function RealtimeProvider({
     gs_investasiTriggerBeranda
   );
 
+  // Client-side only
   useShallowEffect(() => {
-    try {
-      if (!isWibuRealtimeInitialized) {
+    const initRealtime = async () => {
+      if (typeof window === "undefined") return;
+
+      const response: IResponseAPIGetUser = await apiNewGetUserIdByToken();
+
+      if (response.success) {
         WibuRealtime.init({
           project: "hipmi",
           WIBU_REALTIME_TOKEN: WIBU_REALTIME_TOKEN,
@@ -108,7 +119,7 @@ export default function RealtimeProvider({
               data.type == "trigger" &&
               data.pushNotificationTo == "USER" &&
               data.dataMessage?.kategoriApp == "ACCESS" &&
-              data.dataMessage?.userId == userId
+              data.dataMessage?.userId == response.userId
             ) {
               setIsAccessUser(data.dataMessage.status as any);
             }
@@ -117,7 +128,7 @@ export default function RealtimeProvider({
             if (
               data.type == "notification" &&
               data.pushNotificationTo == "USER" &&
-              data.dataMessage?.userId == userId
+              data.dataMessage?.userId == response.userId
             ) {
               setNewUserNtf((e) => e + 1);
               setDataRealtime(data.dataMessage as any);
@@ -164,7 +175,7 @@ export default function RealtimeProvider({
               data.type == "notification" &&
               data.pushNotificationTo == "USER" &&
               data.dataMessage?.status == "Peserta Event" &&
-              userId !== data.dataMessage?.userId
+              response.userId !== data.dataMessage?.userId
             ) {
               setNewUserNtf((e) => e + 1);
             }
@@ -192,7 +203,7 @@ export default function RealtimeProvider({
               data.type == "notification" &&
               data.pushNotificationTo == "USER" &&
               data.dataMessage?.status == "Voting Masuk" &&
-              userId !== data.dataMessage?.userId
+              response.userId !== data.dataMessage?.userId
             ) {
               setNewUserNtf((e) => e + 1);
             }
@@ -260,11 +271,12 @@ export default function RealtimeProvider({
           },
         });
 
-        // Tandai bahwa WibuRealtime telah diinisialisasi
         isWibuRealtimeInitialized = true;
       }
-    } catch (error) {
-      console.log("Error Realtime:", error);
+    };
+
+    if (!isWibuRealtimeInitialized) {
+      initRealtime();
     }
   }, []);
 

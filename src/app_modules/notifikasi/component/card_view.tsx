@@ -77,7 +77,6 @@ export function ComponentNotifiaksi_CardView({
         onClick={async () => {
           try {
             setVisible(true);
-            console.log("data", data);
 
             // JOB
             if (data?.kategoriApp === "JOB") {

@@ -112,3 +112,33 @@ const apiGetSeasonUserId = async () => {
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
+
+export const apiNewGetUserIdByToken = async () => {
+  try {
+    const response = await fetch(`/api/user/id`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get user id",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to get user id");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error get user id", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+}
+  
