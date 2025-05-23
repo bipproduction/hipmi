@@ -1,6 +1,6 @@
 import { ViewKatalogNew } from "@/app_modules/katalog";
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <ViewKatalogNew />

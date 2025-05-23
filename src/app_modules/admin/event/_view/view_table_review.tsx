@@ -262,7 +262,7 @@ export default function AdminEvent_ComponentTableReview() {
         <td>
           <Center c={AdminColor.white}>
             <Box w={100}>
-              <Text>{e?.Author?.username}</Text>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
             </Box>
           </Center>
         </td>
