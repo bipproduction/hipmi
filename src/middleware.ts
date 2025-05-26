@@ -18,6 +18,7 @@ const CONFIG: MiddlewareConfig = {
   userPath: "/dev/home",
   publicRoutes: [
     "/",
+    "/api/not-user/*",
     "/api/voting/*",
     "/api/collaboration/*",
     "/api/notifikasi/*",
@@ -36,7 +37,7 @@ const CONFIG: MiddlewareConfig = {
     "/validasi",
     "/splash",
     "/invalid-user",
-    "/job-vacancy",
+    "/job-vacancy/*",
     "/preview-image",
     "/auth/login",
     "/auth/api/login",
