@@ -1,6 +1,6 @@
 {
   "name": "hipmi",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "private": true,
   "prisma": {
     "seed": "bun prisma/seed.ts"

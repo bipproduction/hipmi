@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.13](https://github.com/bipproduction/hipmi/compare/v1.4.12...v1.4.13) (2025-05-26)
+
+
+### Bug Fixes
+
+* collaboration ([5007827](https://github.com/bipproduction/hipmi/commit/5007827d51117105b879bf18f06da60db8c48ff4))
+
 ## [1.4.12](https://github.com/bipproduction/hipmi/compare/v1.4.11...v1.4.12) (2025-05-26)
 
 
