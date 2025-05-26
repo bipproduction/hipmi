@@ -16,9 +16,9 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Collaboration_SkeletonCreate } from "../component";
-import { apiGetMasterCollaboration } from "../component/lib/api_collaboration";
 import colab_funCreateProyek from "../fun/create/fun_create_proyek";
 import { MODEL_COLLABORATION_MASTER } from "../model/interface";
+import { apiGetMasterIndustri } from "../_lib/api_collaboration";
 
 interface IValue {
   title: string;
@@ -42,17 +42,18 @@ export default function Colab_Create() {
   >(null);
 
   useShallowEffect(() => {
-    onLoadMaster();
+    onLoadIndustri();
   }, []);
 
-  async function onLoadMaster() {
+  async function onLoadIndustri() {
     try {
-      const respone = await apiGetMasterCollaboration();
-      if (respone.success) {
-        setListIndustri(respone.data);
+      const response = await apiGetMasterIndustri();
+
+      if (response.success) {
+        setListIndustri(response.data);
       }
     } catch (error) {
-      clientLogger.error("Error get master collaboration", error);
+      clientLogger.error("Error get master industri", error);
     }
   }
 
