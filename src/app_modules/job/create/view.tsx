@@ -26,10 +26,13 @@ import {
   ComponentGlobal_CardStyles,
   ComponentGlobal_InputCountDown,
 } from "@/app_modules/_global/component";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
 import { Job_ComponentButtonSaveCreate } from "../component";
 import { defaultDeskripsi, defaultSyarat } from "../component/default_value";
 
-export default function Job_Create({userLoginId}: {userLoginId: string}) {
+export default function Job_Create() {
   const [value, setValue] = useState({
     title: "",
     content: "",
@@ -37,10 +40,28 @@ export default function Job_Create({userLoginId}: {userLoginId: string}) {
   });
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
-  // useShallowEffect(() => {
-  //   if (window && window.document) setReload(true);
-  // }, []);
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
+
+  if (!userLoginId) {
+    return <CustomSkeleton height={300} />;
+  }
 
   return (
     <Stack>
@@ -175,7 +196,7 @@ export default function Job_Create({userLoginId}: {userLoginId: string}) {
       </ComponentGlobal_CardStyles>
 
       <Job_ComponentButtonSaveCreate
-        userLoginId={userLoginId}
+        userLoginId={userLoginId as string}
         value={value as any}
         file={file as any}
       />

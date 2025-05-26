@@ -10,15 +10,15 @@ import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDotsVertical, IconEdit } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
 import React from "react";
 
 export default function LayoutJob_DetailDraft({
   children,
-  jobId,
 }: {
   children: React.ReactNode;
-  jobId: string;
 }) {
+  const { id } = useParams();
   const [opened, { open, close }] = useDisclosure();
 
   const listComponent = [
@@ -26,28 +26,12 @@ export default function LayoutJob_DetailDraft({
       id: "1",
       name: "Edit Job",
       icon: <IconEdit />,
-      path: RouterJob.edit + jobId,
+      path: RouterJob.edit + id,
     },
   ];
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Detail Draft"
-            iconRight={
-              <ActionIcon variant="transparent" onClick={() => open()}>
-                <IconDotsVertical color="white" />
-              </ActionIcon>
-            }
-            // routerRight={}
-          />
-        }
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header

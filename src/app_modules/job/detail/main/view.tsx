@@ -44,13 +44,13 @@ export default function Job_MainDetail() {
       <Stack>
         <ComponentJob_DetailData data={data as any} />
 
-        {!data ? (
+        {/* {!data ? (
           <Center>
             <CustomSkeleton height={40} width={"50%"} radius={"xl"} />
           </Center>
         ) : (
           <ButtonAction jobId={param.id} />
-        )}
+        )} */}
       </Stack>
     </>
   );
