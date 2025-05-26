@@ -6,7 +6,7 @@ import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { Button, Select, Stack, Textarea, TextInput } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import colab_funEditById from "../fun/edit/fun_edit_by_id";
 import {
@@ -18,15 +18,62 @@ import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/co
 import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { useShallowEffect } from "@mantine/hooks";
+import {
+  apiGetMasterIndustri,
+  apiGetOneCollaborationById,
+} from "../_lib/api_collaboration";
+import _ from "lodash";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Colab_Edit({
-  selectedData,
-  listIndustri,
-}: {
-  selectedData: MODEL_COLLABORATION;
-  listIndustri: MODEL_COLLABORATION_MASTER[];
-}) {
-  const [value, setValue] = useState(selectedData);
+export default function Colab_Edit() {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_COLLABORATION | any | null>();
+  const [listIndustri, setListIndustri] = useState<
+    MODEL_COLLABORATION_MASTER[] | null
+  >(null);
+
+  useShallowEffect(() => {
+    onLoadIndustri();
+  }, []);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneCollaborationById({
+        id: id as string,
+        kategori: "detail",
+      });
+      if (response.success) {
+        const fixData = _.omit(response.data, [
+          "ProjectCollaboration_Partisipasi",
+          "Author",
+        ]);
+        setData(fixData as MODEL_COLLABORATION);
+      }
+    } catch (error) {
+      clientLogger.error("Error get one collaboration by id", error);
+    }
+  }
+
+  async function onLoadIndustri() {
+    try {
+      const response = await apiGetMasterIndustri();
+
+      if (response.success) {
+        setListIndustri(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get master industri", error);
+    }
+  }
+
+  if (data === undefined || listIndustri === null)
+    return <CustomSkeleton height={400} />;
+
   return (
     <>
       <Stack px={"xs"} py={"md"}>
@@ -46,10 +93,10 @@ export default function Colab_Edit({
           label="Judul"
           withAsterisk
           placeholder="Masukan judul proyek"
-          value={value.title}
+          value={data?.title}
           onChange={(val) =>
-            setValue({
-              ...value,
+            setData({
+              ...data,
               title: val.currentTarget.value,
             })
           }
@@ -71,10 +118,10 @@ export default function Colab_Edit({
           label="Lokasi"
           withAsterisk
           placeholder="Masukan lokasi proyek"
-          value={value.lokasi}
+          value={data?.lokasi}
           onChange={(val) =>
-            setValue({
-              ...value,
+            setData({
+              ...data,
               lokasi: val.currentTarget.value,
             })
           }
@@ -98,15 +145,19 @@ export default function Colab_Edit({
           placeholder="Pilih kategori industri"
           label="Pilih Industri"
           withAsterisk
-          value={value?.ProjectCollaborationMaster_Industri.id}
-          data={listIndustri.map((e) => ({
-            value: e.id,
-            label: e.name,
-          }))}
+          value={data?.ProjectCollaborationMaster_Industri.id}
+          data={
+            _.isEmpty(listIndustri)
+              ? []
+              : listIndustri.map((e) => ({
+                  value: e.id,
+                  label: e.name,
+                }))
+          }
           onChange={
             (val) =>
-              setValue({
-                ...(value as any),
+              setData({
+                ...(data as any),
                 ProjectCollaborationMaster_Industri: {
                   id: val as any,
                 },
@@ -119,17 +170,17 @@ export default function Colab_Edit({
           <Component_V3_Label_TextInput text="Tujuan Proyek" />
 
           <Component_V3_TextEditor
-            data={value.purpose}
+            data={data?.purpose}
             onSetData={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 purpose: val,
               });
             }}
           />
 
           <ComponentGlobal_InputCountDown
-            lengthInput={funReplaceHtml({ html: value.purpose }).length}
+            lengthInput={funReplaceHtml({ html: data?.purpose }).length}
             maxInput={maxInputLength}
           />
         </Stack>
@@ -138,80 +189,22 @@ export default function Colab_Edit({
           <Component_V3_Label_TextInput text="Keuntungan" />
 
           <Component_V3_TextEditor
-            data={value.benefit}
+            data={data?.benefit}
             onSetData={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 benefit: val,
               });
             }}
           />
 
           <ComponentGlobal_InputCountDown
-            lengthInput={funReplaceHtml({ html: value.benefit }).length}
+            lengthInput={funReplaceHtml({ html: data?.benefit }).length}
             maxInput={maxInputLength}
           />
         </Stack>
 
-        {/* <Stack spacing={5}>
-          <Textarea
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              }
-            }}
-            label="Tujuan Proyek"
-            placeholder="Masukan tujuan proyek"
-            withAsterisk
-            minRows={5}
-            value={value.purpose}
-            onChange={(val) =>
-              setValue({
-                ...value,
-                purpose: val.currentTarget.value,
-              })
-            }
-          />
-          <ComponentGlobal_InputCountDown
-            lengthInput={value.purpose.length}
-            maxInput={500}
-          />
-        </Stack> */}
-
-        {/* <Stack spacing={5}>
-          <Textarea
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-            }}
-            label="Keuntungan "
-            placeholder="Masukan keuntungan dalam proyek"
-            minRows={5}
-            value={value.benefit}
-            onChange={(val) =>
-              setValue({
-                ...value,
-                benefit: val.currentTarget.value,
-              })
-            }
-          />
-          <ComponentGlobal_InputCountDown
-            lengthInput={value.benefit.length}
-            maxInput={500}
-          />
-        </Stack> */}
-
-        <ButtonAction value={value as any} />
+        <ButtonAction value={data as any} />
       </Stack>
     </>
   );

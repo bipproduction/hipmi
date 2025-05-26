@@ -4,6 +4,7 @@ export {
   apiGetMasterStatusTransaksi,
   apiGetAdminContact,
   apiGetMasterEmotions,
+  apiGetMasterIndustri,
 };
 
 const apiGetMasterBank = async () => {
@@ -107,4 +108,38 @@ const apiGetMasterEmotions = async () => {
   });
 
   return await response.json().catch(() => null);
+};
+const apiGetMasterIndustri = async () => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/master/industri`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Error get master industri:",
+        errorData?.message || "Unknown error"
+      );
+
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error get master industri:", error);
+    throw error;
+  }
 };

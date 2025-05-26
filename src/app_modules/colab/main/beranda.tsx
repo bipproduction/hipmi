@@ -1,8 +1,10 @@
 "use client";
 
-import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
+import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
 import { Box, Center, Loader } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -12,18 +14,14 @@ import { useState } from "react";
 import { apiGetAllCollaboration } from "../_lib/api_collaboration";
 import { ComponentColab_ButtonUpdateBeranda } from "../component/button/button_update_beranda";
 import { ComponentColab_CardBeranda } from "../component/card_view/card_beranda";
-import { MODEL_COLLABORATION } from "../model/interface";
 import { Collaboration_SkeletonBeranda } from "../component/skeleton_view";
-import { clientLogger } from "@/util/clientLogger";
+import { MODEL_COLLABORATION } from "../model/interface";
 
-export default function Colab_Beranda({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Colab_Beranda() {
   const [data, setData] = useState<MODEL_COLLABORATION[] | null>(null);
   const [activePage, setActivePage] = useState(1);
   const [isNewPost, setIsNewPost] = useState(false);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
   useShallowEffect(() => {
     onLoadData();
@@ -41,6 +39,23 @@ export default function Colab_Beranda({
       }
     } catch (error) {
       clientLogger.error("Error get all collaboration", error);
+    }
+  }
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
     }
   }
 
@@ -99,7 +114,7 @@ export default function Colab_Beranda({
               {(item) => (
                 <ComponentColab_CardBeranda
                   data={item}
-                  userLoginId={userLoginId}
+                  userLoginId={userLoginId as string}
                 />
               )}
             </ScrollOnly>
