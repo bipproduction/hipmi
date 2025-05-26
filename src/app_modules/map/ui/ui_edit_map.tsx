@@ -161,43 +161,6 @@ export function UiMap_EditMap({
               onSetImage={setImg}
             />
           </Center>
-
-          {/* <Center>
-            <FileButton
-              onChange={async (files: any | null) => {
-                try {
-                  const buffer = URL.createObjectURL(
-                    new Blob([new Uint8Array(await files.arrayBuffer())])
-                  );
-                  if (files.size > MAX_SIZE) {
-                    ComponentGlobal_NotifikasiPeringatan(
-                      PemberitahuanMaksimalFile,
-                      3000
-                    );
-                  } else {
-                    setImg(buffer);
-                    setFile(files);
-                  }
-                } catch (error) {
-                  console.log(error);
-                }
-              }}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => (
-                <Button
-                  {...props}
-                  radius={"xl"}
-                  leftIcon={<IconCamera />}
-                  bg={MainColor.yellow}
-                  color="yellow"
-                  c={"black"}
-                >
-                  Upload
-                </Button>
-              )}
-            </FileButton>
-          </Center> */}
         </Stack>
 
         <ComponentMap_ButtonUpdateDataMap data={data as any} file={file} />
