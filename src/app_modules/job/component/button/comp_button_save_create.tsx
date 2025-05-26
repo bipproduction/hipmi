@@ -1,8 +1,5 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/lib";
-import { IRealtimeData } from "@/lib/global_state";
-import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import {
@@ -11,6 +8,9 @@ import {
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useAtom } from "jotai";
@@ -20,13 +20,6 @@ import { WibuRealtime } from "wibu-pkg";
 import { job_funCreateNoFile, job_funCreateWithFile } from "../../fun";
 import { gs_job_hot_menu } from "../../global_state";
 import { MODEL_JOB } from "../../model/interface";
-import { apiCreatedJob } from "../../lib/api_fetch_job";
-import {
-  apiCreatedNotificationToAdmin,
-  apiGetSeasonUserId,
-} from "@/app_modules/_global/lib/api_fetch_global";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetUserId } from "@/app_modules/_global/lib/api_user";
 
 function Job_ComponentButtonSaveCreate({
   value,
@@ -35,13 +28,18 @@ function Job_ComponentButtonSaveCreate({
 }: {
   value: MODEL_JOB;
   file: File;
-  userLoginId: string;
+  userLoginId: string | null;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [hotMenu, setHotMenu] = useAtom(gs_job_hot_menu);
 
   async function onCreate() {
+    if (!userLoginId) {
+      ComponentGlobal_NotifikasiGagal("User tidak ditemukan");
+      return;
+    }
+
     try {
       setIsLoading(true);
       if (file === null) {

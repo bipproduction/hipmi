@@ -7,23 +7,16 @@ import UI_NewLayoutTamplate, {
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import { Job_ViewNotUserJobVacany } from "../_view";
 
-export function Job_UiNotUserView({ data }: { data: any }) {
+export function Job_UiNotUserView() {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate title="Job Vacancy" hideButtonLeft />
-        }
-      >
-        <Job_ViewNotUserJobVacany data={data} />
-      </UIGlobal_LayoutTamplate> */}
 
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Job Vacancy" hideButtonLeft />
         </UI_NewHeader>
         <UI_NewChildren>
-          <Job_ViewNotUserJobVacany data={data} />
+          <Job_ViewNotUserJobVacany/>
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
     </>

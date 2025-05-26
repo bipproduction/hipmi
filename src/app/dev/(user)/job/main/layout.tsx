@@ -1,8 +1,7 @@
-import { LayoutJob_Main } from "@/app_modules/job";
 import NewLayoutJob_Main from "@/app_modules/job/main/new_layout";
 import React from "react";
 
-export default async function Layout({
+export default  function Layout({
   children,
 }: {
   children: React.ReactNode;
