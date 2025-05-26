@@ -1,36 +1,54 @@
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
-import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
-import { UiMap_CreatePin } from "../ui/ui_create_pin";
-import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
-import { UiMap_EditPin } from "../ui";
-import { Component_Header } from "@/app_modules/_global/component/new/component_header";
-import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "@/app_modules/_global/ui/V2_layout_tamplate";
+"use client";
 
-const mapboxToken = process.env.MAPBOX_TOKEN!;
-export async function Map_EditPin({
-  portofolioId,
-  dataMap,
-}: {
-  portofolioId: string;
-  dataMap: any
-}) {
-  if (!mapboxToken)
-    return <ComponentGlobal_IsEmptyData text="Mapbox token not found" />;
+import { ComponentGlobal_BoxInformation } from "@/app_modules/_global/component";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetOneMapByPortofolioId } from "../lib/api_map";
+import { UiMap_EditPin } from "../ui";
+
+export function Map_EditPin({ mapboxToken }: { mapboxToken: string }) {
+  const { id } = useParams();
+  const [data, setData] = useState<any | null>();
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneMapByPortofolioId({ id: id as string });
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      setData(null);
+      console.error("Error get one map by portofolio id", error);
+    }
+  }
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Edit Pin" />}
-      >
-        <UiMap_EditPin mapboxToken={mapboxToken} dataMap={dataMap} />
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Edit Pin" />
         </UI_NewHeader>
         <UI_NewChildren>
-          <UiMap_EditPin mapboxToken={mapboxToken} dataMap={dataMap} />
+          {data === undefined ? (
+            <CustomSkeleton height={400} />
+          ) : !data ? (
+            <ComponentGlobal_BoxInformation informasi="Data tidak ditemukan" />
+          ) : (
+            <UiMap_EditPin mapboxToken={mapboxToken} dataMap={data} />
+          )}
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
     </>

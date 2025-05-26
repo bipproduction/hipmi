@@ -92,7 +92,7 @@ export function ComponentMap_ButtonUpdateDataMap({
         loading={isLoading}
         mb={"xl"}
         style={{ transition: "0.5s" }}
-        disabled={data.namePin === "" || file === null}
+        disabled={data.namePin === "" || data.imageId === null}
         radius={"xl"}
         bg={MainColor.yellow}
         color="yellow"
