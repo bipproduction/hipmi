@@ -110,3 +110,80 @@ export const apiGetMasterIndustri = async () => {
     throw error;
   }
 };
+
+export const apiCollaborationGetMessageByRoomId = async ({
+  id,
+  page,
+}: {
+  id: string;
+  page: string;
+}) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+    const response = await fetch(
+      `/api/collaboration/${id}/message?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Error get message by room id:",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to get message by room id");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error get message by room id:", error);
+    throw error;
+  }
+};
+
+export const apiCollaborationGetRoomById = async ({
+  id,
+}: {
+  id: string;
+}) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+    const response = await fetch(`/api/collaboration/${id}/room`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Error get room by id:",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to get room by id");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error get room by id:", error);
+    throw error;
+  }
+};
