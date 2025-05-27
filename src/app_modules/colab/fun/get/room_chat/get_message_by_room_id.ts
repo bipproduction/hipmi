@@ -12,8 +12,8 @@ export default async function colab_getMessageByRoomId({
   roomId: string;
   page: number;
 }) {
-  const lewat = page * 6 - 6;
-  const ambil = 6;
+  const ambil = 10;
+  const lewat = page * ambil - ambil;
 
   const getList = await prisma.projectCollaboration_Message.findMany({
     orderBy: {

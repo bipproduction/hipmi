@@ -1,6 +1,9 @@
 "use client";
 
-import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
+import {
+  ComponentGlobal_BoxInformation,
+  ComponentGlobal_CardStyles,
+} from "@/app_modules/_global/component";
 import { clientLogger } from "@/util/clientLogger";
 import { Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -13,14 +16,13 @@ import ComponentColab_DetailListPartisipasiUser from "../../component/detail/lis
 import ComponentColab_AuthorNameOnHeader from "../../component/header_author_name";
 import { Collaboration_SkeletonDetail } from "../../component/skeleton_view";
 import { MODEL_COLLABORATION } from "../../model/interface";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Colab_MainDetail({
-  userLoginId,
-}: {
-  userLoginId?: string;
-}) {
+export default function Colab_MainDetail() {
   const params = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_COLLABORATION | null>(null);
+  const [userLoginId, setUserLoginId] = useState<string | null>();
 
   useShallowEffect(() => {
     onLoadData();
@@ -28,25 +30,35 @@ export default function Colab_MainDetail({
 
   async function onLoadData() {
     try {
-      const respone = await apiGetOneCollaborationById({
-        id: params.id,
-        kategori: "detail",
-      });
+      const response = await apiNewGetUserIdByToken();
 
-      if (respone) {
-        setData(respone.data);
+      if (response.success) {
+        setUserLoginId(response.userId);
+        const respone = await apiGetOneCollaborationById({
+          id: params.id,
+          kategori: "detail",
+        });
+
+        if (respone) {
+          setData(respone.data);
+        }
+      } else {
+        setUserLoginId(null);
       }
     } catch (error) {
       clientLogger.error("Error get all collaboration", error);
     }
   }
 
+  if (userLoginId === undefined || data === null)
+    return <Collaboration_SkeletonDetail />;
+
   return (
     <>
-      <Stack>
-        {_.isNull(data) ? (
-          <Collaboration_SkeletonDetail />
-        ) : (
+      {userLoginId === null ? (
+        <ComponentGlobal_BoxInformation informasi="Anda tidak memiliki akses untuk melihat detail proyek ini" />
+      ) : (
+        <Stack>
           <ComponentGlobal_CardStyles>
             <Stack>
               <ComponentColab_AuthorNameOnHeader
@@ -56,13 +68,13 @@ export default function Colab_MainDetail({
               <ComponentColab_DetailData data={data as any} />
             </Stack>
           </ComponentGlobal_CardStyles>
-        )}
 
-        <ComponentColab_DetailListPartisipasiUser
-          userLoginId={userLoginId}
-          authorId={data?.Author.id}
-        />
-      </Stack>
+          <ComponentColab_DetailListPartisipasiUser
+            userLoginId={userLoginId as string}
+            authorId={data?.Author.id}
+          />
+        </Stack>
+      )}
     </>
   );
 }
