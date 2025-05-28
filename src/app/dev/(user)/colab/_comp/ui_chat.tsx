@@ -1,83 +1,60 @@
 // app/chat/[id]/page.tsx
 "use client";
 
-import React, { useState, useCallback } from "react";
-import ChatWindow from "./chat_window";
+import { apiGetMessageByRoomId } from "@/app_modules/colab/_lib/api_collaboration";
 import { useShallowEffect } from "@mantine/hooks";
+import { ChatMessage } from "./interface";
+import { useState } from "react";
+import { ChatScrollArea } from "./ChatScrollArea";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-interface Message {
-  id: string;
-  content: string;
-  senderId: string;
-  createdAt: Date;
-}
+export default function ChatPage({ params }: { params: { id: string } }) {
+  const roomId = params.id;
+  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-export default function ChatPage({ params }: Props) {
-  const chatId = params.id;
-  const currentUserId = "user_123"; // Ganti dengan dynamic user ID dari auth
-
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
-
-  // Load initial messages
-  const loadInitialMessages = useCallback(async () => {
-    const res = await fetch(`/api/messages?chatId=${chatId}`);
-    const data = await res.json();
-    if (data.length > 0) {
-      setCursor(data[0]?.id); // Simpan cursor dari pesan pertama
-    } else {
-      setHasMore(false);
+   const [userLoginId, setUserLoginId] = useState<string | null>(null);
+  
+    useShallowEffect(() => {
+      handleGetUserLoginId();
+    }, []);
+  
+    async function handleGetUserLoginId() {
+      try {
+        const response = await apiNewGetUserIdByToken();
+        if (response.success) {
+          setUserLoginId(response.userId);
+        } else {
+          setUserLoginId(null);
+        }
+      } catch (error) {
+        setUserLoginId(null);
+      }
     }
-    setMessages(data);
-  }, [chatId]);
 
-  // Load more messages (scroll up)
-  const loadMoreMessages = useCallback(async () => {
-    if (!hasMore || !cursor) return [];
-
-    const res = await fetch(`/api/messages?chatId=${chatId}&cursor=${cursor}`);
-    const data = await res.json();
-
-    if (data.length < 20) setHasMore(false);
-    if (data.length > 0) setCursor(data[0]?.id);
-
-    setMessages((prev) => [...data, ...prev]);
-    return data;
-  }, [chatId, cursor, hasMore]);
-
-  // Send message
-  const sendMessage = useCallback(
-    async (content: string) => {
-      await fetch("/api/messages", {
-        method: "POST",
-        body: JSON.stringify({
-          content,
-          senderId: currentUserId,
-          chatId,
-        }),
-      });
-    },
-    [chatId, currentUserId]
-  );
-
-  // Load pesan saat pertama kali
+  async function handleGetDataMessage() {
+    try {
+      const result = await apiGetMessageByRoomId({ id: roomId });
+      setInitialMessages(result.data || []);
+    } catch (error) {
+      console.error("Failed to load messages", error);
+    } finally {
+      setLoading(false);
+    }
+  }
   useShallowEffect(() => {
-    loadInitialMessages();
-  }, [loadInitialMessages]);
+    handleGetDataMessage();
+  }, [roomId]);
+
+  if (loading || !userLoginId) {
+    return <div>Loading chat...</div>;
+  }
 
   return (
-    <ChatWindow
-      initialMessages={messages}
-      currentUserId={currentUserId}
-      loadMoreMessages={loadMoreMessages}
-      sendMessage={sendMessage}
+    <ChatScrollArea
+      initialMessages={initialMessages}
+      currentUserId={userLoginId} // ganti dengan auth dinamis
+      chatRoomId={roomId}
     />
   );
 }
