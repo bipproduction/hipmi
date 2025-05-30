@@ -3,49 +3,99 @@
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
 import { clientLogger } from "@/util/clientLogger";
-import {
-  Button,
-  Select,
-  Stack,
-  Text,
-  TextInput
-} from "@mantine/core";
+import { Button, Select, Stack, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import moment from "moment";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  apiGetEventDetailById,
+  apiGetMasterTipeAcara,
+} from "../_lib/api_event";
 import { MODEL_EVENT } from "../_lib/interface";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
 import { Event_funEditById } from "../fun/edit/fun_edit_by_id";
-import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { useParams } from "next/navigation";
+import { ComponentGlobal_BoxInformation } from "@/app_modules/_global/component";
+import { baseStylesTextInput } from "@/app_modules/_global/lib/base_style_text_input";
 
-export default function Event_Edit({
-  dataEvent,
-  listTipeAcara,
-}: {
-  dataEvent: MODEL_EVENT;
-  listTipeAcara: MODEL_DEFAULT_MASTER_OLD[];
-}) {
+export default function Event_Edit() {
   const router = useRouter();
+  const { id } = useParams();
   const [isLoading, setLoading] = useState(false);
 
-  const [value, setValue] = useState(dataEvent);
-  const [tipe, setTipe] = useState(listTipeAcara);
+  const [data, setData] = useState<MODEL_EVENT | null | any>();
+  const [listTipeAcara, setListTipeAcara] = useState<
+    MODEL_DEFAULT_MASTER_OLD[]
+  >([]);
 
   const [isTimeStart, setIsTimeStart] = useState(false);
   const [diffTimeStart, setDiffTimeStart] = useState(0);
   const [isTimeEnd, setIsTimeEnd] = useState(false);
   const [diffTimeEnd, setDiffTimeEnd] = useState(0);
+
+  useShallowEffect(() => {
+    handleGetMasterTipeAcara();
+  }, []);
+
+  async function handleGetMasterTipeAcara() {
+    try {
+      const response = await apiGetMasterTipeAcara();
+      if (response.success) {
+        setListTipeAcara(response.data);
+      } else {
+        setListTipeAcara([]);
+      }
+    } catch (error) {
+      setListTipeAcara([]);
+    }
+  }
+
+  useShallowEffect(() => {
+    handleGetDetailEvent();
+  }, []);
+
+  async function handleGetDetailEvent() {
+    try {
+      const response = await apiGetEventDetailById({ id: id as string });
+      if (response.success) {
+        const fixData = _.omit(response.data, [
+          "Author",
+          "EventMaster_Status",
+          "Event_Peserta",
+          "createdAt",
+          "updatedAt",
+          "active",
+        ]);
+        setData(fixData as any);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      setData(null);
+    }
+  }
+
+  if (!listTipeAcara.length || !data) {
+    return <CustomSkeleton height={400} />;
+  }
+
+  if (data === undefined) {
+    return <ComponentGlobal_BoxInformation informasi="Data Tidak Ditemukan" />;
+  }
 
   return (
     <>
@@ -66,18 +116,18 @@ export default function Event_Edit({
           label="Judul"
           placeholder="judul"
           withAsterisk
-          value={value.title}
+          value={data?.title}
           maxLength={100}
           error={
-            value.title === "" ? (
+            data?.title === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan judul" />
             ) : (
               ""
             )
           }
           onChange={(val) => {
-            setValue({
-              ...value,
+            setData({
+              ...(data as any),
               title: val.target.value,
             });
           }}
@@ -101,14 +151,14 @@ export default function Event_Edit({
           withAsterisk
           label="Tipe Acara"
           placeholder="Pilih Tipe Acara"
-          data={tipe.map((e) => ({
+          data={listTipeAcara.map((e) => ({
             value: e.id,
             label: e.name,
           }))}
-          value={value.EventMaster_TipeAcara.id}
+          value={data.EventMaster_TipeAcara.id}
           onChange={(val) => {
-            setValue({
-              ...(value as any),
+            setData({
+              ...(data as any),
               EventMaster_TipeAcara: {
                 id: val,
               },
@@ -131,41 +181,26 @@ export default function Event_Edit({
           label="Lokasi"
           placeholder="lokasi acara"
           withAsterisk
-          value={value.lokasi}
+          value={data.lokasi}
           maxLength={100}
           error={
-            value.lokasi === "" ? (
+            data.lokasi === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan lokasi" />
             ) : (
               ""
             )
           }
           onChange={(val) => {
-            setValue({
-              ...value,
+            setData({
+              ...data,
               lokasi: val.target.value,
             });
           }}
         />
 
-        {/* <Text c={"green"}>{JSON.stringify(diffTimeStart, null, 2)}</Text>
-        <Text c={"red"}>{JSON.stringify(diffTimeEnd, null, 2)}</Text>
-        <Text c={"yellow"}>
-          {JSON.stringify(
-            moment(value.tanggal.toISOString().toString()),
-            null,
-            2
-          )}
-        </Text> */}
-
         <DateTimePicker
           styles={{
-            label: {
-              color: MainColor.white,
-            },
-            input: {
-              backgroundColor: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
             },
@@ -176,7 +211,7 @@ export default function Event_Edit({
           withAsterisk
           label="Tanggal & Waktu Mulai"
           placeholder="Masukan tangal dan waktu"
-          value={value.tanggal}
+          value={moment(data.tanggal).toDate()}
           error={
             isTimeStart ? (
               <ComponentEvent_ErrorMaximalInput text="Invalid Time !" />
@@ -195,8 +230,8 @@ export default function Event_Edit({
               ? setIsTimeStart(true)
               : setIsTimeStart(false);
 
-            setValue({
-              ...(value as any),
+            setData({
+              ...data,
               tanggal: val,
             });
           }}
@@ -204,12 +239,7 @@ export default function Event_Edit({
 
         <DateTimePicker
           styles={{
-            label: {
-              color: MainColor.white,
-            },
-            input: {
-              backgroundColor: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
             },
@@ -220,12 +250,11 @@ export default function Event_Edit({
           withAsterisk
           label="Tanggal & Waktu Berakhir"
           placeholder="Masukan tangal dan waktu"
-          value={value.tanggalSelesai}
+          value={moment(data.tanggalSelesai).toDate()}
           error={
             isTimeEnd ? (
               <ComponentEvent_ErrorMaximalInput text="Invalid Time !" />
-            ) : moment(value.tanggalSelesai?.toISOString().toString()) <
-              moment(value.tanggal.toISOString().toString()) ? (
+            ) : moment(data.tanggalSelesai) < moment(data.tanggal) ? (
               <ComponentGlobal_ErrorInput text="Invalid Time !" />
             ) : (
               ""
@@ -242,8 +271,8 @@ export default function Event_Edit({
               ? setIsTimeEnd(true)
               : setIsTimeEnd(false);
 
-            setValue({
-              ...(value as any),
+            setData({
+              ...data,
               tanggalSelesai: val,
             });
           }}
@@ -253,82 +282,43 @@ export default function Event_Edit({
           <Component_V3_Label_TextInput text="Deskripsi" />
 
           <Component_V3_TextEditor
-            data={value.deskripsi}
+            data={data.deskripsi}
             onSetData={(val) => {
-              setValue({
-                ...value,
+              setData({
+                ...data,
                 deskripsi: val.trim(),
               });
             }}
           />
 
-          {funReplaceHtml({ html: value.deskripsi }).length === 0 && (
+          {funReplaceHtml({ html: data.deskripsi }).length === 0 && (
             <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
           )}
 
           <ComponentGlobal_InputCountDown
-            lengthInput={funReplaceHtml({ html: value.deskripsi }).length}
+            lengthInput={funReplaceHtml({ html: data.deskripsi }).length}
             maxInput={maxInputLength}
           />
         </Stack>
-
-        {/* <Stack spacing={5}>
-          <Textarea
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              },
-            }}
-            label="Deskripsi"
-            placeholder="Deskripsikan acara yang akan di selenggarakan"
-            withAsterisk
-            autosize
-            value={value.deskripsi}
-            maxLength={300}
-            error={
-              value.deskripsi === "" ? (
-                <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
-              ) : (
-                ""
-              )
-            }
-            onChange={(val) => {
-              setValue({
-                ...value,
-                deskripsi: val.target.value,
-              });
-            }}
-          />
-          <ComponentGlobal_InputCountDown
-            maxInput={300}
-            lengthInput={value.deskripsi.length}
-          />
-        </Stack> */}
 
         <Button
           style={{
             transition: "0.5s",
           }}
-          disabled={
-            value.title === "" ||
-            value.lokasi === "" ||
-            value.eventMaster_TipeAcaraId === 0 ||
-            moment(value.tanggalSelesai?.toISOString().toString()) <
-              moment(value.tanggal.toISOString().toString()) ||
-            funReplaceHtml({ html: value.deskripsi }).length > maxInputLength ||
-            funReplaceHtml({ html: value.deskripsi }).length === 0
-          }
+          // disabled={
+          //   data.title === "" ||
+          //   data.lokasi === "" ||
+          //   data.eventMaster_TipeAcaraId === 0 ||
+          //   moment(data.tanggalSelesai?.toISOString().toString()) <
+          //     moment(data.tanggal.toISOString().toString()) ||
+          //   funReplaceHtml({ html: data.deskripsi }).length > maxInputLength ||
+          //   funReplaceHtml({ html: data.deskripsi }).length === 0
+          // }
           loaderPosition="center"
           loading={isLoading ? true : false}
           radius={"xl"}
           mt={"xl"}
-          onClick={() => onUpdate(router, value, setLoading)}
+          onClick={() => onUpdate(router, data, setLoading)}
           bg={MainColor.yellow}
           color="yellow"
           c={MainColor.darkblue}

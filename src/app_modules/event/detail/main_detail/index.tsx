@@ -15,36 +15,60 @@ import { WibuRealtime } from "wibu-pkg";
 import { apiGetEventCekPeserta } from "../../_lib/api_event";
 import ComponentEvent_DetailMainData from "../../component/detail/detail_main";
 import { Event_funJoinEvent } from "../../fun/create/fun_join_event";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export default function Event_DetailMain({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Event_DetailMain() {
   const params = useParams<{ id: string }>();
   const eventId = params.id;
   const [isLoading, setLoading] = useState(false);
   const [isJoinSuccess, setIsJoinSuccess] = useState<boolean | null>(null);
   // const [isNewPeserta, setIsNewPeserta] = useState<boolean | null>(null);
 
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
   useShallowEffect(() => {
-    onCheckPeserta();
+    handleGetUserLoginId();
   }, []);
 
-  async function onCheckPeserta() {
+  async function handleGetUserLoginId() {
     try {
-      const respone = await apiGetEventCekPeserta({
-        userId: userLoginId,
-        eventId: eventId,
-      });
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+        const responseData = await apiGetEventCekPeserta({
+          userId: response.userId,
+          eventId: eventId,
+        });
 
-      if (respone) {
-        setIsJoinSuccess(respone.data);
+        if (responseData) {
+          setIsJoinSuccess(responseData.data);
+        }
+      } else {
+        setUserLoginId(null);
       }
     } catch (error) {
-      clientLogger.error("Error check peserta", error);
+      setUserLoginId(null);
     }
   }
+
+  // useShallowEffect(() => {
+  //   onCheckPeserta();
+  // }, []);
+
+  // async function onCheckPeserta() {
+  //   try {
+  //     const respone = await apiGetEventCekPeserta({
+  //       userId: userLoginId,
+  //       eventId: eventId,
+  //     });
+
+  //     if (respone) {
+  //       setIsJoinSuccess(respone.data);
+  //     }
+  //   } catch (error) {
+  //     clientLogger.error("Error check peserta", error);
+  //   }
+  // }
 
   // [ON JOIN BUTTON]
   async function onJoin() {
@@ -97,7 +121,7 @@ export default function Event_DetailMain({
       <Stack spacing={"lg"} pb={"md"}>
         <ComponentEvent_DetailMainData />
 
-        {isJoinSuccess == null ? (
+        {isJoinSuccess == null || !userLoginId ? (
           <CustomSkeleton radius={"xl"} h={40} />
         ) : isJoinSuccess ? (
           <Button disabled radius={"xl"} color="green">

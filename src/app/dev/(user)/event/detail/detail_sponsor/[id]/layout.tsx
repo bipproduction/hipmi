@@ -3,10 +3,10 @@ import LayoutEvent_DetailSponsor from '@/app_modules/event/detail/detail_sponsor
 import React from 'react';
 
 async function Layout({children} : {children: React.ReactNode}) {
-  const userLoginId = await funGetUserIdByToken()
+  // const userLoginId = await funGetUserIdByToken()
   return (
     <>
-      <LayoutEvent_DetailSponsor userLoginId={userLoginId}>
+      <LayoutEvent_DetailSponsor userLoginId={""}>
         {children}
       </LayoutEvent_DetailSponsor>
     </>

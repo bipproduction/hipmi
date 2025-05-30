@@ -1,4 +1,6 @@
 import { MainColor } from "@/app_modules/_global/color";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
@@ -6,6 +8,7 @@ import {
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
 import { IRealtimeData } from "@/lib/global_state";
 import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -13,9 +16,6 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Event_funCreate } from "../../fun/create/fun_create";
 import { gs_event_hotMenu } from "../../global_state";
-import { clientLogger } from "@/util/clientLogger";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
 export default function Event_ComponentCreateButton({
   value,

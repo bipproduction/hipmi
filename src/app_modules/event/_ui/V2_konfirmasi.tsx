@@ -29,6 +29,7 @@ import { Event_funJoinAndConfirmEvent } from "../fun/create/fun_join_and_confirm
 import { Event_funJoinEvent } from "../fun/create/fun_join_event";
 import { gs_event_hotMenu } from "../global_state";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
 interface IKonfirmasiProps {
   dataEvent: {
@@ -50,11 +51,7 @@ interface IKonfirmasiProps {
   kehadiran: boolean | null;
 }
 
-export default function UiEvent_V2_Konfirmasi({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function UiEvent_V2_Konfirmasi() {
   const params = useParams<{ id: string }>();
   const eventId = params.id;
 
@@ -63,6 +60,7 @@ export default function UiEvent_V2_Konfirmasi({
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
   const [hotMenu, setHotMenu] = useAtom(gs_event_hotMenu);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
   // Load Data
   useShallowEffect(() => {
@@ -71,15 +69,19 @@ export default function UiEvent_V2_Konfirmasi({
 
   async function onLoadData() {
     try {
-      const response = await apiGetEventKonfirmasiById({
-        id: eventId,
-        userId: userLoginId,
-      });
+      const responseUser = await apiNewGetUserIdByToken();
+      if (responseUser.success) {
+        setUserLoginId(responseUser.userId);
+        const response = await apiGetEventKonfirmasiById({
+          id: eventId,
+          userId: responseUser.userId,
+        });
 
-      if (response.res) {
-        setData(response.res);
-      } else {
-        setData(null);
+        if (response.res) {
+          setData(response.res);
+        } else {
+          setData(null);
+        }
       }
     } catch (error) {
       setData(null);
@@ -87,8 +89,10 @@ export default function UiEvent_V2_Konfirmasi({
     }
   }
 
+ 
+
   // Jika data kosong
-  if (data === undefined) {
+  if (data === undefined || !userLoginId) {
     return <SkeletonIsDataNull />;
   }
 

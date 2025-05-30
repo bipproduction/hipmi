@@ -1,40 +1,31 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { baseStylesTextInput } from "@/app_modules/_global/lib/base_style_text_input";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_DEFAULT_MASTER_OLD } from "@/app_modules/model_global/interface";
-import {
-  Button,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Select, Stack, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 import moment from "moment";
 import { useState } from "react";
+import { apiGetMasterTipeAcara } from "../_lib/api_event";
 import { Event_ComponentCreateButton } from "../component";
 import ComponentEvent_ErrorMaximalInput from "../component/error_maksimal_input";
-import { MainColor } from "@/app_modules/_global/color";
-import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 
-export default function Event_Create({
-  listTipeAcara,
-  authorId,
-}: {
-  listTipeAcara: MODEL_DEFAULT_MASTER_OLD[];
-  authorId: string;
-}) {
-  const [listTipe, setListTipe] = useState(listTipeAcara);
-
+export default function Event_Create() {
+  const [listTipe, setListTipe] = useState<MODEL_DEFAULT_MASTER_OLD[] | null>();
   const [isTimeStart, setIsTimeStart] = useState(false);
   const [diffTimeStart, setDiffTimeStart] = useState(0);
   const [isTimeEnd, setIsTimeEnd] = useState(false);
   const [diffTimeEnd, setDiffTimeEnd] = useState(0);
-
   const [value, setValue] = useState({
     title: "",
     lokasi: "",
@@ -42,23 +33,60 @@ export default function Event_Create({
     tanggal: Date.toString(),
     tanggalSelesai: Date.toString(),
     eventMaster_TipeAcaraId: 0,
-    authorId: authorId,
+    authorId: "",
   });
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setValue({
+          ...value,
+          authorId: response.userId,
+        });
+      }
+    } catch (error) {
+      setValue({
+        ...value,
+        authorId: "",
+      });
+    }
+  }
+
+  useShallowEffect(() => {
+    handleGetMasterTipeAcara();
+  }, []);
+
+  async function handleGetMasterTipeAcara() {
+    try {
+      const response = await apiGetMasterTipeAcara();
+      if (response.success) {
+        setListTipe(response.data);
+      } else {
+        setListTipe([]);
+      }
+    } catch (error) {
+      setListTipe([]);
+    }
+  }
+
+  if (!listTipe || !value.authorId) {
+    return <CustomSkeleton height={400} />;
+  }
 
   return (
     <>
       {/* <pre>{JSON.stringify(value, null, 2)}</pre> */}
-      <Stack px={"xl"}>
+      <Stack px={"sm"}>
         <TextInput
           styles={{
-            label: {
-              color: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
-            },
-            input: {
-              backgroundColor: MainColor.white,
             },
           }}
           label="Judul"
@@ -74,14 +102,9 @@ export default function Event_Create({
         />
         <Select
           styles={{
-            label: {
-              color: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
-            },
-            input: {
-              backgroundColor: MainColor.white,
             },
             dropdown: {
               backgroundColor: MainColor.white,
@@ -90,10 +113,14 @@ export default function Event_Create({
           withAsterisk
           label="Tipe Acara"
           placeholder="Pilih Tipe Acara"
-          data={listTipe.map((e) => ({
-            value: e.id,
-            label: e.name,
-          }))}
+          data={
+            _.isEmpty(listTipe)
+              ? []
+              : listTipe.map((e) => ({
+                  value: e.id,
+                  label: e.name,
+                }))
+          }
           onChange={(val: any) =>
             setValue({
               ...value,
@@ -104,14 +131,9 @@ export default function Event_Create({
 
         <TextInput
           styles={{
-            label: {
-              color: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
-            },
-            input: {
-              backgroundColor: MainColor.white,
             },
           }}
           label="Lokasi"
@@ -128,14 +150,9 @@ export default function Event_Create({
 
         <DateTimePicker
           styles={{
-            label: {
-              color: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
-            },
-            input: {
-              backgroundColor: MainColor.white,
             },
           }}
           excludeDate={(date) => {
@@ -174,14 +191,9 @@ export default function Event_Create({
 
         <DateTimePicker
           styles={{
-            label: {
-              color: MainColor.white,
-            },
+            ...baseStylesTextInput,
             required: {
               color: MainColor.red,
-            },
-            input: {
-              backgroundColor: MainColor.white,
             },
           }}
           excludeDate={(date) => {
@@ -238,37 +250,6 @@ export default function Event_Create({
             maxInput={maxInputLength}
           />
         </Stack>
-
-        {/* <Stack spacing={5}>
-          <Textarea
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-            }}
-            label="Deskripsi"
-            placeholder="Deskripsikan acara yang akan di selenggarakan"
-            withAsterisk
-            autosize
-            maxLength={300}
-            onChange={(val) => {
-              setValue({
-                ...value,
-                deskripsi: val.target.value,
-              });
-            }}
-          />
-          <ComponentGlobal_InputCountDown
-            lengthInput={value.deskripsi.length}
-            maxInput={300}
-          />
-        </Stack> */}
 
         <Event_ComponentCreateButton
           value={value}
