@@ -152,6 +152,51 @@ export const apiCollaborationGetMessageByRoomId = async ({
   }
 };
 
+export const apiGetMessageByRoomId = async ({
+  id,
+  lastMessageId,
+}: {
+  id: string;
+  lastMessageId?: string;
+}) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    console.log("lastMessageId", lastMessageId);
+
+    let url = `/api/collaboration/${id}/chat`;
+    if (lastMessageId) {
+      url += `?cursor=${lastMessageId}`;
+    }
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Error get message by room id:",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to get message by room id");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error get message by room id:", error);
+    throw error;
+  }
+};
+
 export const apiCollaborationGetRoomById = async ({
   id,
 }: {

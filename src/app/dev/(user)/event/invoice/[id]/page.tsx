@@ -3,10 +3,10 @@ import Event_Invoice from '@/app_modules/event/detail/invoice';
 import React from 'react';
 
 async function Page() {
-  const userLoginId = await funGetUserIdByToken();
+  // const userLoginId = await funGetUserIdByToken();
   return (
     <>
-      <Event_Invoice userLoginId={userLoginId} />
+      <Event_Invoice userLoginId={""} />
     </>
   );
 }

@@ -1,3 +1,5 @@
+// /app/api/collaboration/[id]/chat/route.ts
+
 import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
@@ -14,19 +16,22 @@ async function GET(
   try {
     const roomId = params.id;
     const { searchParams } = new URL(request.url);
-    const page = searchParams.get("page");
-    const takeData = 10;
-    const dataSkip = Number(page) * takeData - takeData;
+    const cursor = searchParams.get("cursor"); // ini adalah `id` pesan terakhir dari client
+    const takeData =5
 
-    const getList = await prisma.projectCollaboration_Message.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      skip: dataSkip,
-      take: takeData,
+    console.log("cursor", cursor);
+
+    // Query dengan cursor
+    const messages = await prisma.projectCollaboration_Message.findMany({
       where: {
         projectCollaboration_RoomChatId: roomId,
+        isActive: true,
+        id: cursor ? { lt: cursor } : undefined, // ambil yang lebih lama dari cursor
       },
+      orderBy: {
+        createdAt: "desc", // urutkan dari paling baru
+      },
+      take: takeData,
       select: {
         id: true,
         createdAt: true,
@@ -47,16 +52,12 @@ async function GET(
       },
     });
 
-    const dataReverse = _.reverse(getList);
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Berhasil mendapatkan data",
-        data: dataReverse,
-      },
-      { status: 200 }
-    );
+   return NextResponse.json({
+     success: true,
+     message: "Berhasil mendapatkan data",
+     data: messages,
+     nextCursor: messages.length > 0 ? messages[messages.length - 1]?.id : null,
+   });
   } catch (error) {
     console.error("Error get message by room id", error);
     return NextResponse.json(
