@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import backendLogger from "@/util/backendLogger";
 
+export const dynamic = "force-dynamic";
+
 export { GET };
 
 async function GET(
