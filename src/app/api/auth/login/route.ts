@@ -15,6 +15,20 @@ export async function POST(req: Request) {
     const codeOtp = randomOTP();
     const body = await req.json();
     const { nomor } = body;
+
+    const createOtpId = await prisma.kodeOtp.create({
+      data: {
+        nomor: nomor,
+        otp: codeOtp,
+      },
+    });
+
+    if (!createOtpId)
+      return NextResponse.json(
+        { success: false, message: "Gagal mengirim kode OTP" },
+        { status: 400 }
+      );
+
     const res = await fetch(
       `https://wa.wibudev.com/code?nom=${nomor}&text=HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.
       \n
@@ -30,19 +44,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
-    const createOtpId = await prisma.kodeOtp.create({
-      data: {
-        nomor: nomor,
-        otp: codeOtp,
-      },
-    });
-
-    if (!createOtpId)
-      return NextResponse.json(
-        { success: false, message: "Gagal mengirim kode OTP" },
-        { status: 400 }
-      );
-
     return NextResponse.json(
       {
         success: true,
@@ -54,7 +55,11 @@ export async function POST(req: Request) {
   } catch (error) {
     backendLogger.log("Error Login", error);
     return NextResponse.json(
-      { success: false, message: "Terjadi masalah saat login" , reason: error as Error },
+      {
+        success: false,
+        message: "Terjadi masalah saat login",
+        reason: error as Error,
+      },
       { status: 500 }
     );
   } finally {
