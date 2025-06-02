@@ -39,6 +39,7 @@ export default function Login({ version }: { version: string }) {
         router.push("/validasi", { scroll: false });
       } else {
         setLoading(false);
+        console.log("respone >>", respone);
         ComponentGlobal_NotifikasiPeringatan(respone?.message);
       }
     } catch (error) {
