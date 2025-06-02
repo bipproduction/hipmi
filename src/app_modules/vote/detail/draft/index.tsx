@@ -1,49 +1,58 @@
 "use client";
 
-import { RouterVote } from "@/lib/router_hipmi/router_vote";
-import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
+import {
+  AccentColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
-import mqtt_client from "@/util/mqtt_client";
-import { Button, SimpleGrid, Stack } from "@mantine/core";
-import moment from "moment";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import ComponentVote_DetailDataSebelumPublish from "../../component/detail/detail_data_sebelum_publish";
-import { Vote_funDeleteById } from "../../fun/delete/fun_delete_by_id";
-import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_id";
-import { MODEL_VOTING } from "../../model/interface";
 import { IRealtimeData } from "@/lib/global_state";
-import { WibuRealtime } from "wibu-pkg";
-import { useShallowEffect } from "@mantine/hooks";
-import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
-import _ from "lodash";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { clientLogger } from "@/util/clientLogger";
+import { Button, SimpleGrid, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import moment from "moment";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
+import { apiGetOneVotingById } from "../../_lib/api_voting";
+import ComponentVote_DetailDataSebelumPublish from "../../component/detail/detail_data_sebelum_publish";
+import { MODEL_VOTING } from "../../model/interface";
+import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_id";
+import { Vote_funDeleteById } from "../../fun/delete/fun_delete_by_id";
 
-export default function Vote_DetailDraft({
-  dataVote,
-}: {
-  dataVote: MODEL_VOTING;
-}) {
-  const [data, setData] = useState(dataVote);
+export default function Vote_DetailDraft() {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_VOTING | null>();
 
   useShallowEffect(() => {
-    onLoadData(setData);
-  }, [setData]);
+    onLoadData();
+  }, []);
 
-  async function onLoadData(setData: any) {
-    const loadData = await voting_funGetOneVotingbyId(dataVote.id);
-    setData(loadData);
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneVotingById({ id: id as string });
+      if (response) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  if (!data) return <CustomSkeleton height={400} />;
 
   return (
     <>
       <Stack spacing={"xl"}>
-        {dataVote?.catatan && (
+        {data?.catatan && (
           <ComponentGlobal_BoxInformation isReport informasi={data?.catatan} />
         )}
         <ComponentVote_DetailDataSebelumPublish data={data} />
@@ -72,39 +81,45 @@ function ButtonAction({
     if (cekHari < 0)
       return ComponentGlobal_NotifikasiPeringatan("Tanggal Voting Lewat");
 
-    const res = await Vote_funEditStatusByStatusId(voteId, "2");
-    if (res.status === 200) {
-      const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.Voting_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "VOTING",
-        title: "Mengajukan review",
-      };
+    setIsLoading(true);
+    try {
+      const res = await Vote_funEditStatusByStatusId(voteId, "2");
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.Voting_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "VOTING",
+          title: "Mengajukan review",
+        };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
         });
 
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "ADMIN",
-          dataMessage: dataNotifikasi,
-        });
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
-        ComponentGlobal_NotifikasiBerhasil("Berhasil Ajukan Review", 2000);
-        setIsLoading(true);
-        router.replace(RouterVote.status({ id: "2" }));
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "ADMIN",
+            dataMessage: dataNotifikasi,
+          });
+
+          ComponentGlobal_NotifikasiBerhasil("Berhasil Ajukan Review", 2000);
+          router.replace(RouterVote.status({ id: "2" }));
+        }
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error update status vote", error);
     }
   }
 
@@ -117,7 +132,7 @@ function ButtonAction({
           ComponentGlobal_NotifikasiBerhasil("Berhasil Hapus Vote", 2000);
           router.replace(RouterVote.status({ id: "3" }));
         } else {
-         setIsLoading(false);
+          setIsLoading(false);
           ComponentGlobal_NotifikasiGagal(res.message);
         }
       } catch (error) {
@@ -163,7 +178,8 @@ function ButtonAction({
             onClick={() => {
               setOpenModal1(false);
             }}
-            style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
           >
             Batal
           </Button>
@@ -177,7 +193,7 @@ function ButtonAction({
               onUpdate();
             }}
             c={MainColor.darkblue}
-            style={{ backgroundColor: AccentColor.yellow  }}
+            style={{ backgroundColor: AccentColor.yellow }}
           >
             Ajukan
           </Button>
@@ -191,7 +207,8 @@ function ButtonAction({
         close={() => setOpenModal2(false)}
         buttonKiri={
           <Button
-          style={{ backgroundColor: AccentColor.blue}} c={AccentColor.white}
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
             radius={"xl"}
             onClick={() => {
               setOpenModal2(false);

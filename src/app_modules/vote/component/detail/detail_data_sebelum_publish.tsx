@@ -12,7 +12,8 @@ import { IconCircle } from "@tabler/icons-react";
 import { MODEL_VOTING } from "../../model/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
-
+import moment from "moment";
+import "moment/locale/id"
 export default function ComponentVote_DetailDataSebelumPublish
 ({
   data,
@@ -39,7 +40,7 @@ export default function ComponentVote_DetailDataSebelumPublish
             </Center>
             <Comp_SetInnerHTML props={data?.deskripsi} />
 
-            <Stack spacing={0} align="center">
+            <Stack spacing={"xs"} align="center">
               <Center>
                 <Text fz={10} fw={"bold"}>
                   Batas Voting
@@ -57,15 +58,11 @@ export default function ComponentVote_DetailDataSebelumPublish
               >
                 <Group>
                   <Text>
-                    {data?.awalVote.toLocaleDateString(["id-ID"], {
-                      dateStyle: "medium",
-                    })}
+                    {moment(data?.awalVote).format("DD MMM YYYY")}
                   </Text>
                   <Text>-</Text>
                   <Text>
-                    {data?.akhirVote.toLocaleDateString(["id-ID"], {
-                      dateStyle: "medium",
-                    })}
+                    {moment(data?.akhirVote).format("DD MMM YYYY")}
                   </Text>
                 </Group>
               </Badge>
