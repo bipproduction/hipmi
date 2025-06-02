@@ -9,9 +9,11 @@ import {
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
 import { IRealtimeData } from "@/lib/global_state";
 import { clientLogger } from "@/util/clientLogger";
@@ -41,14 +43,9 @@ import ComponentVote_HasilVoting from "../../component/detail/detail_hasil_votin
 import { Voting_ComponentSkeletonDetail } from "../../component/skeleton_view";
 import { Vote_funCreateHasil } from "../../fun/create/create_hasil";
 import { MODEL_VOTING } from "../../model/interface";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export default function Vote_MainDetail({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Vote_MainDetail() {
   const params = useParams<{ id: string }>();
   const today = new Date();
   const [data, setData] = useState<MODEL_VOTING | null>(null);
@@ -59,12 +56,13 @@ export default function Vote_MainDetail({
   );
 
   const [isLoading, setLoading] = useState(false);
-
   const [isKontributor, setIsKontributor] = useState<boolean | null>(null);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
   useShallowEffect(() => {
     onLoadData();
     onLoadHasil();
+    handleGetUserId();
   }, []);
 
   async function onLoadData() {
@@ -99,6 +97,18 @@ export default function Vote_MainDetail({
     onCheckKontribusi();
     onLoadPilihan();
   }, []);
+
+  async function handleGetUserId() {
+    try {
+      const respone = await apiNewGetUserIdByToken();
+
+      if (respone) {
+        setUserLoginId(respone.userId);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail", error);
+    }
+  }
 
   async function onCheckKontribusi() {
     try {

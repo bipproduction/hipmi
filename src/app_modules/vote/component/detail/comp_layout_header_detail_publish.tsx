@@ -1,10 +1,13 @@
-import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import {
   ActionIcon,
   Button,
@@ -14,55 +17,84 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import {
   IconArchive,
   IconDotsVertical,
   IconUsersGroup,
   IconX,
 } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiGetOneVotingById } from "../../_lib/api_voting";
 import { voting_funUpdateIsArsipById } from "../../fun";
 import { MODEL_VOTING } from "../../model/interface";
-import { voting_funGetOneVotingbyId } from "../../fun/get/fun_get_one_by_id";
-import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 
 export function Voting_ComponentLayoutHeaderDetailPublish({
-  votingId,
   title,
-  userLoginId,
-  dataVoting,
 }: {
-  votingId: string;
   title: string;
-  userLoginId: string;
-  dataVoting: any;
 }) {
-  const [data, setData] = useState<MODEL_VOTING>(dataVoting);
+  const router = useRouter();
+  const { id } = useParams();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function onUpdateStatusArsip({ isArsip }: { isArsip: boolean }) {
-    setIsLoading(true);
-    const res = await voting_funUpdateIsArsipById({
-      votingId,
-      isArsip: isArsip,
-    });
-    if (res.status === 200) {
-      try {
-        const loadData = await voting_funGetOneVotingbyId(votingId);
-        setData(loadData as any);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setOpenModal(false);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setIsLoading(false);
+  const [data, setData] = useState<MODEL_VOTING | null | any>();
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserId();
+    onLoadData();
+  }, []);
+
+  async function handleGetUserId() {
+    try {
+      const respone = await apiNewGetUserIdByToken();
+
+      if (respone) {
+        setUserLoginId(respone.userId);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      console.error("Error get data detail", error);
+    }
+  }
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneVotingById({ id: id as string });
+      if (response) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onUpdateStatusArsip({ isArsip }: { isArsip: boolean }) {
+    try {
+      setIsLoading(true);
+      const res = await voting_funUpdateIsArsipById({
+        votingId: id as string,
+        isArsip: isArsip,
+      });
+
+      if (res.status !== 200) {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(res.message);
+        return;
+      }
+
       setIsLoading(false);
+      ComponentGlobal_NotifikasiBerhasil("Berhasil Update");
+      router.back();
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      ComponentGlobal_NotifikasiGagal("Gagal Update");
     }
   }
 
@@ -71,14 +103,18 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
       <Component_Header
         title={title}
         customButtonRight={
-          <ActionIcon
-            variant="transparent"
-            onClick={() => {
-              setOpenDrawer(true);
-            }}
-          >
-            <IconDotsVertical color="white" />
-          </ActionIcon>
+          userLoginId ? (
+            <ActionIcon
+              variant="transparent"
+              onClick={() => {
+                setOpenDrawer(true);
+              }}
+            >
+              <IconDotsVertical color="white" />
+            </ActionIcon>
+          ) : (
+            <CustomSkeleton circle height={24} width={24} />
+          )
         }
       />
 
@@ -123,14 +159,14 @@ export function Voting_ComponentLayoutHeaderDetailPublish({
           {/* Check Author */}
           {data?.authorId === userLoginId ? (
             <BoxIsAuthor
-              votingId={votingId}
+              votingId={id as string}
               onSetDrawer={(val: any) => {
                 setOpenDrawer(val.drawer);
                 setOpenModal(val.modal);
               }}
             />
           ) : (
-            <BoxNotAuthor votingId={votingId} />
+            <BoxNotAuthor votingId={id as string} />
           )}
         </Stack>
       </Drawer>

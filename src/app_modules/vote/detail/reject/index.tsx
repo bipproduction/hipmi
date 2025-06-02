@@ -1,35 +1,52 @@
 "use client";
 
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, SimpleGrid, Stack } from "@mantine/core";
-import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiGetOneVotingById } from "../../_lib/api_voting";
 import ComponentVote_DetailDataSebelumPublish from "../../component/detail/detail_data_sebelum_publish";
 import { Vote_funDeleteById } from "../../fun/delete/fun_delete_by_id";
 import { Vote_funEditStatusByStatusId } from "../../fun/edit/fun_edit_status_by_id";
-import { gs_vote_status } from "../../global_state";
 import { MODEL_VOTING } from "../../model/interface";
-import { RouterVote } from "@/lib/router_hipmi/router_vote";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
-import { clientLogger } from "@/util/clientLogger";
 
-export default function Vote_DetailReject({
-  dataVote,
-}: {
-  dataVote: MODEL_VOTING;
-}) {
-  const [data, setData] = useState(dataVote);
+export default function Vote_DetailReject() {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_VOTING | null>();
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneVotingById({ id: id as string });
+      if (response) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (!data) return <CustomSkeleton height={400} />;
 
   return (
     <>
       <Stack spacing={"xl"}>
         <ComponentGlobal_BoxInformation isReport informasi={data?.catatan} />
         <ComponentVote_DetailDataSebelumPublish data={data as any} />
-        <ButtonAction voteId={data.id} />
+        <ButtonAction voteId={id as string} />
       </Stack>
     </>
   );

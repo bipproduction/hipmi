@@ -3,8 +3,14 @@
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { clientLogger } from "@/util/clientLogger";
 import {
   ActionIcon,
   Box,
@@ -14,16 +20,17 @@ import {
   Stack,
   Text,
   TextInput,
-  Textarea,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
-import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  apiGetDaftarPilihanById,
+  apiGetOneVotingById,
+} from "../_lib/api_voting";
 import { Vote_funEditById } from "../fun/edit/fun_edit_by_id";
 import { Vote_getListDaftarNamaById } from "../fun/get/get_list_daftar_vote_by_id";
 import { gs_vote_hotMenu, gs_vote_status } from "../global_state";
@@ -31,30 +38,53 @@ import {
   MODEL_VOTING,
   MODEL_VOTING_DAFTAR_NAMA_VOTE,
 } from "../model/interface";
-import { clientLogger } from "@/util/clientLogger";
-import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
-import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { DatePickerInput, DatesRangeValue } from "@mantine/dates";
+import moment from "moment";
+import "moment/locale/id";
 
-export default function Vote_Edit({
-  dataVote,
-  listDaftarVote,
-}: {
-  dataVote: MODEL_VOTING;
-  listDaftarVote: MODEL_VOTING_DAFTAR_NAMA_VOTE[];
-}) {
-  const [data, setData] = useState(dataVote);
-  const [pilihanNama, setPilihanNama] = useState(listDaftarVote);
+export default function Vote_Edit() {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_VOTING | null>();
+  const [daftarPilihan, setDaftarPilihan] = useState<
+    MODEL_VOTING_DAFTAR_NAMA_VOTE[] | null
+  >(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneVotingById({ id: id as string });
+      if (response) {
+        const fixData = _.omit(response.data, ["Voting_DaftarNamaVote"]);
+        setData(fixData as any);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useShallowEffect(() => {
     onLoadList();
   }, []);
 
   async function onLoadList() {
-    const loadList = await Vote_getListDaftarNamaById(data.id);
-    setPilihanNama(loadList as any);
+    try {
+      const response = await apiGetDaftarPilihanById({ id: id as string });
+      if (response) {
+        setDaftarPilihan(response.data);
+      } else {
+        setDaftarPilihan(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  if (!data || !daftarPilihan) return <CustomSkeleton height={400} />;
 
   return (
     <>
@@ -113,47 +143,6 @@ export default function Vote_Edit({
           />
         </Stack>
 
-        {/* <Stack spacing={5}>
-          <Textarea
-            styles={{
-              label: {
-                color: MainColor.white,
-              },
-              input: {
-                backgroundColor: MainColor.white,
-              },
-              required: {
-                color: MainColor.red,
-              },
-            }}
-            label="Deskripsi"
-            autosize
-            minRows={2}
-            maxRows={5}
-            withAsterisk
-            placeholder="Deskripsi"
-            value={data.deskripsi}
-            maxLength={300}
-            error={
-              data.deskripsi === "" ? (
-                <ComponentGlobal_ErrorInput text="Masukan deskripsi" />
-              ) : (
-                ""
-              )
-            }
-            onChange={(val) => {
-              setData({
-                ...data,
-                deskripsi: val.target.value,
-              });
-            }}
-          />
-          <ComponentGlobal_InputCountDown
-            lengthInput={data.deskripsi.length}
-            maxInput={300}
-          />
-        </Stack> */}
-
         <DatePickerInput
           styles={{
             label: {
@@ -174,7 +163,6 @@ export default function Vote_Edit({
           excludeDate={(date) => {
             return moment(date).diff(Date.now(), "days") < 0;
           }}
-          value={[data.awalVote, data.akhirVote]}
           error={
             data.awalVote === null || data.akhirVote === null ? (
               <ComponentGlobal_ErrorInput text="Invalid Date" />
@@ -182,11 +170,17 @@ export default function Vote_Edit({
               ""
             )
           }
-          onChange={(val: any) => {
+          value={[
+            data.awalVote ? moment(data.awalVote).toDate() : null,
+            data.akhirVote ? moment(data.akhirVote).toDate() : null,
+          ]}
+          onChange={(val) => {
+            if (!val || val.length < 2) return;
+
             setData({
               ...data,
-              awalVote: val[0],
-              akhirVote: val[1],
+              awalVote: val[0] as Date,
+              akhirVote: val[1] as Date,
             });
           }}
         />
@@ -200,7 +194,7 @@ export default function Vote_Edit({
 
           <Stack>
             <Stack>
-              {pilihanNama.map((e, index) => (
+              {daftarPilihan.map((e, index) => (
                 <Group key={index} position="apart" align="center">
                   <Box w={"85%"}>
                     <TextInput
@@ -228,9 +222,9 @@ export default function Vote_Edit({
                         )
                       }
                       onChange={(v) => {
-                        const cloneData = _.clone(pilihanNama);
+                        const cloneData = _.clone(daftarPilihan);
                         cloneData[index].value = v.currentTarget.value;
-                        setPilihanNama([...pilihanNama]);
+                        setDaftarPilihan([...cloneData]);
                       }}
                     />
                   </Box>
@@ -238,17 +232,17 @@ export default function Vote_Edit({
                     mt={"lg"}
                     variant="transparent"
                     radius={"xl"}
-                    disabled={pilihanNama.length < 3 ? true : false}
+                    disabled={daftarPilihan.length < 3 ? true : false}
                     onClick={() => {
-                      pilihanNama.splice(index, 1);
-                      setPilihanNama([...pilihanNama]);
+                      daftarPilihan.splice(index, 1);
+                      setDaftarPilihan([...daftarPilihan]);
                     }}
                   >
                     <IconTrash
                       style={{
                         transition: "0.5s",
                       }}
-                      color={pilihanNama.length < 3 ? "gray" : "red"}
+                      color={daftarPilihan.length < 3 ? "gray" : "red"}
                     />
                   </ActionIcon>
                 </Group>
@@ -257,11 +251,11 @@ export default function Vote_Edit({
 
             <Group position="center">
               <Button
-                disabled={pilihanNama.length >= 4 ? true : false}
+                disabled={daftarPilihan.length >= 4 ? true : false}
                 radius={"xl"}
                 leftIcon={<IconPlus size={15} />}
                 onClick={() => {
-                  setPilihanNama([...(pilihanNama as any), { value: "" }]);
+                  setDaftarPilihan([...(daftarPilihan as any), { value: "" }]);
                 }}
                 compact
                 bg={MainColor.yellow}
@@ -274,9 +268,7 @@ export default function Vote_Edit({
           </Stack>
         </Stack>
 
-        <ButtonAction data={data} listVoting={pilihanNama} />
-
-        {/* <pre>{JSON.stringify(listDaftarVote, null, 2)}</pre> */}
+        <ButtonAction data={data} listVoting={daftarPilihan as any} />
       </Stack>
     </>
   );

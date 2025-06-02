@@ -16,13 +16,7 @@ import {
 } from "../../_lib/api_voting";
 import { Voting_ComponentSkeletonDetail } from "../../component/skeleton_view";
 
-export default function Vote_DetailRiwayatSaya({
-  dataVote,
-  listKontributor,
-}: {
-  dataVote: MODEL_VOTING;
-  listKontributor: any[];
-}) {
+export default function Vote_DetailRiwayatSaya() {
   const params = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_VOTING | null>(null);
   const [hasil, setHasil] = useState<any[] | null>(null);

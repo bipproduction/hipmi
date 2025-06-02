@@ -11,39 +11,19 @@ import { IconDots } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { Component_Header } from "@/app_modules/_global/component/new/component_header";
 import UI_NewLayoutTamplate, { UI_NewHeader, UI_NewChildren } from "@/app_modules/_global/ui/V2_layout_tamplate";
+import { useParams } from "next/navigation";
 
 export default function LayoutVote_DetailSemuaRiwayat({
   children,
-  votingId,
-  userLoginId,
 }: {
   children: React.ReactNode;
-  votingId: string;
-  userLoginId: string;
 }) {
+  const params = useParams<{ id: string }>();
+  const votingId = params.id;
   const [openDrawer, setOpenDrawer] = useState(false);
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Detail Riwayat"
-            customButtonRight={
-              <ActionIcon
-                variant="transparent"
-                onClick={() => {
-                  setOpenDrawer(true);
-                }}
-              >
-                <IconDotsVertical color="white" />
-              </ActionIcon>
-            }
-          />
-        }
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
 
        <UI_NewLayoutTamplate>
               <UI_NewHeader>

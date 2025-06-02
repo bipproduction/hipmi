@@ -1,13 +1,9 @@
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { Vote_MainDetail } from "@/app_modules/vote";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const userLoginId = await funGetUserIdByToken();
+export default async function Page() {
   return (
     <>
-      <Vote_MainDetail
-        userLoginId={userLoginId as string}
-      />
+      <Vote_MainDetail />
     </>
   );
 }
