@@ -1,6 +1,7 @@
 "use client";
 
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { RouterForum } from "@/lib/router_hipmi/router_forum";
@@ -21,18 +22,34 @@ import {
 import { MODEL_FORUM_POSTING } from "../model/interface";
 import ComponentForum_ViewForumProfile from "./forum_profile";
 
-export default function Forum_Forumku({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_Forumku() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const userId = params.id;
   const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
-  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[] | null>(null);
+  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[] | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
 
   useShallowEffect(() => {
     const handleLoadDataUser = async () => {
@@ -103,7 +120,7 @@ export default function Forum_Forumku({
   return (
     <>
       <Stack spacing={"xl"}>
-        {!dataUser ? (
+        {!dataUser || !userLoginId ? (
           <Forum_SkeletonForumku />
         ) : (
           <ComponentForum_ViewForumProfile
@@ -112,7 +129,7 @@ export default function Forum_Forumku({
           />
         )}
 
-        {!dataPosting || isLoading ? (
+        {!dataPosting || isLoading || !userLoginId ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(dataPosting) ? (
           <Forum_ComponentIsDataEmpty />

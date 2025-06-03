@@ -1,25 +1,45 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
-import { Button, Group, Stack, Textarea } from "@mantine/core";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { forum_funCreateReportPosting } from "../../fun/create/fun_create_report_posting";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { forum_funCreateReportPostingLainnya } from "../../fun/create/fun_create_report_posting_lainnya";
-import mqtt_client from "@/util/mqtt_client";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
+import mqtt_client from "@/util/mqtt_client";
+import { Button, Group, Stack, Textarea } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { forum_funCreateReportPostingLainnya } from "../../fun/create/fun_create_report_posting_lainnya";
 
-export default function Forum_ReportPostingLainnya({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_ReportPostingLainnya() {
   const param = useParams<{ id: string }>();
   const postingId = param.id;
   const [deskripsi, setDeskripsi] = useState("");
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
+
+  if (!userLoginId) {
+    return <CustomSkeleton height={400} width={"100%"} />;
+  }
 
   return (
     <>

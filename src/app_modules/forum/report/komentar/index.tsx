@@ -14,6 +14,7 @@ import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
 import { clientLogger } from "@/util/clientLogger";
@@ -22,17 +23,31 @@ import { apiGetMasterReportForum } from "../../component/api_fetch_forum";
 import forum_getOneKategoriById from "../../fun/get/get_one_kategori_by_id";
 import { MODEL_FORUM_MASTER_REPORT } from "../../model/interface";
 
-export default function Forum_ReportKomentar({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_ReportKomentar() {
   const param = useParams<{ id: string }>();
   const komentarId = param.id;
   const [listReport, setListReport] = useState<
     MODEL_FORUM_MASTER_REPORT[] | null
   >(null);
   const [reportValue, setReportValue] = useState("1");
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
 
   useShallowEffect(() => {
     handleLoadMasterReport();
@@ -49,7 +64,8 @@ export default function Forum_ReportKomentar({
     }
   };
 
-  if (!listReport) return <CustomSkeleton height={50} width={"100%"} />;
+  if (!listReport || !userLoginId)
+    return <CustomSkeleton height={400} width={"100%"} />;
 
   return (
     <>
