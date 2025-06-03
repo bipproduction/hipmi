@@ -665,8 +665,10 @@ const limit = pLimit(1);
 export async function generate_seeder() {
   try {
     await Promise.all(listSeederQueue.map((fn) => limit(fn)));
+    await prisma.$disconnect();
   } catch (error) {
     console.error("error generate seeder", error);
+    await prisma.$disconnect();
   }
 
   return { status: 200, success: true };
