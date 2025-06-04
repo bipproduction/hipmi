@@ -7,33 +7,15 @@ import UI_NewLayoutTamplate, {
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import { Investasi_ViewMetodePembayaran } from "../../_view";
 
-export function Investasi_UiMetodePembayaran({
-  listBank,
-  investasiId,
-}: {
-  listBank: any[];
-  investasiId: string;
-}) {
+export function Investasi_UiMetodePembayaran() {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Metode Pembayaran" />}
-      >
-        <Investasi_ViewMetodePembayaran
-          listBank={listBank}
-          investasiId={investasiId}
-        />
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Metode Pembayaran" />
         </UI_NewHeader>
         <UI_NewChildren>
-          <Investasi_ViewMetodePembayaran
-            listBank={listBank}
-            investasiId={investasiId}
-          />
+          <Investasi_ViewMetodePembayaran />
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
     </>
