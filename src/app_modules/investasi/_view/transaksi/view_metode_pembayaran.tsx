@@ -9,22 +9,20 @@ import { IRealtimeData } from "@/lib/global_state";
 import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { clientLogger } from "@/util/clientLogger";
 import { Button, Paper, Radio, Stack, Title } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { useLocalStorage, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { investasi_funCreateInvoice } from "../../_fun/create/fun_create_invoice";
 import { MODEL_MASTER_BANK } from "../../_lib/interface";
+import { apiGetMasterBank } from "@/app_modules/_global/lib/api_fetch_master";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_ViewMetodePembayaran({
-  listBank,
-  investasiId,
-}: {
-  listBank: MODEL_MASTER_BANK[];
-  investasiId: string;
-}) {
+export function Investasi_ViewMetodePembayaran() {
+  // id = investasiId
+  const param = useParams<{ id: string }>();
   const router = useRouter();
-  const [bank, setBank] = useState(listBank);
+  const [bank, setBank] = useState<MODEL_MASTER_BANK[]>([]);
   const [pilihBank, setPilihBank] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [total, setTotal] = useLocalStorage({
@@ -36,6 +34,25 @@ export function Investasi_ViewMetodePembayaran({
     defaultValue: 0,
   });
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetMasterBank();
+
+      if (response.success) {
+        setBank(response.data);
+      } else {
+        setBank([]);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setBank([]);
+    }
+  }
+
   async function onProses() {
     try {
       setLoading(true);
@@ -43,7 +60,7 @@ export function Investasi_ViewMetodePembayaran({
         data: {
           total: total,
           pilihBank: pilihBank,
-          investasiId: investasiId,
+          investasiId: param.id,
           jumlah: jumlah,
         },
       });
@@ -55,7 +72,7 @@ export function Investasi_ViewMetodePembayaran({
       }
 
       const dataNotifikasi: IRealtimeData = {
-        appId: investasiId,
+        appId: param.id,
         status: "Menunggu",
         userId: res.data?.authorId as string,
         pesan: "Menunggu transfer",
@@ -83,6 +100,10 @@ export function Investasi_ViewMetodePembayaran({
       clientLogger.error("Error create invoice:", error);
       setLoading(false);
     }
+  }
+
+  if (bank.length === 0) {
+    return <CustomSkeleton height={300} />;
   }
 
   return (

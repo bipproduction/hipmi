@@ -110,6 +110,8 @@ export function Investasi_ViewEditDokumen() {
           ComponentGlobal_NotifikasiPeringatan(updateNoFile.message);
         }
         ComponentGlobal_NotifikasiBerhasil(updateNoFile.message);
+        router.back();
+
       }
     } catch (error) {
       setIsLoading(false);

@@ -11,23 +11,24 @@ import {
   NumberInput,
   Text,
 } from "@mantine/core";
-import { useFocusTrap, useLocalStorage } from "@mantine/hooks";
-import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import {
+  useFocusTrap,
+  useLocalStorage,
+  useShallowEffect,
+} from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { NEW_RouterInvestasi } from "../../../../lib/router_hipmi/router_investasi";
+import { apiNewGetOneInvestasiById } from "../../_lib/api_fetch_new_investasi";
 import { MODEL_INVESTASI } from "../../_lib/interface";
-import { gs_investas_menu } from "../../g_state";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_ViewProsesPembelian({
-  dataInvestasi,
-}: {
-  dataInvestasi: MODEL_INVESTASI;
-}) {
+export function Investasi_ViewProsesPembelian() {
+  const param = useParams<{ id: string }>();
   const router = useRouter();
   const focusTrapRef = useFocusTrap();
-  const [data, setData] = useState(dataInvestasi);
-  const [maxPembelian, setMaxPembelian] = useState(Number(data.sisaLembar));
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
+  const [maxPembelian, setMaxPembelian] = useState<number>(0);
   const [total, setTotal] = useLocalStorage({
     key: "total_investasi",
     defaultValue: 0,
@@ -37,6 +38,32 @@ export function Investasi_ViewProsesPembelian({
     defaultValue: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiNewGetOneInvestasiById({ id: param.id });
+
+      if (response.success) {
+        setData(response.data);
+        setMaxPembelian(Number(response.data.sisaLembar));
+      } else {
+        setData(null);
+        setMaxPembelian(0);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+      setMaxPembelian(0);
+    }
+  };
+
+  if (!data) {
+    return <CustomSkeleton height={400} />;
+  }
 
   return (
     <>
@@ -120,7 +147,7 @@ export function Investasi_ViewProsesPembelian({
               router.push(NEW_RouterInvestasi.metode_pembayaran + data.id, {
                 scroll: false,
               });
-              setIsLoading(true)
+              setIsLoading(true);
             }}
             bg={MainColor.yellow}
             color="yellow"

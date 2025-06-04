@@ -28,12 +28,9 @@ import UI_NewLayoutTamplate, {
   UI_NewHeader,
   UI_NewChildren,
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export function Investasi_UiDetailBerita({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export function Investasi_UiDetailBerita() {
   const params = useParams<{ id: string }>();
   const id = params.id;
 
@@ -42,6 +39,25 @@ export function Investasi_UiDetailBerita({
   const [openModal, setOpenModal] = useState(false);
   const [data, setData] = useState<any | null>(null);
   const [isLoading, setLoading] = useState(false);
+
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserId();
+    onLoadData();
+  }, []);
+
+  async function handleGetUserId() {
+    try {
+      const respone = await apiNewGetUserIdByToken();
+
+      if (respone) {
+        setUserLoginId(respone.userId);
+      }
+    } catch (error) {
+      console.error("Error get data detail", error);
+    }
+  }
 
   useShallowEffect(() => {
     onLoadData();
@@ -96,27 +112,6 @@ export function Investasi_UiDetailBerita({
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Detail Berita"
-            customButtonRight={
-              data && userLoginId === data.investasi.authorId ? (
-                <ActionIcon
-                  variant="transparent"
-                  onClick={() => setOpenDrawer(true)}
-                >
-                  <IconDotsVertical color="white" />
-                </ActionIcon>
-              ) : (
-                ""
-              )
-            }
-          />
-        }
-      >
-        <Investasi_ViewDetailBerita />
-      </UIGlobal_LayoutTamplate> */}
 
       <UI_NewLayoutTamplate>
         <UI_NewHeader>

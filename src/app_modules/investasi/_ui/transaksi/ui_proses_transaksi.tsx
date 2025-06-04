@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { useState } from "react";
 
-export function Investasi_UiProsesTransaksi({ nomorAdmin }: { nomorAdmin : any}) {
+export function Investasi_UiProsesTransaksi() {
   const router = useRouter();
   const [hotMenu, setHotMenu] = useAtom(gs_investas_menu);
   const [isLoading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ export function Investasi_UiProsesTransaksi({ nomorAdmin }: { nomorAdmin : any})
           />
         }
       >
-        <Investasi_ViewProsesTransaksi nomorAdmin={nomorAdmin} />
+        <Investasi_ViewProsesTransaksi />
       </UIGlobal_LayoutTamplate>
     </>
   );

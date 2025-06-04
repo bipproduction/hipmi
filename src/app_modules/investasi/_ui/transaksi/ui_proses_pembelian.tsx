@@ -7,25 +7,16 @@ import UI_NewLayoutTamplate, {
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import { Investasi_ViewProsesPembelian } from "../../_view";
 
-export function Investasi_UiProsesPembelian({
-  dataInvestasi,
-}: {
-  dataInvestasi: any;
-}) {
+export function Investasi_UiProsesPembelian() {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Pembelian Saham" />}
-      >
-        <Investasi_ViewProsesPembelian dataInvestasi={dataInvestasi} />
-      </UIGlobal_LayoutTamplate> */}
 
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Pembelian Saham" />
         </UI_NewHeader>
         <UI_NewChildren>
-          <Investasi_ViewProsesPembelian dataInvestasi={dataInvestasi} />
+          <Investasi_ViewProsesPembelian />
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
     </>
