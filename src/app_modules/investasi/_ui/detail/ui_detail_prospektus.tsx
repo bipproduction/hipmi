@@ -7,25 +7,15 @@ import UI_NewLayoutTamplate, {
 } from "@/app_modules/_global/ui/V2_layout_tamplate";
 import { Investasi_ViewDetailProspektus } from "../../_view";
 
-export function Investasi_UiDetailProspektus({
-  dataInvestasi,
-}: {
-  dataInvestasi: any;
-}) {
+export function Investasi_UiDetailProspektus() {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={<UIGlobal_LayoutHeaderTamplate title="Detail Prospektus" />}
-      >
-        <Investasi_ViewDetailProspektus dataInvestasi={dataInvestasi} />
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Detail Prospektus" />
         </UI_NewHeader>
         <UI_NewChildren>
-          <Investasi_ViewDetailProspektus dataInvestasi={dataInvestasi} />
+          <Investasi_ViewDetailProspektus  />
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
     </>

@@ -1,3 +1,5 @@
+// -- DELETE SOON -- //
+
 import { EditIntroInvestasi } from "@/app_modules/investasi";
 import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
 import getPembagianDeviden from "@/app_modules/investasi/fun/master/get_pembagian_deviden";

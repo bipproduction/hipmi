@@ -155,7 +155,11 @@ export const RouterInvestasi_OLD = {
   detail_saham_terbeli: "/dev/investasi/detail_saham_terbeli/",
   detail_prospektus: "/dev/investasi/detail_prospektus/",
   detail_dokumen: "/dev/investasi/detail_dokumen/",
+
+  // -- DELETE SOON -- //
   detail_berita: "/dev/investasi/detail_berita/",
+  // -- DELETE SOON -- //
+
   detail_draft: "/dev/investasi/detail_portofolio/draft/",
   detail_publish: "/dev/investasi/detail_portofolio/publish/",
   detail_review: "/dev/investasi/detail_portofolio/review/",

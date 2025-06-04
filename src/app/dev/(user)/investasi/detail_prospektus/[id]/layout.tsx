@@ -1,3 +1,4 @@
+// -- DELETE SOON -- //
 import { LayoutDetailPropektus } from "@/app_modules/investasi";
 import React from "react";
 

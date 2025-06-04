@@ -26,16 +26,16 @@ export default function Investasi_ViewDetailReview({
   const [openModal, setOpenModal] = useState(false);
 
   async function onChangeStatus() {
-    const res = await investasi_funEditStatusById({
-      investasiId: data.id,
-      statusId: "3",
-    });
     try {
       setLoading(true);
+      const res = await investasi_funEditStatusById({
+        investasiId: data.id,
+        statusId: "3",
+      });
       if (res.status === 200) {
         ComponentGlobal_NotifikasiBerhasil("Review Dibatalkan");
         router.replace(NEW_RouterInvestasi.portofolio({ id: "3" }));
-  
+
         const dataNotif = {
           appId: res.data?.id,
           userId: res.data?.authorId,
@@ -44,11 +44,11 @@ export default function Investasi_ViewDetailReview({
           kategoriApp: "INVESTASI",
           title: "Membatalkan review",
         };
-  
+
         const notif = await notifikasiToAdmin_funCreate({
           data: dataNotif as any,
         });
-  
+
         if (notif.status === 201) {
           mqtt_client.publish("ADMIN", JSON.stringify({ count: 1 }));
         }
@@ -88,16 +88,21 @@ export default function Investasi_ViewDetailReview({
         close={() => setOpenModal(false)}
         title={"Anda yakin ingin batalkan review?"}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue }}
-          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModal(false)}
+          >
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             style={{
-              transition: "0.5s", color: "black",
-              backgroundColor: AccentColor.yellow
+              transition: "0.5s",
+              color: "black",
+              backgroundColor: AccentColor.yellow,
             }}
             loaderPosition="center"
             loading={isLoading}
