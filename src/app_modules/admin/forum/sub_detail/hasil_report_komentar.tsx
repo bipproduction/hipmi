@@ -68,7 +68,7 @@ export default function AdminForum_HasilReportKomentar({
             />
           </Group>
         </Admin_V3_ComponentBreakpoint>
-        
+
         <HasilReportPosting listReport={listReport} komentarId={komentarId} />
       </Stack>
     </>
@@ -86,15 +86,13 @@ function ButtonDeleteKomentar({
 }) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-  const [loadingDel2, setLoadingDel2] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function onDelete() {
-    await adminForum_funDeleteKomentarById(komentarId).then(async (res) => {
+    try {
+      setLoading(true);
+      const res = await adminForum_funDeleteKomentarById(komentarId);
       if (res.status === 200) {
-        setLoadingDel2(false);
-        close();
-        router.back();
-
         // const dataKomentar = await adminForum_funGetOneKomentarById({
         //   komentarId: komentarId,
         // });
@@ -121,10 +119,17 @@ function ButtonDeleteKomentar({
         }
 
         ComponentGlobal_NotifikasiBerhasil(res.message);
+        setLoading(false);
+        close();
+        router.back();
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
       }
-    });
+    } catch (error) {
+      console.log("error delete", error);
+      setLoading(false);
+      ComponentGlobal_NotifikasiGagal("Terjadi kesalahan, silahkan coba lagi");
+    }
   }
 
   return (
@@ -149,12 +154,12 @@ function ButtonDeleteKomentar({
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingDel2 ? true : false}
+              loading={loading}
               radius={"xl"}
               color="red"
               onClick={() => {
                 onDelete();
-                setLoadingDel2(true);
+                setLoading(true);
               }}
             >
               Hapus

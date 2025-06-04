@@ -80,11 +80,24 @@ export function ComponentForum_UiDetailReportKomentar() {
 
           <Stack spacing={"xs"}>
             <Text fw={"bold"}>Komentar anda</Text>
-            <Paper withBorder p={"sm"}>
-              <Text>
-                <div dangerouslySetInnerHTML={{ __html: data.komentar }} />
+            <Box
+              style={{
+                backgroundColor: MainColor.soft_darkblue,
+                padding: 10,
+                borderRadius: 8,
+              }}
+            >
+              <Text fz={"sm"} color="white">
+                {data?.komentar ? (
+                  <Comp_V3_SetInnerHTMLWithStiker
+                    props={data.komentar}
+                    className="chat-content"
+                  />
+                ) : (
+                  ""
+                )}
               </Text>
-            </Paper>
+            </Box>
           </Stack>
 
           <Stack spacing={"xs"}>

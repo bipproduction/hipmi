@@ -16,7 +16,6 @@ import {
   Button,
   Center,
   Group,
-  Modal,
   Paper,
   ScrollArea,
   Spoiler,
@@ -30,6 +29,7 @@ import { IconTrash } from "@tabler/icons-react";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
@@ -38,8 +38,6 @@ import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_cre
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
 import { adminForum_getListReportPostingById } from "../fun/get/get_list_report_posting_by_id";
-import { UIGlobal_Modal } from "@/app_modules/_global/ui";
-import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 
 export default function AdminForum_HasilReportPosting({
   dataPosting,
@@ -77,35 +75,42 @@ function ButtonDeletePosting({
 }) {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-  const [loadingDel2, setLoadingDel2] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   async function onDelete() {
-    const del = await adminForum_funDeletePostingById(dataPosting.id);
-    if (del.status === 200) {
-      setLoadingDel2(false);
-      close();
-      router.back();
+    try {
+      setLoading(true);
+      const del = await adminForum_funDeletePostingById(dataPosting.id);
+      if (del.status === 200) {
+        const dataNotif = {
+          appId: dataPosting.id,
+          status: "Report Posting",
+          userId: dataPosting.authorId,
+          pesan: dataPosting.diskusi,
+          kategoriApp: "FORUM",
+          title: "Postingan anda telah di laporkan",
+        };
+        const notif = await adminNotifikasi_funCreateToUser({
+          data: dataNotif as any,
+        });
+        if (notif.status === 201) {
+          mqtt_client.publish(
+            "USER",
+            JSON.stringify({ userId: dataPosting.authorId, count: 1 })
+          );
+        }
 
-      const dataNotif = {
-        appId: dataPosting.id,
-        status: "Report Posting",
-        userId: dataPosting.authorId,
-        pesan: dataPosting.diskusi,
-        kategoriApp: "FORUM",
-        title: "Postingan anda telah di laporkan",
-      };
-      const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
-      });
-      if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: dataPosting.authorId, count: 1 })
-        );
+        ComponentGlobal_NotifikasiBerhasil(del.message);
+        setLoading(false);
+        close();
+        router.back();
+      } else {
+        ComponentGlobal_NotifikasiGagal(del.message);
       }
-
-      ComponentGlobal_NotifikasiBerhasil(del.message);
-    } else {
-      ComponentGlobal_NotifikasiGagal(del.message);
+    } catch (error) {
+      console.log("error delete", error);
+      setLoading(false);
+      ComponentGlobal_NotifikasiGagal("Terjadi kesalahan, silahkan coba lagi");
     }
   }
   return (
@@ -130,12 +135,12 @@ function ButtonDeletePosting({
             </Button>
             <Button
               loaderPosition="center"
-              loading={loadingDel2 ? true : false}
+              loading={loading ? true : false}
               radius={"xl"}
               color="red"
               onClick={() => {
                 onDelete();
-                setLoadingDel2(true);
+                setLoading(true);
               }}
             >
               Hapus
