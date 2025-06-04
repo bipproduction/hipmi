@@ -23,12 +23,9 @@ import ComponentForum_BerandaCardView from "../component/main_component/card_vie
 import { Forum_ComponentIsDataEmpty } from "../component/other_component";
 import { Forum_SkeletonCard } from "../component/skeleton_view";
 import { MODEL_FORUM_POSTING } from "../model/interface";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export default function Forum_Beranda({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_Beranda() {
   const [data, setData] = useState<MODEL_FORUM_POSTING[]>([]);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setIsSearch] = useState("");
@@ -36,6 +33,24 @@ export default function Forum_Beranda({
   const [countNewPost, setCountNewPost] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
 
   useShallowEffect(() => {
     handleLoadData(isSearch);
@@ -175,7 +190,7 @@ export default function Forum_Beranda({
 
         {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
 
-        {!data.length && isLoading ? (
+        {!data.length && isLoading && !userLoginId ? (
           <Forum_SkeletonCard />
         ) : _.isEmpty(data) ? (
           <Forum_ComponentIsDataEmpty />
@@ -196,7 +211,7 @@ export default function Forum_Beranda({
               {(item) => (
                 <ComponentForum_BerandaCardView
                   data={item}
-                  userLoginId={userLoginId}
+                  userLoginId={userLoginId as string}
                   onLoadData={(val) => {
                     setData(val);
                   }}

@@ -3,6 +3,7 @@
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import UI_NewLayoutTamplate, {
   UI_NewChildren,
@@ -12,21 +13,20 @@ import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import { clientLogger } from "@/util/clientLogger";
-import { ActionIcon, Avatar, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LayoutForum_Main({
-  userLoginId,
   children,
 }: {
-  userLoginId: string;
   children: React.ReactNode;
 }) {
   const router = useRouter();
   const [data, setData] = useState<MODEL_USER | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
   useShallowEffect(() => {
     handleLoadData();
@@ -34,12 +34,18 @@ export default function LayoutForum_Main({
 
   const handleLoadData = async () => {
     try {
-      const response = await apiGetUserById({
-        id: userLoginId,
-      });
+      const responseUserId = await apiNewGetUserIdByToken();
+      if (responseUserId.success) {
+        setUserLoginId(responseUserId.userId);
+        const responseUser = await apiGetUserById({
+          id: responseUserId.userId,
+        });
 
-      if (response) {
-        setData(response.data);
+        if (responseUser.success) {
+          setData(responseUser.data);
+        }
+      } else {
+        setUserLoginId(null);
       }
     } catch (error) {
       clientLogger.error("Error get user", error);
@@ -53,7 +59,7 @@ export default function LayoutForum_Main({
           <Component_Header
             title="Forum"
             iconRight={
-              !data ? (
+              !data || !userLoginId ? (
                 <CustomSkeleton height={30} width={30} circle />
               ) : (
                 <ActionIcon
@@ -61,7 +67,7 @@ export default function LayoutForum_Main({
                   variant="transparent"
                   onClick={() => {
                     setIsLoading(true);
-                    router.push(RouterForum.forumku + data?.id);
+                    router.push(RouterForum.forumku + userLoginId);
                   }}
                 >
                   {isLoading ? (
@@ -87,7 +93,7 @@ export default function LayoutForum_Main({
             }
           />
         </UI_NewHeader>
-       
+
         <UI_NewChildren>{children}</UI_NewChildren>
       </UI_NewLayoutTamplate>
 

@@ -2,6 +2,8 @@ import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export { GET };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {

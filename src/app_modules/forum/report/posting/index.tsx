@@ -1,35 +1,52 @@
 "use client";
 
-import { RouterForum } from "@/lib/router_hipmi/router_forum";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
 import mqtt_client from "@/util/mqtt_client";
 import { Button, Radio, Stack, Text, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { toNumber } from "lodash";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiGetMasterReportForum } from "../../component/api_fetch_forum";
 import { forum_funCreateReportPosting } from "../../fun/create/fun_create_report_posting";
 import forum_getOneKategoriById from "../../fun/get/get_one_kategori_by_id";
 import { MODEL_FORUM_MASTER_REPORT } from "../../model/interface";
-import { useShallowEffect } from "@mantine/hooks";
-import { apiGetMasterReportForum } from "../../component/api_fetch_forum";
-import { clientLogger } from "@/util/clientLogger";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Forum_ReportPosting({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_ReportPosting() {
   const param = useParams<{ id: string }>();
   const postingId = param.id;
-  const [listReport, setListReport] = useState<MODEL_FORUM_MASTER_REPORT[] | null>(null);
+  const [listReport, setListReport] = useState<
+    MODEL_FORUM_MASTER_REPORT[] | null
+  >(null);
   const [reportValue, setReportValue] = useState("1");
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
 
   useShallowEffect(() => {
     handleLoadMasterReport();
@@ -46,7 +63,8 @@ export default function Forum_ReportPosting({
     }
   };
 
-  if (!listReport) return <CustomSkeleton height={50} width={"100%"} />;
+  if (!listReport || !userLoginId)
+    return <CustomSkeleton height={400} width={"100%"} />;
 
   return (
     <>

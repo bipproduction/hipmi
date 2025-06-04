@@ -1,4 +1,3 @@
-
 import { LayoutForum_ReportPosting } from "@/app_modules/forum";
 import React from "react";
 

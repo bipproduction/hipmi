@@ -17,12 +17,9 @@ import { MODEL_FORUM_POSTING } from "../../model/interface";
 import { ISticker } from "@/app_modules/_global/lib/interface/stiker";
 import { apiGetStickerForUser } from "@/app_modules/_global/lib/stiker/api_fecth_stiker_for_user";
 import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export default function Forum_V3_EditPosting({
-  userLoginId,
-}: {
-  userLoginId: string;
-}) {
+export default function Forum_V3_EditPosting() {
   const param = useParams<{ id: string }>();
   const [data, setData] = useState<MODEL_FORUM_POSTING | null>(null);
 
@@ -33,6 +30,7 @@ export default function Forum_V3_EditPosting({
 
   const [sticker, setSticker] = useState<ISticker[] | null>(null);
   const [emotion, setEmotion] = useState<any>([]);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
   useShallowEffect(() => {
     onLoadData();
@@ -40,28 +38,34 @@ export default function Forum_V3_EditPosting({
 
   async function onLoadData() {
     try {
-      const responseDataProfile = await apiGetUserById({
-        id: userLoginId,
-      });
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+        const responseDataProfile = await apiGetUserById({
+          id: response.userId,
+        });
 
-      if (responseDataProfile.success) {
-        try {
-          const response = await apiGetStickerForUser({
-            gender: responseDataProfile?.data?.Profile?.jenisKelamin,
-          });
-          if (response.success) {
-            setSticker(response.res.data);
-          } else {
-            console.error("Failed to get sticker", response.message);
+        if (responseDataProfile.success) {
+          try {
+            const response = await apiGetStickerForUser({
+              gender: responseDataProfile?.data?.Profile?.jenisKelamin,
+            });
+            if (response.success) {
+              setSticker(response.res.data);
+            } else {
+              console.error("Failed to get sticker", response.message);
+              setSticker([]);
+            }
+          } catch (error) {
+            console.error("Error get sticker", error);
             setSticker([]);
           }
-        } catch (error) {
-          console.error("Error get sticker", error);
-          setSticker([]);
+        } else {
+          console.error("Failed to get profile", responseDataProfile.message);
+          setSticker(null);
         }
       } else {
-        console.error("Failed to get profile", responseDataProfile.message);
-        setSticker(null);
+        setUserLoginId(null);
       }
     } catch (error) {
       console.error("Error get profile", error);
@@ -117,7 +121,7 @@ export default function Forum_V3_EditPosting({
     };
   }, []);
 
-  if (!data) return <CustomSkeleton height={200} />;
+  if (!data || !userLoginId) return <CustomSkeleton height={200} />;
 
   return (
     <>
