@@ -1,13 +1,15 @@
 "use client";
 
-import { Button } from "@mantine/core";
-import {
-  adminInvestasi_funAcceptTransaksiById,
-  adminInvestasi_funGetAllTransaksiById,
-} from "../../fun";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
-import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
+import { notifikasiToUser_funCreate } from "@/app_modules/notifikasi/fun";
+import { IRealtimeData } from "@/lib/global_state";
+import { Button } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
+import {
+  adminInvestasi_funAcceptTransaksiById
+} from "../../fun";
 
 export function AdminInvestasi_ComponentButtonBandingTransaksi({
   invoiceId,
@@ -18,8 +20,9 @@ export function AdminInvestasi_ComponentButtonBandingTransaksi({
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-  onLoadData: (val: any) => void;
+  onLoadData?: (val: any) => void;
 }) {
+  const router = useRouter();
   const [isLoading, setLoading] = useState(false);
   async function onAccept() {
     const res = await adminInvestasi_funAcceptTransaksiById({
@@ -28,22 +31,52 @@ export function AdminInvestasi_ComponentButtonBandingTransaksi({
       lembarTerbeli,
     });
 
-    // if (res.status == 200) {
-    //   try {
-    //     const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
-    //       investasiId,
-    //       page: 1,
-    //     });
-    //     onLoadData(dataTransaksi);
-    //   } catch (error) {
-    //     console.log(error);
-    //   } finally {
-    //     ComponentAdminGlobal_NotifikasiBerhasil(res.message);
-    //     setLoading(true);
-    //   }
-    // } else {
-    //   ComponentAdminGlobal_NotifikasiGagal(res.message);
-    // }
+    if (res.status == 200) {
+      const dataNotifikasi: IRealtimeData = {
+        appId: investasiId,
+        status: res.data?.dataInvestasi?.MasterStatusInvestasi?.name as any,
+        userId: res.data?.dataInvestasi.authorId as string,
+        pesan: "Cek investasi anda, Anda memiliki investor baru",
+        kategoriApp: "INVESTASI",
+        title: "Investor baru",
+      };
+
+      const notif = await notifikasiToUser_funCreate({
+        data: dataNotifikasi as any,
+      });
+
+      if (notif.status === 201) {
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "USER",
+          dataMessage: dataNotifikasi,
+        });
+      }
+
+      const notifikasiInvestor: IRealtimeData = {
+        appId: res.data?.dataInvestor.id as string,
+        status: "Berhasil",
+        userId: res.data?.dataInvestor.authorId as string,
+        pesan: "Selamat, anda telah menjadi investor baru",
+        kategoriApp: "INVESTASI",
+        title: "Investasi berhasil",
+      };
+
+      const notifToInvestor = await notifikasiToUser_funCreate({
+        data: notifikasiInvestor as any,
+      });
+
+      if (notifToInvestor.status === 201) {
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "USER",
+          dataMessage: notifikasiInvestor,
+        });
+      }
+
+      ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+      router.back();
+    }
   }
 
   return (
