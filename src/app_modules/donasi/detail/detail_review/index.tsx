@@ -1,36 +1,60 @@
 "use client";
 
-import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { UIGlobal_Modal } from "@/app_modules/_global/ui";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
-import mqtt_client from "@/util/mqtt_client";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { Button, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import ComponentDonasi_DetailDataGalangDana from "../../component/detail_galang_dana/detail_data_donasi";
 import ComponentDonasi_CeritaPenggalangMain from "../../component/detail_main/cerita_penggalang";
-import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
-import { MODEL_DONASI } from "../../model/interface";
 import { donasi_checkStatus } from "../../fun";
-import { WibuRealtime } from "wibu-pkg";
-import { IRealtimeData } from "@/lib/global_state";
-import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
+import { apiGetOneDonasiById } from "../../lib/api_donasi";
+import { MODEL_DONASI } from "../../model/interface";
 
-export default function DetailReviewDonasi({
-  dataDonasi,
-}: {
-  dataDonasi: MODEL_DONASI;
-}) {
-  const [donasi, setDonasi] = useState(dataDonasi);
+export default function DetailReviewDonasi() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState({} as MODEL_DONASI);
+  const [loading, setLoading] = useState(true);
+
+  useShallowEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      setLoading(true); 
+      const response = await apiGetOneDonasiById(param.id, "semua");
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return <CustomSkeleton height={400} />;
+  }
 
   return (
     <>
       <Stack spacing={"xl"} pb={"md"}>
-        <ComponentDonasi_DetailDataGalangDana donasi={donasi} />
-        <ComponentDonasi_CeritaPenggalangMain donasi={donasi} />
-        <ButtonBatalReview donasi={donasi} />
+        <ComponentDonasi_DetailDataGalangDana donasi={data} />
+        <ComponentDonasi_CeritaPenggalangMain donasi={data} />
+        <ButtonBatalReview donasi={data} />
       </Stack>
     </>
   );
@@ -46,7 +70,6 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
     if (check) {
       const res = await Donasi_funGantiStatus(donasi.id, "3");
       if (res.status === 200) {
-
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.id as any,
           status: res.data?.DonasiMaster_Status?.name as any,
@@ -71,10 +94,9 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
             pushNotificationTo: "ADMIN",
             dataMessage: dataNotifikasi,
           });
-
-          ComponentGlobal_NotifikasiBerhasil("Berhasil Dibatalkan");
-          router.push(RouterDonasi.status_galang_dana({ id: "3" }));
         }
+        ComponentGlobal_NotifikasiBerhasil("Berhasil Dibatalkan");
+        router.push(RouterDonasi.status_galang_dana({ id: "3" }));
       } else {
         setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(res.message);

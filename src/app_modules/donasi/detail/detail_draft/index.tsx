@@ -17,14 +17,39 @@ import ComponentDonasi_DetailDataGalangDana from "../../component/detail_galang_
 import ComponentDonasi_CeritaPenggalangMain from "../../component/detail_main/cerita_penggalang";
 import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
+import { apiGetOneDonasiById } from "../../lib/api_donasi";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function DetailDraftDonasi({
-  dataDonasi,
-}: {
-  dataDonasi: MODEL_DONASI;
-}) {
-  const [data, setData] = useState(dataDonasi);
-
+export default function DetailDraftDonasi() {
+    const param = useParams<{ id: string }>();
+    const [data, setData] = useState({} as MODEL_DONASI);
+    const [loading, setLoading] = useState(true);
+  
+    useShallowEffect(() => {
+      getData();
+    }, []);
+  
+    async function getData() {
+      try {
+        setLoading(true); 
+        const response = await apiGetOneDonasiById(param.id, "semua");
+  
+        if (response.success) {
+          setData(response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    if (loading) {
+      return <CustomSkeleton height={400} />;
+    }
+  
   return (
     <>
       <Stack spacing={"xl"} py={"md"}>

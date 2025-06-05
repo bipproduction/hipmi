@@ -245,7 +245,7 @@ export function Admin_V3_ComponentButtonUserCircle({
                             
                             color="yellow"
                             processing
-                            label={<Text c="black" fz={10}>{countNotifikasi}</Text>}
+                            label={<Text c="black" fz={10}>{countNotifikasi ? countNotifikasi : ""}</Text>}
                           >
                             <IconBell color="white" />
                           </Indicator>
@@ -284,7 +284,7 @@ export function Admin_V3_ComponentButtonUserCircle({
                           <Indicator
                             color="yellow"
                             processing
-                            label={<Text c="black" fz={10}>{countNotifikasi}</Text>}
+                            label={<Text c="black" fz={10}>{countNotifikasi ? countNotifikasi : ""}</Text>}
                           >
                             <IconBell size={18} color={e.color || "white"} />
                           </Indicator>
