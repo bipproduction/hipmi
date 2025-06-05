@@ -3,11 +3,7 @@ import Admin_ComponentBackButton from "@/app_modules/admin/_admin_global/back_bu
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_INVOICE_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { clientLogger } from "@/util/clientLogger";
-import {
-  Badge,
-  Box,
-  Stack
-} from "@mantine/core";
+import { Badge, Box, Grid, Group, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +14,10 @@ import { Admin_ComponentBoxStyle } from "@/app_modules/admin/_admin_global/_comp
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import { Admin_V3_ComponentDetail } from "@/app_modules/admin/_components_v3/comp_detail_data";
 import { AdminInvestasi_ComponentCekBuktiTransfer } from "../../_component/new_button/button_cek_bukti_transfer";
+import {
+  AdminInvestasi_ComponentButtonKonfirmasiTransaksi,
+  AdminInvestasi_ComponentButtonBandingTransaksi,
+} from "../../_component";
 
 function DetailTransaksi() {
   const params = useParams<{ id: string }>();
@@ -121,6 +121,25 @@ function DetailTransaksi() {
               {listData.map((e, i) => (
                 <Admin_V3_ComponentDetail key={i} item={e} />
               ))}
+
+              <Group position="center" mt="xl">
+                {data?.statusInvoiceId === "1" && "-"}
+                {data?.statusInvoiceId === "2" && (
+                  <AdminInvestasi_ComponentButtonKonfirmasiTransaksi
+                    investasiId={data?.investasiId}
+                    invoiceId={data?.id}
+                    lembarTerbeli={data?.lembarTerbeli}
+                  />
+                )}
+                {data?.statusInvoiceId === "3" && "-"}
+                {data?.statusInvoiceId === "4" && (
+                  <AdminInvestasi_ComponentButtonBandingTransaksi
+                    invoiceId={data?.id}
+                    investasiId={data?.investasiId}
+                    lembarTerbeli={data?.lembarTerbeli}
+                  />
+                )}
+              </Group>
             </Stack>
           </Admin_ComponentBoxStyle>
 

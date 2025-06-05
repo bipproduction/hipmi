@@ -2,21 +2,20 @@
 
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
-import { Button, Stack } from "@mantine/core";
+import {
+  notifikasiToUser_funCreate
+} from "@/app_modules/notifikasi/fun";
+import { IRealtimeData } from "@/lib/global_state";
+import { clientLogger } from "@/util/clientLogger";
+import { Button, Group } from "@mantine/core";
 import { IconBan, IconCircleCheck } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import {
   adminInvestasi_funAcceptTransaksiById,
-  adminInvestasi_funGetAllTransaksiById,
-  adminInvestasi_funRejectInvoiceById,
+  adminInvestasi_funRejectInvoiceById
 } from "../../fun";
-import { clientLogger } from "@/util/clientLogger";
-import { IRealtimeData } from "@/lib/global_state";
-import {
-  notifikasiToAdmin_funCreate,
-  notifikasiToUser_funCreate,
-} from "@/app_modules/notifikasi/fun";
-import { WibuRealtime } from "wibu-pkg";
 
 export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
   invoiceId,
@@ -27,8 +26,9 @@ export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-  onLoadData: (val: any) => void;
+  onLoadData?: (val: any) => void;
 }) {
+  const router = useRouter()
   const [isLoadingAccpet, setLoadingAccept] = useState(false);
   const [isLoadingReject, setLoadingReject] = useState(false);
 
@@ -58,13 +58,9 @@ export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
             dataMessage: notifikasiInvestor,
           });
 
-          const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
-            investasiId,
-            page: 1,
-          });
-          onLoadData(dataTransaksi);
-
+          
           ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+          router.back();
         }
       } else {
         ComponentAdminGlobal_NotifikasiGagal(res.message);
@@ -128,12 +124,15 @@ export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
           });
         }
 
-        const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
-          investasiId,
-          page: 1,
-        });
-        onLoadData(dataTransaksi);
+        // const dataTransaksi = await adminInvestasi_funGetAllTransaksiById({
+        //   investasiId,
+        //   page: 1,
+        // });
+        // onLoadData?.(dataTransaksi);
+
+        
         ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+        router.back();
       }
     } catch (error) {
       clientLogger.error("Error accept invoice", error);
@@ -144,7 +143,7 @@ export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
 
   return (
     <>
-      <Stack>
+      <Group position="center">
         <Button
           loaderPosition="center"
           loading={isLoadingAccpet}
@@ -167,7 +166,7 @@ export function AdminInvestasi_ComponentButtonKonfirmasiTransaksi({
         >
           Tolak
         </Button>
-      </Stack>
+      </Group>
     </>
   );
 }
