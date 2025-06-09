@@ -13,6 +13,7 @@ export async function GET(
       },
       select: {
         id: true,
+        authorId: true,
         nominal: true,
         donasiId: true,
         createdAt: true,

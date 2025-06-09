@@ -1,48 +1,73 @@
 "use client";
 
-import { IRealtimeData } from "@/lib/global_state";
-import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { apiGetMasterBank } from "@/app_modules/_global/lib/api_fetch_master";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_MASTER_BANK } from "@/app_modules/investasi/_lib/interface";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Paper, Radio, Stack, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { Donasi_funCreateInvoice } from "../../fun/create/fun_create_invoice";
 import { gs_donasi_hot_menu, gs_proses_donasi } from "../../global_state";
-import { WibuRealtime } from "wibu-pkg";
-import { clientLogger } from "@/util/clientLogger";
 
-export default function Donasi_MetodePembayaran({
-  listBank,
-  donasiId,
-  authorId,
-}: {
-  listBank: MODEL_MASTER_BANK[];
-  donasiId: string;
-  authorId: string;
-}) {
+export default function Donasi_MetodePembayaran() {
+  const param = useParams<{ id: string }>();
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
   const [prosesDonasi, setProsesDonasi] = useAtom(gs_proses_donasi);
   const [pilihBank, setPilihBank] = useState("");
-  const [bank, setBank] = useState(listBank);
+  const [bank, setBank] = useState<MODEL_MASTER_BANK[] | null>(null);
   const [activeHotMenu, setActiveHotMenu] = useAtom(gs_donasi_hot_menu);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleListData();
+    handleGetUserId();
+  }, []);
+
+  async function handleListData() {
+    try {
+      const response = await apiGetMasterBank();
+      if (response.success) {
+        setBank(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching bank data:", error);
+    }
+  }
+
+  async function handleGetUserId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      }
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
+    }
+  }
 
   async function onProses() {
     try {
       setLoading(true);
       const body = {
-        donasiId: donasiId,
+        donasiId: param.id,
         donasiMaster_BankId: pilihBank,
         nominal: prosesDonasi.nominal,
-        authorId: authorId,
+        authorId: userLoginId,
       };
 
       const res = await Donasi_funCreateInvoice(body);
@@ -84,11 +109,13 @@ export default function Donasi_MetodePembayaran({
     }
   }
 
+  if (!bank || !userLoginId) {
+    return <CustomSkeleton height={400} />;
+  }
+
   return (
     <>
       <Stack>
-        {/* <pre>{JSON.stringify(prosesDonasi, null, 2)}</pre> */}
-
         <Radio.Group
           value={pilihBank}
           onChange={setPilihBank}
