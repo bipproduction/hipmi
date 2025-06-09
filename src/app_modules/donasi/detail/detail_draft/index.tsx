@@ -23,33 +23,33 @@ import { useParams } from "next/navigation";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export default function DetailDraftDonasi() {
-    const param = useParams<{ id: string }>();
-    const [data, setData] = useState({} as MODEL_DONASI);
-    const [loading, setLoading] = useState(true);
-  
-    useShallowEffect(() => {
-      getData();
-    }, []);
-  
-    async function getData() {
-      try {
-        setLoading(true); 
-        const response = await apiGetOneDonasiById(param.id, "semua");
-  
-        if (response.success) {
-          setData(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState({} as MODEL_DONASI);
+  const [loading, setLoading] = useState(true);
+
+  useShallowEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      setLoading(true);
+      const response = await apiGetOneDonasiById(param.id, "semua");
+
+      if (response.success) {
+        setData(response.data);
       }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  
-    if (loading) {
-      return <CustomSkeleton height={400} />;
-    }
-  
+  }
+
+  if (loading) {
+    return <CustomSkeleton height={400} />;
+  }
+
   return (
     <>
       <Stack spacing={"xl"} py={"md"}>
@@ -108,7 +108,7 @@ function ButtonAjukanPenggalangan({
           });
 
           ComponentGlobal_NotifikasiBerhasil("Berhasil Diajukan");
-          router.push(RouterDonasi.status_galang_dana({ id: "2" }));
+          router.replace(RouterDonasi.status_galang_dana({ id: "2" }));
         }
       } else {
         setLoadingAjukan(false);

@@ -6,12 +6,16 @@ import { Donasi_getOneInvoiceById } from "@/app_modules/donasi/fun/get/get_one_i
 export default async function Page({ params }: { params: { id: string } }) {
   let invoiceId = params.id;
   const dataDonasi = await Donasi_getOneInvoiceById(invoiceId);
-  const countDonatur= await Donasi_getCountDonatur(dataDonasi?.donasiId as any)
-
+  const countDonatur = await Donasi_getCountDonatur(
+    dataDonasi?.donasiId as any
+  );
 
   return (
     <>
-      <DetailDonasiSaya dataDonasi={dataDonasi as any} countDonatur={countDonatur} />
+      <DetailDonasiSaya
+        dataDonasi={dataDonasi as any}
+        countDonatur={countDonatur}
+      />
     </>
   );
 }

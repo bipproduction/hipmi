@@ -38,7 +38,7 @@ export default function AdminDonasi_DetailReview() {
       try {
         const response = await apiGetAdminDonasiById({
           id: params.id,
-        })
+        });
 
         if (response?.success && response?.data) {
           setData(response.data);
@@ -50,14 +50,14 @@ export default function AdminDonasi_DetailReview() {
         clientLogger.error("Invalid data format recieved:", error);
         setData(null);
       }
-    }
+    };
     loadInitialData();
-  })
+  });
   return (
     <>
       <Stack>
         {!data ? (
-          <SkeletonAdminDetailDonasiReview  />
+          <SkeletonAdminDetailDonasiReview />
         ) : (
           <>
             <ButtonOnHeader donasi={data} setData={setData} />
@@ -77,7 +77,7 @@ export default function AdminDonasi_DetailReview() {
             </SimpleGrid>
           </>
         )}
-      </Stack >
+      </Stack>
     </>
   );
 }
@@ -92,8 +92,10 @@ function ButtonOnHeader({
   const router = useRouter();
   const [isLoadingPublish, setLoadingPublish] = useState(false);
   const [isLoadingReject, setLoadingReject] = useState(false);
-  const [openedPublish, { open: openPublish, close: closePublish }] = useDisclosure(false);
-  const [openedReject, { open: openReject, close: closeReject }] = useDisclosure(false);
+  const [openedPublish, { open: openPublish, close: closePublish }] =
+    useDisclosure(false);
+  const [openedReject, { open: openReject, close: closeReject }] =
+    useDisclosure(false);
   const [catatan, setCatatan] = useState("");
 
   async function onPublish() {
@@ -152,7 +154,6 @@ function ButtonOnHeader({
                 title: "Donasi baru terpublish",
               };
 
-
               WibuRealtime.setData({
                 type: "notification",
                 pushNotificationTo: "USER",
@@ -161,13 +162,11 @@ function ButtonOnHeader({
             }
           }
 
-          const newData = await AdminDonasi_getOneById(donasi?.id);
-          setData(newData);
           ComponentAdminGlobal_NotifikasiBerhasil(
             "Berhasil Mengubah Status Donasi"
           );
-          router.back()
           setLoadingPublish(false);
+          router.back();
         } else {
           setLoadingPublish(false);
           ComponentAdminGlobal_NotifikasiPeringatan(
@@ -190,46 +189,52 @@ function ButtonOnHeader({
         "Lengkapi Alasan Penolakan"
       );
 
-    const checkStatus = await donasi_checkStatus({ id: donasi.id });
+    try {
+      setLoadingReject(true);
+      const checkStatus = await donasi_checkStatus({ id: donasi.id });
 
-    if (checkStatus) {
-      const res = await AdminDonasi_funUpdateStatusReject(
-        donasi.id,
-        "4",
-        catatan
-      );
-      if (res.status === 200) {
-        const dataNotifikasi: IRealtimeData = {
-          appId: res.data?.id as string,
-          status: res.data?.DonasiMaster_Status?.name as any,
-          userId: res.data?.authorId as any,
-          pesan: res.data?.title as any,
-          kategoriApp: "DONASI",
-          title: "Donasi anda di tolak !",
-        };
+      if (checkStatus) {
+        const res = await AdminDonasi_funUpdateStatusReject(
+          donasi.id,
+          "4",
+          catatan
+        );
+        if (res.status === 200) {
+          const dataNotifikasi: IRealtimeData = {
+            appId: res.data?.id as string,
+            status: res.data?.DonasiMaster_Status?.name as any,
+            userId: res.data?.authorId as any,
+            pesan: res.data?.title as any,
+            kategoriApp: "DONASI",
+            title: "Donasi anda di tolak !",
+          };
 
-        const notif = await adminNotifikasi_funCreateToUser({
-          data: dataNotifikasi as any,
-        });
-
-        if (notif.status === 201) {
-          WibuRealtime.setData({
-            type: "notification",
-            pushNotificationTo: "USER",
-            dataMessage: dataNotifikasi,
+          const notif = await adminNotifikasi_funCreateToUser({
+            data: dataNotifikasi as any,
           });
 
-          const newData = await AdminDonasi_getOneById(donasi?.id);
-          setData(newData);
-          close();
-          ComponentAdminGlobal_NotifikasiBerhasil(res.message);
-          setLoadingReject(true);
+          if (notif.status === 201) {
+            WibuRealtime.setData({
+              type: "notification",
+              pushNotificationTo: "USER",
+              dataMessage: dataNotifikasi,
+            });
+
+            ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+            closeReject();
+            router.back()
+          }
+        } else {
+          setLoadingReject(false);
+          ComponentAdminGlobal_NotifikasiGagal(res.message);
         }
       } else {
-        ComponentAdminGlobal_NotifikasiGagal(res.message);
+        setLoadingReject(false);
+        ComponentGlobal_NotifikasiPeringatan("Status donasi telah diubah user");
       }
-    } else {
-      ComponentGlobal_NotifikasiPeringatan("Status donasi telah diubah user");
+    } catch (error) {
+      setLoadingReject(false);
+      console.error("Error to reject donasi", error);
     }
   }
 
@@ -331,10 +336,6 @@ function ButtonOnHeader({
           </>
         }
       />
-
-
-
-
 
       {/* <Modal
         opened={opened}

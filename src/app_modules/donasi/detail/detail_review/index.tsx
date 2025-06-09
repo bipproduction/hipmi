@@ -96,7 +96,7 @@ function ButtonBatalReview({ donasi }: { donasi: MODEL_DONASI }) {
           });
         }
         ComponentGlobal_NotifikasiBerhasil("Berhasil Dibatalkan");
-        router.push(RouterDonasi.status_galang_dana({ id: "3" }));
+        router.replace(RouterDonasi.status_galang_dana({ id: "3" }));
       } else {
         setLoading(false);
         ComponentGlobal_NotifikasiPeringatan(res.message);
