@@ -14,14 +14,6 @@ export default function LayoutEditCeritaPenggalangDonasi({
 }) {
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate title="Update Cerita Penggalang" />
-        }
-      >
-        {children}
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header title="Update Cerita Penggalang" />
