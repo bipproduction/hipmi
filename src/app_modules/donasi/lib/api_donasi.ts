@@ -214,38 +214,117 @@ export const apiGetCountDonatur = async ({ id }: { id: string }) => {
 };
 
 export const apiGetDonasiKabarById = async ({ id }: { id: string }) => {
-    try {
-      // Fetch token from cookie
-      const { token } = await fetch("/api/get-cookie").then((res) => res.json());
-      if (!token) {
-        console.error("No token found");
-        return null;
-      }
-
-      const response = await fetch(`/api/donasi/kabar/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        console.error(
-          "Failed to get donasi kabar",
-          response.statusText,
-          errorData
-        );
-        throw new Error(errorData?.message || "Failed to get donasi kabar");
-      }
-
-      // Return the JSON response
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error get donasi kabar", error);
-      throw error; // Re-throw the error to handle it in the calling function
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
     }
-  };
+
+    const response = await fetch(`/api/donasi/kabar/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get donasi kabar",
+        response.statusText,
+        errorData
+      );
+      throw new Error(errorData?.message || "Failed to get donasi kabar");
+    }
+
+    // Return the JSON response
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error get donasi kabar", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+export const apiGetDonasiPenggalangDanaByUserId = async ({ id }: { id: string }) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/donasi/${id}/penggalang-dana`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get donasi penggalang dana",
+        response.statusText,
+        errorData
+      );
+      throw new Error(
+        errorData?.message || "Failed to get donasi penggalang dana"
+      );
+    }
+
+    // Return the JSON response
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error get donasi penggalang dana", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+}
+
+export const apiGetDonasiPencairanDanaById = async ({ id, page }: { id: string, page: number }) => {
+  try {
+    // Fetch token from cookie
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/donasi/${id}/pencairan-dana?page=${page}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get donasi pencairan dana",
+        response.statusText,
+        errorData
+      );
+      throw new Error(
+        errorData?.message || "Failed to get donasi pencairan dana"
+      );
+    }
+
+    // Return the JSON response
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error get donasi pencairan dana", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+}
+    

@@ -49,20 +49,19 @@ export default function AdminDonasi_PencairanDana() {
 
   useShallowEffect(() => {
     loadInitialData();
-  }, [])
+  }, []);
   const loadInitialData = async () => {
     try {
       const response = await apiGetAdminDonasiById({
         id: donasiId,
-      })
+      });
 
       if (response?.success && response?.data) {
-        setData(response.data)
-        console.log("ini respone data", response.data)
+        setData(response.data);
         // setTerkumpul(response.data.terkumpul)
         // setTotal(response.data.totalPencairan)
       } else {
-        setData(null)
+        setData(null);
         // setTerkumpul("")
         // setTotal(0)
       }
@@ -72,20 +71,22 @@ export default function AdminDonasi_PencairanDana() {
       // setTerkumpul("");
       // setTotal(0);
     }
-  }
+  };
 
   return (
     <>
       <Stack>
         <ComponentAdminDonasi_TombolKembali />
-        {!data ?
-          (  
-            <CustomSkeletonAdmin height={500} />)
-          : (
+        {!data ? (
+          <CustomSkeletonAdmin height={500} />
+        ) : (
           <>
-            <TotalDanaView danaTerkumpul={data?.terkumpul as string} totalPencairan={data?.totalPencairan as number} />
-              <FormView
-              donasiId={donasiId}  
+            <TotalDanaView
+              danaTerkumpul={data?.terkumpul as string}
+              totalPencairan={data?.totalPencairan as number}
+            />
+            <FormView
+              donasiId={donasiId}
               danaTerkumpul={data?.terkumpul as string}
               totalPencairan={data?.totalPencairan as number}
               onSuccess={(val) => {
@@ -95,7 +96,7 @@ export default function AdminDonasi_PencairanDana() {
             />
           </>
         )}
-      </Stack >
+      </Stack>
     </>
   );
 }
@@ -109,8 +110,6 @@ function TotalDanaView({
 }) {
   const terkumpul = toNumber(danaTerkumpul);
   const sisaDana = terkumpul - totalPencairan;
-  console.log("Sisa dana", sisaDana);
-  console.log("Terkumpul", terkumpul);
 
   return (
     <>
@@ -121,7 +120,9 @@ function TotalDanaView({
           bg={AdminColor.softBlue}
         >
           <Stack spacing={0} align="center">
-            <Text c={AdminColor.white} fw={"bold"}>Dana Tersisa</Text>
+            <Text c={AdminColor.white} fw={"bold"}>
+              Dana Tersisa
+            </Text>
             <Title>
               {
                 <ComponentAdminGlobal_TampilanRupiahDonasi
@@ -147,9 +148,7 @@ function FormView({
   danaTerkumpul: string;
   totalPencairan: number;
   onSuccess: (val: any) => void;
-  }) {
-  
- 
+}) {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [images, setImages] = useState<any | null>();
@@ -176,61 +175,63 @@ function FormView({
     if (_.values(body).includes(""))
       return ComponentAdminGlobal_NotifikasiPeringatan("Lengkapi Data");
 
-    const uploadImage = await funGlobal_UploadToStorage({
-      file: file as File,
-      dirId: DIRECTORY_ID.donasi_bukti_trf_pencairan_dana,
-    });
-    if (!uploadImage.success)
-      return ComponentAdminGlobal_NotifikasiPeringatan(
-        "Gagal upload file gambar"
-      );
-
-    const res = await AdminDonasi_funCreatePencairanDana({
-      data: body as any,
-      fileId: uploadImage.data.id,
-    });
-    if (res.status === 200) {
+    try {
       setIsLoading(true);
-      const res2 = await AdminDonasi_AkumulasiPencairanById(
-        body.donasiId as any,
-        body.nominalCair as any
-      );
-      if (res2.status === 200) {
-        const loadData = await apiGetAdminDonasiById({id: donasiId});
-        onSuccess(loadData);
-        console.log("load Data", loadData);
+      const uploadImage = await funGlobal_UploadToStorage({
+        file: file as File,
+        dirId: DIRECTORY_ID.donasi_bukti_trf_pencairan_dana,
+      });
+      if (!uploadImage.success)
+        return ComponentAdminGlobal_NotifikasiPeringatan(
+          "Gagal upload file gambar"
+        );
 
-        const dataNotif = {
-          appId: loadData?.data?.id,
-          userId: loadData?.data?.authorId,
-          pesan: loadData?.data?.title as any,
-          status: "Pencairan Dana",
-          kategoriApp: "DONASI",
-          title: "Dana donasi berhasil dicairkan",
-        };
+      const res = await AdminDonasi_funCreatePencairanDana({
+        data: body as any,
+        fileId: uploadImage.data.id,
+      });
+      if (res.status === 200) {
+        const res2 = await AdminDonasi_AkumulasiPencairanById(
+          body.donasiId as any,
+          body.nominalCair as any
+        );
+        if (res2.status === 200) {
+          const loadData = await apiGetAdminDonasiById({ id: donasiId });
+          onSuccess(loadData);
 
-        console.log("Data Notif", dataNotif);
+          const dataNotif = {
+            appId: loadData?.data?.id,
+            userId: loadData?.data?.authorId,
+            pesan: loadData?.data?.title as any,
+            status: "Pencairan Dana",
+            kategoriApp: "DONASI",
+            title: "Dana donasi berhasil dicairkan",
+          };
 
-        const notif = await adminNotifikasi_funCreateToUser({
-          data: dataNotif as any,
-        });
+          const notif = await adminNotifikasi_funCreateToUser({
+            data: dataNotif as any,
+          });
 
-        if (notif.status === 201) {
-          mqtt_client.publish(
-            "USER",
-            JSON.stringify({ userId: loadData?.authorId, count: 1 })
-          );
+          if (notif.status === 201) {
+            mqtt_client.publish(
+              "USER",
+              JSON.stringify({ userId: loadData?.authorId, count: 1 })
+            );
+          }
+
+          ComponentAdminGlobal_NotifikasiBerhasil(res2.message);
+          router.back();
+          setIsLoading(false);
+        } else {
+          ComponentAdminGlobal_NotifikasiGagal(res2.message);
+          setIsLoading(false);
         }
-
-        ComponentAdminGlobal_NotifikasiBerhasil(res2.message);
-        router.back();
-        setIsLoading(false);
       } else {
-        ComponentAdminGlobal_NotifikasiGagal(res2.message);
+        ComponentAdminGlobal_NotifikasiGagal(res.message);
         setIsLoading(false);
       }
-    } else {
-      ComponentAdminGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      ComponentAdminGlobal_NotifikasiGagal("Terjadi kesalahan");
       setIsLoading(false);
     }
   }
@@ -238,9 +239,15 @@ function FormView({
   return (
     <>
       <Center>
-        <Paper p={"md"} w={{ base: 300, sm: 350, md: 400, lg: 500 }} bg={AdminColor.softBlue}>
+        <Paper
+          p={"md"}
+          w={{ base: 300, sm: 350, md: 400, lg: 500 }}
+          bg={AdminColor.softBlue}
+        >
           <Center mb={"lg"}>
-            <Title c={AdminColor.white} order={5}>Form Pencairan Dana</Title>
+            <Title c={AdminColor.white} order={5}>
+              Form Pencairan Dana
+            </Title>
           </Center>
           <Stack>
             <TextInput

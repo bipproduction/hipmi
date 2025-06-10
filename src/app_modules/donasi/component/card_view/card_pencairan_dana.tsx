@@ -1,19 +1,9 @@
-import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
-import {
-  Button,
-  Center,
-  Paper,
-  Spoiler,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import { Button, Center, Spoiler, Stack, Text, Title } from "@mantine/core";
 import { IconImageInPicture } from "@tabler/icons-react";
 import moment from "moment";
 
+import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { RouterImagePreview } from "@/lib";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,15 +19,7 @@ export function ComponentDonasi_CardPencairanDana({
 
   return (
     <>
-      <Paper
-        style={{
-          padding: "15px",
-          border: `2px solid ${AccentColor.blue}`,
-          backgroundColor: AccentColor.darkblue,
-          borderRadius: "10px",
-          color: "white",
-        }}
-      >
+      <ComponentGlobal_CardStyles>
         <Text fz={"xs"}>{moment(data.createdAt).format("ll")}</Text>
         <Stack spacing={"lg"}>
           <Title order={5}>{data.title}</Title>
@@ -68,7 +50,7 @@ export function ComponentDonasi_CardPencairanDana({
             </Button>
           </Center>
         </Stack>
-      </Paper>
+      </ComponentGlobal_CardStyles>
     </>
   );
 }

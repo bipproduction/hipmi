@@ -6,30 +6,27 @@ import {
   MODEL_DONASI,
   MODEL_DONASI_PENCAIRAN_DANA,
 } from "@/app_modules/donasi/model/interface";
-import {
-  Stack
-} from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useState } from "react";
 
-export default function PencairanDanaDonasi({
-  donasiId,
-  totalAkumulasi,
-  listPencairan,
-}: {
-  donasiId: string;
-  totalAkumulasi: MODEL_DONASI;
-  listPencairan: MODEL_DONASI_PENCAIRAN_DANA[];
-}) {
-  const [akumulasi, setAkumulasi] = useState(totalAkumulasi);
-  const [listPD, setListPD] = useState(listPencairan);
+export default function PencairanDanaDonasi(
+  {
+    // donasiId,
+    // totalAkumulasi,
+    // listPencairan,
+  }: {
+    // donasiId: string;
+    // totalAkumulasi: MODEL_DONASI;
+    // listPencairan: MODEL_DONASI_PENCAIRAN_DANA[];
+  }
+) {
+  // const [akumulasi, setAkumulasi] = useState(totalAkumulasi);
+  // const [listPD, setListPD] = useState(listPencairan);
   return (
     <>
       <Stack>
-        <ComponentDonasi_BoxPencariranDana akumulasi={akumulasi} />
-        <ComponentDonasi_InformasiPencairanDana
-          donasiId={donasiId}
-          listPD={listPD}
-        />
+        <ComponentDonasi_BoxPencariranDana />
+        <ComponentDonasi_InformasiPencairanDana />
       </Stack>
     </>
   );
