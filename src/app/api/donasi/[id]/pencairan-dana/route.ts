@@ -12,7 +12,7 @@ export async function GET(
     const { id } = params;
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page"));
-    const takeData = 3;
+    const takeData = 5
     const skipData = page * takeData - takeData;
 
     if (!page) {
