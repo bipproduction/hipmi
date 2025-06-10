@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = params;
-    console.log("id server", id);
+
     const data = await prisma.donasi_Invoice.findUnique({
       where: {
         id: id,
