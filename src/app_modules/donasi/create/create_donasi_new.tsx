@@ -116,7 +116,7 @@ export default function CreateDonasiNew() {
 
   return (
     <>
-      <Stack spacing={"md"} px={"xl"}>
+      <Stack spacing={"md"} px={"sm"}>
         <ComponentGlobal_BoxInformation informasi="Lengkapi semua data di bawah untuk selanjutnya mengisi cerita penggalangan dana." />
         <Select
           styles={{

@@ -1,8 +1,5 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/lib";
-import { IRealtimeData } from "@/lib/global_state";
-import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentGlobal_BoxUploadImage,
@@ -10,11 +7,20 @@ import {
 } from "@/app_modules/_global/component";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { clientLogger } from "@/util/clientLogger";
 import {
   AspectRatio,
@@ -22,30 +28,22 @@ import {
   Center,
   Image,
   Stack,
-  TextInput,
-  Textarea,
+  TextInput
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconPhoto } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Donasi_funCreate } from "../fun/create/fun_create_donasi";
 import { gs_donasi_hot_menu } from "../global_state";
+import { apiGetTemporaryCreate } from "../lib/api_donasi";
 import { MODEL_DONASI_TEMPORARY } from "../model/interface";
-import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
-import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
-import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
-import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 
-export default function CreateCeritaPenggalangDonasi({
-  dataTemporary,
-  userId,
-}: {
-  dataTemporary: MODEL_DONASI_TEMPORARY;
-  userId: string;
-}) {
+export default function CreateCeritaPenggalangDonasi() {
+  const { id } = useParams();
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
   const [donasiHotMenu, setDonasiHotMenu] = useAtom(gs_donasi_hot_menu);
@@ -56,24 +54,58 @@ export default function CreateCeritaPenggalangDonasi({
     namaBank: "",
     rekening: "",
   });
-  const [temporary, setTemporary] = useState(dataTemporary);
+  const [temporary, setTemporary] = useState<MODEL_DONASI_TEMPORARY | null>(
+    null
+  );
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserId();
+    handleGetTemporaryCreate();
+  }, []);
+
+  async function handleGetUserId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+
+      if (response) {
+        setUserLoginId(response.userId);
+      }
+    } catch (error) {
+      console.error("Error get data detail", error);
+    }
+  }
+
+  async function handleGetTemporaryCreate() {
+    try {
+      const response = await apiGetTemporaryCreate({ id: id as string });
+
+      if (response && response.success) {
+        setTemporary(response.data);
+      } else {
+        console.log("response temporary create", response.message);
+      }
+    } catch (error) {
+      console.error("Error get temporary create", error);
+    }
+  }
 
   async function onCreate() {
     if (_.values(data).includes(""))
       return ComponentGlobal_NotifikasiPeringatan("Lengkapin Data");
 
     const body = {
-      id: temporary.id,
-      title: temporary.title,
-      target: temporary.target,
-      donasiMaster_KategoriId: temporary.donasiMaster_KategoriId,
-      donasiMaster_DurasiId: temporary.donasiMaster_DurasiId,
-      authorId: userId,
+      id: temporary?.id,
+      title: temporary?.title,
+      target: temporary?.target,
+      donasiMaster_KategoriId: temporary?.donasiMaster_KategoriId,
+      donasiMaster_DurasiId: temporary?.donasiMaster_DurasiId,
+      authorId: userLoginId as string,
       namaBank: data.namaBank,
       rekening: data.rekening,
-      imageId: temporary.imageId,
+      imageId: temporary?.imageId,
       CeritaDonasi: {
         pembukaan: data.pembukaan,
         cerita: data.cerita,
@@ -139,9 +171,12 @@ export default function CreateCeritaPenggalangDonasi({
       clientLogger.error("Error create cerita donasi", error);
     }
   }
+
+  if (!temporary) return <CustomSkeleton height={400} />;
+
   return (
     <>
-      <Stack spacing={50} px={"xl"} pb={"md"}>
+      <Stack spacing={50} px={"sm"} pb={"md"}>
         <Stack spacing={"sm"}>
           <ComponentGlobal_BoxInformation informasi="Cerita Anda adalah kunci untuk menginspirasi kebaikan. Jelaskan dengan jujur dan jelas tujuan penggalangan dana ini agar calon donatur memahami dampak positif yang dapat mereka wujudkan melalui kontribusi mereka." />
 

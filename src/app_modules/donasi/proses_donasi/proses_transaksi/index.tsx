@@ -20,22 +20,50 @@ import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { donasi_getOneStatusInvoiceById } from "../../fun/get/get_one_status_invoice_by_id";
 import { gs_donasi_hot_menu } from "../../global_state";
 import { MODEL_DONASI_INVOICE } from "../../model/interface";
+import { apiGetDonasiInvoiceById } from "../../lib/api_donasi";
+import { apiGetAdminContact } from "@/app_modules/_global/lib/api_fetch_master";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function Donasi_ProsesTransaksi({
-  statusInvoice,
-  nomorAdmin,
-}: {
-  statusInvoice: MODEL_DONASI_INVOICE;
-  nomorAdmin: any;
-}) {
+export default function Donasi_ProsesTransaksi() {
+  const param = useParams<{ id: string }>();
   const router = useRouter();
-  const [data, setData] = useState(statusInvoice);
+  const [dataInvoice, setDataInvoice] = useState<MODEL_DONASI_INVOICE | null>(
+    null
+  );
+  const [dataNomorAdmin, setDataNomorAdmin] = useState<any | null>(null);
   const [hotMenu, setHotMenu] = useAtom(gs_donasi_hot_menu);
+
+  useShallowEffect(() => {
+    onLoadDataInvoice();
+    onLoadDataNomorAdmin();
+  }, []);
+
+  async function onLoadDataInvoice() {
+    try {
+      const response = await apiGetDonasiInvoiceById({ id: param.id });
+      if (response.success) {
+        setDataInvoice(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onLoadDataNomorAdmin() {
+    try {
+      const response = await apiGetAdminContact();
+      if (response.success) {
+        setDataNomorAdmin(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   interface MODAL_DONASI_INVOICE {
     invoiceId: string;
@@ -47,33 +75,35 @@ export default function Donasi_ProsesTransaksi({
 
     mqtt_client.on("message", (topic, message) => {
       const dataClient: MODAL_DONASI_INVOICE = JSON.parse(message.toString());
-      if (topic === "donasi_invoice" && dataClient.invoiceId === data.id) {
-        // setData({
-        //   ...data,
-        //   donasiMaster_StatusInvoiceId: dataClient.statusInvoiceId,
-        // });
+      if (topic === "donasi_invoice" && dataClient.invoiceId === param.id) {
         onLoad();
       }
     });
   }, []);
 
   async function onLoad() {
-    const loadData = await donasi_getOneStatusInvoiceById({
-      invoiceId: data.id,
-    });
-    setData(loadData as any);
+   try {
+     const response = await apiGetDonasiInvoiceById({ id: param.id });
+     if (response.success) {
+       setDataInvoice(response.data);
+     }
+   } catch (error) {
+     console.log(error);
+   }
   }
 
-  if (data.DonasiMaster_StatusInvoice.id === "1") {
+  if (dataInvoice?.DonasiMaster_StatusInvoice.id === "1") {
     setHotMenu(2);
-    router.replace(RouterDonasi.detail_donasi_saya + `${data.id}`, {
+    router.replace(RouterDonasi.detail_donasi_saya + `${dataInvoice?.id}`, {
       scroll: false,
     });
   }
 
+  if(!dataInvoice || !dataNomorAdmin) return <CustomSkeleton height={400}/>
+
   return (
     <>
-      {data.DonasiMaster_StatusInvoice.id === "1" ? (
+      {dataInvoice.DonasiMaster_StatusInvoice.id === "1" ? (
         <>
           <Center h={"50vh"}>
             <Loader color="yellow" />
@@ -150,7 +180,7 @@ export default function Donasi_ProsesTransaksi({
                     textDecoration: "none",
                   }}
                   target="_blank"
-                  href={`https://wa.me/+${nomorAdmin.nomor}?text=Hallo Admin , Saya ada kendala dalam proses transfer donasi!`}
+                  href={`https://wa.me/+${dataNomorAdmin}?text=Hallo Admin , Saya ada kendala dalam proses transfer donasi!`}
                 >
                   <IconBrandWhatsapp size={40} color={MainColor.green} />
                 </Link>

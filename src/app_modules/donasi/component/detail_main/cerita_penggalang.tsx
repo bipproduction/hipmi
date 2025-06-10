@@ -13,7 +13,6 @@ import {
   Box,
 } from "@mantine/core";
 import { IconCircleChevronRight } from "@tabler/icons-react";
-import moment from "moment";
 import { useState } from "react";
 import {
   AccentColor,
@@ -22,6 +21,8 @@ import {
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import moment from "moment";
+import "moment/locale/id";
 
 export default function ComponentDonasi_CeritaPenggalangMain({
   donasi,
@@ -51,9 +52,7 @@ export default function ComponentDonasi_CeritaPenggalangMain({
           <Stack>
             <Group position="apart">
               <Text>
-                {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
-                  donasi?.createdAt
-                )}
+                {moment(donasi?.createdAt).format("DD MMM YYYY")}
               </Text>
               <ActionIcon
                 variant="transparent"

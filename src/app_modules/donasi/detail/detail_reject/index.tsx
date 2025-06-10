@@ -10,7 +10,7 @@ import {
 } from "@/app_modules/_global/notif_global";
 import UIGlobal_Modal from "@/app_modules/_global/ui/ui_modal";
 import { Button, Group, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import ComponentDonasi_DetailDataGalangDana from "../../component/detail_galang_dana/detail_data_donasi";
 import ComponentDonasi_CeritaPenggalangMain from "../../component/detail_main/cerita_penggalang";
@@ -18,15 +18,38 @@ import { Donasi_funDeleteDonasiById } from "../../fun/delete/fin_delete_donasi_b
 import { Donasi_funGantiStatus } from "../../fun/update/fun_ganti_status";
 import { MODEL_DONASI } from "../../model/interface";
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetOneDonasiById } from "../../lib/api_donasi";
 
-export default function DetailRejectDonasi({
-  dataReject,
-  fileIdImageCerita,
-}: {
-  dataReject: MODEL_DONASI;
-  fileIdImageCerita: string;
-}) {
-  const [data, setData] = useState(dataReject);
+export default function DetailRejectDonasi() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState({} as MODEL_DONASI);
+  const [loading, setLoading] = useState(true);
+
+  useShallowEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      setLoading(true);
+      const response = await apiGetOneDonasiById(param.id, "semua");
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return <CustomSkeleton height={400} />;
+  }
+
   return (
     <>
       <Stack spacing={"xl"} pb={"md"}>
@@ -35,7 +58,7 @@ export default function DetailRejectDonasi({
         <ComponentDonasi_CeritaPenggalangMain donasi={data} />
         <ButtonAction
           donasiId={data.id}
-          fileIdImageCerita={fileIdImageCerita}
+          fileIdImageCerita={data.CeritaDonasi.imageId}
           imageId={data.imageId}
         />
       </Stack>
@@ -59,44 +82,54 @@ function ButtonAction({
   const [isLoadingDelete, setLoadingDelete] = useState(false);
 
   async function onChangeStatus() {
-    await Donasi_funGantiStatus(donasiId, "3").then((res) => {
-      if (res.status === 200) {
-        setLoadingEdit(true);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        router.replace(RouterDonasi.status_galang_dana({ id: "3" }));
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
-        setLoadingEdit(true);
-      }
-    });
+    try {
+      setLoadingEdit(true);
+      await Donasi_funGantiStatus(donasiId, "3").then((res) => {
+        if (res.status === 200) {
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          router.replace(RouterDonasi.status_galang_dana({ id: "3" }));
+        } else {
+          ComponentGlobal_NotifikasiGagal(res.message);
+          setLoadingEdit(true);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      setLoadingEdit(false);
+    }
   }
   async function onDelete() {
-    const del = await Donasi_funDeleteDonasiById(donasiId);
-    if (del.status === 200) {
+    try {
       setLoadingDelete(true);
-      const deleteImageDonasi = await funGlobal_DeleteFileById({
-        fileId: imageId as any,
-      });
+      const del = await Donasi_funDeleteDonasiById(donasiId);
+      if (del.status === 200) {
+        const deleteImageDonasi = await funGlobal_DeleteFileById({
+          fileId: imageId as any,
+        });
 
-      if (!deleteImageDonasi.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar ");
+        if (!deleteImageDonasi.success) {
+          ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar ");
+          setLoadingDelete(false);
+        }
+
+        const deleteImageCerita = await funGlobal_DeleteFileById({
+          fileId: fileIdImageCerita as any,
+        });
+
+        if (!deleteImageCerita.success) {
+          ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar ");
+          setLoadingDelete(false);
+        }
+
+        router.replace(RouterDonasi.status_galang_dana({ id: "4" }));
+        ComponentGlobal_NotifikasiBerhasil(del.message);
+        setLoadingDelete(false);
+      } else {
+        ComponentGlobal_NotifikasiGagal(del.message);
         setLoadingDelete(false);
       }
-
-      const deleteImageCerita = await funGlobal_DeleteFileById({
-        fileId: fileIdImageCerita as any,
-      });
-
-      if (!deleteImageCerita.success) {
-        ComponentGlobal_NotifikasiPeringatan("Gagal hapus gambar ");
-        setLoadingDelete(false);
-      }
-
-      router.replace(RouterDonasi.status_galang_dana({ id: "4" }));
-      ComponentGlobal_NotifikasiBerhasil(del.message);
-      setLoadingDelete(false);
-    } else {
-      ComponentGlobal_NotifikasiGagal(del.message);
+    } catch (error) {
+      console.error(error);
       setLoadingDelete(false);
     }
   }
@@ -105,7 +138,7 @@ function ButtonAction({
       <Group grow>
         <Button
           radius={"xl"}
-          style={{ backgroundColor: AccentColor.yellow}}
+          style={{ backgroundColor: AccentColor.yellow }}
           c={MainColor.darkblue}
           onClick={() => setOpenModalEdit(true)}
         >
@@ -127,8 +160,12 @@ function ButtonAction({
         opened={openModaEdit}
         close={() => setOpenModalEdit(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue }}
-          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalEdit(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModalEdit(false)}
+          >
             Batal
           </Button>
         }
@@ -152,8 +189,12 @@ function ButtonAction({
         opened={openModalDelete}
         close={() => setOpenModalDelete(false)}
         buttonKiri={
-          <Button style={{ backgroundColor: AccentColor.blue }}
-          c={AccentColor.white} radius={"xl"} onClick={() => setOpenModalDelete(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModalDelete(false)}
+          >
             Batal
           </Button>
         }

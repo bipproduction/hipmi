@@ -4,6 +4,7 @@ import { ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component"
 import { apiGetMasterStatusTransaksi } from "@/app_modules/_global/lib/api_fetch_master";
 import { globalStatusTransaksi } from "@/app_modules/_global/lib/master_list_app";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import { Admin_ComponentModal } from "@/app_modules/admin/_admin_global/_component/comp_admin_modal";
 import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
@@ -19,7 +20,6 @@ import {
   Button,
   Center,
   Group,
-  Modal,
   Paper,
   ScrollArea,
   Select,
@@ -34,6 +34,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import adminDonasi_funUpdateStatusDanTotal from "../../fun/update/fun_update_status_dan_total";
 import { apiGetAdminAllDaftarDonatur } from "../../lib/api_fetch_admin_donasi";
+import mqtt_client from "@/util/mqtt_client";
 
 function TampilanListDonatur({
   setReloadDonasi,
@@ -334,7 +335,7 @@ function ButtonAccept({
   onSuccessDonatur: (val: any) => void;
   isReload: boolean;
 }) {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, setOpened] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   async function onAccept() {
@@ -343,79 +344,84 @@ function ButtonAccept({
     setIsLoading(true);
     isReload;
 
-    const updateStatus = await adminDonasi_funUpdateStatusDanTotal({
-      invoiceId: invoiceId,
-      donasiId: donasiId,
-      jumlahTerkumpul: jumlahTerkumpul,
-      nominal: nominalDonasi,
-      target: target,
-      statusInvoiceId: "1",
-    });
-
-    if (updateStatus.status == 200) {
-      const dataNotif = {
-        appId: updateStatus.data?.id,
-        userId: updateStatus.data?.authorId,
-        pesan: updateStatus.data?.Donasi?.title,
-        status: updateStatus.data?.DonasiMaster_StatusInvoice?.name,
-        kategoriApp: "DONASI",
-        title: "Terimakasih, Donasi anda telah diterima",
-      };
-
-      const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
+    try {
+      const updateStatus = await adminDonasi_funUpdateStatusDanTotal({
+        invoiceId: invoiceId,
+        donasiId: donasiId,
+        jumlahTerkumpul: jumlahTerkumpul,
+        nominal: nominalDonasi,
+        target: target,
+        statusInvoiceId: "1",
       });
 
-      if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: updateStatus?.data?.authorId, count: 1 })
-        );
+      if (updateStatus.status === 200) {
+        const dataNotif = {
+          appId: updateStatus.data?.id,
+          userId: updateStatus.data?.authorId,
+          pesan: updateStatus.data?.Donasi?.title,
+          status: updateStatus.data?.DonasiMaster_StatusInvoice?.name,
+          kategoriApp: "DONASI",
+          title: "Terimakasih, Donasi anda telah diterima",
+        };
 
-        mqtt_client.publish(
-          "donasi_invoice",
-          JSON.stringify({
-            invoiceId: invoiceId,
-            statusInvoiceId: "1",
-          })
-        );
+        const notif = await adminNotifikasi_funCreateToUser({
+          data: dataNotif as any,
+        });
+
+        if (notif.status === 201) {
+          mqtt_client.publish(
+            "USER",
+            JSON.stringify({ userId: updateStatus?.data?.authorId, count: 1 })
+          );
+
+          mqtt_client.publish(
+            "donasi_invoice",
+            JSON.stringify({
+              invoiceId: invoiceId,
+              statusInvoiceId: "1",
+            })
+          );
+        }
+
+        const dataNotifToAuthorDonasi = {
+          appId: updateStatus.data?.Donasi?.id,
+          userId: updateStatus.data?.Donasi?.authorId,
+          pesan: updateStatus.data?.Donasi?.title,
+          status: "Donatur Baru",
+          kategoriApp: "DONASI",
+          title: "Ada donatur baru",
+        };
+
+        const notifToAuthorDonasi = await adminNotifikasi_funCreateToUser({
+          data: dataNotifToAuthorDonasi as any,
+        });
+
+        if (notifToAuthorDonasi.status === 201) {
+          mqtt_client.publish(
+            "USER",
+            JSON.stringify({
+              userId: updateStatus?.data?.Donasi?.authorId,
+              count: 1,
+            })
+          );
+        }
+
+        // const updateData = await AdminDonasi_getOneById(donasiId);
+        // onSuccessDonasi(updateData as any);
+        // const updatelistDonatur = await adminDonasi_getListDonatur({
+        //   donasiId: donasiId,
+        //   page: 1,
+        // });
+        setOpened(false);
+        onSuccessDonasi(true);
+        ComponentAdminGlobal_NotifikasiBerhasil(updateStatus.message);
+        setIsLoading(false);
+      } else {
+        ComponentAdminGlobal_NotifikasiGagal(updateStatus.message);
+        setIsLoading(false);
       }
-
-      const dataNotifToAuthorDonasi = {
-        appId: updateStatus.data?.Donasi?.id,
-        userId: updateStatus.data?.Donasi?.authorId,
-        pesan: updateStatus.data?.Donasi?.title,
-        status: "Donatur Baru",
-        kategoriApp: "DONASI",
-        title: "Ada donatur baru",
-      };
-
-      const notifToAuthorDonasi = await adminNotifikasi_funCreateToUser({
-        data: dataNotifToAuthorDonasi as any,
-      });
-
-      if (notifToAuthorDonasi.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({
-            userId: updateStatus?.data?.Donasi?.authorId,
-            count: 1,
-          })
-        );
-      }
-
-      // const updateData = await AdminDonasi_getOneById(donasiId);
-      // onSuccessDonasi(updateData as any);
-      // const updatelistDonatur = await adminDonasi_getListDonatur({
-      //   donasiId: donasiId,
-      //   page: 1,
-      // });
-      onSuccessDonasi(true);
-      ComponentAdminGlobal_NotifikasiBerhasil(updateStatus.message);
-      setIsLoading(false);
-      close();
-    } else {
-      ComponentAdminGlobal_NotifikasiGagal(updateStatus.message);
+    } catch (error) {
+      console.error("Error update status invoice", error);
       setIsLoading(false);
     }
   }
@@ -426,38 +432,49 @@ function ButtonAccept({
         color="green"
         radius={"xl"}
         onClick={() => {
-          open();
+          setOpened(true);
         }}
       >
         Terima
       </Button>
 
-      <Modal opened={opened} onClose={close} centered withCloseButton={false}>
-        <Paper>
-          <Stack align="center">
-            <Title
-              align="center"
-              order={6}
-            >{`${"Anda sudah melihat bukti transfer dan yakin menerima donasi ini ?"}`}</Title>
-            <Group position="center">
-              <Button radius={"xl"} onClick={() => close()}>
-                Batal
-              </Button>
-              <Button
-                color="green"
-                loading={isLoading}
-                loaderPosition="center"
-                radius={"xl"}
-                onClick={() => {
-                  onAccept();
-                }}
-              >
-                Terima
-              </Button>
-            </Group>
-          </Stack>
-        </Paper>
-      </Modal>
+      <Admin_ComponentModal
+        opened={opened}
+        onClose={() => {
+          setOpened(false);
+        }}
+        // title="Terima Donasi"
+        size="sm"
+        withCloseButton={false}
+      >
+        <Stack align="center">
+          <Title
+            c={AdminColor.white}
+            align="center"
+            order={6}
+          >{`${"Anda sudah melihat bukti transfer dan yakin menerima donasi ini ?"}`}</Title>
+          <Group position="center">
+            <Button radius={"xl"} onClick={() => setOpened(false)}>
+              Batal
+            </Button>
+            <Button
+              color="green"
+              loading={isLoading}
+              loaderPosition="center"
+              radius={"xl"}
+              onClick={() => {
+                onAccept();
+              }}
+            >
+              Terima
+            </Button>
+          </Group>
+        </Stack>
+      </Admin_ComponentModal>
+
+      {/* <Modal opened={opened} onClose={close} centered withCloseButton={false}>
+       
+      </Modal> */}
     </>
   );
 }

@@ -1,16 +1,16 @@
 "use client";
 
-import { pathAssetImage, RouterImagePreview } from "@/lib";
-import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   ComponentGlobal_CardStyles,
   ComponentGlobal_LoaderAvatar,
 } from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import ComponentDonasi_CardPublish from "@/app_modules/donasi/component/card_view/card_publish";
-import {
-  MODEL_DONASI_INFO_PENGGALANG
-} from "@/app_modules/donasi/model/interface";
+import { apiGetDonasiPenggalangDanaByUserId } from "@/app_modules/donasi/lib/api_donasi";
+import { MODEL_DONASI_INFO_PENGGALANG } from "@/app_modules/donasi/model/interface";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { pathAssetImage, RouterImagePreview } from "@/lib";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   ActionIcon,
   Box,
@@ -18,18 +18,36 @@ import {
   Image,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandGmail, IconMoodSmile, IconPhone } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function PenggalangDanaDonasi({
-  dataPenggalang,
-}: {
-  dataPenggalang: MODEL_DONASI_INFO_PENGGALANG;
-}) {
-  const [data, setData] = useState(dataPenggalang);
+export default function PenggalangDanaDonasi() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_DONASI_INFO_PENGGALANG | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetDonasiPenggalangDanaByUserId({
+        id: param.id,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (!data) return <CustomSkeleton height={400} />;
 
   return (
     <>
