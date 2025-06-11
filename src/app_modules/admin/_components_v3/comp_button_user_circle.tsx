@@ -2,21 +2,21 @@
 
 import { AccentColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global";
+import { apiFetchLogout } from "@/app_modules/auth/_lib/api_fetch_auth";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import { Warna } from "@/lib/warna";
 import {
   ActionIcon,
   Button,
-  Center,
   Divider,
   Group,
   Indicator,
   MediaQuery,
   Popover,
-  SimpleGrid,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import {
   IconBell,
@@ -30,8 +30,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentModal } from "../_admin_global/_component/comp_admin_modal";
-import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
-import { ComponentAdminGlobal_NotifikasiPeringatan } from "../_admin_global/admin_notifikasi/notifikasi_peringatan";
 
 export function Admin_V3_ComponentButtonUserCircle({
   dataUser,
@@ -134,15 +132,18 @@ export function Admin_V3_ComponentButtonUserCircle({
   ];
 
   async function onClickLogout() {
-    setLoadingLogout(true);
-    const res = await fetch(`/api/auth/logout?id=${dataUser?.id}`, {
-      method: "GET",
-    });
+    try {
+      setLoadingLogout(true);
+      const response = await apiFetchLogout({ id: dataUser?.id as string });
 
-    const result = await res.json();
-    if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(result.message);
-      router.push("/", { scroll: false });
+      if (response && response.success) {
+        ComponentGlobal_NotifikasiBerhasil(response.message);
+        router.replace("/", { scroll: false });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingLogout(false);
     }
   }
 
@@ -242,10 +243,13 @@ export function Admin_V3_ComponentButtonUserCircle({
                           <IconBell color="white" />
                         ) : (
                           <Indicator
-                            
                             color="yellow"
                             processing
-                            label={<Text c="black" fz={10}>{countNotifikasi ? countNotifikasi : ""}</Text>}
+                            label={
+                              <Text c="black" fz={10}>
+                                {countNotifikasi ? countNotifikasi : ""}
+                              </Text>
+                            }
                           >
                             <IconBell color="white" />
                           </Indicator>
@@ -284,7 +288,11 @@ export function Admin_V3_ComponentButtonUserCircle({
                           <Indicator
                             color="yellow"
                             processing
-                            label={<Text c="black" fz={10}>{countNotifikasi ? countNotifikasi : ""}</Text>}
+                            label={
+                              <Text c="black" fz={10}>
+                                {countNotifikasi ? countNotifikasi : ""}
+                              </Text>
+                            }
                           >
                             <IconBell size={18} color={e.color || "white"} />
                           </Indicator>

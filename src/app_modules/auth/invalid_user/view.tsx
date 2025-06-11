@@ -20,12 +20,12 @@ export default function InvalidUser() {
       await fetch("/api/auth/logout", {
         method: "GET",
       });
-      router.push("/login", {scroll: false});
+      router.push("/", { scroll: false });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error("Gagal menghapus cookie:", error);
-    } 
+    }
   };
 
   return (
@@ -33,7 +33,8 @@ export default function InvalidUser() {
       <UIGlobal_LayoutDefault>
         <Stack align="center" justify="center" spacing="md" h={"100vh"}>
           <Title order={3} c={MainColor.white} align="center">
-            Maaf, Anda tidak memiliki izin untuk mengakses halaman ini. Silakan logout terlebih dahulu.
+            Maaf, Anda tidak memiliki izin untuk mengakses halaman ini. Silakan
+            logout terlebih dahulu.
           </Title>
           <Button
             loading={isLoading}
