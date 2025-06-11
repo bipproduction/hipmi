@@ -65,7 +65,7 @@ export function Donasi_ViewRekapKabar() {
         ) : (
           <Box>
             <ScrollOnly
-              height="25vh"
+              height="85vh"
               renderLoading={() => (
                 <Center>
                   <ComponentGlobal_Loader size={25} />

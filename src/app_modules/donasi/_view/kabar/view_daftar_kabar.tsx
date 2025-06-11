@@ -61,7 +61,7 @@ export function Donasi_ViewDaftarKabar() {
       ) : (
         <Box>
           <ScrollOnly
-            height="22vh"
+            height="90vh"
             renderLoading={() => (
               <Center>
                 <ComponentGlobal_Loader size={25} />
