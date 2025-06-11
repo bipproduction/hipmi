@@ -11,46 +11,22 @@ import { ActionIcon } from "@mantine/core";
 import { IconCirclePlus, IconDotsVertical } from "@tabler/icons-react";
 import { useState } from "react";
 import { Donasi_ViewRekapKabar } from "../../_view";
+import { useParams } from "next/navigation";
 
-export function Donasi_UiRekapKabar({
-  listKabar,
-  donasiId,
-}: {
-  listKabar: any[];
-  donasiId: string;
-}) {
+export function Donasi_UiRekapKabar() {
+  const { id } = useParams();
   const [openDrawer, setOpenDrawer] = useState(false);
   const listPage = [
     {
       id: "1",
       name: "Tambah Kabar",
       icon: <IconCirclePlus />,
-      path: RouterDonasi.create_kabar + donasiId,
+      path: RouterDonasi.create_kabar + id,
     },
   ];
 
   return (
     <>
-      {/* <UIGlobal_LayoutTamplate
-        header={
-          <UIGlobal_LayoutHeaderTamplate
-            title="Daftar Kabar"
-            customButtonRight={
-              <ActionIcon
-                variant="transparent"
-                onClick={() => {
-                  setOpenDrawer(true);
-                }}
-              >
-                <IconDotsVertical color="white" />
-              </ActionIcon>
-            }
-          />
-        }
-      >
-        <Donasi_ViewRekapKabar donasiId={donasiId} listKabar={listKabar} />
-      </UIGlobal_LayoutTamplate> */}
-
       <UI_NewLayoutTamplate>
         <UI_NewHeader>
           <Component_Header
@@ -68,7 +44,7 @@ export function Donasi_UiRekapKabar({
           />
         </UI_NewHeader>
         <UI_NewChildren>
-          <Donasi_ViewRekapKabar donasiId={donasiId} listKabar={listKabar} />
+          <Donasi_ViewRekapKabar />
         </UI_NewChildren>
       </UI_NewLayoutTamplate>
 
