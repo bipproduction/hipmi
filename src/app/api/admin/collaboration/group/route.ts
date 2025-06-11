@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
   const page = searchParams.get("page");
-  const takeData = 1;
+  const takeData = 10;
   const skipData = Number(page) * takeData - takeData;
 
   try {
