@@ -1,7 +1,5 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
-
-export const dynamic = "force-dynamic";
+import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
@@ -12,27 +10,35 @@ export async function GET(
     const { id } = params;
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page"));
-    const takeData = 5
+    const takeData = 10;
     const skipData = page * takeData - takeData;
 
     if (!page) {
-      fixData = await prisma.donasi_PencairanDana.findMany({
-        orderBy: {
-          createdAt: "asc",
-        },
+      fixData = await prisma.donasi_Kabar.findMany({
         where: {
           donasiId: id,
+          active: true,
+        },
+        select: {
+          id: true,
+          title: true,
+          deskripsi: true,
+          createdAt: true,
         },
       });
     } else {
-      fixData = await prisma.donasi_PencairanDana.findMany({
+      fixData = await prisma.donasi_Kabar.findMany({
         take: takeData,
         skip: skipData,
-        orderBy: {
-          createdAt: "asc",
-        },
         where: {
           donasiId: id,
+          active: true,
+        },
+        select: {
+          id: true,
+          title: true,
+          deskripsi: true,
+          createdAt: true,
         },
       });
     }

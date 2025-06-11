@@ -28,26 +28,42 @@ import {
 } from "@mantine/core";
 import { IconPhoto } from "@tabler/icons-react";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { donasi_funUpdateKabar } from "../../fun";
 import { MODEL_DONASI_KABAR } from "../../model/interface";
 import { clientLogger } from "@/util/clientLogger";
 import SkeletonEditDonasi from "../../edit/edit_donasi/skeleton_edit_donasi";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetDonasiKabarById } from "../../lib/api_donasi";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Donasi_ViewEditKabar({
-  dataKabar,
-}: {
-  dataKabar: MODEL_DONASI_KABAR;
-}) {
+export function Donasi_ViewEditKabar() {
+  const { id } = useParams();
   const router = useRouter();
-  const [data, setData] = useState(dataKabar);
+  const [data, setData] = useState<MODEL_DONASI_KABAR | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
   const [isLoading, setLoading] = useState(false);
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetDonasiKabarById({ id: id as string });
+      // console.log("res >", response)
+      if (response && response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data kabar", error);
+    }
+  }
+
   async function onUpdate() {
-    if (data.title === "" || data.deskripsi === "") {
+    if (data?.title === "" || data?.deskripsi === "") {
       return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
     }
 
@@ -66,16 +82,16 @@ export function Donasi_ViewEditKabar({
         }
 
         const res = await donasi_funUpdateKabar({
-          data: data,
+          data: data as MODEL_DONASI_KABAR,
           fileId: uploadImage.data.id,
         });
 
         if (res.status === 200) {
           setLoading(false);
 
-          if (dataKabar.imageId !== null) {
+          if (data?.imageId !== null) {
             const deleteImage = await funGlobal_DeleteFileById({
-              fileId: data.imageId,
+              fileId: data?.imageId as string,
             });
 
             if (!deleteImage.success) {
@@ -92,7 +108,7 @@ export function Donasi_ViewEditKabar({
         }
       } else {
         const res = await donasi_funUpdateKabar({
-          data: data,
+          data: data as MODEL_DONASI_KABAR,
         });
 
         if (res.status === 200) {
@@ -110,6 +126,8 @@ export function Donasi_ViewEditKabar({
       setLoading(false);
     }
   }
+
+  if (!data) return <CustomSkeleton height={300} />;
 
   return (
     <>
@@ -134,7 +152,7 @@ export function Donasi_ViewEditKabar({
               onChange={(val) => {
                 setData({
                   ...data,
-                  title: _.startCase(val.target.value),
+                  title: val.target.value,
                 });
               }}
             />

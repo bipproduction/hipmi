@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
 
 export { GET };
 
@@ -12,9 +13,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       include: {
         MasterBank: true,
         StatusInvoice: {
-            where: {
-                name: "Berhasil",
-            }
+          where: {
+            name: "Berhasil",
+          },
         },
         Investasi: {
           include: {

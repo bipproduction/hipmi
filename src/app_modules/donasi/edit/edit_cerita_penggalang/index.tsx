@@ -34,25 +34,44 @@ import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/co
 import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
 import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
 import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetDonasiCeritaPenggalang } from "../../lib/api_donasi";
+import { useParams } from "next/navigation";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function EditCeritaPenggalangDonasi({
-  dataCerita,
-}: {
-  dataCerita: MODEL_CERITA_DONASI;
-}) {
+export default function EditCeritaPenggalangDonasi() {
+  const { id } = useParams();
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState(dataCerita);
+  const [data, setData] = useState<MODEL_CERITA_DONASI | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [updateImage, setUpdateImage] = useState<any | null>();
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetDonasiCeritaPenggalang({
+        id: id as string,
+      });
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error get data donasi cerita penggalang", error);
+    }
+  }
 
   async function onUpdate() {
     setLoading(true);
 
     const body = {
-      id: data.id,
-      pembukaan: data.pembukaan,
-      cerita: data.cerita,
+      id: data?.id,
+      pembukaan: data?.pembukaan,
+      cerita: data?.cerita,
     };
 
     if (_.values(body).includes(""))
@@ -72,7 +91,7 @@ export default function EditCeritaPenggalangDonasi({
         }
 
         const deleteImage = await funGlobal_DeleteFileById({
-          fileId: data.imageId,
+          fileId: data?.imageId as string,
         });
         if (!deleteImage.success) {
           setLoading(false);
@@ -108,6 +127,8 @@ export default function EditCeritaPenggalangDonasi({
       clientLogger.error("Error update cerita penggalangan", error);
     }
   }
+
+  if (!data) return <CustomSkeleton height={300} />;
 
   return (
     <>

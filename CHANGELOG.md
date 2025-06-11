@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.22](https://github.com/bipproduction/hipmi/compare/v1.4.21...v1.4.22) (2025-06-11)
+
+
+### Bug Fixes
+
+* donasi ([f2c6940](https://github.com/bipproduction/hipmi/commit/f2c694022e510ea99726cfffaf06b6cfffb808c1))
+* donasi ([1f1cca3](https://github.com/bipproduction/hipmi/commit/1f1cca3520ff22b878e945383a580b32a3054a3d))
+* donasi ([e94090e](https://github.com/bipproduction/hipmi/commit/e94090eb30c2f34af08816b3c4ad8ac4cbd360e8))
+* donasi ([bb65042](https://github.com/bipproduction/hipmi/commit/bb650429b323670c85adc582eda8ff522bd4dd60))
+* donasi ([886d9f3](https://github.com/bipproduction/hipmi/commit/886d9f37f4636576b8a89020537e13708f582431))
+
 ## [1.4.21](https://github.com/bipproduction/hipmi/compare/v1.4.20...v1.4.21) (2025-06-10)
 
 

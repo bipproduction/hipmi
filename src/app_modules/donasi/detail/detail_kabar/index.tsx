@@ -11,6 +11,8 @@ import { apiGetDonasiKabarById } from "../../lib/api_donasi";
 import { useParams } from "next/navigation";
 import { useShallowEffect } from "@mantine/hooks";
 import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import moment from "moment";
+import "moment/locale/id";
 
 export default function DetailKabarDonasi() {
   const param = useParams<{ id: string }>();
@@ -32,7 +34,7 @@ export default function DetailKabarDonasi() {
   }
 
   if (!kabar) {
-    return <CustomSkeleton />;
+    return <CustomSkeleton h={300} />;
   }
 
   return (
@@ -41,9 +43,7 @@ export default function DetailKabarDonasi() {
         <Stack>
           <Group position="right">
             <Text>
-              {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
-                kabar.createdAt
-              )}
+              {moment(kabar.createdAt).format("DD MMM YYYY")}
             </Text>
           </Group>
 
