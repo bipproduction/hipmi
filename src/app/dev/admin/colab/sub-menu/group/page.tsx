@@ -6,7 +6,7 @@ export default async function Page() {
 
   return (
     <>
-      <AdminColab_TableGroup listGroup={listGroup as any}  />
+      <AdminColab_TableGroup  />
     </>
   );
 }

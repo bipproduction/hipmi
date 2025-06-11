@@ -71,7 +71,7 @@ const apiGetAdminCollaborationRoomById = async ({
   search,
 }: {
   page: string;
-  search: string;
+  search?: string;
 }) => {
   const { token } = await fetch("/api/get-cookie").then((res) => res.json());
   if (!token) return await token.json().catch(() => null);

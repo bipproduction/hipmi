@@ -14,8 +14,9 @@ import {
   Stack,
   Table,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconCircleDot } from "@tabler/icons-react";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
@@ -23,28 +24,25 @@ import Admin_DetailButton from "../../_admin_global/_component/button/detail_but
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminColab_DetailData from "../component/detail_data";
-import adminColab_getListAllGroupChat from "../fun/get/get_list_all_group_chat";
 import adminColab_getOneRoomChatById from "../fun/get/get_one_room_chat_by_id";
+import { apiGetAdminCollaborationRoomById } from "../lib/api_fetch_admin_collaboration";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export default function AdminColab_TableGroup({
-  listGroup,
-}: {
-  listGroup: any;
-}) {
+export default function AdminColab_TableGroup() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Project Collaboration" />
-        <TableMenu listGroup={listGroup} />
+        <TableMenu />
       </Stack>
     </>
   );
 }
-function TableMenu({ listGroup }: { listGroup: any }) {
-  const [data, setData] = useState<MODEL_COLLABORATION_ROOM_CHAT[]>(
-    listGroup.data
+function TableMenu() {
+  const [data, setData] = useState<MODEL_COLLABORATION_ROOM_CHAT[] | null>(
+    null
   );
-  const [isNPage, setNPage] = useState(listGroup.nPage);
+  const [isNPage, setNPage] = useState(1);
   const [activePage, setActivePage] = useState(1);
 
   const [idProject, setIdProject] = useState("");
@@ -52,14 +50,37 @@ function TableMenu({ listGroup }: { listGroup: any }) {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [detailData, setDetailData] = useState<MODEL_COLLABORATION_ROOM_CHAT>();
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, [activePage]);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetAdminCollaborationRoomById({
+        page: `${activePage}`,
+      });
+
+      if (response?.success && response?.data?.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invalid data format recieved", response);
+        setData([]);
+      }
+    } catch (error) {
+      console.error("Error get data table reject", error);
+      setData([]);
+    }
+  }
+
   // PAGINATION dan No awal  data di tampilkan
   let noAwal = activePage * 5 - 4;
-  async function onLoad(pindahPage: any) {
-    const load = await adminColab_getListAllGroupChat({ page: pindahPage });
-    setActivePage(pindahPage);
-    setData(load.data as any);
-    setNPage(load.nPage);
-  }
+  // async function onLoad(pindahPage: any) {
+  //   const load = await adminColab_getListAllGroupChat({ page: pindahPage });
+  //   setActivePage(pindahPage);
+  //   setData(load.data as any);
+  //   setNPage(load.nPage);
+  // }
 
   async function onDetailData(roomId: string) {
     setLoadingDetail(true);
@@ -75,46 +96,63 @@ function TableMenu({ listGroup }: { listGroup: any }) {
     });
   }
 
-  const tableRow = data.map((e, i) => (
-    <tr key={i} style={{ color: AdminColor.white }}>
-      {/* <td>
+  const tableRow = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data.map((e, i) => (
+      <tr key={i} style={{ color: AdminColor.white }}>
+        {/* <td>
         <Center c={AdminColor.white}>{noAwal++}</Center>
       </td> */}
-      <td>
-        <Box w={150}>
-          <Text lineClamp={1}>
-            {e?.ProjectCollaboration?.Author?.Profile?.name}
-          </Text>
-        </Box>
-      </td>
-      <td>
-        <Box w={150}>
-          <Text lineClamp={1}>{e?.name}</Text>
-        </Box>
-      </td>
-      <td>
-        <Box w={150}>
-          <Text>
-            {e?.ProjectCollaboration?.ProjectCollaborationMaster_Industri?.name}
-          </Text>
-        </Box>
-      </td>
-      <td>
-        <Center>
-          <Text>{e?.ProjectCollaboration_AnggotaRoomChat.length}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center>
-          <Stack>
-            <Admin_DetailButton
-              path={`/dev/admin/colab/detail/group/${e.id}`}
-            />
-          </Stack>
-        </Center>
-      </td>
-    </tr>
-  ));
+        <td>
+          <Box w={150}>
+            <Text lineClamp={1}>
+              {e?.ProjectCollaboration?.Author?.Profile?.name}
+            </Text>
+          </Box>
+        </td>
+        <td>
+          <Box w={150}>
+            <Text lineClamp={1}>{e?.name}</Text>
+          </Box>
+        </td>
+        <td>
+          <Box w={150}>
+            <Text>
+              {
+                e?.ProjectCollaboration?.ProjectCollaborationMaster_Industri
+                  ?.name
+              }
+            </Text>
+          </Box>
+        </td>
+        <td>
+          <Center>
+            <Text>{e?.ProjectCollaboration_AnggotaRoomChat.length}</Text>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Stack>
+              <Admin_DetailButton
+                path={`/dev/admin/colab/detail/group/${e.id}`}
+              />
+            </Stack>
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
@@ -124,44 +162,49 @@ function TableMenu({ listGroup }: { listGroup: any }) {
           color={AdminColor.softBlue}
           component={<></>}
         />
-        <Paper p={"md"} bg={AdminColor.softBlue}>
-          <Stack>
-            <ScrollArea h={"65vh"}>
-              <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
-                <thead>
-                  <tr>
-                    {/* <th>
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue}>
+            <Stack>
+              <ScrollArea h={"65vh"}>
+                <Table verticalSpacing={"xs"} horizontalSpacing={"md"} p={"md"}>
+                  <thead>
+                    <tr>
+                      {/* <th>
                       <Center c={AdminColor.white}>No</Center>
                     </th> */}
-                    <th>
-                      <Text c={AdminColor.white}>Admin Room</Text>
-                    </th>
-                    <th>
-                      <Text c={AdminColor.white}>Nama Group</Text>
-                    </th>
-                    <th>
-                      <Text c={AdminColor.white}>Industri</Text>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Anggota Group</Center>
-                    </th>
-                    <th>
-                      <Center c={AdminColor.white}>Aksi</Center>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{tableRow}</tbody>
-              </Table>
-            </ScrollArea>
-            <Admin_V3_ComponentPaginationBreakpoint
-              total={isNPage}
-              value={activePage}
-              onChange={(val) => {
-                onLoad(val);
-              }}
-            />
-          </Stack>
-        </Paper>
+                      <th>
+                        <Text c={AdminColor.white}>Admin Room</Text>
+                      </th>
+                      <th>
+                        <Text c={AdminColor.white}>Nama Group</Text>
+                      </th>
+                      <th>
+                        <Text c={AdminColor.white}>Industri</Text>
+                      </th>
+                      <th>
+                        <Center c={AdminColor.white}>Anggota Group</Center>
+                      </th>
+                      <th>
+                        <Center c={AdminColor.white}>Aksi</Center>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>{tableRow()}</tbody>
+                </Table>
+              </ScrollArea>
+              <Admin_V3_ComponentPaginationBreakpoint
+                total={isNPage}
+                value={activePage}
+                onChange={(val) => {
+                  setActivePage(val);
+                }}
+              />
+            </Stack>
+          </Paper>
+        )}
       </Stack>
 
       <Modal
