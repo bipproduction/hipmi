@@ -28,7 +28,7 @@ import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconFlag3, IconSearch, IconTrash } from "@tabler/icons-react";
 import moment from "moment";
 import "moment/locale/id";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
@@ -36,30 +36,63 @@ import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ViewOneDetailPosting from "../component/detail_one_posting";
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
-import { apiAdminGetKomentarForumById } from "../lib/api_fetch_admin_forum";
+import {
+  apiAdminGetKomentarForumById,
+  apiAdminGetPostingForumById,
+} from "../lib/api_fetch_admin_forum";
 import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
 import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
 
-export default function AdminForum_DetailPosting({
-  dataPosting,
-}: {
-  dataPosting: MODEL_FORUM_POSTING;
-}) {
+export default function AdminForum_DetailPosting() {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_FORUM_POSTING | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiAdminGetPostingForumById({ id: id as string });
+      if (response && response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Invalid data format received:", error);
+      setData(null);
+    }
+  }
+
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Detail" />
         <Admin_ComponentBackButton />
-        <Admin_V3_ComponentBreakpoint>
-          <ComponentAdminForum_ViewOneDetailPosting dataPosting={dataPosting} />
-        </Admin_V3_ComponentBreakpoint>
-        <TableKomentar postingId={dataPosting.id} totalComments={dataPosting.Forum_Komentar as any} />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
+          <>
+            <Admin_V3_ComponentBreakpoint>
+              <ComponentAdminForum_ViewOneDetailPosting dataPosting={data} />
+            </Admin_V3_ComponentBreakpoint>
+            <TableKomentar
+              postingId={id as string}
+              totalComments={data?.Forum_Komentar as any}
+            />
+          </>
+        )}
       </Stack>
     </>
   );
 }
 
-function TableKomentar({ postingId, totalComments }: { postingId: string, totalComments: number }) {
+function TableKomentar({
+  postingId,
+  totalComments,
+}: {
+  postingId: string;
+  totalComments: number;
+}) {
   const router = useRouter();
   const [data, setData] = useState<MODEL_FORUM_KOMENTAR[] | null>(null);
   const [nPage, setNPage] = useState<number>(1);

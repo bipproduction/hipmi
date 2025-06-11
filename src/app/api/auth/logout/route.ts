@@ -23,20 +23,19 @@ export async function GET() {
   }
 
   try {
-    const response = NextResponse.json({
-      success: true,
-      message: "Logout berhasil",
-    });
-
     // Menghapus cookie dengan set maxAge 0
-    response.cookies.set({
+    cookieStore.set({
       name: sessionKey,
       value: "",
       path: "/",
       maxAge: 0,
     });
 
-    return response;
+    return NextResponse.json({
+      success: true,
+      message: "Logout berhasil",
+
+    });
   } catch (error) {
     console.error("Gagal menghapus cookie:", error);
     return NextResponse.json(

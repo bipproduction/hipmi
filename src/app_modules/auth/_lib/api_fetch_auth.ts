@@ -4,6 +4,7 @@ export {
   apiPostVerifikasiCodeOtp,
   apiDeleteAktivasiKodeOtpByNomor,
   apiFetchRegister,
+  apiFetchLogout,
 };
 
 const apiFetchLogin = async ({ nomor }: { nomor: string }) => {
@@ -70,4 +71,15 @@ const apiFetchRegister = async ({
 
   return result;
   // return await respone.json().catch(() => null);
+};
+
+
+const apiFetchLogout = async ({ id }: { id: string }) => {
+  const respone = await fetch(`/api/auth/logout?id=${id}`, {
+    method: "GET",
+  });
+
+  const result = await respone.json();
+
+  return result;
 };
