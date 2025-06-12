@@ -7,6 +7,7 @@ import {
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   MODEL_FORUM_KOMENTAR,
   MODEL_FORUM_REPORT_POSTING,
@@ -15,6 +16,7 @@ import mqtt_client from "@/util/mqtt_client";
 import {
   Box,
   Button,
+  Center,
   Group,
   Paper,
   ScrollArea,
@@ -24,10 +26,10 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Admin_ComponentModal } from "../../_admin_global/_component/comp_admin_modal";
 import Admin_ComponentBackButton from "../../_admin_global/back_button";
@@ -37,18 +39,42 @@ import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_g
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 import ComponentAdminForum_ViewOneDetailKomentar from "../component/detail_one_komentar";
 import { adminForum_funDeleteKomentarById } from "../fun/delete/fun_delete_komentar_by_id";
-import { adminForum_getListReportKomentarbyId } from "../fun/get/get_list_report_komentar_by_id";
+import {
+  apiAdminGetListReportKomentarById,
+  apiAdminGetOneKomentarForumById,
+} from "../lib/api_fetch_admin_forum";
 
-export default function AdminForum_HasilReportKomentar({
-  komentarId,
-  listReport,
-  dataKomentar,
-}: {
-  komentarId: string;
-  listReport: any;
-  dataKomentar: MODEL_FORUM_KOMENTAR;
-}) {
-  const [data, setData] = useState(dataKomentar);
+export default function AdminForum_HasilReportKomentar(
+//   {
+//   komentarId,
+//   listReport,
+//   dataKomentar,
+// }: {
+//   komentarId: string;
+//   listReport: any;
+//   dataKomentar: MODEL_FORUM_KOMENTAR;
+// }
+) {
+  const { id } = useParams();
+  const [data, setData] = useState<MODEL_FORUM_KOMENTAR | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiAdminGetOneKomentarForumById({
+        id: id as string,
+      });
+      if (response && response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Invalid data get one forum", error);
+      setData(null);
+    }
+  }
 
   return (
     <>
@@ -56,20 +82,24 @@ export default function AdminForum_HasilReportKomentar({
         <ComponentAdminGlobal_HeaderTamplate name="Forum: Report" />
         <Admin_ComponentBackButton />
 
-        <Admin_V3_ComponentBreakpoint>
-          <ComponentAdminForum_ViewOneDetailKomentar dataKomentar={data} />
-          <Group position="center">
-            <ButtonDeleteKomentar
-              komentarId={komentarId}
-              data={data}
-              onSuccess={(val) => {
-                setData(val);
-              }}
-            />
-          </Group>
-        </Admin_V3_ComponentBreakpoint>
+        {!data ? (
+          <CustomSkeleton height={200} width={"100%"} />
+        ) : (
+          <Admin_V3_ComponentBreakpoint>
+            <ComponentAdminForum_ViewOneDetailKomentar dataKomentar={data} />
+            <Group position="center">
+              <ButtonDeleteKomentar
+                komentarId={id as string}
+                data={data}
+                onSuccess={(val) => {
+                  setData(val);
+                }}
+              />
+            </Group>
+          </Admin_V3_ComponentBreakpoint>
+        )}
 
-        <HasilReportPosting listReport={listReport} komentarId={komentarId} />
+        <HasilReportPosting komentarId={id as string} />
       </Stack>
     </>
   );
@@ -188,67 +218,106 @@ function ButtonDeleteKomentar({
 }
 
 function HasilReportPosting({
-  listReport,
+  // listReport,
   komentarId,
 }: {
-  listReport: any;
+  // listReport: any;
   komentarId: string;
 }) {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_FORUM_REPORT_POSTING[]>(
-    listReport.data
-  );
-  const [nPage, setNPage] = useState(listReport.nPage);
+  const [data, setData] = useState<MODEL_FORUM_REPORT_POSTING[] | null>(null);
+  const [nPage, setNPage] = useState(1);
   const [activePage, setActivePage] = useState(1);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, [komentarId, activePage]);
+
+  async function onLoadData() {
+    try {
+      const response = await apiAdminGetListReportKomentarById({
+        id: komentarId,
+        page: `${activePage}`,
+      });
+      if (response && response.success) {
+        setData(response.data.data);
+        setNPage(response.data.nPage);
+      }
+    } catch (error) {
+      console.error("Invalid data format received:", error);
+      setData([]);
+      setNPage(1);
+    }
+  }
 
   async function onPageClick(p: any) {
     setActivePage(p);
-    const loadData = await adminForum_getListReportKomentarbyId({
-      komentarId: komentarId,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
   }
 
-  const TableRows = data?.map((e, i) => (
-    <tr key={i} style={{ color: AdminColor.white }}>
-      <td>
-        <Box w={100}>
-          <Text>{e?.User?.username}</Text>
-        </Box>
-      </td>
-      <td>
-        <Box w={150}>
-          <Text>
-            {e?.ForumMaster_KategoriReport?.title
-              ? e?.ForumMaster_KategoriReport?.title
-              : "-"}
-          </Text>
-        </Box>
-      </td>
+  const TableRows = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
 
-      <td>
-        <Box w={300}>
-          <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
-            {e?.ForumMaster_KategoriReport?.deskripsi ? (
-              <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
-            ) : (
-              <Text>-</Text>
-            )}
-          </Spoiler>
-        </Box>
-      </td>
+    return data?.map((e, i) => (
+      <tr key={i} style={{ color: AdminColor.white }}>
+        <td>
+          <Box w={100}>
+            <Text>{e?.User?.username}</Text>
+          </Box>
+        </td>
+        <td>
+          <Box w={150}>
+            <Text>
+              {e?.ForumMaster_KategoriReport?.title
+                ? e?.ForumMaster_KategoriReport?.title
+                : "-"}
+            </Text>
+          </Box>
+        </td>
 
-      <td>
-        <Box w={300}>
-          <Spoiler maxHeight={50} hideLabel="sembunyikan" showLabel="tampilkan">
-            {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
-          </Spoiler>
-        </Box>
-      </td>
-    </tr>
-  ));
+        <td>
+          <Box w={300}>
+            <Spoiler
+              maxHeight={50}
+              hideLabel="sembunyikan"
+              showLabel="tampilkan"
+            >
+              {e?.ForumMaster_KategoriReport?.deskripsi ? (
+                <Text>{e?.ForumMaster_KategoriReport?.deskripsi}</Text>
+              ) : (
+                <Text>-</Text>
+              )}
+            </Spoiler>
+          </Box>
+        </td>
+
+        <td>
+          <Box w={300}>
+            <Spoiler
+              maxHeight={50}
+              hideLabel="sembunyikan"
+              showLabel="tampilkan"
+            >
+              {e?.deskripsi ? <Text>{e?.deskripsi}</Text> : <Text>-</Text>}
+            </Spoiler>
+          </Box>
+        </td>
+      </tr>
+    ));
+  };
+
+  if (!data) {
+    return <CustomSkeleton height={400} width={"100%"} />;
+  }
 
   return (
     <>
@@ -293,7 +362,7 @@ function HasilReportPosting({
                   </tr>
                 </thead>
 
-                <tbody>{TableRows}</tbody>
+                <tbody>{TableRows()}</tbody>
               </Table>
             </ScrollArea>
             <Admin_V3_ComponentPaginationBreakpoint
