@@ -85,7 +85,7 @@ export async function GET(request: Request,
       });
       const nCount = await prisma.forum_ReportPosting.count({
         where: {
-          isActive: true,
+          forum_PostingId: postingId,
         },
       });
 

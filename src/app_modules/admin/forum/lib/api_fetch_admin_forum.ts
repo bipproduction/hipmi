@@ -1,13 +1,15 @@
 export {
-  apiGetAdminForumPublishCountDasboard,
-  apiGetAdminCountForumReportPosting,
-  apiGetAdminCountForumReportKomentar,
-  apiGetAdminForumReportPosting,
-  apiGetAdminForumReportKomentar,
-  apiGetAdminForumPublish,
-  apiGetAdminHasilReportPosting,
-  apiAdminGetKomentarForumById,
+  apiAdminGetListKomentarForumById as apiAdminGetKomentarForumById,
+  apiAdminGetOneKomentarForumById,
   apiAdminGetPostingForumById,
+  apiGetAdminCountForumReportKomentar,
+  apiGetAdminCountForumReportPosting,
+  apiGetAdminForumPublish,
+  apiGetAdminForumPublishCountDasboard,
+  apiGetAdminForumReportKomentar,
+  apiGetAdminForumReportPosting,
+  apiGetAdminHasilReportPosting,
+  apiAdminGetListReportKomentarById,
 };
 
 const apiGetAdminForumPublishCountDasboard = async () => {
@@ -162,7 +164,7 @@ const apiGetAdminHasilReportPosting = async ({
   return await response.json().catch(() => null);
 };
 
-const apiAdminGetKomentarForumById = async ({
+const apiAdminGetListKomentarForumById = async ({
   id,
   page,
   search,
@@ -214,11 +216,7 @@ const apiAdminGetKomentarForumById = async ({
   }
 };
 
-const apiAdminGetPostingForumById = async ({
-  id,
-}: {
-  id: string;
-}) => {
+const apiAdminGetPostingForumById = async ({ id }: { id: string }) => {
   try {
     const { token } = await fetch("/api/get-cookie").then((res) => res.json());
     if (!token) {
@@ -253,6 +251,84 @@ const apiAdminGetPostingForumById = async ({
     return resulst;
   } catch (error) {
     console.error("Error get admin posting forum", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+const apiAdminGetOneKomentarForumById = async ({ id }: { id: string }) => {
+  try {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/admin/forum/komentar/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get admin komentar forum",
+        response.statusText,
+        errorData
+      );
+      throw new Error(
+        errorData?.message || "Failed to get admin komentar forum"
+      );
+    }
+
+    // Return the JSON response
+    const resulst = await response.json();
+    return resulst;
+  } catch (error) {
+    console.error("Error get admin komentar forum", error);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
+
+const apiAdminGetListReportKomentarById = async ({ id, page }: { id: string; page?: string }) => {
+  try {
+    const { token } = await fetch("/api/get-cookie").then((res) => res.json());
+    if (!token) {
+      console.error("No token found");
+      return null;
+    }
+
+    const response = await fetch(`/api/admin/forum/${id}/report-komentar${page ? `?page=${page}` : ""}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error(
+        "Failed to get admin list report komentar forum",
+        response.statusText,
+        errorData
+      );
+      throw new Error(
+        errorData?.message || "Failed to get admin list report komentar forum"
+      );
+    }
+
+    // Return the JSON response
+    const resulst = await response.json();
+    return resulst;
+  } catch (error) {
+    console.error("Error get admin list report komentar forum", error);
     throw error; // Re-throw the error to handle it in the calling function
   }
 };
