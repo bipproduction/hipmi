@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.26](https://github.com/bipproduction/hipmi/compare/v1.4.25...v1.4.26) (2025-06-13)
+
+
+### Bug Fixes
+
+* admin donasi ([6ccdbf9](https://github.com/bipproduction/hipmi/commit/6ccdbf9763c1ce8443a6a691b24817d6b80265c6))
+* super admin ([5bc70ba](https://github.com/bipproduction/hipmi/commit/5bc70baf96e792e1e1492027747f8352f2f80313))
+
 ## [1.4.25](https://github.com/bipproduction/hipmi/compare/v1.4.24...v1.4.25) (2025-06-12)
 
 ## [1.4.24](https://github.com/bipproduction/hipmi/compare/v1.4.23...v1.4.24) (2025-06-12)
