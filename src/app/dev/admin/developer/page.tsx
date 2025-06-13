@@ -4,12 +4,12 @@ import adminDeveloper_funGetListAllUser from "@/app_modules/admin/developer/fun/
 import _ from "lodash";
 
 export default async function Page() {
-  const listUser = await adminDeveloper_funGetListAllUser({ page: 1 });
-  const listAdmin = await adminDeveloper_funGetListAllAdmin({ page: 1 });
+  // const listUser = await adminDeveloper_funGetListAllUser({ page: 1 });
+  // const listAdmin = await adminDeveloper_funGetListAllAdmin({ page: 1 });
 
   return (
     <>
-      <AdminDeveloper listUser={listUser.data as any} pUser={listUser.nPage} listAdmin={listAdmin.data as any} pAdmin={listAdmin.nPage} />
+      <AdminDeveloper />
     </>
   );
 }
