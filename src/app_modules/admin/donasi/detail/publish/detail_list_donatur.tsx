@@ -271,7 +271,6 @@ function TampilanListDonatur({
               verticalSpacing={"xl"}
               horizontalSpacing={"md"}
               p={"md"}
-              w={1120}
             >
               <thead>
                 <tr>

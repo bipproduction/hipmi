@@ -6,12 +6,10 @@ import { Admin_ComponentLoadImageLandscape } from "@/app_modules/admin/_admin_gl
 import CustomSkeletonAdmin from "@/app_modules/admin/_admin_global/_component/skeleton/customSkeletonAdmin";
 import Admin_ComponentBackButton from "@/app_modules/admin/_admin_global/back_button";
 import {
-  MODEL_DONASI,
-  MODEL_DONASI_PENCAIRAN_DANA,
+  MODEL_DONASI
 } from "@/app_modules/donasi/model/interface";
 import { RouterAdminDonasi } from "@/lib/router_admin/router_admin_donasi";
 import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
-import { clientLogger } from "@/util/clientLogger";
 import {
   Button,
   Center,
@@ -28,20 +26,16 @@ import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { toNumber } from "lodash";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiGetAdminDonasiById } from "../../lib/api_fetch_admin_donasi";
+import {
+  apiGetAdminDonasiById,
+  apiGetAdminDonasiCountDonatur,
+} from "../../lib/api_fetch_admin_donasi";
 import TampilanListDonatur from "./detail_list_donatur";
 import TampilanListPencairan from "./detail_list_pencairan";
 
-export default function AdminDonasi_DetailPublish({
-  countDonatur,
-  listPencairan,
-}: {
-  countDonatur: number;
-  listPencairan: MODEL_DONASI_PENCAIRAN_DANA[];
-}) {
-  const [pencairan, setPencairan] = useState(listPencairan);
-  const [isReload, setReload] = useState(false);
+export default function AdminDonasi_DetailPublish() {
   const params = useParams<{ id: string }>();
+  const [isReload, setReload] = useState(false);
   const [data, setData] = useState<MODEL_DONASI | null>(null);
 
   useShallowEffect(() => {
@@ -61,23 +55,20 @@ export default function AdminDonasi_DetailPublish({
         setData(null);
       }
     } catch (error) {
-      clientLogger.error("Invalid data format recieved:", error);
+      console.error("Invalid data format recieved:", error);
       setData(null);
     }
   };
 
   return (
     <>
-      {/* <pre>{JSON.stringify(pencairan, null, 2)}</pre> */}
       <Stack>
         <>
-          <Admin_ComponentBackButton
-            path={RouterAdminDonasi.table_publish}
-          />
+          <Admin_ComponentBackButton path={RouterAdminDonasi.table_publish} />
           {!data ? (
             <CustomSkeletonAdmin height={"40vh"} />
           ) : (
-            <TampilanDetailDonasi countDonatur={countDonatur} donasi={data} />
+            <TampilanDetailDonasi donasi={data} />
           )}
           {!data ? (
             <CustomSkeletonAdmin height={"80vh"} />
@@ -90,7 +81,7 @@ export default function AdminDonasi_DetailPublish({
               isReload={isReload}
             />
           )}
-          <TampilanListPencairan pencairan={pencairan} />
+          <TampilanListPencairan />
         </>
       </Stack>
     </>
@@ -98,15 +89,34 @@ export default function AdminDonasi_DetailPublish({
 }
 
 function TampilanDetailDonasi({
-  countDonatur,
+  // countDonatur,
   donasi,
 }: {
-  countDonatur: number;
+  // countDonatur: number;
   donasi: MODEL_DONASI;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
   const router = useRouter();
   const [isLoadingPencairanDana, setIsLoadingPencairanDana] = useState(false);
+  const [countDonatur, setCountDonatur] = useState(0);
+
+  useShallowEffect(() => {
+    onLoadData()
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetAdminDonasiCountDonatur({ id: donasi.id });
+      if (response?.success && response?.data) {
+        setCountDonatur(response.data);
+      } else {
+        setCountDonatur(0);
+      }
+    } catch (error) {
+      console.error("Error get count donatur", error);
+      setCountDonatur(0);
+    }
+  }
 
   return (
     <>
@@ -227,7 +237,7 @@ function TampilanDetailDonasi({
                   </Grid.Col>
                   <Grid.Col span={"auto"}>
                     <Title order={5} c={AdminColor.white}>
-                      {countDonatur}
+                      {countDonatur ? countDonatur : "-"}
                     </Title>
                   </Grid.Col>
                 </Grid>
