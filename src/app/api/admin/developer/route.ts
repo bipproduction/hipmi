@@ -8,8 +8,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
     const page = searchParams.get("page");
-    const takeData = 10;
-    const skipData = Number(page) * takeData - takeData;
+    const dataTake = 10;
+    const dataSkip = Number(page) * dataTake - dataTake;
 
     if (!page) {
       fixData = await prisma.user.findMany({
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
           updatedAt: "desc",
         },
         where: {
-          masterUserRoleId: "1",
+          masterUserRoleId: "2",
           username: {
             contains: search || "",
             mode: "insensitive",
@@ -25,14 +25,14 @@ export async function GET(request: Request) {
         },
       });
     } else {
-      const getData = await prisma.user.findMany({
-        skip: skipData,
-        take: takeData,
+      const data = await prisma.user.findMany({
+        skip: dataSkip,
+        take: dataTake,
         orderBy: {
           updatedAt: "desc",
         },
         where: {
-          masterUserRoleId: "1",
+          masterUserRoleId: "2",
           username: {
             contains: search || "",
             mode: "insensitive",
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 
       const nCount = await prisma.user.count({
         where: {
-          masterUserRoleId: "1",
+          masterUserRoleId: "2",
           username: {
             contains: search || "",
             mode: "insensitive",
@@ -51,8 +51,8 @@ export async function GET(request: Request) {
       });
 
       fixData = {
-        data: getData,
-        nPage: _.ceil(nCount / takeData),
+        data: data,
+        nPage: _.ceil(nCount / dataTake),
       };
     }
 
@@ -63,13 +63,20 @@ export async function GET(request: Request) {
         data: fixData,
       },
       {
-        status: 200,    
+        status: 200,
       }
     );
   } catch (error) {
+    console.error("Error get data admin", error);
     return NextResponse.json(
-      { success: false, message: "Internal Server Error" },
-      { status: 500 }
+      {
+        success: false,
+        message: "Internal Server Error",
+        reason: (error as Error).message,
+      },
+      {
+        status: 500,
+      }
     );
   }
 }
