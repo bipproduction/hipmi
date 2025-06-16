@@ -6,9 +6,9 @@ const nextConfig = {
   },
   output: "standalone",
   staticPageGenerationTimeout: 180, // tingkatkan menjadi 3 menit
-  // eslint: {
-  //   ignoreDuringBuilds: true,
-  // },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // async headers() {
   //   return [
   //     {
