@@ -3,7 +3,6 @@
 import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
-import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { gs_admin_ntf } from "@/lib/global_state";
 import {
   AppShell,
@@ -16,19 +15,10 @@ import {
   Navbar,
   ScrollArea,
   Stack,
-  Text,
-  useMantineTheme,
+  Text
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
-import {
-  IconBriefcase,
-  IconCoin,
-  IconHome,
-  IconMessage,
-  IconUser,
-} from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 import { Admin_UiNavbar } from "../_admin_global";
@@ -36,10 +26,10 @@ import {
   gs_admin_navbar_menu,
   gs_admin_navbar_subMenu,
 } from "../_admin_global/new_global_state";
-import { Admin_V3_ComponentButtonUserCircle } from "./comp_button_user_circle";
-import { Admin_V3_SkeletonNavbar } from "./skeleton_navbar";
-import { Admin_V3_ViewDrawerNotifikasi } from "./notifikasi/view_drawer_notifikasi";
 import { apiGetCountNotifikasiByUserId } from "../notifikasi/lib/api_fetch_notifikasi";
+import { Admin_V3_ComponentButtonUserCircle } from "./comp_button_user_circle";
+import { Admin_V3_ViewDrawerNotifikasi } from "./notifikasi/view_drawer_notifikasi";
+import { Admin_V3_SkeletonNavbar } from "./skeleton_navbar";
 
 export function Admin_V3_MainLayout({
   children,
