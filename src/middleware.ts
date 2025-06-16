@@ -71,6 +71,7 @@ export const middleware = async (req: NextRequest) => {
   // Get token from cookie or Authorization header
   const token = getToken(req, sessionKey);
   const user = await verifyToken({ token, encodedKey });
+  // console.log("user >>", user);
 
   // Handle login page access
   if (pathname === loginPath) {
@@ -164,6 +165,56 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
+  if (pathname.startsWith("/dev/admin")) {
+    try {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
+      const userValidateResponse = await fetch(
+        `${apiBaseUrl}/api/user-validate`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!userValidateResponse.ok) {
+        console.error(
+          "User validation failed:",
+          userValidateResponse.statusText
+        );
+        return setCorsHeaders(unauthorizedResponseAPIUserValidate(req));
+      }
+
+      const userValidateJson = await userValidateResponse.json();
+      // console.log("data json >>", userValidateJson.data);
+
+      if (userValidateJson.success === true && !userValidateJson.data) {
+        return setCorsHeaders(unauthorizedResponseDataUserNotFound(req));
+      }
+
+      if (userValidateJson.data.masterUserRoleId === "1") {
+        return setCorsHeaders(unauthorizedResponseUserNotAdmin(req));
+      }
+
+      if (!userValidateJson.data.active) {
+        return setCorsHeaders(unauthorizedResponseUserNotActive(req));
+      }
+    } catch (error) {
+      console.error("Error during user validation API:", error);
+      if (!token) return setCorsHeaders(unauthorizedResponseTokenPAGE());
+      return setCorsHeaders(
+        await unauthorizedResponseValidationUser({
+          loginPath,
+          sessionKey,
+          token,
+          req,
+        })
+      );
+    }
+  }
+
   // Default: proceed with request and add CORS headers
   const response = NextResponse.next();
   return setCorsHeaders(response);
@@ -192,7 +243,6 @@ function getToken(req: NextRequest, sessionKey: string): string | undefined {
   }
   return undefined;
 }
-
 
 function cookieOptions() {
   return {
@@ -329,6 +379,10 @@ function unauthorizedResponseUserNotActive(req: NextRequest) {
   return setCorsHeaders(
     NextResponse.redirect(new URL("/waiting-room", req.url))
   );
+}
+
+function unauthorizedResponseUserNotAdmin(req: NextRequest) {
+  return setCorsHeaders(NextResponse.redirect(new URL("/dev/home", req.url)));
 }
 
 async function unauthorizedResponseValidationUser({

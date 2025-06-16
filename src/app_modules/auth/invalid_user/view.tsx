@@ -20,7 +20,7 @@ export default function InvalidUser() {
       await fetch("/api/auth/logout", {
         method: "GET",
       });
-      router.push("/", { scroll: false });
+      router.replace("/login", { scroll: false });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
