@@ -138,7 +138,7 @@ export function Admin_V3_ComponentButtonUserCircle({
 
       if (response && response.success) {
         ComponentGlobal_NotifikasiBerhasil(response.message);
-        router.replace("/", { scroll: false });
+        router.replace("/login", { scroll: false });
       }
     } catch (error) {
       console.error(error);
