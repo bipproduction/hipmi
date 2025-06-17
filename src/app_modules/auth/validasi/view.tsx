@@ -33,6 +33,7 @@ import {
   apiGetCheckCodeOtp,
   apiPostVerifikasiCodeOtp,
 } from "../_lib/api_fetch_auth";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 
 export default function Validasi() {
   const router = useRouter();
@@ -100,7 +101,7 @@ export default function Validasi() {
 
       if (respone && respone.success == true) {
         if (respone.roleId == "1") {
-          router.push("/login", { scroll: false });
+          router.push(RouterHome.main_home, { scroll: false });
           ComponentGlobal_NotifikasiBerhasil(respone.message);
         } else if (respone.roleId != "1") {
           router.push(RouterAdminDashboard.splash_admin, { scroll: false });
