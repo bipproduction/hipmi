@@ -50,6 +50,7 @@ export async function POST(req: Request) {
       {
         success: true,
         message: "Registrasi Berhasil, Anda Sedang Login",
+        token: token,
         // data: createUser,
       },
       { status: 201 }

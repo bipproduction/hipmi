@@ -13,6 +13,7 @@ export async function POST(req: Request) {
 
   try {
     const { nomor } = await req.json();
+
     const dataUser = await prisma.user.findUnique({
       where: {
         nomor: nomor,
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
         message: "Berhasil Login",
         roleId: dataUser.masterUserRoleId,
         active: dataUser.active,
+        token: token,
       },
       { status: 200 }
     );
