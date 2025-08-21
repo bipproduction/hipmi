@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function forum_countPostingByAuthorId(authorId: string) {
   const data = await prisma.forum_Posting.count({

@@ -1,19 +1,22 @@
 "use client";
 
 import { Box, Center, Image, ScrollArea, Skeleton, Stack, Text } from "@mantine/core";
-import AdminGlobal_ComponentBackButton from "./back_button";
-import { APIs, pathAssetImage } from "@/app/lib";
+import Admin_ComponentBackButton from "./back_button";
+import { APIs, pathAssetImage } from "@/lib";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
 export function Admin_ComponentPreviewImageAdmin({
   fileId,
+  size,
 }: {
   fileId: string;
+  size?: string;
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: size || "1000" });
 
   useShallowEffect(() => {
     onLoadImage();
@@ -34,19 +37,21 @@ export function Admin_ComponentPreviewImageAdmin({
   return (
     <>
       <Stack>
-        <AdminGlobal_ComponentBackButton />
-        <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"}>
+        <Admin_ComponentBackButton />
+        <Box style={{ zIndex: 0 }} h={"80vh"} pos={"static"} px={"lg"}>
           {isImage === null ? (
             <Center>
-              <Skeleton height={300} w={200} radius={"sm"} />
+              <CustomSkeleton height={500} w={300} radius={"sm"} />
             </Center>
           ) : isImage ? (
-            <ScrollArea h={"100%"}>
-              <Center>
-                <Image alt="Image" src={url} maw={500} miw={200} />
-              </Center>
-            </ScrollArea>
+            <Center>
+              <Image alt="Image" src={url} maw={300} />
+            </Center>
           ) : (
+            // <ScrollArea h={"100%"}>
+            //   <Center>
+            //   </Center>
+            // </ScrollArea>
             <Box
               bg={"gray"}
               style={{

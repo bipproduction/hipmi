@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { revalidatePath } from "next/cache";
 
@@ -8,17 +8,49 @@ export async function forum_funCreateKomentar(
   postingId: string,
   komentar: string
 ) {
-  const userLoginId = await funGetUserIdByToken();
+  try {
+    const userLoginId = await funGetUserIdByToken();
 
-  const create = await prisma.forum_Komentar.create({
-    data: {
-      komentar: komentar,
-      forum_PostingId: postingId,
-      authorId: userLoginId,
-    },
-  });
+    const create = await prisma.forum_Komentar.create({
+      data: {
+        komentar: komentar,
+        forum_PostingId: postingId,
+        authorId: userLoginId,
+      },
+      select: {
+        id: true,
+        isActive: true,
+        komentar: true,
+        createdAt: true,
+        Author: {
+          select: {
+            id: true,
+            username: true,
+            Profile: {
+              select: {
+                name: true,
+                imageId: true,
+              },
+            },
+          },
+        },
+        authorId: true,
+      },
+    });
 
-  if (!create) return { status: 400, message: "Gagal menambahkan komentar" };
-  revalidatePath("/dev/forum/detail");
-  return { status: 201, message: "Berhasil menambahkan komentar" };
+    if (!create) return { status: 400, message: "Gagal menambahkan komentar" };
+
+    return {
+      status: 201,
+      message: "Berhasil menambahkan komentar",
+      data: create,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Error API",
+      error: (error as Error).message,
+    };
+  }
 }

@@ -1,7 +1,7 @@
 import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
-} from "@/app/lib/router_hipmi/router_investasi";
+} from "@/lib/router_hipmi/router_investasi";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { SimpleGrid, Stack, ActionIcon, Text } from "@mantine/core";
 import {
@@ -47,13 +47,13 @@ export function Investasi_ComponentFooterMain() {
 
   return (
     <>
-      <SimpleGrid cols={listFooter.length} h={"9vh"} mx={"xs"}>
+      <SimpleGrid cols={listFooter.length} h={"9vh"} mx={"xs"} w={"100%"}>
         {listFooter.map((e: any, i) => (
           <Stack key={i} align="center" justify="center" spacing={0}>
             <ActionIcon
               // disabled={e.path === "" ? true : false}
               variant="transparent"
-              c={hotMenu === i ? MainColor.yellow : "white"}
+              c={hotMenu === i ? MainColor.yellow : MainColor.white}
               onClick={() => {
                 router.push(e.route, { scroll: false });
                 setHotMenu(i);
@@ -62,7 +62,7 @@ export function Investasi_ComponentFooterMain() {
               {e.icon}
             </ActionIcon>
             <Text
-              c={hotMenu === i ? MainColor.yellow : "white"}
+              c={hotMenu === i ? MainColor.yellow : MainColor.white}
               fz={"xs"}
               lineClamp={1}
             >

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 
 export async function job_funGetAllByStatusId({

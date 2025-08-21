@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function forum_getOnePostingById(postingId: string) {
   const data = await prisma.forum_Posting.findFirst({

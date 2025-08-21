@@ -5,7 +5,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { IconBriefcase } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { useRouter } from "next/navigation";
 import { gs_job_hot_menu } from "../global_state";
 

@@ -26,7 +26,7 @@ import { AdminDonasi_funUpdateStatusInvoice } from "../../fun/update/fun_update_
 import { AdminDonasi_getListStatusInvoiceProses } from "../../fun/get/get_list_status_invoice_proses";
 import { AdminDonasi_funUpdateProgresDanTerkumpul } from "../../fun/update/fun_update_progres_dan_terkumpul";
 import { useDisclosure } from "@mantine/hooks";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "@/app_modules/admin/_admin_global/admin_notifikasi/notifikasi_gagal";
 

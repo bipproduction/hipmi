@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import {
   MODEL_VOTING,
   MODEL_VOTING_DAFTAR_NAMA_VOTE,
@@ -19,7 +19,7 @@ export async function Vote_funEditById(
     },
     data: {
       title: data.title,
-      deskripsi: data.deskripsi,
+      deskripsi: data.deskripsi.trim(),
       awalVote: data.awalVote,
       akhirVote: data.akhirVote,
     },

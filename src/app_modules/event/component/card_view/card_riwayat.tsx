@@ -1,4 +1,4 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { Group, Stack, Text, Title } from "@mantine/core";
 
 import {
@@ -8,7 +8,8 @@ import {
 } from "@/app_modules/_global/component";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
   const router = useRouter();
@@ -19,13 +20,6 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
     <>
       <ComponentGlobal_CardStyles marginBottom={"15px"}>
         <Stack>
-          {/* <ComponentGlobal_AuthorNameOnHeader
-            profileId={data.Author?.Profile?.id}
-            imagesId={data.Author?.Profile?.imagesId}
-            authorName={data.Author?.Profile?.name}
-            isPembatas={true}
-          /> */}
-
           <ComponentGlobal_AvatarAndUsername
             profile={data.Author?.Profile as any}
           />
@@ -45,12 +39,15 @@ export function ComponentEvent_CardRiwayat({ data }: { data: MODEL_EVENT }) {
               <Text align="right" fz={"sm"} lineClamp={1}>
                 {new Intl.DateTimeFormat("id-ID", {
                   dateStyle: "medium",
-                }).format(data.tanggal)}
+                }).format(new Date(data.tanggal))}
               </Text>
             </Group>
 
-            <Text fz={"sm"} lineClamp={2}>
-              {data.deskripsi}
+            <Text fz={"sm"} lineClamp={4}>
+              <Comp_SetInnerHTML
+                props={data.deskripsi}
+                style={{ height: 50 }}
+              />
             </Text>
           </Stack>
 

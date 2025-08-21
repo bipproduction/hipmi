@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import prisma from "@/lib/prisma";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { revalidatePath } from "next/cache";
 import { MODEL_DONASI } from "../../model/interface";
 import { Donasi_funDeleteTemporaryCreate } from "../delete/fun_delete_temporary_create";

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import {
   Box,
@@ -12,7 +12,7 @@ import { ScrollOnly } from "next-scroll-loader";
 import { useState } from "react";
 import ComponentEvent_BoxListStatus from "../../component/box_list_status";
 import { event_getAllReject } from "../../fun/get/status/get_all_reject";
-import { MODEL_EVENT } from "../../model/interface";
+import { MODEL_EVENT } from "../../_lib/interface";
 
 export default function Event_StatusReject({
   listReject,

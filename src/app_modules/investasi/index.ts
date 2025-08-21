@@ -1,4 +1,4 @@
-import InvestasiCreate from "./create/view";
+import InvestasiCreateNew from "./create/view_new";
 import InvestasiCreateLayout from "./create/layout";
 import DetailInvestasi from "./detail/view";
 import LayoutDetailInvestasi from "./detail/layout";
@@ -6,10 +6,6 @@ import PortofolioInvestasi from "./portofolio/view";
 import LayoutPortofolioInvestasi from "./portofolio/layout";
 import EditIntroInvestasi from "./edit_intro/view";
 import LayoutEditIntroInvestasi from "./edit_intro/layout";
-import EditProspektusInvestasi from "./edit_propektus/view";
-import LayoutEditProspektusInvestasi from "./edit_propektus/layout";
-import EditDokumenInvestasi from "./edit_dokumen/view";
-import LayoutEditDokumenInvestasi from "./edit_dokumen/layout";
 import EditBeritaInvestasi from "./edit_berita/view";
 import LayoutEditBeritaInvestasi from "./edit_berita/layout";
 import DetailPropektus from "./detail_prospektus/view";
@@ -49,7 +45,6 @@ import StatusPesananInvetsatsi from "./status_pesanan/view";
 import LayoutStatusPesananInvestasi from "./status_pesanan/layout";
 
 export {
-  InvestasiCreate,
   InvestasiCreateLayout,
   DetailInvestasi,
   LayoutDetailInvestasi,
@@ -57,10 +52,6 @@ export {
   LayoutPortofolioInvestasi,
   EditIntroInvestasi,
   LayoutEditIntroInvestasi,
-  EditProspektusInvestasi,
-  LayoutEditProspektusInvestasi,
-  EditDokumenInvestasi,
-  LayoutEditDokumenInvestasi,
   EditBeritaInvestasi,
   LayoutEditBeritaInvestasi,
   DetailPropektus,
@@ -98,4 +89,5 @@ export {
   LayoutProsesTransaksiInvestasi,
   StatusPesananInvetsatsi,
   LayoutStatusPesananInvestasi,
+  InvestasiCreateNew
 };

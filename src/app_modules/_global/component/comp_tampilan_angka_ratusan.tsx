@@ -1,4 +1,5 @@
 import { Group, Text } from "@mantine/core";
+import { MainColor } from "../color";
 
 export default function ComponentGlobal_TampilanAngkaRatusan({
   nominal,
@@ -32,7 +33,7 @@ export default function ComponentGlobal_TampilanAngkaRatusan({
           fw={fontWeight ? fontWeight : "bold"}
           fz={fontSize ? fontSize : "md"}
           style={{
-            color: color ? color : "white",
+            color: color ? color : MainColor.white,
           }}
         >
           {new Intl.NumberFormat("id-ID", { maximumFractionDigits: 10 }).format(
@@ -43,6 +44,9 @@ export default function ComponentGlobal_TampilanAngkaRatusan({
           <Text
             fw={fontWeight ? fontWeight : "bold"}
             fz={fontSize ? fontSize : "md"}
+            style={{
+              color: color ? color : MainColor.white,
+            }}
           >
             {textAfter}
           </Text>

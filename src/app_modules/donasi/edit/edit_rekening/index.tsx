@@ -1,27 +1,45 @@
 "use client";
 
-import { Button, Stack, TextInput } from "@mantine/core";
-import { MODEL_DONASI } from "../../model/interface";
-import { useState } from "react";
-import _ from "lodash";
-import { useRouter } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Donasi_funUpdateRekening } from "../../fun/update/fun_update_rekening";
-import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
+import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
 } from "@/app_modules/_global/notif_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { Button, Stack, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { Donasi_funUpdateRekening } from "../../fun/update/fun_update_rekening";
+import { apiGetOneDonasiById } from "../../lib/api_donasi";
+import { MODEL_DONASI } from "../../model/interface";
 
-export default function Donasi_EditRekening({
-  dataDonasi,
-}: {
-  dataDonasi: MODEL_DONASI;
-}) {
+export default function Donasi_EditRekening() {
+  const { id } = useParams();
   const router = useRouter();
-  const [donasi, setDonasi] = useState(dataDonasi);
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
   const [isLoading, setLoading] = useState(false);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetOneDonasiById(id as string, "semua");
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error get data donasi", error);
+    }
+  }
+
+  if (!data) return <CustomSkeleton height={300} />;
 
   return (
     <>
@@ -36,17 +54,17 @@ export default function Donasi_EditRekening({
             withAsterisk
             label="Nama Bank"
             placeholder="Masukan Nama Bank"
-            value={donasi.namaBank}
+            value={data.namaBank}
             error={
-              donasi.namaBank === "" ? (
+              data.namaBank === "" ? (
                 <ComponentGlobal_ErrorInput text="Masukan nama bank" />
               ) : (
                 ""
               )
             }
             onChange={(val) =>
-              setDonasi({
-                ...donasi,
+              setData({
+                ...data,
                 namaBank: _.upperCase(val.target.value),
               })
             }
@@ -61,17 +79,17 @@ export default function Donasi_EditRekening({
             type="number"
             label="Nomor Rekening"
             placeholder="Masukkan Nomor Rekening"
-            value={donasi.rekening}
+            value={data.rekening}
             error={
-              donasi.rekening === "" ? (
+              data.rekening === "" ? (
                 <ComponentGlobal_ErrorInput text="Masukan nomor rekening" />
               ) : (
                 ""
               )
             }
             onChange={(val) =>
-              setDonasi({
-                ...donasi,
+              setData({
+                ...data,
                 rekening: val.currentTarget.value,
               })
             }
@@ -83,11 +101,9 @@ export default function Donasi_EditRekening({
           }}
           loaderPosition="center"
           loading={isLoading ? true : false}
-          disabled={
-            donasi.namaBank === "" || donasi.rekening === "" ? true : false
-          }
+          disabled={data.namaBank === "" || data.rekening === "" ? true : false}
           radius={"xl"}
-          onClick={() => onUpdate(router, donasi, setLoading)}
+          onClick={() => onUpdate(router, data, setLoading)}
           bg={MainColor.yellow}
           color="yellow"
           c={"black"}

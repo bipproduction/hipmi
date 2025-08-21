@@ -1,120 +1,153 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
+import { IRealtimeData } from "@/lib/global_state";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToUser_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_user";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
+import { apiGetEventCekPeserta } from "../../_lib/api_event";
 import ComponentEvent_DetailMainData from "../../component/detail/detail_main";
-import ComponentEvent_ListPeserta from "../../component/detail/list_peserta";
-import { Event_countTotalPesertaById } from "../../fun/count/count_total_peserta_by_id";
 import { Event_funJoinEvent } from "../../fun/create/fun_join_event";
-import { Event_getListPesertaById } from "../../fun/get/get_list_peserta_by_id";
-import { MODEL_EVENT, MODEL_EVENT_PESERTA } from "../../model/interface";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
 
-export default function Event_DetailMain({
-  dataEvent,
-  listPeserta,
-  userLoginId,
-  isJoin,
-  totalPeserta,
-}: {
-  dataEvent: MODEL_EVENT;
-  listPeserta: MODEL_EVENT_PESERTA[];
-  userLoginId: string;
-  isJoin: boolean;
-  totalPeserta: number;
-}) {
-  const router = useRouter();
-  const [total, setTotal] = useState(totalPeserta);
-  const [peserta, setPeserta] = useState(listPeserta);
+export default function Event_DetailMain() {
+  const params = useParams<{ id: string }>();
+  const eventId = params.id;
   const [isLoading, setLoading] = useState(false);
+  const [isJoinSuccess, setIsJoinSuccess] = useState<boolean | null>(null);
+  // const [isNewPeserta, setIsNewPeserta] = useState<boolean | null>(null);
+
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+        const responseData = await apiGetEventCekPeserta({
+          userId: response.userId,
+          eventId: eventId,
+        });
+
+        if (responseData) {
+          setIsJoinSuccess(responseData.data);
+        }
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
+
+  // useShallowEffect(() => {
+  //   onCheckPeserta();
+  // }, []);
+
+  // async function onCheckPeserta() {
+  //   try {
+  //     const respone = await apiGetEventCekPeserta({
+  //       userId: userLoginId,
+  //       eventId: eventId,
+  //     });
+
+  //     if (respone) {
+  //       setIsJoinSuccess(respone.data);
+  //     }
+  //   } catch (error) {
+  //     clientLogger.error("Error check peserta", error);
+  //   }
+  // }
+
+  // [ON JOIN BUTTON]
+  async function onJoin() {
+    const body = {
+      userId: userLoginId,
+      eventId: eventId,
+    };
+
+    try {
+      setLoading(true);
+      const res = await Event_funJoinEvent(body as any);
+      if (res.status === 200) {
+        if (userLoginId !== res.data?.Event?.authorId) {
+          const dataNotifikasi: IRealtimeData = {
+            appId: res?.data?.Event?.id as any,
+            status: "Peserta Event" as any,
+            userId: res.data?.Event?.authorId as any,
+            pesan: res.data?.Event?.title as any,
+            kategoriApp: "EVENT",
+            title: "Peserta baru event anda !",
+          };
+
+          const createNotifikasi = await notifikasiToUser_funCreate({
+            data: dataNotifikasi as any,
+          });
+
+          if (createNotifikasi.status === 201) {
+            WibuRealtime.setData({
+              type: "notification",
+              pushNotificationTo: "USER",
+              dataMessage: dataNotifikasi,
+            });
+          }
+        }
+        setIsJoinSuccess(true);
+        setLoading(false);
+        ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error join event", error);
+    }
+  }
 
   return (
     <>
       <Stack spacing={"lg"} pb={"md"}>
-        <ComponentEvent_DetailMainData data={dataEvent} />
-        {isJoin ? (
+        <ComponentEvent_DetailMainData />
+
+        {isJoinSuccess == null || !userLoginId ? (
+          <CustomSkeleton radius={"xl"} h={40} />
+        ) : isJoinSuccess ? (
           <Button disabled radius={"xl"} color="green">
             Anda Telah Ikut Serta
           </Button>
         ) : (
           <Button
+            style={{ backgroundColor: MainColor.green }}
             loaderPosition="center"
             loading={isLoading ? true : false}
             radius={"xl"}
-            color="green"
+            c={AccentColor.white}
             onClick={() => {
-              onJoin(
-                userLoginId,
-                dataEvent.id,
-                setPeserta,
-                setTotal,
-                setLoading
-              );
+              onJoin();
             }}
           >
             JOIN
           </Button>
         )}
 
-        <ComponentEvent_ListPeserta listPeserta={listPeserta} total={total} />
+        {/* <ComponentEvent_ListPeserta
+          total={total}
+          eventId={eventId}
+          isNewPeserta={isNewPeserta}
+        /> */}
       </Stack>
     </>
   );
-}
-
-async function onJoin(
-  userId: string,
-  eventId: string,
-  setPeserta: any,
-  setTotal: any,
-  setLoading: any
-) {
-  const body = {
-    userId: userId,
-    eventId: eventId,
-  };
-
-  const userLoginId = userId;
-
-  const res = await Event_funJoinEvent(body as any);
-  if (res.status === 200) {
-    const resPeserta = await Event_getListPesertaById(eventId);
-    setPeserta(resPeserta);
-
-    const resTotal = await Event_countTotalPesertaById(eventId);
-    setTotal(resTotal);
-
-    if (userLoginId !== res.data?.Event?.authorId) {
-      const dataNotifikasi: IRealtimeData = {
-        appId: res?.data?.Event?.id as any,
-        status: "Peserta Event" as any,
-        userId: res.data?.Event?.authorId as any,
-        pesan: res.data?.Event?.title as any,
-        kategoriApp: "EVENT",
-        title: "Peserta baru event anda !",
-      };
-
-      const createNotifikasi = await notifikasiToUser_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (createNotifikasi.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "USER",
-          dataMessage: dataNotifikasi,
-        });
-      }
-    }
-
-    setLoading(true);
-    ComponentGlobal_NotifikasiBerhasil(res.message, 2000);
-  } else {
-    ComponentGlobal_NotifikasiGagal(res.message);
-  }
 }

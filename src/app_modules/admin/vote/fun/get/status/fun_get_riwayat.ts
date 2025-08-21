@@ -2,7 +2,7 @@
 
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { ceil } from "lodash";
 
 export async function adminVote_funGetListRiwayat({

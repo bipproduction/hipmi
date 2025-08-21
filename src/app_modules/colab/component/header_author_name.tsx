@@ -3,6 +3,8 @@
 import { ComponentGlobal_AvatarAndUsername } from "@/app_modules/_global/component";
 import { Group, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
+import moment from "moment";
+import "moment/locale/id";
 
 export default function ComponentColab_AuthorNameOnHeader({
   tglPublish,
@@ -19,10 +21,8 @@ export default function ComponentColab_AuthorNameOnHeader({
         component={
           <Group position="right">
             {tglPublish ? (
-              <Text fz={"xs"}>
-                {new Intl.DateTimeFormat("id-ID", {
-                  dateStyle: "medium",
-                }).format(tglPublish)}
+              <Text lineClamp={1}>
+                {moment(tglPublish).locale("id").format("ll")}
               </Text>
             ) : (
               ""
@@ -65,7 +65,7 @@ export default function ComponentColab_AuthorNameOnHeader({
           <Grid.Col span={"content"}>
             <Stack justify="center" h={"100%"}>
               {tglPublish ? (
-                <Text fz={"xs"}>
+                <Text >
                   {new Intl.DateTimeFormat("id-ID", {
                     dateStyle: "medium"
 

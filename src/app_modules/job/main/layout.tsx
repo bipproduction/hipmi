@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { gs_job_hot_menu } from "../global_state";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 
 export default function LayoutJob_Main({
   children,

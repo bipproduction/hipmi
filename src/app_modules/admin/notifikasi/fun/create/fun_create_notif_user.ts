@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 
@@ -23,7 +23,12 @@ export default async function adminNotifikasi_funCreateToUser({
       userRoleId: "1",
     },
   });
-  
-  if (!create) return { status: 400, message: "Gagal mengirim notifikasi" };
+
+  if (!create) {
+    await prisma.$disconnect();
+    return { status: 400, message: "Gagal mengirim notifikasi" };
+  }
+
+  await prisma.$disconnect();
   return { status: 201, message: "Berhasil mengirim notifikasi" };
 }

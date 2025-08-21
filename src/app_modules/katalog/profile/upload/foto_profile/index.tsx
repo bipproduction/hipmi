@@ -1,6 +1,6 @@
 "use client";
 
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import {
   ComponentGlobal_BoxUploadImage,
   ComponentGlobal_ButtonUploadFileImage,
@@ -9,15 +9,38 @@ import { AspectRatio, Center, Image, Stack } from "@mantine/core";
 import { useState } from "react";
 import { Profile_ComponentButtonUpdatePhotoProfile } from "../../_component";
 import { MODEL_PROFILE } from "../../model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { apiGetOneProfileById } from "../../lib/api_fetch_profile";
 
-export default function UploadFotoProfile({
-  dataProfile,
-}: {
-  dataProfile: MODEL_PROFILE;
-}) {
-  const [profile, setProfile] = useState(dataProfile);
+export default function UploadFotoProfile() {
+  const param = useParams<{ id: string }>();
+  const profileId = param.id;
+  const [profile, setProfile] = useState<MODEL_PROFILE | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<any | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneProfileById({ id: profileId });
+      if (response && response.success) {
+        setProfile(response.data);
+      } else {
+        setProfile(null);
+      }
+    } catch (error) {
+      console.log("Error get profile", error);
+      setProfile(null);
+    }
+  };
+
+  if (!profile)
+    return <CustomSkeleton height={300} width={"100%"} radius={"md"} />;
 
   return (
     <>
@@ -27,7 +50,11 @@ export default function UploadFotoProfile({
             <Image
               style={{ maxHeight: 250 }}
               alt="Avatar"
-              src={image ? image : APIs.GET({ fileId: profile.imageId as any })}
+              src={
+                image
+                  ? image
+                  : APIs.GET({ fileId: profile.imageId as any, size: "400" })
+              }
             />
           </AspectRatio>
         </ComponentGlobal_BoxUploadImage>
@@ -37,9 +64,11 @@ export default function UploadFotoProfile({
             onSetImage={setImage}
           />
         </Center>
+        
         <Profile_ComponentButtonUpdatePhotoProfile
           file={file as any}
           profileId={profile.id}
+          fileId={profile.imageId as string}
         />
       </Stack>
     </>

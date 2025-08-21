@@ -11,7 +11,7 @@ import {
 import { IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AccentColor } from "../color/color_pallet";
+import { AccentColor, MainColor } from "../color/color_pallet";
 import ComponentGlobal_Loader from "../component/loader";
 
 interface MODEL_DRAWER {
@@ -28,13 +28,13 @@ export default function UIGlobal_Drawer({
   opened: boolean;
   close: () => void;
   component:
-    | {
-        id: string;
-        name: string;
-        icon: string;
-        path: string;
-      }[]
-    | any[];
+  | {
+    id: string;
+    name: string;
+    icon: string;
+    path: string;
+  }[]
+  | any[];
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ export default function UIGlobal_Drawer({
             borderRight: `1px solid ${AccentColor.blue}`,
             borderLeft: `1px solid ${AccentColor.blue}`,
             borderRadius: "20px 20px 0px 0px",
-            color: "white",
+            color: MainColor.white,
             paddingBottom: "5%",
           },
         }}
@@ -72,28 +72,35 @@ export default function UIGlobal_Drawer({
         <Stack spacing={"xs"}>
           <Group position="right">
             <ActionIcon onClick={close} variant="transparent">
-              <IconX color="white" />
+              <IconX color={MainColor.white} />
             </ActionIcon>
           </Group>
           <SimpleGrid cols={component.length < 4 ? component.length : 4}>
             {component.map((e, i) => (
-              <Stack key={i} align="center" spacing={"xs"}>
+              <Stack key={i} align="center" spacing={"xs"} 
+                onClick={() => {
+                  setPageId(e?.id);
+                  setIsLoading(true);
+                  router.push(e?.path, { scroll: false });
+                }}
+              >
                 <ActionIcon
                   variant="transparent"
-                  c="white"
-                  onClick={() => {
-                    setPageId(e?.id);
-                    setIsLoading(true);
-                    router.push(e?.path, {scroll: false});
-                  }}
+                  c={MainColor.white}
                 >
-                  {isLoading && e?.id === pageId ? (
+                  {/* PAKE LOADING */}
+                  {/* {isLoading && e?.id === pageId ? (
                     <ComponentGlobal_Loader />
                   ) : (
                     e?.icon
-                  )}
+                  )} */}
+
+
+                  {/* GA PAKE LOADING */}
+                  {e?.icon}
+
                 </ActionIcon>
-                <Text fz={"sm"} align="center" color="white">
+                <Text fz={"sm"} align="center" color={MainColor.white}>
                   {e?.name}
                 </Text>
               </Stack>

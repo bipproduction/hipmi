@@ -1,7 +1,7 @@
 "use client";
 
-import { pathAssetImage, RouterImagePreview } from "@/app/lib";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { pathAssetImage, RouterImagePreview } from "@/lib";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import {
   MODEL_VOTE_KONTRIBUTOR,
   MODEL_VOTING_DAFTAR_NAMA_VOTE,

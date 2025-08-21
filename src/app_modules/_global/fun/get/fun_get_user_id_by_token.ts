@@ -1,27 +1,33 @@
 "use server";
 
-import { prisma } from "@/app/lib";
-import { ServerEnv } from "@/app/lib/server_env";
-import { unsealData } from "iron-session";
 import { cookies } from "next/headers";
+import { decrypt } from "../../../../app/(auth)/_lib/decrypt";
 
 export async function funGetUserIdByToken() {
-   const c = cookies().get(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!);
+  const SESSION_KEY = process.env.NEXT_PUBLIC_BASE_SESSION_KEY;
 
-  //  const token = JSON.parse(
-  //    await unsealData(c?.value as string, {
-  //      password: process.env.WIBU_PWD as string,
-  //    })
-  //  );
-  //  return token.id;
+  if (!SESSION_KEY) {
+    console.warn("SESSION_KEY tidak ditemukan");
+    return null;
+  }
 
-  const token = c?.value
-  const cekToken = await prisma.userSession.findFirst({
-    where: {
-      token: token,
-    },
-  });
+  const cookieStore = cookies();
+  const c = cookieStore.get(SESSION_KEY);
 
-  // if (cekToken === null) return null
-  return cekToken?.userId
+  if (!c?.value) {
+    console.warn("Cookie tidak ditemukan");
+    return null;
+  }
+
+  try {
+    const cekUser = await decrypt({
+      token: c.value,
+      encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
+    });
+
+    return cekUser?.id || null;
+  } catch (error) {
+    console.error("Gagal mendekripsi token:", error);
+    return null;
+  }
 }

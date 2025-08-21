@@ -1,13 +1,17 @@
-import { sessionCreate } from "@/app/auth/_lib/session_create";
-import prisma from "@/app/lib/prisma";
-import { ServerEnv } from "@/app/lib/server_env";
-import { sealData } from "iron-session";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { sessionCreate } from "@/app/(auth)/_lib/session_create";
+import prisma from "@/lib/prisma";
+import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  if (req.method === "POST") {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { success: false, message: "Method Not Allowed" },
+      { status: 405 }
+    );
+  }
+
+  try {
     const { nomor } = await req.json();
 
     const dataUser = await prisma.user.findUnique({
@@ -23,11 +27,10 @@ export async function POST(req: Request) {
       },
     });
 
-
-    if (dataUser === null)
-      return new Response(
-        JSON.stringify({ success: false, message: "Nomor Belum Terdaftar" }),
-        { status: 404 }
+    if (dataUser == null)
+      return NextResponse.json(
+        { success: false, message: "Nomor Belum Terdaftar" },
+        { status: 200 }
       );
 
     const token = await sessionCreate({
@@ -36,72 +39,44 @@ export async function POST(req: Request) {
       user: dataUser as any,
     });
 
-    const cekSessionUser = await prisma.userSession.findFirst({
-      where: {
-        userId: dataUser.id,
-      },
-    });
-
-    if (cekSessionUser !== null) {
-      await prisma.userSession.delete({
-        where: {
-          userId: dataUser.id,
-        },
-      });
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: "Gagal membuat session" },
+        { status: 500 }
+      );
     }
-
-    try {
-      const createUserSession = await prisma.userSession.create({
-        data: {
-          token: token as string,
-          userId: dataUser.id,
-        },
-      });
-
-      if (!createUserSession)
-        return new Response(
-          JSON.stringify({ success: false, message: "Gagal Membuat Session" }),
-          { status: 400 }
-        );
-    } catch (error) {
-      console.log(error);
-    }
-
-    // if (data) {
-    //   const res = await sealData(
-    //     JSON.stringify({
-    //       id: data.id,
-    //       username: data.username,
-    //     }),
-    //     {
-    //       password: ServerEnv.value?.WIBU_PWD as string,
-    //     }
-    //   );
-
-    //   cookies().set({
-    //     name: "mySession",
-    //     value: res,
-    //     maxAge: 60 * 60 * 24 * 7,
-    //   });
-
-    //   revalidatePath("/dev/home");
-
-    //   return NextResponse.json({ status: 200, data });
-    // }
-
-    // return NextResponse.json({ success: true });
-    return new Response(
-      JSON.stringify({
+    // Buat response dengan token dalam cookie
+    const response = NextResponse.json(
+      {
         success: true,
         message: "Berhasil Login",
         roleId: dataUser.masterUserRoleId,
         active: dataUser.active,
-      }),
+        token: token,
+      },
       { status: 200 }
     );
+
+    // Set cookie dengan token yang sudah dipastikan tidak null
+    response.cookies.set(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!, token, {
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 30 * 24 * 60 * 60, // 30 hari dalam detik (1 bulan)
+    });
+
+    return response;
+  } catch (error) {
+    backendLogger.log("API Error or Server Error", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Maaf, Terjadi Keselahan",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
-  return new Response(
-    JSON.stringify({ success: false, message: "Method Not Allowed" }),
-    { status: 405 }
-  );
 }

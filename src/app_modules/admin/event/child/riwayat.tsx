@@ -1,165 +1,168 @@
 "use client";
 
-import { RouterAdminEvent } from "@/app/lib/router_admin/router_admin_event";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import { apiGetAdminEventRiwayat } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { clientLogger } from "@/util/clientLogger";
 import {
-  Button,
+  Box,
   Center,
   Group,
-  Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
-import { IconCircleCheck, IconSearch } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
-import { adminEvent_funGetListAllRiwayat } from "../fun";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
-export default function AdminEvent_Riwayat({
-  listRiwayat,
-}: {
-  listRiwayat: any;
-}) {
+export default function AdminEvent_Riwayat() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Event: Riwayat" />
-        <DetailRiwayat listRiwayat={listRiwayat} />
+        <DetailRiwayat />
       </Stack>
     </>
   );
 }
 
-function DetailRiwayat({ listRiwayat }: { listRiwayat: any }) {
+function DetailRiwayat() {
   const router = useRouter();
   const [eventId, setEventId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [data, setData] = useState<MODEL_EVENT[]>(listRiwayat.data);
-  const [isNPage, setNPage] = useState(listRiwayat.nPage);
-  const [isActivePage, setActivePage] = useState(1);
+  const [data, setData] = useState<MODEL_EVENT[] | null>(null);
+  const [isNPage, setNPage] = useState(1);
+  const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminEvent_funGetListAllRiwayat({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminEventRiwayat({
+          page: `${activePage}`,
+          search: isSearch,
+        });
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminEvent_funGetListAllRiwayat({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+    };
 
-  const TableRows = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Button
-          loaderPosition="center"
-          loading={e.id === eventId && loading ? true : false}
-          color={"green"}
-          leftIcon={<IconCircleCheck />}
-          radius={"xl"}
-          onClick={() => {
-            setEventId(e.id);
-            setLoading(true);
-            router.push(RouterAdminEvent.detail_peserta + e.id);
-          }}
-        >
-          Lihat Peserta
-        </Button>
-      </td>
+    loadInitialData();
+  }, [activePage, isSearch]);
 
-      <td>
-        <Center w={200}>
-          <Text>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={2}>{e.title}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text>{e.lokasi}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text>{e.EventMaster_TipeAcara.name}</Text>
-        </Center>
-      </td>
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
+  };
 
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggal)}
-            ,{" "}
-            <Text span inherit>
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
+
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggal)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggal))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggal))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggalSelesai)}
-            ,{" "}
-            <Text span inherit>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggalSelesai)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggalSelesai))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggalSelesai))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
+          </Center>
+        </td>
 
-      <td>
-        <Center w={400}>
-          <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
-            {e.deskripsi}
-          </Spoiler>
-        </Center>
-      </td>
-    </tr>
-  ));
+        <td>
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
         <Group
           position="apart"
-          bg={"gray.4"}
+          bg={AdminColor.softBlue}
           p={"xs"}
           style={{ borderRadius: "6px" }}
         >
-          <Title order={4}>Riwayat</Title>
+          <Title c={AdminColor.white} order={4}>
+            Riwayat
+          </Title>
           <TextInput
             icon={<IconSearch size={20} />}
             radius={"xl"}
@@ -170,58 +173,53 @@ function DetailRiwayat({ listRiwayat }: { listRiwayat: any }) {
           />
         </Group>
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={"100%"}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                  <th>
-                    <Center>Username</Center>
-                  </th>
-                  <th>
-                    <Center>Judul</Center>
-                  </th>
-                  <th>
-                    <Center>Lokasi</Center>
-                  </th>
-                  <th>
-                    <Center>Tipe Acara</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Mulai</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Selesai</Center>
-                  </th>
-                  <th>
-                    <Center>Deskripsi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{TableRows}</tbody>
-            </Table>
-          </ScrollArea>
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={"100%"}
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Username</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Judul</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Mulai
+                      </Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Selesai
+                      </Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
 
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
               total={isNPage}
               onChange={(val) => {
                 onPageClick(val);
               }}
             />
-          </Center>
-        </Paper>
+          </Paper>
+        )}
       </Stack>
     </>
   );

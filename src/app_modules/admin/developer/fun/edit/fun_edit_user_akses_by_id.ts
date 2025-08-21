@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminDeveloper } from "@/app/lib/router_admin/router_admin_developer";
+import prisma from "@/lib/prisma";
+import { RouterAdminDeveloper } from "@/lib/router_admin/router_admin_developer";
 import { revalidatePath } from "next/cache";
 
 export default async function adminDeveloper_funEditUserAksesById(

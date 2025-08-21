@@ -1,49 +1,64 @@
 "use client";
 
-import { DIRECTORY_ID } from "@/app/lib";
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
+import { ComponentGlobal_ButtonUploadFileImage } from "@/app_modules/_global/component";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import notifikasiToAdmin_funCreate from "@/app_modules/notifikasi/fun/create/create_notif_to_admin";
+import { DIRECTORY_ID } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import {
   Button,
   Center,
   CopyButton,
-  FileButton,
   Grid,
   Group,
   Paper,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
-import { IconCamera, IconCircleCheck } from "@tabler/icons-react";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconCircleCheck } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import TampilanRupiahDonasi from "../../component/tampilan_rupiah";
 import { Donasi_funUpdateStatusInvoice } from "../../fun/update/fun_update_status_invoice";
 import { gs_donasi_hot_menu } from "../../global_state";
+import { apiGetDonasiInvoiceById } from "../../lib/api_donasi";
 import { MODEL_DONASI_INVOICE } from "../../model/interface";
 
-export default function Donasi_InvoiceProses({
-  dataInvoice,
-}: {
-  dataInvoice: MODEL_DONASI_INVOICE;
-}) {
-  const [invoice, setDataInvoice] = useState(dataInvoice);
+export default function Donasi_InvoiceProses() {
+  const param = useParams<{ id: string }>();
+  const [invoice, setDataInvoice] = useState<MODEL_DONASI_INVOICE | null>(null);
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [active, setActive] = useAtom(gs_donasi_hot_menu);
   const [isLoading, setLoading] = useState(false);
+
+  useShallowEffect(() => {
+    onLoadInvoice();
+  }, []);
+
+  async function onLoadInvoice() {
+    try {
+      const response = await apiGetDonasiInvoiceById({ id: param.id });
+      if (response.success) {
+        setDataInvoice(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function onClick() {
     try {
@@ -55,24 +70,16 @@ export default function Donasi_InvoiceProses({
 
       if (!uploadImage.success) {
         setLoading(false);
-        return ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+        return;
       }
 
       const res = await Donasi_funUpdateStatusInvoice({
-        invoiceId: invoice.id,
+        invoiceId: invoice?.id as any,
         statusId: "2",
         fileId: uploadImage.data.id,
       });
       if (res.status === 200) {
-        // const dataNotif: any = {
-        //   appId: res.data?.Donasi?.id as any,
-        //   userId: res.data?.Donasi?.authorId as any,
-        //   pesan: res.data?.Donasi?.title as any,
-        //   status: res.data?.DonasiMaster_StatusInvoice?.name,
-        //   kategoriApp: "DONASI",
-        //   title: "Donatur melakukan transfer",
-        // };
-
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.Donasi?.id as any,
           status: res.data?.DonasiMaster_StatusInvoice?.name as any,
@@ -87,23 +94,27 @@ export default function Donasi_InvoiceProses({
         });
 
         if (notif.status === 201) {
-           WibuRealtime.setData({
-             type: "notification",
-             pushNotificationTo: "ADMIN",
-           });
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
           ComponentGlobal_NotifikasiBerhasil(res.message);
           setActive(2);
-          router.push(RouterDonasi.proses_transaksi + `${invoice.id}`);
-          setLoading(false);
+          router.push(RouterDonasi.proses_transaksi + `${invoice?.id}`);
         }
       } else {
         ComponentGlobal_NotifikasiGagal(res.message);
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      console.error("Error upload data invoice", error);
     }
+  }
+
+  if (!invoice) {
+    return <CustomSkeleton height={400} />;
   }
 
   return (
@@ -259,35 +270,9 @@ export default function Donasi_InvoiceProses({
         >
           <Stack spacing={"sm"}>
             <Center>
-              <FileButton
-                onChange={async (files: any | null) => {
-                  try {
-                    // const buffer = URL.createObjectURL(
-                    //   new Blob([new Uint8Array(await files.arrayBuffer())])
-                    // );
-                    // console.log(buffer, "ini buffer");
-
-                    setFile(files);
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }}
-                accept="image/png,image/jpeg"
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    radius={"xl"}
-                    leftIcon={<IconCamera />}
-                    bg={MainColor.yellow}
-                    color="yellow"
-                    c={"black"}
-                  >
-                    Upload
-                  </Button>
-                )}
-              </FileButton>
+              <ComponentGlobal_ButtonUploadFileImage onSetFile={setFile} />
             </Center>
+
             {file ? (
               <Center>
                 <Group spacing={"xs"}>

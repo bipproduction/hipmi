@@ -4,14 +4,11 @@ import {
   ComponentGlobal_CardStyles,
   ComponentGlobal_LoadImage,
 } from "@/app_modules/_global/component";
-import { Box, Center, Skeleton, Stack, Text } from "@mantine/core";
+import { Center, Stack, Text } from "@mantine/core";
 import { MODEL_JOB } from "../../model/interface";
+import { Job_SkeletonDetailJob } from "../skeleton/comp_skeleton_beranda";
 
-export default function ComponentJob_DetailData({
-  data,
-}: {
-  data?: MODEL_JOB;
-}) {
+export default function ComponentJob_DetailData({ data }: { data: MODEL_JOB }) {
   return (
     <>
       {data ? (
@@ -39,24 +36,7 @@ export default function ComponentJob_DetailData({
           </Stack>
         </ComponentGlobal_CardStyles>
       ) : (
-        <ComponentGlobal_CardStyles>
-          <Stack spacing={"xl"}>
-            <Stack align="center">
-              <Skeleton h={250} w={200} radius="md" />
-              <Skeleton h={10} w={200} />
-            </Stack>
-
-            {Array.from(new Array(2)).map((e, i) => (
-              <Stack key={i}>
-                <Skeleton h={10} w={100} />
-
-                {Array.from({ length: 3 }).map((_, ii) => (
-                  <Skeleton h={10} key={ii} />
-                ))}
-              </Stack>
-            ))}
-          </Stack>
-        </ComponentGlobal_CardStyles>
+        <Job_SkeletonDetailJob />
       )}
     </>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { Footer, Center, Button } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -28,13 +28,19 @@ export default function ButtonDonasi({ donasiId }: { donasiId: string }) {
       <Footer
         height={70}
         px={"md"}
-        sx={{ borderStyle: "none", backgroundColor: "transparent" }}
+        style={{
+          borderStyle: "none",
+          backgroundColor: "transparent",
+          width: "100%",
+        }}
       >
         <Center h={70}>
           <Button
+            style={{
+              width: "100%",
+            }}
             loaderPosition="center"
             loading={isLoading ? true : false}
-            w={"100%"}
             radius={"xl"}
             onClick={() => onClick()}
             bg={MainColor.yellow}

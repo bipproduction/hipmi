@@ -25,7 +25,7 @@ export default function UIGlobal_DrawerCustom({
 }: {
   opened: boolean;
   close: () => void;
-  component: React.ReactNode;
+   component: React.ReactNode;
 }) {
   return (
     <>
@@ -44,6 +44,7 @@ export default function UIGlobal_DrawerCustom({
             left: 0,
             right: 0,
             width: 500,
+            zIndex:10
           },
           body: {
             backgroundColor: AccentColor.darkblue,

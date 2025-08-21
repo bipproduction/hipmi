@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import userRole from "../../../bin/seeder/user_role.json";
 import bidangBisnis from "../../../bin/seeder/bidang_bisnis.json";

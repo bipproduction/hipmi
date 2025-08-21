@@ -1,6 +1,6 @@
 "use client";
 
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,
@@ -19,46 +19,107 @@ import {
   Text,
 } from "@mantine/core";
 import { IconCamera, IconCircleCheck } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 import { investasi_funUploadBuktiTransferById } from "../../_fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
+import { DIRECTORY_ID } from "@/lib";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
+import { IRealtimeData } from "@/lib/global_state";
+import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { WibuRealtime } from "wibu-pkg";
+import { clientLogger } from "@/util/clientLogger";
+import { ComponentGlobal_ButtonUploadFileImage } from "@/app_modules/_global/component";
+import { useShallowEffect } from "@mantine/hooks";
+import { apiGetInvoiceById } from "../../_lib/api_fetch_new_investasi";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_ViewInvoice({
-  dataInvoice,
-}: {
-  dataInvoice: MODEL_INVOICE_INVESTASI;
-}) {
+export function Investasi_ViewInvoice() {
+  const param = useParams<{ id: string }>();
+  const invoiceId = param.id;
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState(dataInvoice);
+  const [data, setData] = useState<MODEL_INVOICE_INVESTASI | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [img, setImg] = useState<any | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+  }, [invoiceId]);
+
+  async function onLoadData() {
+    try {
+      const response = await apiGetInvoiceById({ id: invoiceId });
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error get invoice", error);
+    }
+  }
 
   async function onUpload() {
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
-      file: file as any,
-      dirId: DIRECTORY_ID.investasi_bukti_transfer,
-    });
+    try {
+      setLoading(true);
+      const uploadFileToStorage = await funGlobal_UploadToStorage({
+        file: file as any,
+        dirId: DIRECTORY_ID.investasi_bukti_transfer,
+      });
 
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload bukti transfer")
+      if (!uploadFileToStorage.success) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload bukti transfer");
+        return;
+      }
 
-    const res = await investasi_funUploadBuktiTransferById({
-      invoiceId: data.id,
-      fileId: uploadFileToStorage.data.id,
-    });
+      const res = await investasi_funUploadBuktiTransferById({
+        invoiceId: invoiceId as string,
+        fileId: uploadFileToStorage.data.id,
+      });
 
-    if (res.status !== 200) return ComponentGlobal_NotifikasiGagal(res.message);
-    ComponentGlobal_NotifikasiBerhasil(res.message);
-    setLoading(true);
-    router.push(NEW_RouterInvestasi.proses_transaksi + data.id, {
-      scroll: false,
-    });
+      if (res.status != 200) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
+        return;
+      }
+
+      const dataNotifikasi: IRealtimeData = {
+        appId: data?.Investasi.id,
+        status: "Proses",
+        userId: data?.authorId as string,
+        pesan: "Bukti transfer telah diupload",
+        kategoriApp: "INVESTASI",
+        title: "Invoice baru",
+      };
+
+      const notif = await notifikasiToAdmin_funCreate({
+        data: dataNotifikasi as any,
+      });
+
+      if (notif.status === 201) {
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "ADMIN",
+          dataMessage: dataNotifikasi,
+        });
+
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+
+        router.push(NEW_RouterInvestasi.proses_transaksi + invoiceId, {
+          scroll: false,
+        });
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error(" Error upload invoice", error);
+    }
+  }
+
+  if (!data) {
+    return <CustomSkeleton height={300}/>
   }
 
   return (
@@ -72,7 +133,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <Title order={5}>Mohon transfer ke rekening dibawah</Title>
@@ -85,7 +146,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
@@ -125,7 +186,7 @@ export function Investasi_ViewInvoice({
                           color={copied ? "teal" : "yellow"}
                           c={"black"}
                         >
-                          {copied ? "Berhasil" : "Salin"}
+                          {copied ? "Disalin" : "Salin"}
                         </Button>
                       )}
                     </CopyButton>
@@ -143,7 +204,7 @@ export function Investasi_ViewInvoice({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
@@ -158,7 +219,7 @@ export function Investasi_ViewInvoice({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
               }}
             >
               <Grid>
@@ -183,7 +244,7 @@ export function Investasi_ViewInvoice({
                           c={"black"}
                           onClick={copy}
                         >
-                          {copied ? "Berhasil" : "Salin"}
+                          {copied ? "Disalin" : "Salin"}
                         </Button>
                       )}
                     </CopyButton>
@@ -207,34 +268,15 @@ export function Investasi_ViewInvoice({
         >
           <Stack spacing={"sm"}>
             <Center>
-              <FileButton
-                onChange={async (files: any | null) => {
-                  try {
-                    setFile(files);
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }}
-                accept="image/png,image/jpeg"
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    radius={"xl"}
-                    leftIcon={<IconCamera />}
-                    bg={MainColor.yellow}
-                    color="yellow"
-                    c={"black"}
-                  >
-                    Upload
-                  </Button>
-                )}
-              </FileButton>
+              <ComponentGlobal_ButtonUploadFileImage
+                onSetFile={setFile}
+                accept="image/png,image/png,image/jpeg,application/pdf"
+              />
             </Center>
             {file ? (
               <Center>
                 <Group spacing={"xs"}>
-                  <Text fz={"xs"} fs={"italic"}>
+                  <Text c={MainColor.white} fz={"xs"} fs={"italic"}>
                     Upload berhasil{" "}
                   </Text>
                   <IconCircleCheck color="green" />
@@ -242,7 +284,7 @@ export function Investasi_ViewInvoice({
               </Center>
             ) : (
               <Center>
-                <Text fz={"xs"} fs={"italic"}>
+                <Text c={MainColor.white} fz={"xs"} fs={"italic"}>
                   Upload bukti transfer anda !
                 </Text>
               </Center>

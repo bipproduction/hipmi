@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import prisma from "@/lib/prisma";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import { revalidatePath } from "next/cache";
 
 export async function adminInvestasi_funEditStatusPublishById({

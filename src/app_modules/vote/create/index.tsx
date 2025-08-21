@@ -1,7 +1,7 @@
 "use client";
 
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -28,6 +28,11 @@ import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Vote_funCreate } from "../fun/create/create_vote";
 import { gs_vote_hotMenu } from "../global_state";
+import { clientLogger } from "@/util/clientLogger";
+import { Component_V3_TextEditor } from "@/app_modules/_global/component/new/comp_V3_text_editor";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
+import Component_V3_Label_TextInput from "@/app_modules/_global/component/new/comp_V3_label_text_input";
 
 export default function Vote_Create() {
   const router = useRouter();
@@ -69,40 +74,46 @@ export default function Vote_Create() {
 
     // console.log("berhasil");
 
-    const res = await Vote_funCreate(data as any, listVote);
-    if (res.status === 201) {
-       const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.Voting_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "VOTING",
-        title: "Voting baru",
-      };
+    try {
+      setIsLoading(true);
+      const res = await Vote_funCreate(data as any, listVote);
+      if (res.status === 201) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.Voting_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "VOTING",
+          title: "Voting baru",
+        };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
         });
 
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "ADMIN",
-          dataMessage: dataNotifikasi,
-        });
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
-        setHotMenu(2);
-        router.replace(RouterVote.status({ id: "2" }));
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setIsLoading(true);
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "ADMIN",
+            dataMessage: dataNotifikasi,
+          });
+
+          setHotMenu(2);
+          router.replace(RouterVote.status({ id: "2" }));
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+        }
+      } else {
+        setIsLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setIsLoading(false);
+      clientLogger.error("Error create voting", error);
     }
   }
 
@@ -113,7 +124,13 @@ export default function Vote_Create() {
           <TextInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             label="Judul"
@@ -127,12 +144,38 @@ export default function Vote_Create() {
               });
             }}
           />
+
           <Stack spacing={5}>
+            <Component_V3_Label_TextInput text="Deskripsi" />
+
+            <Component_V3_TextEditor
+              data={data.deskripsi}
+              onSetData={(val) => {
+                setData({
+                  ...data,
+                  deskripsi: val,
+                });
+              }}
+            />
+
+            <ComponentGlobal_InputCountDown
+              lengthInput={funReplaceHtml({ html: data.deskripsi }).length}
+              maxInput={maxInputLength}
+            />
+          </Stack>
+
+          {/* <Stack spacing={5}>
             <Textarea
               styles={{
                 label: {
-                  color: "white",
+                  color: MainColor.white,
                 },
+                input: {
+                  backgroundColor: MainColor.white,
+                },
+                required: {
+                  color: MainColor.red,
+                }
               }}
               label="Deskripsi"
               autosize
@@ -152,12 +195,18 @@ export default function Vote_Create() {
               maxInput={300}
               lengthInput={data.deskripsi.length}
             />
-          </Stack>
+          </Stack> */}
 
           <DatePickerInput
             styles={{
               label: {
-                color: "white",
+                color: MainColor.white,
+              },
+              input: {
+                backgroundColor: MainColor.white,
+              },
+              required: {
+                color: MainColor.red,
               },
             }}
             label="Jangka Waktu"
@@ -180,7 +229,7 @@ export default function Vote_Create() {
 
         <Stack spacing={0}>
           <Center>
-            <Text fw={"bold"} fz={"sm"} c={"white"}>
+            <Text fw={"bold"} fz={"sm"} c={MainColor.white}>
               Daftar Pilihan
             </Text>
           </Center>
@@ -192,7 +241,13 @@ export default function Vote_Create() {
                   <TextInput
                     styles={{
                       label: {
-                        color: "white",
+                        color: MainColor.white,
+                      },
+                      input: {
+                        backgroundColor: MainColor.white,
+                      },
+                      required: {
+                        color: MainColor.red,
                       },
                     }}
                     label={e.name}
@@ -249,12 +304,11 @@ export default function Vote_Create() {
         <Button
           disabled={
             !data.title ||
-            !data.deskripsi ||
             !data.awalVote ||
             !data.akhirVote ||
-            listVote.map((e, i) => e.value).includes("")
-              ? true
-              : false
+            listVote.map((e, i) => e.value).includes("") ||
+            funReplaceHtml({ html: data.deskripsi }).length > maxInputLength ||
+            funReplaceHtml({ html: data.deskripsi }).length === 0
           }
           loaderPosition="center"
           loading={isLoading ? true : false}

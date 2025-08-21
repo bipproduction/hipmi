@@ -1,3 +1,4 @@
+import { MainColor } from "@/app_modules/_global/color";
 import { Grid, Text } from "@mantine/core";
 import { data } from "autoprefixer";
 import React from "react";
@@ -13,7 +14,7 @@ export function Investasi_ComponentTitleAndValueInDetail({
     <>
       <Grid>
         <Grid.Col span={5}>
-          <Text fw={"bold"}>{title} </Text>
+          <Text c={MainColor.white} fw={"bold"}>{title} </Text>
         </Grid.Col>
         <Grid.Col span={1}>: </Grid.Col>
         <Grid.Col span={6}>{value}</Grid.Col>

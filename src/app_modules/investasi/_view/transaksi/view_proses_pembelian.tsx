@@ -11,23 +11,24 @@ import {
   NumberInput,
   Text,
 } from "@mantine/core";
-import { useFocusTrap, useLocalStorage } from "@mantine/hooks";
-import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import {
+  useFocusTrap,
+  useLocalStorage,
+  useShallowEffect,
+} from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { NEW_RouterInvestasi } from "../../../../app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "../../../../lib/router_hipmi/router_investasi";
+import { apiNewGetOneInvestasiById } from "../../_lib/api_fetch_new_investasi";
 import { MODEL_INVESTASI } from "../../_lib/interface";
-import { gs_investas_menu } from "../../g_state";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_ViewProsesPembelian({
-  dataInvestasi,
-}: {
-  dataInvestasi: MODEL_INVESTASI;
-}) {
+export function Investasi_ViewProsesPembelian() {
+  const param = useParams<{ id: string }>();
   const router = useRouter();
   const focusTrapRef = useFocusTrap();
-  const [data, setData] = useState(dataInvestasi);
-  const [maxPembelian, setMaxPembelian] = useState(Number(data.sisaLembar));
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
+  const [maxPembelian, setMaxPembelian] = useState<number>(0);
   const [total, setTotal] = useLocalStorage({
     key: "total_investasi",
     defaultValue: 0,
@@ -37,6 +38,32 @@ export function Investasi_ViewProsesPembelian({
     defaultValue: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiNewGetOneInvestasiById({ id: param.id });
+
+      if (response.success) {
+        setData(response.data);
+        setMaxPembelian(Number(response.data.sisaLembar));
+      } else {
+        setData(null);
+        setMaxPembelian(0);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+      setMaxPembelian(0);
+    }
+  };
+
+  if (!data) {
+    return <CustomSkeleton height={400} />;
+  }
 
   return (
     <>
@@ -52,8 +79,8 @@ export function Investasi_ViewProsesPembelian({
       >
         {/* Sisa Lembar Saham */}
         <Group position="apart" mb={"md"}>
-          <Text>Sisa Lembar Saham</Text>
-          <Text fz={23}>
+          <Text c={MainColor.white}>Sisa Lembar Saham</Text>
+          <Text c={MainColor.white} fz={23}>
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
             }).format(+data.sisaLembar)}{" "}
@@ -62,8 +89,8 @@ export function Investasi_ViewProsesPembelian({
 
         {/* Harga perlembar saham */}
         <Group position="apart" mb={"md"}>
-          <Text>Harga Perlembar</Text>
-          <Text fz={23}>
+          <Text c={MainColor.white}>Harga Perlembar</Text>
+          <Text c={MainColor.white} fz={23}>
             Rp.{" "}
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
@@ -74,12 +101,13 @@ export function Investasi_ViewProsesPembelian({
         {/* Lembar saham */}
         <Group position="apart" mb={"md"}>
           <Box>
-            <Text>Jumlah Pembelian</Text>
+            <Text c={MainColor.white}>Jumlah Pembelian</Text>
             <Text c={"blue"} fs={"italic"} fz={10}>
               minimal pembelian 10 lembar
             </Text>
           </Box>
           <NumberInput
+            styles={{ input: { backgroundColor: MainColor.white } }}
             type="number"
             ref={focusTrapRef}
             w={100}
@@ -94,13 +122,13 @@ export function Investasi_ViewProsesPembelian({
           />
         </Group>
 
-        <Divider my={"lg"} />
+        <Divider color={MainColor.white} my={"lg"} />
 
         <Group position="apart" mb={"md"}>
           <Box>
-            <Text>Total Harga</Text>
+            <Text c={MainColor.white}>Total Harga</Text>
           </Box>
-          <Text fz={25}>
+          <Text c={MainColor.white} fz={25}>
             Rp.{" "}
             {new Intl.NumberFormat("id-ID", {
               maximumFractionDigits: 10,
@@ -119,7 +147,7 @@ export function Investasi_ViewProsesPembelian({
               router.push(NEW_RouterInvestasi.metode_pembayaran + data.id, {
                 scroll: false,
               });
-              setIsLoading(true)
+              setIsLoading(true);
             }}
             bg={MainColor.yellow}
             color="yellow"

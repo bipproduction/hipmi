@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import prisma from "@/lib/prisma";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import _ from "lodash";
 import { revalidatePath } from "next/cache";
 
@@ -12,8 +12,8 @@ export default async function colab_getMessageByRoomId({
   roomId: string;
   page: number;
 }) {
-  const lewat = page * 6 - 6;
-  const ambil = 6;
+  const ambil = 10;
+  const lewat = page * ambil - ambil;
 
   const getList = await prisma.projectCollaboration_Message.findMany({
     orderBy: {

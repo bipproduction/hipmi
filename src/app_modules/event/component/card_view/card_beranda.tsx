@@ -1,4 +1,5 @@
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardLoadingOverlay,
@@ -7,6 +8,7 @@ import {
 import { Box, Group, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
 
 export function ComponentEvent_CardBeranda({ data }: { data: any }) {
   const router = useRouter();
@@ -15,7 +17,9 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
 
   return (
     <>
-      <ComponentGlobal_CardStyles marginBottom={"15px"}>
+      <ComponentGlobal_CardStyles
+        marginBottom={"15px"}
+      >
         <Stack>
           <ComponentGlobal_AvatarAndUsername
             profile={data?.Author?.Profile as any}
@@ -31,18 +35,16 @@ export function ComponentEvent_CardBeranda({ data }: { data: any }) {
             }}
           >
             <Group w={"100%"} position="apart" grow>
-              <Title order={5} lineClamp={1}>
+              <Title c={MainColor.white} order={5} lineClamp={1}>
                 {data.title}
               </Title>
-              <Text align="right" fz={"sm"} lineClamp={1}>
-                {new Intl.DateTimeFormat("id-ID", {
-                  dateStyle: "medium",
-                }).format(data.tanggal)}
-              </Text>
             </Group>
 
-            <Text fz={"sm"} lineClamp={2}>
-              {data.deskripsi}
+            <Text c={MainColor.white} fz={"sm"} lineClamp={4}>
+              <Comp_SetInnerHTML
+                props={data.deskripsi}
+                style={{ height: 50 }}
+              />
             </Text>
           </Stack>
 

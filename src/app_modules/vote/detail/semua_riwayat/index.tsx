@@ -1,30 +1,73 @@
 "use client";
 
+import { clientLogger } from "@/util/clientLogger";
 import { Stack } from "@mantine/core";
-import ComponentVote_DetailDataTanpaVote from "../../component/detail/detail_data_tanpa_vote";
-import ComponentVote_HasilVoting from "../../component/detail/detail_hasil_voting";
-import ComponentVote_DaftarKontributorVoter from "../../component/detail/detail_daftar_kontributor";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import {
+  apiGetHasilVotingById,
+  apiGetOneVotingById,
+} from "../../_lib/api_voting";
 import ComponentVote_DetailDataSetelahPublish from "../../component/detail/detail_data_setelah_publish";
-import { MODEL_VOTE_KONTRIBUTOR, MODEL_VOTING } from "../../model/interface";
+import ComponentVote_HasilVoting from "../../component/detail/detail_hasil_voting";
+import { Voting_ComponentSkeletonDetail } from "../../component/skeleton_view";
+import { MODEL_VOTING } from "../../model/interface";
 
-export default function Vote_DetailSemuaRiwayat({
-  dataVote,
-  listKontributor,
-}: {
-  dataVote: MODEL_VOTING;
-  listKontributor: MODEL_VOTE_KONTRIBUTOR[];
-}) {
+export default function Vote_DetailSemuaRiwayat() {
+  const params = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_VOTING | null>(null);
+  const [hasil, setHasil] = useState<any[] | null>(null);
+
+  useShallowEffect(() => {
+    onLoadData();
+    onLoadHasil();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetOneVotingById({
+        id: params.id,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail", error);
+    }
+  }
+
+  async function onLoadHasil() {
+    try {
+      const respone = await apiGetHasilVotingById({
+        id: params.id,
+      });
+
+      if (respone) {
+        setHasil(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data hasil voting", error);
+    }
+  }
+
+  if (_.isNull(data) || _.isNull(hasil)) {
+    return <Voting_ComponentSkeletonDetail />;
+  }
+
   return (
     <>
       <Stack pb={"md"}>
         <ComponentVote_DetailDataSetelahPublish
-          data={dataVote}
+          data={data as any}
           authorName={true}
         />
-        <ComponentVote_HasilVoting data={dataVote.Voting_DaftarNamaVote} />
-        <ComponentVote_DaftarKontributorVoter
+        <ComponentVote_HasilVoting data={hasil} />
+        {/* <ComponentVote_DaftarKontributorVoter
           listKontributor={listKontributor}
-        />
+        /> */}
       </Stack>
     </>
   );

@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import prisma from "@/lib/prisma";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { revalidatePath } from "next/cache";
 
 // NEW FUNCTION
@@ -22,6 +22,11 @@ export default async function adminDonasi_funUpdateStatusDanTotal({
 }) {
   let totalNominal = nominal + jumlahTerkumpul;
   const progres = (totalNominal / target) * 100;
+  // console.log("Progres", progres)
+  // console.log("Jumlah total nominal", typeof totalNominal)
+  // console.log("Ini nominal", nominal)
+  // console.log("Ini jumlah terkumpul", jumlahTerkumpul)
+  // console.log("Ini target", target)
 
   const updateInvoice = await prisma.donasi_Invoice.update({
     where: {
@@ -38,7 +43,6 @@ export default async function adminDonasi_funUpdateStatusDanTotal({
           id: true,
           title: true,
           authorId: true,
-          
         },
       },
       DonasiMaster_StatusInvoice: {
@@ -48,6 +52,8 @@ export default async function adminDonasi_funUpdateStatusDanTotal({
       },
     },
   });
+  // console.log("Jumlah update invoice", updateInvoice);
+
   if (!updateInvoice) return { status: 400, message: "Update invoice gagal" };
 
   const updateDonasi = await prisma.donasi.update({
@@ -59,6 +65,7 @@ export default async function adminDonasi_funUpdateStatusDanTotal({
       progres: "" + progres,
     },
   });
+  // console.log("Jumlah update donasi", updateDonasi)
 
   if (!updateDonasi) return { status: 400, message: "Update donasi gagal" };
   revalidatePath(RouterAdminDonasi_OLD.detail_publish + donasiId);

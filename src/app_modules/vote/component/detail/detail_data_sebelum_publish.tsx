@@ -10,8 +10,10 @@ import {
 } from "@mantine/core";
 import { IconCircle } from "@tabler/icons-react";
 import { MODEL_VOTING } from "../../model/interface";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
-
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import moment from "moment";
+import "moment/locale/id"
 export default function ComponentVote_DetailDataSebelumPublish
 ({
   data,
@@ -26,7 +28,7 @@ export default function ComponentVote_DetailDataSebelumPublish
           backgroundColor: AccentColor.darkblue,
           borderRadius: "10px",
           border: `2px solid ${AccentColor.blue}`,
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Card.Section px={"xs"}>
@@ -36,9 +38,9 @@ export default function ComponentVote_DetailDataSebelumPublish
                 {data?.title}
               </Title>
             </Center>
-            <Text>{data?.deskripsi}</Text>
+            <Comp_SetInnerHTML props={data?.deskripsi} />
 
-            <Stack spacing={0} align="center">
+            <Stack spacing={"xs"} align="center">
               <Center>
                 <Text fz={10} fw={"bold"}>
                   Batas Voting
@@ -49,22 +51,18 @@ export default function ComponentVote_DetailDataSebelumPublish
                   root: {
                     backgroundColor: AccentColor.blue,
                     border: `1px solid ${AccentColor.skyblue}`,
-                    color: "white",
+                    color: MainColor.white,
                     width: "80%",
                   },
                 }}
               >
                 <Group>
                   <Text>
-                    {data?.awalVote.toLocaleDateString(["id-ID"], {
-                      dateStyle: "medium",
-                    })}
+                    {moment(data?.awalVote).format("DD MMM YYYY")}
                   </Text>
                   <Text>-</Text>
                   <Text>
-                    {data?.akhirVote.toLocaleDateString(["id-ID"], {
-                      dateStyle: "medium",
-                    })}
+                    {moment(data?.akhirVote).format("DD MMM YYYY")}
                   </Text>
                 </Group>
               </Badge>

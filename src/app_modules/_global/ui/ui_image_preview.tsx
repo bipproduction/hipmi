@@ -1,7 +1,7 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
 import {
   ActionIcon,
   Box,
@@ -10,25 +10,23 @@ import {
   Image,
   rem,
   ScrollArea,
-  Skeleton,
-  Text,
-  Title,
+  Skeleton
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MainColor } from "../color";
+import ComponentGlobal_Loader from "../component/loader";
 import UIGlobal_LayoutHeaderTamplate from "./ui_header_tamplate";
 import { UIHeader } from "./ui_layout_tamplate";
-import ComponentGlobal_Loader from "../component/loader";
 
 export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();
@@ -82,7 +80,7 @@ export function UIGlobal_ImagePreview({ fileId }: { fileId: string }) {
             }
           />
 
-          <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"}>
+          <Box style={{ zIndex: 0 }} h={"90vh"} pos={"static"} px={"lg"} pt={"sm"}>
             {isImage === null ? (
               <Skeleton height={200} radius={"sm"} />
             ) : isImage ? (

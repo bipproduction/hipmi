@@ -21,7 +21,7 @@ import {
   ComponentGlobal_TampilanRupiah,
 } from "@/app_modules/_global/component";
 import { useRouter } from "next/navigation";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { useState } from "react";
 import { Investasi_ComponentStylesCard } from "../comp_card_border_and_background";
 

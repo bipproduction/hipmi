@@ -1,6 +1,6 @@
 "use client";
 
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { Avatar, Stack } from "@mantine/core";
@@ -91,8 +91,8 @@ export function UiMap_MapBoxView({
                     }}
                     src={
                       e.pinId === null
-                        ? APIs.GET({ fileId: e.Portofolio.logoId })
-                        : APIs.GET({ fileId: e.pinId })
+                        ? APIs.GET({ fileId: e.Portofolio.logoId, size: "300" })
+                        : APIs.GET({ fileId: e.pinId, size: "300" })
                     }
                   />
                 </Stack>
@@ -110,7 +110,7 @@ export function UiMap_MapBoxView({
         opened={openDrawer}
         close={() => setOpenDrawer(false)}
         mapId={mapId}
-        component={<ComponentMap_DetailData mapId={mapId}  />}
+        component={<ComponentMap_DetailData mapId={mapId} />}
       />
     </>
   );

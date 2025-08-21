@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Berhasil"
+  },
+  {
+    "id": "2",
+    "name": "Proses"
+  },
+  {
+    "id": "3",
+    "name": "Menunggu"
+  },
+  {
+    "id": "4",
+    "name": "Gagal"
+  }
+]

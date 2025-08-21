@@ -1,59 +1,40 @@
-import { ServerEnv } from "@/app/lib/server_env";
-import { TokenStorage } from "@/app/lib/token";
-import { envs } from "@/lib/envs";
-
-export async function funGlobal_UploadToStorage({
+export async function funUploadFileToStorage({
   file,
   dirId,
 }: {
   file: File;
   dirId: string;
 }) {
-  const Env_WS_APIKEY = TokenStorage.value;
-
-  const allowedMimeTypes = [
-    "image/png",
-    "image/jpeg",
-    "image/gif",
-    "text/csv",
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "text/plain",
-  ];
-
-  if (!allowedMimeTypes.includes(file.type)) console.log("File tidak sesuai");
-
-  if (file.size > 100 * 1024 * 1024) console.log("File terlalu besar");
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("dirId", dirId);
-
   try {
-    const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
+    const tokenResponse = await fetch("/api/get-cookie");
+    if (!tokenResponse.ok) {
+      throw new Error("Failed to get token");
+    }
+    const { token } = await tokenResponse.json();
+
+    if (!token) {
+      return { success: false, message: "Token not found" };
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("dirId", dirId);
+
+    const upload = await fetch("/api/image/upload", {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: `Bearer ${Env_WS_APIKEY}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    const dataRes = await res.json();
+    const res = await upload.json();
 
-    if (res.ok) {
-      return { success: true, data: dataRes.data };
-    } else {
-      const errorText = await res.text();
-      console.error("Error:", errorText);
-      return { success: false, data: {} };
-    }
+    return upload.ok
+      ? { success: true, data: res.data, message: res.message }
+      : { success: false, data: {}, message: res.message };
   } catch (error) {
-    console.error("Error:", error);
-    return { success: false, data: {} };
+    console.log(error);
+    return { success: false, message: "An unexpected error occurred" };
   }
-
-  return { success: false, data: { id: "" } };
 }

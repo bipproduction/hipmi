@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function colab_getOneCollaborationById(colabId: string) {
   const data = await prisma.projectCollaboration.findFirst({

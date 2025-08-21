@@ -5,7 +5,7 @@ import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { IconCaretRight } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 
 export function ComponentPortofolio_DaftarBoxView({
   data,
@@ -34,7 +34,7 @@ export function ComponentPortofolio_DaftarBoxView({
       >
         <Group position="apart">
           <Stack spacing={0} w={"80%"}>
-            <Text fw={"bold"} lineClamp={1} w={"80%"}>
+            <Text c={MainColor.white} fw={"bold"} lineClamp={1} w={"80%"}>
               {data?.namaBisnis}
             </Text>
             <Text fz={10} c={MainColor.yellow}>
@@ -43,11 +43,16 @@ export function ComponentPortofolio_DaftarBoxView({
           </Stack>
 
           <Stack>
-            {isLoading ? (
+            {/* PAKE LOADING */}
+            {/* {isLoading ? (
               <ComponentGlobal_Loader />
             ) : (
               <IconCaretRight color="white" size={25} />
-            )}
+            )} */}
+
+
+            {/* GA PAKE LOADING */}
+            <IconCaretRight color={MainColor.white} size={25} />
           </Stack>
         </Group>
       </Paper>

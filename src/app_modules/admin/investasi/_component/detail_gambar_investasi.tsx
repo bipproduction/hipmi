@@ -1,12 +1,13 @@
 import { Paper, Stack, Title } from "@mantine/core";
 import { Admin_ComponentLoadImageLandscape } from "../../_admin_global";
+import { AccentColor, AdminColor } from "@/app_modules/_global/color/color_pallet";
 
 export function ComponentAdminInvestasi_DetailGambar({imagesId}: {imagesId: any}) {
     return (
       <>
-        <Paper withBorder p={"lg"}>
+        <Paper bg={AdminColor.softBlue}  p={"lg"}>
           <Stack>
-            <Title align="center" order={3}>
+            <Title c={AdminColor.white} align="center" order={3}>
               Gambar Proyek
             </Title>
 

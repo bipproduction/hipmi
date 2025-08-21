@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 
 export async function donasi_funMasterStatusDonasi() {
   const data = await prisma.donasiMaster_StatusDonasi.findMany({});

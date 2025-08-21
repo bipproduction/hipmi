@@ -1,5 +1,7 @@
-import { Center, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { AccentColor, MainColor } from "../color/color_pallet";
+import { Grid, Stack, Text } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { MainColor } from "../color/color_pallet";
+import { ComponentGlobal_CardStyles } from "./comp_card_box_and_background";
 
 export default function ComponentGlobal_BoxInformation({
   informasi,
@@ -12,15 +14,7 @@ export default function ComponentGlobal_BoxInformation({
 }) {
   return (
     <>
-      <Paper
-        bg={"blue.3"}
-        p={10}
-        style={{
-          backgroundColor: AccentColor.blue,
-          border: `2px solid ${AccentColor.softblue}`,
-          borderRadius: "10px",
-        }}
-      >
+      <ComponentGlobal_CardStyles>
         {isReport ? (
           <Stack spacing={0}>
             <Text
@@ -31,23 +25,29 @@ export default function ComponentGlobal_BoxInformation({
             >
               * Report
             </Text>
-            <Text fz={fonsize ? fonsize : 12} c={"white"}>
+            <Text fz={fonsize ? fonsize : 12} c={MainColor.white}>
               {informasi}
             </Text>
           </Stack>
         ) : (
-          <Group>
-            <Text fz={fonsize ? fonsize : 12} c={"red"} fw={"bold"}>
-              *{" "}
-              <Text span inherit c={"white"} fw={"normal"}>
+          <Grid>
+            <Grid.Col span={1}>
+              <IconInfoCircle color={MainColor.white} />
+            </Grid.Col>
+            <Grid.Col span={10}>
+              <Text
+                fz={fonsize ? fonsize : 12}
+                span
+                inherit
+                c={MainColor.white}
+                fw={"normal"}
+              >
                 {informasi}
               </Text>
-            </Text>
-          </Group>
+            </Grid.Col>
+          </Grid>
         )}
-      </Paper>
+      </ComponentGlobal_CardStyles>
     </>
   );
-
-  
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
+import { AccentColor, MainColor } from "@/app_modules/_global/color/color_pallet";
 import {
   Avatar,
   Card,
@@ -25,7 +25,7 @@ export default function ComponentVote_HasilVoting({
           backgroundColor: AccentColor.darkblue,
           borderRadius: "10px",
           border: `2px solid ${AccentColor.blue}`,
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Card.Section>

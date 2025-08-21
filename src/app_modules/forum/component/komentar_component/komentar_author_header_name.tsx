@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
-import { RouterProfile } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { RouterProfile } from "@/lib/router_hipmi/router_katalog";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { Avatar, Divider, Grid, Group, Stack, Text } from "@mantine/core";
 import { IconCircle } from "@tabler/icons-react";
@@ -12,6 +12,8 @@ import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
 import { data } from "autoprefixer";
 import { MODEL_PROFILE } from "@/app_modules/katalog/profile/model/interface";
+import moment from "moment";
+import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 
 export default function ComponentForum_KomentarAuthorNameOnHeader({
   userId,
@@ -23,6 +25,7 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
   postingId,
   userLoginId,
   profile,
+  listKomentar,
 }: {
   userId?: string;
   komentarId?: string;
@@ -33,6 +36,7 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
   postingId?: string;
   userLoginId: string;
   profile: MODEL_PROFILE;
+  listKomentar?: MODEL_FORUM_KOMENTAR[];
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -84,10 +88,11 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
               <Group spacing={3}>
                 <Text c={"white"} fz={"sm"}>
                   {tglPublish
-                    ? tglPublish.toLocaleDateString(["id-ID"], {
+                    ? new Intl.DateTimeFormat("id-ID", {
                         day: "numeric",
                         month: "short",
-                      })
+                        year: "numeric",
+                      }).format(new Date(tglPublish))
                     : new Date().toLocaleDateString(["id-ID"], {
                         day: "numeric",
                         month: "short",
@@ -105,9 +110,10 @@ export default function ComponentForum_KomentarAuthorNameOnHeader({
                   <ComponentForum_KomentarButtonMore
                     userId={userId}
                     komentarId={komentarId}
-                    setKomentar={setKomentar}
                     postingId={postingId}
                     userLoginId={userLoginId}
+                    setKomentar={setKomentar}
+                    listKomentar={listKomentar}
                   />
                 </Group>
               ) : (

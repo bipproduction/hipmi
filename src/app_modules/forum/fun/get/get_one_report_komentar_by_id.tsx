@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import _ from "lodash";
 import { MODEL_FORUM_KOMENTAR } from "../../model/interface";
 import { group } from "console";

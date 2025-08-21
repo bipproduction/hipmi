@@ -1,30 +1,25 @@
 "use client";
 
+import {
+  AccentColor,
+  AdminColor,
+} from "@/app_modules/_global/color/color_pallet";
 import { Button, Group, Stack } from "@mantine/core";
 import { useAtom } from "jotai";
 import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
 import { gs_app_information_menu } from "../lib";
 import {
   AdminAppInformation_ViewInfoBank,
-  AdminAppInformation_ViewInformasiWhatApps,
   AdminAppInformation_ViewKategoriPortofolio,
 } from "../view";
 
-export default function AdminAppInformation_UiMain({
-  nomorAdmin,
-  listBank,
-  dataBidangBisnis,
-}: {
-  nomorAdmin: any;
-  listBank: any[];
-  dataBidangBisnis: any[];
-}) {
+export default function AdminAppInformation_UiMain() {
   const [selectPage, setSelectPage] = useAtom(gs_app_information_menu);
   const listPage = [
-    {
-      id: "1",
-      name: "Whatsapp",
-    },
+    // {
+    //   id: "1",
+    //   name: "Whatsapp",
+    // },
     {
       id: "2",
       name: "Informasi Bank",
@@ -45,8 +40,8 @@ export default function AdminAppInformation_UiMain({
             <Button
               key={i}
               radius={"xl"}
-              c={"white"}
-              bg={selectPage === e.id ? "blue" : "gray.3"}
+              c={selectPage === e.id ? AdminColor.white : "gray"}
+              bg={selectPage === e.id ? AccentColor.blue : AccentColor.darkblue}
               onClick={() => {
                 setSelectPage(e.id);
               }}
@@ -59,18 +54,12 @@ export default function AdminAppInformation_UiMain({
           ))}
         </Group>
 
-        {selectPage === "1" && (
-          <AdminAppInformation_ViewInformasiWhatApps nomorAdmin={nomorAdmin} />
-        )}
+        {/* {selectPage === "1" && (
+          <AdminAppInformation_ViewInformasiWhatApps />
+        )} */}
 
-        {selectPage === "2" && (
-          <AdminAppInformation_ViewInfoBank listBank={listBank} />
-        )}
-        {selectPage === "3" && (
-          <AdminAppInformation_ViewKategoriPortofolio
-            dataBidangBisnis={dataBidangBisnis}
-          />
-        )}
+        {selectPage === "2" && <AdminAppInformation_ViewInfoBank />}
+        {selectPage === "3" && <AdminAppInformation_ViewKategoriPortofolio />}
       </Stack>
     </>
   );

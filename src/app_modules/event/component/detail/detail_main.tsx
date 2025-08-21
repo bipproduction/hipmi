@@ -1,107 +1,95 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_AvatarAndUsername,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
-import { Grid, Stack, Text, Title } from "@mantine/core";
-import { MODEL_EVENT } from "../../model/interface";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Component_V3_GridDetailData } from "@/app_modules/_global/component/new/comp_V3_grid_detail_data";
+import { Component_V3_MomentDateAndTime } from "@/app_modules/_global/component/new/comp_V3_moment_date_and_time";
+import { clientLogger } from "@/util/clientLogger";
+import { Stack, Title } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import "moment/locale/id";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetEventDetailById } from "../../_lib/api_event";
+import { MODEL_EVENT } from "../../_lib/interface";
+import { Event_ComponentDaftarPesertaDanSponsor } from "../button/comp_daftar_peserta_dan_sponsor";
+import { Event_ComponentSkeletonDetail } from "../skeleton/comp_skeleton_detail";
 
-export default function ComponentEvent_DetailMainData({
-  data,
-}: {
-  data: MODEL_EVENT;
-}) {
-  const tgl = data.tanggal;
-  const hari = tgl.toLocaleString("id-ID", { dateStyle: "full" });
+export default function ComponentEvent_DetailMainData() {
+  const params = useParams<{ id: string }>();
+  const eventId = params.id as string;
+  const [data, setData] = useState<MODEL_EVENT | null>(null);
 
-  const jam = tgl.toLocaleTimeString([], {
-    timeStyle: "short",
-    hourCycle: "h24",
-  });
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetEventDetailById({
+        id: eventId,
+      });
+
+      if (respone) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data detail event", error);
+    }
+  }
+
+  const listData = [
+    {
+      title: "Lokasi",
+      value: data?.lokasi ?? "-",
+    },
+    {
+      title: "Tipe Acara",
+      value: `${data?.EventMaster_TipeAcara?.name}`,
+    },
+    {
+      title: "Tanggal Mulai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggal} />,
+    },
+    {
+      title: "Tanggal Selesai ",
+      value: <Component_V3_MomentDateAndTime dateTime={data?.tanggalSelesai} />,
+    },
+    {
+      title: "Deskripsi",
+      value: <Comp_SetInnerHTML props={data?.deskripsi ?? ""} />,
+    },
+  ];
 
   return (
     <>
-      <ComponentGlobal_CardStyles>
-        <Stack px={"xs"} spacing={"xl"}>
-          <ComponentGlobal_AvatarAndUsername
-            profile={data?.Author?.Profile as any}
-          />
+      {data == null ? (
+        <Event_ComponentSkeletonDetail />
+      ) : (
+        <ComponentGlobal_CardStyles>
+          <Stack  spacing={"xl"}>
+            <ComponentGlobal_AvatarAndUsername
+              profile={data?.Author?.Profile as any}
+            />
 
-          <Stack spacing={"xl"}>
-            <Title align="center" order={4}>
-              {data ? data.title : null}
-            </Title>
-            <Grid>
-              <Grid.Col span={4}>
-                <Text fw={"bold"}>Lokasi</Text>
-              </Grid.Col>
-              <Grid.Col span={1}>:</Grid.Col>
-              <Grid.Col span={"auto"}>
-                <Text>{data ? data.lokasi : null}</Text>
-              </Grid.Col>
-            </Grid>
-            <Grid>
-              <Grid.Col span={4}>
-                <Text fw={"bold"}>Tipe Acara</Text>
-              </Grid.Col>
-              <Grid.Col span={1}>:</Grid.Col>
-              <Grid.Col span={"auto"}>
-                <Text>{data ? data.EventMaster_TipeAcara.name : null}</Text>
-              </Grid.Col>
-            </Grid>
-
-            <Stack spacing={"xs"}>
-              <Text fw={"bold"}>Tanggal & Waktu</Text>
-              <Grid>
-                <Grid.Col span={4}>
-                  <Text fw={"bold"}>Mulai</Text>
-                </Grid.Col>
-                <Grid.Col span={1}>:</Grid.Col>
-                <Grid.Col span={"auto"}>
-                  <Text>
-                    {" "}
-                    {new Intl.DateTimeFormat("id-ID", {
-                      dateStyle: "full",
-                    }).format(data?.tanggal)}
-                    ,{" "}
-                    <Text span inherit>
-                      {new Intl.DateTimeFormat("id-ID", {
-                        timeStyle: "short",
-                      }).format(data?.tanggal)}
-                    </Text>
-                  </Text>
-                </Grid.Col>
-              </Grid>
-              <Grid>
-                <Grid.Col span={4}>
-                  <Text fw={"bold"}>Selesai</Text>
-                </Grid.Col>
-                <Grid.Col span={1}>:</Grid.Col>
-                <Grid.Col span={"auto"}>
-                  <Text>
-                    {" "}
-                    {new Intl.DateTimeFormat("id-ID", {
-                      dateStyle: "full",
-                    }).format(data?.tanggalSelesai)}
-                    ,{" "}
-                    <Text span inherit>
-                      {new Intl.DateTimeFormat("id-ID", {
-                        timeStyle: "short",
-                      }).format(data?.tanggalSelesai)}
-                    </Text>
-                  </Text>
-                </Grid.Col>
-              </Grid>
-            </Stack>
-
-            <Stack spacing={2}>
-              <Text fw={"bold"}>Deskripsi</Text>
-              <Text>{data ? data?.deskripsi : null}</Text>
+            <Stack spacing={"xl"}>
+              <Title color={MainColor.white} align="center" order={4}>
+                {data ? data.title : null}
+              </Title>
+              <Stack>
+                {listData.map((e, i) => (
+                  <Component_V3_GridDetailData item={e} key={i} />
+                ))}
+              </Stack>
+              <Event_ComponentDaftarPesertaDanSponsor />
             </Stack>
           </Stack>
-        </Stack>
-      </ComponentGlobal_CardStyles>
+        </ComponentGlobal_CardStyles>
+      )}
     </>
   );
 }

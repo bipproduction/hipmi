@@ -1,5 +1,6 @@
-import { APIs } from "@/app/lib";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { APIs } from "@/lib";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { MODEL_INVESTASI_DOKUMEN } from "@/app_modules/investasi/_lib/interface";
 import {
   SimpleGrid,
@@ -10,10 +11,13 @@ import {
   Group,
   Button,
   Text,
+  Box,
 } from "@mantine/core";
 import { IconFileTypePdf } from "@tabler/icons-react";
 import _ from "lodash";
 import Link from "next/link";
+import { Admin_ComponentBoxStyle } from "../../_admin_global/_component/comp_admin_boxstyle";
+import { Admin_V3_ComponentDetail } from "../../_components_v3/comp_detail_data";
 
 export function ComponentAdminInvestasi_UIDetailFile({
   title,
@@ -26,73 +30,57 @@ export function ComponentAdminInvestasi_UIDetailFile({
   listDokumen: any[];
   prospektusFileId: string;
 }) {
+  const listItem = [
+    {
+      label: "File ",
+      value: (
+        <Stack align="center">
+          <Text lineClamp={1}>Prospek {title}</Text>
+          <Link target="_blank" href={APIs.GET({ fileId: prospektusFileId })}>
+            <Button leftIcon={<IconFileTypePdf color="white" />} radius={50}>
+              Lihat
+            </Button>
+          </Link>
+        </Stack>
+      ),
+    },
+    {
+      label: "Dokumen",
+      value: _.isEmpty(listDokumen) ? (
+        <Text>-</Text>
+      ) : (
+        listDokumen.map((e: MODEL_INVESTASI_DOKUMEN) => (
+          <Box key={e.id}>
+            <Group>
+              <Text>{e.title}</Text>
+              <Link target="_blank" href={APIs.GET({ fileId: e.fileId })}>
+                <Button
+                  leftIcon={<IconFileTypePdf color="white" />}
+                  radius={50}
+                >
+                  Lihat
+                </Button>
+              </Link>
+            </Group>
+          </Box>
+        ))
+      ),
+    },
+  ];
+
   return (
     <>
-      <SimpleGrid
-        cols={1}
-        spacing="lg"
-        breakpoints={[
-          { maxWidth: "62rem", cols: 1, spacing: "md" },
-          { maxWidth: "48rem", cols: 1, spacing: "sm" },
-          { maxWidth: "36rem", cols: 1, spacing: "sm" },
-        ]}
-      >
-        <Paper withBorder p={"lg"}>
+      <Admin_ComponentBoxStyle>
+        <Stack c={AdminColor.white}>
+          <Title order={3}>File & Dokumen</Title>
+
           <Stack>
-            <Title order={3}>File & Dokumen</Title>
-
-            <Stack spacing={50}>
-              {/* File */}
-              <Grid align="center">
-                <Grid.Col span={4}>
-                  <Text fw={"bold"}>File:</Text>
-                </Grid.Col>
-                <Grid.Col span={8}>
-                  <Group>
-                    <IconFileTypePdf />
-                    <Text>Prospek {title}</Text>
-                    <Link
-                      target="_blank"
-                      href={APIs.GET({ fileId: prospektusFileId })}
-                    >
-                      <Button radius={50}>Lihat</Button>
-                    </Link>
-                  </Group>
-                </Grid.Col>
-              </Grid>
-
-              {/* Dokumen */}
-              <Grid>
-                <Grid.Col span={4}>
-                  <Text fw={"bold"}>Dokumen:</Text>
-                </Grid.Col>
-                <Grid.Col span={8}>
-                  <Stack>
-                    {_.isEmpty(listDokumen) ? (
-                      <Text>-</Text>
-                    ) : (
-                      listDokumen.map((e: MODEL_INVESTASI_DOKUMEN) => (
-                        <Paper key={e.id}>
-                          <Group>
-                            <IconFileTypePdf />
-                            <Text>{e.title}</Text>
-                            <Link
-                              target="_blank"
-                              href={APIs.GET({ fileId: e.fileId })}
-                            >
-                              <Button radius={50}>Lihat</Button>
-                            </Link>
-                          </Group>
-                        </Paper>
-                      ))
-                    )}
-                  </Stack>
-                </Grid.Col>
-              </Grid>
-            </Stack>
+            {listItem.map((e, i) => (
+              <Admin_V3_ComponentDetail key={i} item={e} />
+            ))}
           </Stack>
-        </Paper>
-      </SimpleGrid>
+        </Stack>
+      </Admin_ComponentBoxStyle>
     </>
   );
 }

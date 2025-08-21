@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import { Group, Modal, Stack, Textarea } from "@mantine/core";
 import React from "react";
 
@@ -25,6 +26,8 @@ export function Admin_ComponentModalReport({
   return (
     <>
       <Modal
+        style={{ color: AdminColor.white}}
+        styles={{ content: { backgroundColor: AdminColor.softBlue,  }, header: { backgroundColor: AdminColor.softBlue }, title: { color: AdminColor.white } }}
         opened={opened}
         onClose={onClose}
         title={title}

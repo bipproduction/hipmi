@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { Box, Center } from "@mantine/core";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import _ from "lodash";

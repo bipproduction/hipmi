@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import UIGlobal_SplashScreen from "@/app_modules/_global/ui/ui_splash";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconPresentation } from "@tabler/icons-react";
@@ -16,7 +16,7 @@ export default function Event_SplashScreen() {
     setTimeout(() => {
       router.replace(RouterEvent.beranda);
       setHotMenu(0);
-    }, 1000);
+    }, 500);
   }, []);
   return (
     <>

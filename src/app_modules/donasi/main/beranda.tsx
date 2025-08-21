@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
@@ -11,7 +11,7 @@ import { useState } from "react";
 import ComponentDonasi_CardPublish from "../component/card_view/card_publish";
 import { donasi_funGetAllPublish } from "../fun/get/get_list_beranda";
 import { MODEL_DONASI } from "../model/interface";
-import { gs_donasiTriggerBeranda } from "@/app/lib/global_state";
+import { gs_donasiTriggerBeranda } from "@/lib/global_state";
 import { useAtom } from "jotai";
 import { useShallowEffect } from "@mantine/hooks";
 import { AccentColor } from "@/app_modules/_global/color";

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { tree } from "next/dist/build/templates/app-page";
 
 export async function donasi_funGetAllPublish({ page }: { page: number }) {

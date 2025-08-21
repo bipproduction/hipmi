@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import _ from "lodash";
 import { Model_Berita_Investasi } from "../../_lib/interface";
 import { revalidatePath } from "next/cache";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 
 export async function investasi_funCreateBerita({
   data,

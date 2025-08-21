@@ -1,58 +1,83 @@
 "use client";
 
-import { Button, Loader, Select, Stack, TextInput } from "@mantine/core";
-import _ from "lodash";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { validRegex } from "../../component/regular_expressions";
-import { Profile_funEditById } from "../fun/update/fun_edit_profile_by_id";
+import { clientLogger } from "@/util/clientLogger";
+import { Button, Select, Stack, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { emailRegex } from "../../component/regular_expressions";
+import { Profile_SkeletonViewEdit } from "../_component/skeleton_view";
+import {
+  apiGetOneProfileById,
+  apiUpdateProfile,
+} from "../lib/api_fetch_profile";
 import { MODEL_PROFILE } from "../model/interface";
+import { masterJenisKelamin } from "@/app_modules/_global/lib/master_jenis_kelamin";
 
-export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
+export default function EditProfile() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const profileId = params.id;
 
   //Get data profile
-  const [dataProfile, setDataProfile] = useState(data);
+  const [data, setData] = useState<MODEL_PROFILE | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function onUpdate() {
-    const body = dataProfile;
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
 
-    // console.log(body)
-    if (_.values(body).includes("")) return null;
-    if (!body.email.match(validRegex)) return null;
+  async function onLoadData() {
+    try {
+      const respone = await apiGetOneProfileById({ id: profileId });
 
-    await Profile_funEditById(body).then((res) => {
-      if (res.status === 200) {
-        setLoading(true);
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setTimeout(() => router.back(), 1000);
-      } else {
-        ComponentGlobal_NotifikasiGagal(res.message);
+      if (respone) {
+        setData(respone.data);
       }
-    });
+    } catch (error) {
+      clientLogger.error("Error get data profile", error);
+    }
   }
 
-  if (!dataProfile)
-    return (
-      <>
-        <Loader />
-      </>
-    );
+  async function onUpdate() {
+    // console.log(body)
+    if (_.values(data).includes(""))
+      return ComponentGlobal_NotifikasiPeringatan("Lengkapi data");
+    if (!data?.email.match(emailRegex))
+      return ComponentGlobal_NotifikasiPeringatan("Format email salah");
+
+    try {
+      setLoading(true);
+      const respone = await apiUpdateProfile({ data: data });
+
+      if (respone && respone.success == true) {
+        ComponentGlobal_NotifikasiBerhasil(respone.message);
+        router.back();
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(respone.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error client update profile", error);
+    }
+  }
+
+  if (!data) return <Profile_SkeletonViewEdit />;
 
   return (
     <>
-      {/* <pre>{JSON.stringify(dataProfile, null, 2)}</pre> */}
       <Stack px={"sm"}>
-        <TextInput
+        {/* <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
           }}
           withAsterisk
@@ -64,7 +89,7 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
             },
           }}
           withAsterisk
@@ -85,12 +110,15 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
               },
             });
           }}
-        />
+        /> */}
 
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
@@ -98,16 +126,16 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           placeholder="nama"
           maxLength={50}
           error={
-            dataProfile?.name === "" ? (
+            data?.name === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan nama" />
             ) : (
               ""
             )
           }
-          value={dataProfile?.name}
+          value={data?.name}
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               name: val.target.value,
             });
           }}
@@ -116,26 +144,28 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
           label="Email"
           placeholder="email"
           error={
-            dataProfile?.email === "" ? (
+            data?.email === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan email " />
-            ) : dataProfile?.email?.length > 0 &&
-              !dataProfile?.email.match(validRegex) ? (
+            ) : data?.email?.length > 0 && !data?.email.match(emailRegex) ? (
               <ComponentGlobal_ErrorInput text="Invalid email" />
             ) : (
               ""
             )
           }
-          value={dataProfile?.email}
+          value={data?.email}
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               email: val.target.value,
             });
           }}
@@ -144,24 +174,27 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <TextInput
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
           label="Alamat"
           placeholder="alamat"
-          value={dataProfile.alamat}
+          value={data.alamat}
           maxLength={100}
           error={
-            dataProfile?.alamat === "" ? (
+            data?.alamat === "" ? (
               <ComponentGlobal_ErrorInput text="Masukan alamat " />
             ) : (
               ""
             )
           }
           onChange={(val) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               alamat: val.target.value,
             });
           }}
@@ -170,19 +203,22 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
         <Select
           styles={{
             label: {
-              color: "white",
+              color: MainColor.white,
+            },
+            input: {
+              backgroundColor: MainColor.white,
             },
           }}
           withAsterisk
           label="Jenis Kelamin"
-          value={dataProfile?.jenisKelamin}
+          value={data?.jenisKelamin}
           data={[
             { value: "Laki-laki", label: "Laki-laki" },
             { value: "Perempuan", label: "Perempuan" },
           ]}
           onChange={(val: any) => {
-            setDataProfile({
-              ...dataProfile,
+            setData({
+              ...data,
               jenisKelamin: val,
             });
           }}
@@ -194,15 +230,13 @@ export default function EditProfile({ data }: { data: MODEL_PROFILE }) {
           bg={MainColor.yellow}
           color="yellow"
           c={"black"}
-          loading={loading ? true : false}
+          loading={loading}
           loaderPosition="center"
           onClick={() => onUpdate()}
         >
           Update
         </Button>
       </Stack>
-
-      {/* <pre>{JSON.stringify(dataProfile, null, 2)}</pre> */}
     </>
   );
 }

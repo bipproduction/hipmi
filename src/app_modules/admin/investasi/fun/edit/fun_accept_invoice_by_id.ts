@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import prisma from "@/lib/prisma";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { toNumber } from "lodash";
 import { revalidatePath } from "next/cache";
 
@@ -13,7 +13,11 @@ export async function adminInvestasi_funAcceptTransaksiById({
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-}) {
+  }) {
+  console.log("Ini invoiceid", invoiceId)
+  console.log("Ini investasid", investasiId)
+  console.log("Ini lembar terbeli", lembarTerbeli)
+
   const dataInvestasi: any = await prisma.investasi.findFirst({
     where: {
       id: investasiId,
@@ -24,7 +28,6 @@ export async function adminInvestasi_funAcceptTransaksiById({
       lembarTerbeli: true,
     },
   });
-
   // Hitung TOTAL SISA LEMBAR
   const investasi_sisaLembar = toNumber(dataInvestasi?.sisaLembar);
   const invoice_lembarTerbeli = toNumber(lembarTerbeli);
@@ -47,6 +50,7 @@ export async function adminInvestasi_funAcceptTransaksiById({
       statusInvoiceId: "1",
     },
   });
+  
 
   if (!updt) {
     return { status: 400, message: "Gagal Update Status" };
@@ -60,15 +64,29 @@ export async function adminInvestasi_funAcceptTransaksiById({
         lembarTerbeli: resultLembarTerbeli.toString(),
         progress: resultProgres,
       },
+      include: {
+        MasterStatusInvestasi: true,
+      },
     });
 
     if (!updateInvestasi)
       return { status: 400, message: "Gagal Update Data Investasi" };
 
+    const newData = updateInvestasi;
+
+    const allData = {
+      dataInvestasi: updateInvestasi,
+      dataInvestor: updt,
+    };
+
     revalidatePath(RouterAdminInvestasi.detail_publish);
     return {
       status: 200,
       message: "Update Berhasil",
+      data: allData,
     };
   }
 }
+
+
+

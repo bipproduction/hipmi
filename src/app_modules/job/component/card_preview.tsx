@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterJob } from "@/app/lib/router_hipmi/router_job";
+import { RouterJob } from "@/lib/router_hipmi/router_job";
 import { Card, Center, Grid, Image, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 

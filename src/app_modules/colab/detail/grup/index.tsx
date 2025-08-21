@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
 import mqtt_client from "@/util/mqtt_client";

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function Donasi_funDeleteDonasiById(donasiId: string) {
   const delCerita = await prisma.donasi_Cerita.delete({

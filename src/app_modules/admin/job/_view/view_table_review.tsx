@@ -1,8 +1,5 @@
-import { RouterAdminGlobal } from "@/app/lib";
-import {
-  gs_adminJob_triggerReview,
-  IRealtimeData,
-} from "@/app/lib/global_state";
+import { RouterAdminGlobal } from "@/lib";
+import { gs_adminJob_triggerReview, IRealtimeData } from "@/lib/global_state";
 import { ComponentGlobal_InputCountDown } from "@/app_modules/_global/component";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -25,6 +22,7 @@ import {
   Text,
   Affix,
   rem,
+  Box,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import {
@@ -33,6 +31,7 @@ import {
   IconBan,
   IconSearch,
   IconRefresh,
+  IconCircleCheck,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,22 +43,30 @@ import { AdminJob_funEditStatusPublishById } from "../fun/edit/fun_edit_status_p
 import adminJob_getListReview from "../fun/get/get_list_review";
 import { useAtom } from "jotai";
 import { AccentColor } from "@/app_modules/_global/color";
+import {
+  AdminColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
+import { clientLogger } from "@/util/clientLogger";
+import { apiGetAdminJobByStatus } from "../lib/api_fetch_admin_job";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
-export default function AdminJob_ViewTavleReview({
-  listReview,
-}: {
-  listReview: any;
-}) {
+export default function AdminJob_ViewTavleReview() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_JOB[]>(listReview.data);
-  const [nPage, setNPage] = useState(listReview.nPage);
+  const [data, setData] = useState<MODEL_JOB[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
-
+  const [publish, setPublish] = useState(false);
   const [reject, setReject] = useState(false);
   const [jobId, setJobId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [catatan, setCatatan] = useState("");
+  const [isLoadingShowImage, setLoadingShowImage] = useState(false);
+  const [dataId, setDataId] = useState("");
 
   // Realtime
   const [isAdminJob_TriggerReview, setIsAdminJob_TriggerReview] = useAtom(
@@ -68,160 +75,161 @@ export default function AdminJob_ViewTavleReview({
   const [isShowReload, setIsShowReload] = useState(false);
 
   useShallowEffect(() => {
-    if (isAdminJob_TriggerReview) {
-      setIsShowReload(true);
+    loadInitialData();
+  }, [activePage, isSearch]);
+
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminJobByStatus({
+        name: "Review",
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response?.success && response?.data.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invliad data format recieved", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data table publish", error);
+      setData([]);
     }
-  }, [isAdminJob_TriggerReview, setIsShowReload]);
-
-  //   useShallowEffect(() => {
-  //     onLoadData({
-  //       onSuccessLoad(val) {
-  //         setData(val.data);
-  //         setNPage(val.nPage);
-  //       },
-  //     });
-  //   }, [setData, setNPage]);
-  //   async function onLoadData({
-  //     onSuccessLoad,
-  //   }: {
-  //     onSuccessLoad: (val: any) => any;
-  //   }) {
-  //     const loadData = await adminJob_getListReview({ page: 1 });
-  //     onSuccessLoad(loadData);
-  //   }
-
+  };
   async function onLoadData() {
-    const loadData = await adminJob_getListReview({ page: 1 });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+    loadInitialData();
     setIsLoading(false);
     setIsShowReload(false);
     setIsAdminJob_TriggerReview(false);
   }
 
-  async function onSearch(s: string) {
-    setSearch(s);
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
     setActivePage(1);
-    const loadData = await adminJob_getListReview({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  };
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminJob_getListReview({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
 
-  const rowTable = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={150}>
-          <Text>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          w={200}
-          maxHeight={50}
-          hideLabel="sembunyikan"
-          showLabel="tampilkan"
-        >
-          {e.title}
-        </Spoiler>
-      </td>
-      <td>
-        <Center w={200}>
-          {e.imageId ? (
-            <Button
-              loaderPosition="center"
-              loading={isLoading && jobId == e?.id}
-              color="green"
-              radius={"xl"}
-              leftIcon={<IconPhotoCheck />}
-              onClick={() => {
-                setJobId(e?.id);
-                setIsLoading(true);
-                router.push(RouterAdminGlobal.preview_image({ id: e.imageId }));
-              }}
-            >
-              Lihat
-            </Button>
-          ) : (
-            <Center w={150}>
-              <Text fw={"bold"} fz={"xs"} fs={"italic"}>
-                Tidak ada poster
-              </Text>
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
             </Center>
-          )}
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.content }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Stack>
-          <Stack align="center">
-            <Button
-              color={"green"}
-              leftIcon={<IconEyeShare />}
-              radius={"xl"}
-              onClick={() =>
-                onPublish({
-                  jobId: e?.id,
-                  onLoadData(val: any) {
-                    setData(val.data);
-                    setNPage(val.nPage);
-                  },
-                })
-              }
-            >
-              Publish
-            </Button>
-            <Button
-              color={"red"}
-              leftIcon={<IconBan />}
-              radius={"xl"}
-              onClick={() => {
-                setReject(true);
-                setJobId(e.id);
-              }}
-            >
-              Reject
-            </Button>
-          </Stack>
-        </Stack>
-      </td>
-    </tr>
-  ));
+          </td>
+        </tr>
+      );
+    }
+    return data?.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center>
+            <Text c={AdminColor.white}>{e?.Author?.username}</Text>
+          </Center>
+        </td>
+
+        <td>
+          <Center>
+            <Box w={150}>
+              <Text c={"white"} truncate>
+                {e.title}
+              </Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            {e.imageId ? (
+              <Button
+                loaderPosition="center"
+                loading={isLoadingShowImage && e.id === dataId}
+                color="green"
+                radius={"xl"}
+                leftIcon={<IconPhotoCheck />}
+                onClick={() => {
+                  setLoadingShowImage(true);
+                  setDataId(e.id);
+                  router.push(
+                    RouterAdminGlobal.preview_image({ id: e.imageId })
+                  );
+                }}
+              >
+                Lihat
+              </Button>
+            ) : (
+              <Center>
+                <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
+                  Tidak ada poster
+                </Text>
+              </Center>
+            )}
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminJob.detail({ id: e.id })} />
+          </Center>
+        </td>
+      </tr>
+    ));
+
+
+  };
 
   return (
     <>
       <Modal
+        styles={{
+          header: { backgroundColor: AdminColor.softBlue },
+          body: { backgroundColor: AdminColor.softBlue },
+          title: { color: AdminColor.white },
+        }}
+        title={"Apakah anda yakin ingin mempublish job ini?"}
+        withCloseButton={false}
+        opened={publish}
+        onClose={() => {
+          setPublish(false);
+        }}
+        size={"sm"}
+        centered
+      >
+        <Stack>
+          <Group position="center">
+            <Button radius={"xl"} onClick={() => setPublish(false)}>
+              Batal
+            </Button>
+            <Button
+              style={{ transition: "0.5s", backgroundColor: MainColor.green }}
+              radius={"xl"}
+              onClick={() => {
+                onPublish({
+                  jobId: jobId,
+                  onLoadData(val: any) {
+                    setData(val.data);
+                    setNPage(val.nPage);
+                  },
+                });
+                setPublish(false);
+              }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      <Modal
+        styles={{
+          header: { backgroundColor: AdminColor.softBlue },
+          body: { backgroundColor: AdminColor.softBlue },
+          title: { color: AdminColor.white },
+        }}
         opened={reject}
         onClose={() => {
           setReject(false);
@@ -237,7 +245,11 @@ export default function AdminJob_ViewTavleReview({
               maxRows={5}
               maxLength={300}
               autosize
-              label={<Text fw={"bold"}>Alasan Penolakan</Text>}
+              label={
+                <Text c={AdminColor.white} fw={"bold"}>
+                  Alasan Penolakan
+                </Text>
+              }
               placeholder="Masukkan alasan penolakan lowongan ini"
               onChange={(val) => setCatatan(val.currentTarget.value)}
             />
@@ -252,6 +264,7 @@ export default function AdminJob_ViewTavleReview({
             </Button>
             <Button
               style={{ transition: "0.5s" }}
+              bg={MainColor.green}
               disabled={catatan === "" ? true : false}
               radius={"xl"}
               onClick={() => {
@@ -275,7 +288,7 @@ export default function AdminJob_ViewTavleReview({
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Review"
-          color="orange.4"
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -287,77 +300,72 @@ export default function AdminJob_ViewTavleReview({
             />
           }
         />
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
+            {isShowReload && (
+              <Paper bg={"red"} w={"50%"}>
+                <Affix position={{ top: rem(200) }} w={"100%"}>
+                  <Center>
+                    <Button
+                      style={{
+                        transition: "0.5s",
+                        border: `1px solid ${AccentColor.skyblue}`,
+                      }}
+                      bg={AccentColor.blue}
+                      loaderPosition="center"
+                      loading={isLoading}
+                      radius={"xl"}
+                      opacity={0.8}
+                      onClick={() => onLoadData()}
+                      leftIcon={<IconRefresh />}
+                    >
+                      Update Data
+                    </Button>
+                  </Center>
+                </Affix>
+              </Paper>
+            )}
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          {isShowReload && (
-            <Paper bg={"red"} w={"50%"}>
-              <Affix position={{ top: rem(200) }} w={"100%"}>
-                <Center>
-                  <Button
-                    style={{
-                      transition: "0.5s",
-                      border: `1px solid ${AccentColor.skyblue}`,
-                    }}
-                    bg={AccentColor.blue}
-                    loaderPosition="center"
-                    loading={isLoading}
-                    radius={"xl"}
-                    opacity={0.8}
-                    onClick={() => onLoadData()}
-                    leftIcon={<IconRefresh />}
-                  >
-                    Update Data
-                  </Button>
-                </Center>
-              </Affix>
-            </Paper>
-          )}
-
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={"100%"}
-              h={"100%"}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>Author</Center>
-                  </th>
-                  <th>
-                    <Text>Judul</Text>
-                  </th>
-                  <th>
-                    <Center>Poster</Center>
-                  </th>
-                  <th>
-                    <Text>Syarat Ketentuan</Text>
-                  </th>
-                  <th>
-                    <Text>Deskripsi</Text>
-                  </th>
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{rowTable}</tbody>
-            </Table>
-          </ScrollArea>
-          <Center mt={"xl"}>
-            <Pagination
-              value={activePage}
-              total={nPage}
-              onChange={(val) => {
-                onPageClick(val);
-              }}
-            />
-          </Center>
-        </Paper>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={"100%"}
+                h={"100%"}
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Author</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Judul</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Poster</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+            <Center mt={"xl"}>
+              <Admin_V3_ComponentPaginationBreakpoint
+                value={activePage}
+                total={nPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+            </Center>
+          </Paper>
+        )}
       </Stack>
     </>
   );

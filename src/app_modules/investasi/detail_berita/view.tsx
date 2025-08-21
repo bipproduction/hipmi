@@ -3,7 +3,7 @@
 import { AspectRatio, Group, Image, Stack, Text, Title } from "@mantine/core";
 import { Model_Berita_Investasi } from "../_lib/interface";
 import { useState } from "react";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import moment from "moment";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import { useShallowEffect } from "@mantine/hooks";

@@ -1,27 +1,28 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
-import { Button, Paper, Radio, Stack, Text, Title } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { MODEL_MASTER_BANK } from "../../_lib/interface";
-import { investasi_funCreateInvoice } from "../../_fun/create/fun_create_invoice";
-import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { data } from "autoprefixer";
+import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
+import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { IRealtimeData } from "@/lib/global_state";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
+import { clientLogger } from "@/util/clientLogger";
+import { Button, Paper, Radio, Stack, Title } from "@mantine/core";
+import { useLocalStorage, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
+import { investasi_funCreateInvoice } from "../../_fun/create/fun_create_invoice";
+import { MODEL_MASTER_BANK } from "../../_lib/interface";
+import { apiGetMasterBank } from "@/app_modules/_global/lib/api_fetch_master";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 
-export function Investasi_ViewMetodePembayaran({
-  listBank,
-  investasiId,
-}: {
-  listBank: MODEL_MASTER_BANK[];
-  investasiId: string;
-}) {
+export function Investasi_ViewMetodePembayaran() {
+  // id = investasiId
+  const param = useParams<{ id: string }>();
   const router = useRouter();
-  const [bank, setBank] = useState(listBank);
+  const [bank, setBank] = useState<MODEL_MASTER_BANK[]>([]);
   const [pilihBank, setPilihBank] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [total, setTotal] = useLocalStorage({
@@ -33,21 +34,76 @@ export function Investasi_ViewMetodePembayaran({
     defaultValue: 0,
   });
 
-  async function onProses() {
-    const res = await investasi_funCreateInvoice({
-      data: {
-        total: total,
-        pilihBank: pilihBank,
-        investasiId: investasiId,
-        jumlah: jumlah,
-      },
-    });
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
 
-    if (res.status !== 201)
-      return ComponentGlobal_NotifikasiPeringatan(res.message);
-    ComponentGlobal_NotifikasiBerhasil(res.message);
-    setLoading(true);
-    router.push(NEW_RouterInvestasi.invoice + res.data?.id, { scroll: false });
+  async function onLoadData() {
+    try {
+      const response = await apiGetMasterBank();
+
+      if (response.success) {
+        setBank(response.data);
+      } else {
+        setBank([]);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setBank([]);
+    }
+  }
+
+  async function onProses() {
+    try {
+      setLoading(true);
+      const res = await investasi_funCreateInvoice({
+        data: {
+          total: total,
+          pilihBank: pilihBank,
+          investasiId: param.id,
+          jumlah: jumlah,
+        },
+      });
+
+      if (res.status != 201) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan(res.message);
+        return;
+      }
+
+      const dataNotifikasi: IRealtimeData = {
+        appId: param.id,
+        status: "Menunggu",
+        userId: res.data?.authorId as string,
+        pesan: "Menunggu transfer",
+        kategoriApp: "INVESTASI",
+        title: "Transaksi baru",
+      };
+
+      const notif = await notifikasiToAdmin_funCreate({
+        data: dataNotifikasi as any,
+      });
+
+      if (notif.status === 201) {
+        WibuRealtime.setData({
+          type: "notification",
+          pushNotificationTo: "ADMIN",
+          dataMessage: dataNotifikasi,
+        });
+
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+        router.push(NEW_RouterInvestasi.invoice + res.data?.id, {
+          scroll: false,
+        });
+      }
+    } catch (error) {
+      clientLogger.error("Error create invoice:", error);
+      setLoading(false);
+    }
+  }
+
+  if (bank.length === 0) {
+    return <CustomSkeleton height={300} />;
   }
 
   return (
@@ -68,7 +124,7 @@ export function Investasi_ViewMetodePembayaran({
                 padding: "15px",
                 cursor: "pointer",
                 borderRadius: "10px",
-                color: "white",
+                color: MainColor.white,
                 marginBottom: "15px",
               }}
             >
@@ -76,11 +132,12 @@ export function Investasi_ViewMetodePembayaran({
                 styles={{
                   radio: {
                     color: "yellow",
+                    backgroundColor: MainColor.white,
                   },
                 }}
                 value={e.id}
                 label={
-                  <Title order={6} color="white">
+                  <Title order={6} color={MainColor.white}>
                     {e.namaBank}
                   </Title>
                 }

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { ceil } from "lodash";
 
 export async function adminEvent_getListPesertaById({
@@ -22,6 +22,7 @@ export async function adminEvent_getListPesertaById({
       eventId: eventId,
     },
     select: {
+      isPresent: true,
       User: {
         include: {
           Profile: true,

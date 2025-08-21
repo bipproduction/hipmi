@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import _ from "lodash";
 
 export async function notifikasi_funEventCheckStatus({ id }: { id: string }) {

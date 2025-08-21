@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
+import prisma from "@/lib/prisma";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
 import { revalidatePath } from "next/cache";
 
 export async function Event_funDeleteById(eventId: string) {

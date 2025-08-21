@@ -1,28 +1,46 @@
-import { prisma } from "@/app/lib";
 import { cookies } from "next/headers";
-export async function GET(request: Request) {
-   const { searchParams } = new URL(request.url);
-   const id = searchParams.get("id");
+import { NextResponse } from "next/server";
 
-    const delToken = await prisma.userSession.delete({
-      where: {
-        userId: id as string,
-      },
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const sessionKey = process.env.NEXT_PUBLIC_BASE_SESSION_KEY!;
+  if (!sessionKey) {
+    return NextResponse.json(
+      { success: false, message: "Session key tidak ditemukan" },
+      { status: 500 }
+    );
+  }
+
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get(sessionKey);
+
+  if (!sessionCookie) {
+    return NextResponse.json(
+      { success: false, message: "Session tidak ditemukan" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Menghapus cookie dengan set maxAge 0
+    cookieStore.set({
+      name: sessionKey,
+      value: "",
+      path: "/",
+      maxAge: 0,
     });
 
-  const del = cookies().delete(process.env.NEXT_PUBLIC_BASE_SESSION_KEY!);
-  return new Response(JSON.stringify({ success: true, message: "Logout Berhasil" }), {status: 200});
+    return NextResponse.json({
+      success: true,
+      message: "Logout berhasil",
+
+    });
+  } catch (error) {
+    console.error("Gagal menghapus cookie:", error);
+    return NextResponse.json(
+      { success: false, message: "Gagal melakukan logout" },
+      { status: 500 }
+    );
+  }
 }
-
-// import { cookies } from "next/headers";
-// import { NextResponse } from "next/server";
-
-// export async function GET() {
-//   cookies().set({
-//     name: "mySession",
-//     value: "",
-//     maxAge: 0,
-//   });
-
-//   return NextResponse.json({ status: 200, message: "Logout" });
-// }

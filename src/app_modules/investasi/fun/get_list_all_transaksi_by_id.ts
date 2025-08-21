@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import moment from "moment";
 import { MODEL_Transaksi_Investasi } from "../_lib/interface";
 import funGantiStatusTransaksi_Investasi from "./fun_ganti_status_transaksi";

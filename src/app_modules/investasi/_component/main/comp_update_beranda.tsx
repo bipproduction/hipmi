@@ -1,31 +1,29 @@
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import { Affix, Button, Center, rem } from "@mantine/core";
 import { useState } from "react";
-import { investasi_funGetAllPublish } from "../../fun/get_all_investasi";
-import { data } from "autoprefixer";
+import { apiFetchGetAllInvestasi } from "../../_lib/api_fetch_new_investasi";
 
 export function Investasi_ComponentButtonUpdateBeranda({
   onLoadData,
 }: {
   onLoadData: (val: any) => void;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   async function onLoaded() {
     try {
-      await investasi_funGetAllPublish({ page: 1 });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      const loadData = await investasi_funGetAllPublish({ page: 1 });
-
-      onLoadData({
-        data: loadData,
-        isNewPost: false,
+      setLoading(true);
+      const response = await apiFetchGetAllInvestasi({
+        page: "1",
       });
+      if (response.success) {
+        onLoadData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    setIsLoading(true);
   }
 
   return (

@@ -1,5 +1,5 @@
 "use server";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function adminInvestasi_getOneById({
   investasiId,

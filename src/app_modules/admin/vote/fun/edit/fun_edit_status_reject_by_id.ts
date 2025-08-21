@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_VOTING } from "@/app_modules/vote/model/interface";
 import { revalidatePath } from "next/cache";
 

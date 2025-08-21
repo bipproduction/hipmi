@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { Center, Image, Paper, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useAtom } from "jotai";
@@ -24,7 +24,7 @@ export default function Vote_Splash() {
       setTabsStatus("Publish");
       setTabsRiwayat("Semua");
       router.replace(RouterVote.beranda);
-    }, 1000);
+    }, 500);
   }, []);
 
   return (

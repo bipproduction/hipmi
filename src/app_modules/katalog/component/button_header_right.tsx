@@ -11,10 +11,12 @@ export function ComponentKatalog_ButtonHeaderRight({
   profileId,
   userLoginId,
   authorId,
+  userRoleId,
 }: {
   profileId: string;
   userLoginId: string;
   authorId: string;
+  userRoleId: string
 }) {
   const [opened, { open, close }] = useDisclosure();
 
@@ -33,6 +35,7 @@ export function ComponentKatalog_ButtonHeaderRight({
         close={() => close()}
         profileId={profileId}
         userId={userLoginId}
+        userRoleId={userRoleId}
       />
     </>
   );

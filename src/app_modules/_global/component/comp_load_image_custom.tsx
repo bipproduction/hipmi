@@ -1,7 +1,7 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
 import { Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export function ComponentGlobal_LoadImageCustom({
   height: number;
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

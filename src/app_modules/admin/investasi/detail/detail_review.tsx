@@ -1,162 +1,197 @@
 "use client";
 
+import { MainColor } from "@/app_modules/_global/color";
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
-import getOneInvestasiById from "@/app_modules/investasi/fun/get_one_investasi_by_id";
-import mqtt_client from "@/util/mqtt_client";
-import {
-  Button,
-  Group,
-  SimpleGrid,
-  Stack
-} from "@mantine/core";
+import { IRealtimeData } from "@/lib/global_state";
+import { clientLogger } from "@/util/clientLogger";
+import { Button, Group, SimpleGrid, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { Admin_ComponentModalReport } from "../../_admin_global/_component";
+import Admin_ComponentModalPublish from "../../_admin_global/_component/comp_admin_modal_publish";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
 import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
-import AdminGlobal_ComponentBackButton from "../../_admin_global/back_button";
+import Admin_ComponentBackButton from "../../_admin_global/back_button";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 import { ComponentAdminInvestasi_DetailDataAuthor } from "../_component/detail_data_author";
 import { ComponentAdminInvestasi_DetailData } from "../_component/detail_data_investasi";
 import { ComponentAdminInvestasi_DetailGambar } from "../_component/detail_gambar_investasi";
+import SkeletonAdminInvestasi from "../_component/skeleton_admin_investasi";
 import { ComponentAdminInvestasi_UIDetailFile } from "../_component/ui_detail_file";
+import { apiGetAdminInvestasiById } from "../_lib/api_fetch_admin_investasi";
 import { adminInvestasi_funEditStatusPublishById } from "../fun/edit/fun_status_publish_by_id";
 import Admin_funRejectInvestasi from "../fun/fun_reject_investasi";
+import ComponentAdminGlobal_HeaderTamplate from "../../_admin_global/header_tamplate";
+import { AdminInvestasi_ViewDetailData } from "../_view";
+import { Admin_V3_ComponentBreakpoint } from "../../_components_v3/comp_simple_grid_breakpoint";
+import { Admin_V3_ComponentSkeletonBreakpoint } from "../../_components_v3/comp_skeleton_breakpoint";
+import { AdminInvestasi_ComponentNewDetailData } from "../_component/new_detail_data";
 
-export default function AdminInvestasi_DetailReview({
-  dataInvestasi,
-}: {
-  dataInvestasi: MODEL_INVESTASI;
-}) {
+export default function AdminInvestasi_DetailReview() {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [data, setData] = useState(dataInvestasi);
+  const [data, setData] = useState<MODEL_INVESTASI | null>(null);
   const [publish, setPublish] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalPublish, setOpenModalPublish] = useState(false);
+  const [openModalReject, setOpenModalReject] = useState(false);
   const [isLoadingPublish, setIsLoadingPublish] = useState(false);
   const [isLoadingReject, setIsLoadingReject] = useState(false);
   const [report, setReport] = useState("");
+  const investasiId = params;
 
   useShallowEffect(() => {
     cekStatusPublish();
+    loadInitialData();
   }, []);
 
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminInvestasiById({
+        id: params.id,
+      });
+
+      if (response?.success && response?.data) {
+        setData(response.data);
+      }
+    } catch (error) {
+      clientLogger.error("Invalid data format recieved:", error);
+      setData(null);
+    }
+  };
+
   async function cekStatusPublish() {
-    if (data.MasterStatusInvestasi.id === "3") setPublish(false);
+    if (data?.MasterStatusInvestasi.id === "3") setPublish(false);
   }
 
   async function onReject() {
     const body = {
-      id: data.id,
+      id: data?.id,
       catatan: report,
       status: "4",
     };
     if (_.isEmpty(body.catatan))
       return ComponentAdminGlobal_NotifikasiPeringatan("Lengkapi alasan");
 
-    const res = await Admin_funRejectInvestasi(body);
-    if (res.status === 200) {
+    try {
       setIsLoadingReject(true);
+      const res = await Admin_funRejectInvestasi(body);
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as string,
+          userId: res.data?.authorId as string,
+          pesan: res.data?.title as string,
+          status: res.data?.MasterStatusInvestasi?.name as any,
+          kategoriApp: "INVESTASI",
+          title: "Investasi anda di tolak !",
+        };
 
-      const dataNotif = {
-        appId: res.data?.id,
-        userId: res.data?.authorId,
-        pesan: res.data?.title,
-        status: res.data?.MasterStatusInvestasi?.name,
-        kategoriApp: "INVESTASI",
-        title: "Investasi anda di tolak !",
-      };
+        const notif = await adminNotifikasi_funCreateToUser({
+          data: dataNotifikasi as any,
+        });
 
-      const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
-      });
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
+        }
 
-      if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: res?.data?.authorId, count: 1 })
-        );
+        ComponentAdminGlobal_NotifikasiBerhasil(res.message);
+        router.back();
+        setOpenModalReject(false);
+        setIsLoadingReject(false);
+      } else {
+        ComponentAdminGlobal_NotifikasiGagal(res.message);
+        setOpenModalReject(false);
+        setIsLoadingReject(false);
       }
-
-      const loadData = await getOneInvestasiById(data.id);
-      setData(loadData as any);
-
-      ComponentAdminGlobal_NotifikasiBerhasil(res.message);
-      router.back();
-      setOpenModal(false);
+    } catch (error) {
+      console.log(error);
+      setOpenModalReject(false);
       setIsLoadingReject(false);
-    } else {
-      ComponentAdminGlobal_NotifikasiGagal(res.message);
-      setOpenModal(false);
     }
   }
 
   async function onPublish() {
-    const res = await adminInvestasi_funEditStatusPublishById({
-      investasiId: data.id,
-      statusId: "1",
-      progesInvestasiId: "1",
-    });
-    if (res.status === 200) {
-      const dataNotif = {
-        appId: res.data?.id,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        status: res.data?.MasterStatusInvestasi?.name as any,
-        kategoriApp: "INVESTASI",
-        title: "Investasi publish",
-      };
-
-      const notif = await adminNotifikasi_funCreateToUser({
-        data: dataNotif as any,
+    try {
+      setIsLoadingPublish(true);
+      const res = await adminInvestasi_funEditStatusPublishById({
+        investasiId: data?.id as any,
+        statusId: "1",
+        progesInvestasiId: "1",
       });
+      if (res.status === 200) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as string,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          status: res.data?.MasterStatusInvestasi?.name as any,
+          kategoriApp: "INVESTASI",
+          title: "Investasi publish",
+        };
 
-      if (notif.status === 201) {
-        mqtt_client.publish(
-          "USER",
-          JSON.stringify({ userId: res?.data?.authorId, count: 1 })
-        );
+        const notif = await adminNotifikasi_funCreateToUser({
+          data: dataNotifikasi as any,
+        });
 
-        mqtt_client.publish(
-          "Beranda_Investasi",
-          JSON.stringify({ update: true })
-        );
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
 
-        const loadData = await getOneInvestasiById(data.id);
-        setData(loadData as any);
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "USER",
+            dataMessage: dataNotifikasi,
+          });
 
-        ComponentAdminGlobal_NotifikasiBerhasil("Proyek Investasi Di Publish");
-        router.back();
-        // router.push(RouterAdminInvestasi_OLD.table_status_review);
+          ComponentAdminGlobal_NotifikasiBerhasil(
+            "Proyek Investasi Di Publish"
+          );
+          setOpenModalPublish(false);
+          setIsLoadingPublish(false);
+          router.back();
+          // router.push(RouterAdminInvestasi_OLD.table_status_review);
+        }
+      } else {
+        ComponentAdminGlobal_NotifikasiGagal(res.message);
+        setOpenModalPublish(false);
+        setIsLoadingPublish(false);
       }
-    } else {
-      ComponentAdminGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      console.log(error);
+      setOpenModalPublish(false);
+      setIsLoadingPublish(false);
     }
   }
 
   return (
     <>
-      <Stack px={"lg"}>
+      <Stack>
+        <ComponentAdminGlobal_HeaderTamplate name="Investasi: Review" />
         <Group position="apart">
-          <AdminGlobal_ComponentBackButton />
+          <Admin_ComponentBackButton />
 
-          {data.masterStatusInvestasiId === "2" ? (
+          {data?.masterStatusInvestasiId === "2" ? (
             <Group>
               <Button
-                loaderPosition="center"
-                loading={isLoadingPublish}
                 radius={"xl"}
                 color="green"
-                onClick={() => onPublish()}
+                onClick={() => setOpenModalPublish(true)}
               >
                 Publish
               </Button>
               <Button
                 radius={"xl"}
                 color="red"
-                onClick={() => setOpenModal(true)}
+                onClick={() => setOpenModalReject(true)}
               >
                 Reject
               </Button>
@@ -166,7 +201,7 @@ export default function AdminInvestasi_DetailReview({
           )}
         </Group>
 
-        <SimpleGrid
+        {/* <SimpleGrid
           cols={3}
           spacing="lg"
           breakpoints={[
@@ -175,37 +210,48 @@ export default function AdminInvestasi_DetailReview({
             { maxWidth: "36rem", cols: 1, spacing: "sm" },
           ]}
         >
-          {/* Data Author */}
-          <ComponentAdminInvestasi_DetailDataAuthor data={data.author} />
+          <ComponentAdminInvestasi_DetailDataAuthor
+            data={data?.author as any}
+          />
 
-          {/* Data Foto */}
-          <ComponentAdminInvestasi_DetailGambar imagesId={data.imageId} />
+          <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId} />
 
-          {/* Data Detail */}
           <ComponentAdminInvestasi_DetailData data={data} />
-        </SimpleGrid>
+        </SimpleGrid> */}
 
-        <ComponentAdminInvestasi_UIDetailFile
-          title={data.title}
-          dataProspektus={data.ProspektusInvestasi}
-          listDokumen={data.DokumenInvestasi}
-          prospektusFileId={data.prospektusFileId}
-        />
+        {!data ? (
+          <Admin_V3_ComponentSkeletonBreakpoint />
+        ) : (
+          <Admin_V3_ComponentBreakpoint md={2} lg={2}>
+            <AdminInvestasi_ComponentNewDetailData data={data as any} />
+            {/* Data Foto */}
+            <Admin_V3_ComponentBreakpoint cols={1}>
+              <ComponentAdminInvestasi_DetailGambar imagesId={data?.imageId} />
+              <ComponentAdminInvestasi_UIDetailFile
+                title={data?.title}
+                dataProspektus={data?.ProspektusInvestasi}
+                listDokumen={data?.DokumenInvestasi}
+                prospektusFileId={data?.prospektusFileId}
+              />
+            </Admin_V3_ComponentBreakpoint>
+          </Admin_V3_ComponentBreakpoint>
+        )}
       </Stack>
 
       <Admin_ComponentModalReport
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
+        opened={openModalReject}
+        onClose={() => setOpenModalReject(false)}
         title="Alasan Penolakan"
         onHandlerChange={(val) => setReport(val.target.value)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button radius={"xl"} onClick={() => setOpenModalReject(false)}>
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             loaderPosition="center"
+            style={{ backgroundColor: MainColor.green }}
             loading={isLoadingReject}
             radius={"xl"}
             onClick={() => {
@@ -216,8 +262,29 @@ export default function AdminInvestasi_DetailReview({
           </Button>
         }
       />
-
-  
+      <Admin_ComponentModalPublish
+        opened={openModalPublish}
+        onClose={() => setOpenModalPublish(false)}
+        title="Anda Yakin Ingin Mempublish Investasi Ini ?"
+        buttonKiri={
+          <Button radius={"xl"} onClick={() => setOpenModalPublish(false)}>
+            Batal
+          </Button>
+        }
+        buttonKanan={
+          <Button
+            loaderPosition="center"
+            loading={isLoadingPublish}
+            style={{ backgroundColor: MainColor.green }}
+            radius={"xl"}
+            onClick={() => {
+              onPublish();
+            }}
+          >
+            Simpan
+          </Button>
+        }
+      />
     </>
   );
 }

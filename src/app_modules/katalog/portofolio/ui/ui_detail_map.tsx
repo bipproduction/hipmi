@@ -1,6 +1,6 @@
 "use client";
 
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 import {
   ComponentMap_DetailData,
@@ -102,8 +102,8 @@ function MapView({
             <Avatar
               src={
                 data.pinId === null
-                  ? APIs.GET({ fileId: logoId })
-                  : APIs.GET({ fileId: data.pinId })
+                  ? APIs.GET({ fileId: logoId , size: "300"})
+                  : APIs.GET({ fileId: data.pinId, size: "300" })
               }
               alt="Logo"
               style={{

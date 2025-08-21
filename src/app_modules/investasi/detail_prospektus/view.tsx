@@ -3,7 +3,7 @@
 import {
   NEW_RouterInvestasi,
   RouterInvestasi_OLD,
-} from "@/app/lib/router_hipmi/router_investasi";
+} from "@/lib/router_hipmi/router_investasi";
 import {
   AccentColor,
   MainColor,
@@ -24,8 +24,8 @@ import { IconChevronRight, IconFileTypePdf } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 import { MODEL_INVESTASI } from "../_lib/interface";
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
-import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
 import { useRouter } from "next/navigation";
 // import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 // import "@cyntler/react-doc-viewer/dist/index.css";

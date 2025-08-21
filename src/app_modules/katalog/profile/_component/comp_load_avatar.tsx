@@ -1,8 +1,8 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib";
-import { RouterImagePreview } from "@/app/lib/router_hipmi/router_image_preview";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib";
+import { RouterImagePreview } from "@/lib/router_hipmi/router_image_preview";
 import { AccentColor } from "@/app_modules/_global/color";
 import { Avatar, Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";

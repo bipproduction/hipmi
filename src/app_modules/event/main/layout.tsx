@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
@@ -70,7 +70,7 @@ export default function LayoutEvent_Main({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={hotMenu === i ? MainColor.yellow : "white"}
+                  c={hotMenu === i ? MainColor.yellow : MainColor.white}
                   onClick={() =>
                     e.path === ""
                       ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")
@@ -80,7 +80,7 @@ export default function LayoutEvent_Main({
                   {e.icon}
                 </ActionIcon>
                 <Text
-                  c={hotMenu === i ? MainColor.yellow : "white"}
+                  c={hotMenu === i ? MainColor.yellow : MainColor.white}
                   fz={"xs"}
                   lineClamp={1}
                 >

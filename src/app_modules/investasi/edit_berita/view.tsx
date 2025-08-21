@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
-import { Warna } from "@/app/lib/warna";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
+import { Warna } from "@/lib/warna";
 import {
   AspectRatio,
   Button,

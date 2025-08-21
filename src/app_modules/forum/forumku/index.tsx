@@ -1,104 +1,168 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
-import {
-  AccentColor
-} from "@/app_modules/_global/color/color_pallet";
+import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
-import {
-  ActionIcon,
-  Affix,
-  Center,
-  Loader,
-  Stack,
-  Text,
-  rem,
-} from "@mantine/core";
-import { useWindowScroll } from "@mantine/hooks";
-import { IconPencilPlus, IconSearchOff } from "@tabler/icons-react";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
+import { Center, Loader, Stack } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { ScrollOnly } from "next-scroll-loader";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiGetForumkuById } from "../component/api_fetch_forum";
 import ComponentForum_ForumkuMainCardView from "../component/forumku_component/forumku_view";
-import { forum_getAllPostingByAuhtorId } from "../fun/get/get_list_posting_by_author_id";
+import { Forum_ComponentIsDataEmpty } from "../component/other_component";
+import {
+  Forum_SkeletonCard,
+  Forum_SkeletonForumku,
+} from "../component/skeleton_view";
 import { MODEL_FORUM_POSTING } from "../model/interface";
 import ComponentForum_ViewForumProfile from "./forum_profile";
-import ComponentGlobal_CreateButton from "@/app_modules/_global/component/button_create";
 
-export default function Forum_Forumku({
-  auhtorSelectedData,
-  dataPosting,
-  totalPosting,
-  userLoginId,
-}: {
-  auhtorSelectedData: MODEL_USER;
-  dataPosting: MODEL_FORUM_POSTING[];
-  totalPosting: number;
-  userLoginId: string;
-}) {
+export default function Forum_Forumku() {
   const router = useRouter();
-  const [data, setData] = useState(dataPosting);
+  const params = useParams<{ id: string }>();
+  const userId = params.id;
+  const [dataUser, setDataUser] = useState<MODEL_USER | null>(null);
+  const [dataPosting, setDataPosting] = useState<MODEL_FORUM_POSTING[] | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
-  const [scroll, scrollTo] = useWindowScroll();
-  const [loadingCreate, setLoadingCreate] = useState(false);
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
+
+  useShallowEffect(() => {
+    const handleLoadDataUser = async () => {
+      try {
+        const response = await apiGetUserById({
+          id: userId,
+        });
+
+        if (response) {
+          setDataUser(response.data);
+        }
+      } catch (error) {
+        clientLogger.error("Error get user", error);
+      }
+    };
+
+    handleLoadDataUser();
+  }, []);
+
+  useShallowEffect(() => {
+    handleLoadDataForum();
+  }, []);
+
+  const handleLoadDataForum = async () => {
+    try {
+      setIsLoading(true);
+      const response = await apiGetForumkuById({
+        id: userId,
+        page: "1",
+      });
+
+      if (response.success) {
+        setDataPosting(response.data);
+        setActivePage(1);
+        setIsLoading(false);
+      } else {
+        setDataPosting([]);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data forum");
+      setIsLoading(false);
+      setDataPosting([]);
+    }
+  };
+
+  const handleMoreData = async () => {
+    try {
+      const nextPage = activePage + 1;
+
+      const response = await apiGetForumkuById({
+        id: userId,
+        page: `${nextPage}`,
+      });
+
+      if (response.success) {
+        setActivePage(nextPage);
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      clientLogger.error("Error get data forum");
+      return null;
+    }
+  };
 
   return (
     <>
-      {userLoginId === auhtorSelectedData.id && (
-        <ComponentGlobal_CreateButton path={RouterForum.create} />
-      )}
-
       <Stack spacing={"xl"}>
-        <ComponentForum_ViewForumProfile
-          auhtorSelectedData={auhtorSelectedData}
-          totalPosting={totalPosting}
-        />
+        {!dataUser || !userLoginId ? (
+          <Forum_SkeletonForumku />
+        ) : (
+          <ComponentForum_ViewForumProfile
+            auhtorSelectedData={dataUser}
+            totalPosting={dataPosting?.length || 0}
+          />
+        )}
 
-        {_.isEmpty(data) ? (
-          <Stack align="center" justify="center" h={"80vh"}>
-            <IconSearchOff size={80} color="white" />
-            <Stack spacing={0} align="center">
-              <Text c={"white"} fw={"bold"} fz={"xs"}>
-                Tidak ada data
-              </Text>
-            </Stack>
-          </Stack>
+        {!dataPosting || isLoading || !userLoginId ? (
+          <Forum_SkeletonCard />
+        ) : _.isEmpty(dataPosting) ? (
+          <Forum_ComponentIsDataEmpty />
         ) : (
           // --- Main component --- //
           <ScrollOnly
-            height={data.length < 5 ? "75vh" : "100vh"}
+            height={"75vh"}
             renderLoading={() => (
               <Center mt={"lg"}>
                 <Loader color={"yellow"} />
               </Center>
             )}
-            data={data}
-            setData={setData}
-            moreData={async () => {
-              const loadData = await forum_getAllPostingByAuhtorId({
-                page: activePage + 1,
-                authorId: auhtorSelectedData.id,
-              });
-              setActivePage((val) => val + 1);
-
-              return loadData;
-            }}
+            data={dataPosting as MODEL_FORUM_POSTING[]}
+            setData={setDataPosting as any}
+            moreData={handleMoreData}
           >
             {(item) => (
               <ComponentForum_ForumkuMainCardView
                 data={item}
                 userLoginId={userLoginId}
                 onLoadData={(val) => {
-                  setData(val);
+                  setDataPosting(val);
                 }}
-                allData={data}
+                allData={dataPosting || []}
               />
             )}
           </ScrollOnly>
         )}
       </Stack>
+
+      {userLoginId === dataUser?.id && (
+        <ComponentGlobal_CreateButton path={RouterForum.create} />
+      )}
     </>
   );
 }

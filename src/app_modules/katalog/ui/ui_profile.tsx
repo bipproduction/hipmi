@@ -68,6 +68,7 @@ export function Profile_UiView({
         <Box>
           <Profile_ComponentLoadBackgroundImage
             fileId={profile.imageBackgroundId as any}
+            size={500}
           />
 
           <Box

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import _ from "lodash";
 
 export async function event_getListSemuaRiwayat({ page }: { page: number }) {

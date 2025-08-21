@@ -1,21 +1,21 @@
-import { IRealtimeData } from "@/app/lib/global_state";
-import { RouterEvent } from "@/app/lib/router_hipmi/router_event";
 import { MainColor } from "@/app_modules/_global/color";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import { maxInputLength } from "@/app_modules/_global/lib/maximal_setting";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
-  ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
 import { notifikasiToAdmin_funCreate } from "@/app_modules/notifikasi/fun";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterEvent } from "@/lib/router_hipmi/router_event";
+import { clientLogger } from "@/util/clientLogger";
 import { Button } from "@mantine/core";
 import { useAtom } from "jotai";
-import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
 import { Event_funCreate } from "../../fun/create/fun_create";
 import { gs_event_hotMenu } from "../../global_state";
-import { event_checkStatus } from "../../fun/get/fun_check_status_by_id";
 
 export default function Event_ComponentCreateButton({
   value,
@@ -31,42 +31,47 @@ export default function Event_ComponentCreateButton({
   const [isLoading, setLoading] = useState(false);
 
   async function onSave() {
-    
-    const res = await Event_funCreate(value);
+    try {
+      setLoading(true);
+      const res = await Event_funCreate(value);
 
-    if (res.status === 201) {
-      const dataNotifikasi: IRealtimeData = {
-        appId: res.data?.id as any,
-        status: res.data?.EventMaster_Status?.name as any,
-        userId: res.data?.authorId as any,
-        pesan: res.data?.title as any,
-        kategoriApp: "EVENT",
-        title: "Event baru",
-      };
+      if (res.status === 201) {
+        const dataNotifikasi: IRealtimeData = {
+          appId: res.data?.id as any,
+          status: res.data?.EventMaster_Status?.name as any,
+          userId: res.data?.authorId as any,
+          pesan: res.data?.title as any,
+          kategoriApp: "EVENT",
+          title: "Event baru",
+        };
 
-      const notif = await notifikasiToAdmin_funCreate({
-        data: dataNotifikasi as any,
-      });
-
-      if (notif.status === 201) {
-        WibuRealtime.setData({
-          type: "notification",
-          pushNotificationTo: "ADMIN",
+        const notif = await notifikasiToAdmin_funCreate({
+          data: dataNotifikasi as any,
         });
 
-        WibuRealtime.setData({
-          type: "trigger",
-          pushNotificationTo: "ADMIN",
-          dataMessage: dataNotifikasi,
-        });
+        if (notif.status === 201) {
+          WibuRealtime.setData({
+            type: "notification",
+            pushNotificationTo: "ADMIN",
+          });
 
-        ComponentGlobal_NotifikasiBerhasil(res.message);
-        setHotMenu(1);
-        setLoading(true);
-        router.push(RouterEvent.status({ id: "2" }), { scroll: false });
+          WibuRealtime.setData({
+            type: "trigger",
+            pushNotificationTo: "ADMIN",
+            dataMessage: dataNotifikasi,
+          });
+
+          ComponentGlobal_NotifikasiBerhasil(res.message);
+          setHotMenu(1);
+          router.push(RouterEvent.status({ id: "2" }), { scroll: false });
+        }
+      } else {
+        setLoading(false);
+        ComponentGlobal_NotifikasiGagal(res.message);
       }
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error create event", error);
     }
   }
 
@@ -79,14 +84,16 @@ export default function Event_ComponentCreateButton({
         disabled={
           value.title === "" ||
           value.lokasi === "" ||
-          value.deskripsi === "" ||
           value.eventMaster_TipeAcaraId === 0 ||
           value.tanggal === "function Date() { [native code] }" ||
           // moment(value.tanggal).diff(moment(), "minutes") < 0
-          diffTimeEnd - 1 < diffTimeStart
+          diffTimeEnd - 1 < diffTimeStart ||
+          // value.deskripsi === "" ||
+          funReplaceHtml({ html: value.deskripsi }).length > maxInputLength ||
+          funReplaceHtml({ html: value.deskripsi }).length === 0
         }
         loaderPosition="center"
-        loading={isLoading ? true : false}
+        loading={isLoading}
         radius={"xl"}
         mt={"xl"}
         onClick={() => {
@@ -94,7 +101,7 @@ export default function Event_ComponentCreateButton({
         }}
         bg={MainColor.yellow}
         color="yellow"
-        c={"black"}
+        c={MainColor.darkblue}
       >
         Simpan
       </Button>

@@ -2,16 +2,27 @@
 
 import { useRouter } from "next/navigation";
 import { MODEL_DONASI } from "../../model/interface";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
-import { Stack, Title, Paper, Group, ActionIcon, Text } from "@mantine/core";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
+import {
+  Stack,
+  Title,
+  Paper,
+  Group,
+  ActionIcon,
+  Text,
+  Box,
+} from "@mantine/core";
 import { IconCircleChevronRight } from "@tabler/icons-react";
-import moment from "moment";
 import { useState } from "react";
 import {
   AccentColor,
   MainColor,
 } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { funReplaceHtml } from "@/app_modules/_global/fun/fun_replace_html";
+import moment from "moment";
+import "moment/locale/id";
 
 export default function ComponentDonasi_CeritaPenggalangMain({
   donasi,
@@ -25,7 +36,7 @@ export default function ComponentDonasi_CeritaPenggalangMain({
       <Stack
         spacing={"xs"}
         style={{
-          color: "white",
+          color: MainColor.white,
         }}
       >
         <Title order={4}>Cerita Penggalang Dana</Title>
@@ -35,15 +46,13 @@ export default function ComponentDonasi_CeritaPenggalangMain({
             backgroundColor: AccentColor.darkblue,
             border: `2px solid ${AccentColor.blue}`,
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <Stack>
             <Group position="apart">
               <Text>
-                {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
-                  donasi?.createdAt
-                )}
+                {moment(donasi?.createdAt).format("DD MMM YYYY")}
               </Text>
               <ActionIcon
                 variant="transparent"
@@ -63,7 +72,9 @@ export default function ComponentDonasi_CeritaPenggalangMain({
                 )}
               </ActionIcon>
             </Group>
-            <Text lineClamp={4}>{donasi?.CeritaDonasi.cerita}</Text>
+            <Text lineClamp={4}>
+              {funReplaceHtml({ html: donasi?.CeritaDonasi.cerita })}
+            </Text>
             {/* <Text c={"blue"}>Baca selengkapnya</Text> */}
           </Stack>
         </Paper>

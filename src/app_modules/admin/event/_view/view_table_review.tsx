@@ -1,14 +1,15 @@
-import {
-  gs_adminEvent_triggerReview,
-  IRealtimeData,
-} from "@/app/lib/global_state";
+import { apiGetDataEventByStatus } from "@/app_modules/admin/event/_lib/api_fecth_admin_event";
+import { gs_adminEvent_triggerReview, IRealtimeData } from "@/lib/global_state";
 import { AccentColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiGagal,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
+import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_by_id";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Affix,
   Box,
@@ -26,7 +27,6 @@ import {
   Text,
   Textarea,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import {
@@ -39,26 +39,26 @@ import { useAtom } from "jotai";
 import moment from "moment";
 import { useState } from "react";
 import { WibuRealtime } from "wibu-pkg";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
 import { ComponentAdminGlobal_NotifikasiBerhasil } from "../../_admin_global/admin_notifikasi/notifikasi_berhasil";
 import { ComponentAdminGlobal_NotifikasiGagal } from "../../_admin_global/admin_notifikasi/notifikasi_gagal";
+import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
 import adminNotifikasi_funCreateToUser from "../../notifikasi/fun/create/fun_create_notif_user";
 import { adminEvent_funGetListReview } from "../fun";
 import { AdminEvent_funEditStatusPublishById } from "../fun/edit/fun_edit_status_publish_by_id";
 import { AdminEvent_funEditCatatanById } from "../fun/edit/fun_edit_status_reject_by_id";
-import { event_checkStatus } from "@/app_modules/event/fun/get/fun_check_status_by_id";
-import { ComponentAdminGlobal_NotifikasiPeringatan } from "../../_admin_global/admin_notifikasi/notifikasi_peringatan";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
+import Admin_DetailButton from "../../_admin_global/_component/button/detail_button";
+import { RouterAdminEvent } from "@/lib/router_admin/router_admin_event";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 
-export default function AdminEvent_ComponentTableReview({
-  listData,
-}: {
-  listData: any;
-}) {
-  const [data, setData] = useState<MODEL_EVENT[]>(listData.data);
-  const [isNPage, setNPage] = useState(listData.nPage);
-  const [isActivePage, setActivePage] = useState(1);
+export default function AdminEvent_ComponentTableReview() {
+  const [data, setData] = useState<MODEL_EVENT[] | null>(null);
+  const [isNPage, setNPage] = useState<number>(1);
+  const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isModal, setModal] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const [catatan, setCatatan] = useState("");
   const [eventId, setEventId] = useState("");
@@ -70,37 +70,41 @@ export default function AdminEvent_ComponentTableReview({
   const [isShowReload, setIsShowReload] = useState(false);
 
   useShallowEffect(() => {
-    if (isAdminTriggerReview) {
-      setIsShowReload(true);
+    loadInitialData();
+  }, [activePage, isSearch]);
+
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetDataEventByStatus({
+        name: "Review",
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response?.success && response?.data?.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invalid data format received:", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data table publish", error);
+      setData([]);
     }
-  }, [isAdminTriggerReview, setIsShowReload]);
+  };
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminEvent_funGetListReview({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
+    setActivePage(1);
+  };
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminEvent_funGetListReview({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
 
   async function onLoadData() {
-    const loadData = await adminEvent_funGetListReview({
-      page: 1,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+    loadInitialData();
     setIsLoading(false);
     setIsShowReload(false);
     setIsAdminTriggerReview(false);
@@ -108,21 +112,22 @@ export default function AdminEvent_ComponentTableReview({
 
   async function onPublish({
     eventId,
-    tanggalSelesai,
+    tanggal,
   }: {
     eventId: string;
-    tanggalSelesai: Date;
+    tanggal: Date;
   }) {
     const checkStatus = await event_checkStatus({ id: eventId });
 
     if (checkStatus) {
-      if (moment(tanggalSelesai).diff(Date.now(), "minutes") < 0)
+      if (moment(tanggal).diff(Date.now(), "minutes") < 0)
         return ComponentGlobal_NotifikasiPeringatan(
           "Waktu acara telah lewat, Report untuk memberitahu user !"
         );
 
       const res = await AdminEvent_funEditStatusPublishById(eventId, "1");
       if (res.status === 200) {
+        setIsLoading(true);
         const dataNotifikasi: IRealtimeData = {
           appId: res.data?.id as any,
           status: res.data?.EventMaster_Status?.name as any,
@@ -150,18 +155,32 @@ export default function AdminEvent_ComponentTableReview({
           });
         }
 
-        const loadData = await adminEvent_funGetListReview({
-          search: isSearch,
-          page: isActivePage,
-        });
-        setData(loadData.data as any);
-        setNPage(loadData.nPage);
+        try {
+          const response = await apiGetDataEventByStatus({
+            name: "Review",
+            page: `${activePage}`,
+            search: isSearch,
+          });
+
+          if (response?.success && response?.data?.data) {
+            setData(response.data.data);
+            setNPage(response.data.nPage || 1);
+          } else {
+            setData([]);
+          }
+        } catch (error) {
+          clientLogger.error("Error get data table publish", error);
+          setData([]);
+        }
 
         ComponentAdminGlobal_NotifikasiBerhasil("Berhasil update status");
       } else {
+        setModal(false);
+        setIsLoading(false);
         ComponentAdminGlobal_NotifikasiGagal(res.message);
       }
     } else {
+      setModal(false);
       ComponentAdminGlobal_NotifikasiPeringatan(
         "Review di batalkan oleh user, reload halaman review !"
       );
@@ -199,12 +218,25 @@ export default function AdminEvent_ComponentTableReview({
         });
       }
 
-      const loadData = await adminEvent_funGetListReview({
-        search: isSearch,
-        page: isActivePage,
-      });
-      setData(loadData.data as any);
-      setNPage(loadData.nPage);
+      try {
+        const response = await apiGetDataEventByStatus({
+          name: "Review",
+          page: `${activePage}`,
+          search: isSearch,
+        });
+
+        if (response?.success && response?.data?.data) {
+          setData(response.data.data);
+          setNPage(response.data.nPage || 1);
+        } else {
+          console.error("Invalid data format received:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Error get data table publish", error);
+        setData([]);
+      }
+
       ComponentGlobal_NotifikasiBerhasil(res.message);
       close();
     } else {
@@ -212,206 +244,200 @@ export default function AdminEvent_ComponentTableReview({
     }
   }
 
-  const TableRows = data.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={200}>
-          <Text>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={2}>{e.title}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text>{e.lokasi}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text>{e.EventMaster_TipeAcara.name}</Text>
-        </Center>
-      </td>
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color={"gray"}>Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
 
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggal)}
-            ,{" "}
-            <Text span inherit>
+    return data.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={1}>{e?.Author?.username}</Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Box w={100}>
+              <Text lineClamp={2}>{e.title}</Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggal)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggal))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggal))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={200}>
-          <Text align="center">
-            {" "}
-            {new Intl.DateTimeFormat("id-ID", {
-              dateStyle: "full",
-            }).format(e?.tanggalSelesai)}
-            ,{" "}
-            <Text span inherit>
+          </Center>
+        </td>
+        <td>
+          <Center c={AdminColor.white}>
+            <Text align="center">
               {new Intl.DateTimeFormat("id-ID", {
-                timeStyle: "short",
-              }).format(e?.tanggalSelesai)}
+                dateStyle: "full",
+              }).format(new Date(e?.tanggalSelesai))}
+              ,{" "}
+              <Text span inherit>
+                {new Intl.DateTimeFormat("id-ID", {
+                  timeStyle: "short",
+                }).format(new Date(e?.tanggalSelesai))}
+              </Text>
             </Text>
-          </Text>
-        </Center>
-      </td>
-      
-      <td>
-        <Center w={400}>
-          <Spoiler hideLabel="sembunyikan" maxHeight={50} showLabel="tampilkan">
-            {e.deskripsi}
-          </Spoiler>
-        </Center>
-      </td>
+          </Center>
+        </td>
 
-      <td>
-        <Center>
-          <Stack>
-            <Button
-              color={"green"}
-              leftIcon={<IconCircleCheck />}
-              radius={"xl"}
-              onClick={() =>
-                onPublish({
-                  eventId: e.id,
-                  tanggalSelesai: e.tanggalSelesai,
-                })
-              }
-            >
-              Publish
-            </Button>
-            <Button
-              color={"red"}
-              leftIcon={<IconBan />}
-              radius={"xl"}
-              onClick={async () => {
-                const checkStatus = await event_checkStatus({ id: eventId });
-
-                if (checkStatus) {
-                  open();
-                  setEventId(e.id);
-                } else {
-                  ComponentAdminGlobal_NotifikasiPeringatan(
-                    "Review di batalkan oleh user, muat kembali halaman ini !"
-                  );
+        {/* <td>
+          <Center>
+            <Stack>
+              <Button
+                color={"green"}
+                leftIcon={<IconCircleCheck />}
+                radius={"xl"}
+                onClick={() =>
+                  onPublish({
+                    eventId: e.id,
+                    tanggal: e.tanggal,
+                  })
                 }
-              }}
-            >
-              Reject
-            </Button>
-          </Stack>
-        </Center>
-      </td>
-    </tr>
-  ));
+              >
+                Publish
+              </Button>
+              <Button
+                color={"red"}
+                leftIcon={<IconBan />}
+                radius={"xl"}
+                onClick={async () => {
+                  const checkStatus = await event_checkStatus({ id: e.id });
+
+                  if (checkStatus) {
+                    open();
+                    setEventId(e.id);
+                  } else {
+                    ComponentAdminGlobal_NotifikasiPeringatan(
+                      "Review di batalkan oleh user, muat kembali halaman ini !"
+                    );
+                  }
+                }}
+              >
+                Reject
+              </Button>
+            </Stack>
+          </Center>
+        </td> */}
+
+        <td>
+          <Center>
+            <Admin_DetailButton
+              path={RouterAdminEvent.new_detail({ id: e.id })}
+            />
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
-          position="apart"
-          bg={"orange.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4}>Review</Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Masukan judul"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
-
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          {isShowReload && (
-            <Affix position={{ top: rem(200) }} w={"100%"}>
-              <Center>
-                <Button
-                  style={{
-                    transition: "0.5s",
-                    border: `1px solid ${AccentColor.skyblue}`,
-                  }}
-                  bg={AccentColor.blue}
-                  loaderPosition="center"
-                  loading={isLoading}
-                  radius={"xl"}
-                  opacity={0.8}
-                  onClick={() => onLoadData()}
-                  leftIcon={<IconRefresh />}
-                >
-                  Update Data
-                </Button>
-              </Center>
-            </Affix>
-          )}
-
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={1500}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>Username</Center>
-                  </th>
-                  <th>
-                    <Center>Judul</Center>
-                  </th>
-                  <th>
-                    <Center>Lokasi</Center>
-                  </th>
-                  <th>
-                    <Center>Tipe Acara</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Mulai</Center>
-                  </th>
-                  <th>
-                    <Center>Tanggal & Waktu Selesai</Center>
-                  </th>
-                  <th>
-                    <Center>Deskripsi</Center>
-                  </th>
-
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{TableRows}</tbody>
-            </Table>
-          </ScrollArea>
-
-          <Center mt={"xl"}>
-            <Pagination
-              value={isActivePage}
-              total={isNPage}
+        <ComponentAdminGlobal_TitlePage
+          name="Review"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+              disabled={!data}
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Masukan judul"
               onChange={(val) => {
-                onPageClick(val);
+                onSearch(val.currentTarget.value);
               }}
             />
-          </Center>
-        </Paper>
+          }
+        />
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width="100%" />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
+            {isShowReload && (
+              <Affix position={{ top: rem(200) }} w={"100%"}>
+                <Center>
+                  <Button
+                    style={{
+                      transition: "0.5s",
+                      border: `1px solid ${AccentColor.skyblue}`,
+                    }}
+                    bg={AccentColor.blue}
+                    loaderPosition="center"
+                    loading={isLoading}
+                    radius={"xl"}
+                    opacity={0.8}
+                    onClick={() => onLoadData()}
+                    leftIcon={<IconRefresh />}
+                  >
+                    Update Data
+                  </Button>
+                </Center>
+              </Affix>
+            )}
+
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table verticalSpacing={"md"} horizontalSpacing={"md"} p={"md"}>
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Username</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Judul</Center>
+                    </th>
+
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Mulai
+                      </Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>
+                        Tanggal & Waktu Selesai
+                      </Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+
+              <Admin_V3_ComponentPaginationBreakpoint
+                value={activePage}
+                total={isNPage}
+                onChange={(val) => {
+                  onPageClick(val);
+                }}
+              />
+          </Paper>
+        )}
       </Stack>
 
       <Modal
@@ -448,6 +474,31 @@ export default function AdminEvent_ComponentTableReview({
           </Group>
         </Stack>
       </Modal>
+
+      {/* <Modal
+        opened={isModal}
+        title="Anda Yakin Ingin Mempublish Event Ini?"
+        onClose={() => setModal(false)}
+        centered
+        withCloseButton={false}
+        size={"md"}
+      >
+        <Stack>
+          <Group position="right">
+            <Button radius={"xl"} onClick={close}>
+              Batal
+            </Button>
+            <Button
+              radius={"xl"}
+              // onClick={() => {
+              //   onPublish(eventId, tanggal);
+              // }}
+            >
+              Simpan
+            </Button>
+          </Group>
+        </Stack>
+      </Modal> */}
     </>
   );
 }

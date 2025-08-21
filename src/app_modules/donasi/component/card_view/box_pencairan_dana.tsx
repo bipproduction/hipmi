@@ -3,8 +3,40 @@ import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_
 import { Paper, Stack, Grid, Title, Text } from "@mantine/core";
 import { MODEL_DONASI } from "../../model/interface";
 import TampilanRupiahDonasi from "../tampilan_rupiah";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { apiGetOneDonasiById } from "../../lib/api_donasi";
 
-export function ComponentDonasi_BoxPencariranDana({ akumulasi }: { akumulasi: MODEL_DONASI }) {
+export function ComponentDonasi_BoxPencariranDana() {
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_DONASI | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useShallowEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      setLoading(true); 
+      const response = await apiGetOneDonasiById(param.id, "semua");
+
+      if (response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading || !data) {
+    return <CustomSkeleton height={300} />;
+  }
+  
   return (
     <>
       <Paper
@@ -22,12 +54,12 @@ export function ComponentDonasi_BoxPencariranDana({ akumulasi }: { akumulasi: MO
           <Grid>
             <Grid.Col span={6}>
               <Title order={5}>
-                <TampilanRupiahDonasi nominal={akumulasi.totalPencairan} />
+                <TampilanRupiahDonasi nominal={data.totalPencairan} />
               </Title>
               <Text fz={"xs"}>Dana sudah dicairkan</Text>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Title order={5}>{akumulasi.akumulasiPencairan} kali</Title>
+              <Title order={5}>{data.akumulasiPencairan} kali</Title>
               <Text fz={"xs"}>Pencairan dana</Text>
             </Grid.Col>
           </Grid>

@@ -1,7 +1,21 @@
-import { AccentColor } from "@/app_modules/_global/color";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import { Card } from "@mantine/core";
 import React from "react";
 
+/**
+ * ComponentGlobal_CardStyles
+ *
+ * A React component that renders a customizable card element.
+ *
+ * Props:
+ * - children (React.ReactNode): Content to be displayed inside the card.
+ * - backgroundColor (string, optional): Background color of the card. Defaults to AccentColor.darkblue.
+ * - border (string, optional): Border color of the card. Defaults to AccentColor.blue.
+ * - marginBottom (string | number, optional): Margin below the card. Defaults to "15px".
+ * - height (string | number, optional): Height of the card. Defaults to "auto".
+ * - color (string, optional): Text color inside the card. Defaults to MainColor.white.
+ * - onClickHandler (React.MouseEventHandler<HTMLDivElement>, optional): Function to handle click events on the card.
+ */
 export function ComponentGlobal_CardStyles({
   children,
   backgroundColor,
@@ -10,6 +24,7 @@ export function ComponentGlobal_CardStyles({
   height,
   color,
   onClickHandler,
+  style,
 }: {
   children: React.ReactNode;
   backgroundColor?: string;
@@ -18,11 +33,13 @@ export function ComponentGlobal_CardStyles({
   height?: string | number;
   color?: string;
   onClickHandler?: React.MouseEventHandler<HTMLDivElement>;
+  style?: React.CSSProperties;
 }) {
   return (
     <>
       <Card
         style={{
+          ...style,
           backgroundColor: backgroundColor
             ? backgroundColor
             : AccentColor.darkblue,
@@ -30,7 +47,7 @@ export function ComponentGlobal_CardStyles({
           paddingInline: "16px",
           paddingBlock: "16px",
           borderRadius: "10px",
-          color: color ? color : "white",
+          color: color ? color : MainColor.white,
           height: height ? height : "auto",
           marginBottom: marginBottom ? marginBottom : "15px",
         }}

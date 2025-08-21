@@ -8,17 +8,41 @@ import { Investasi_ComponentCardRekapDocument } from "../../_component";
 import { investasi_funGetAllDocumentById } from "../../_fun";
 import { MODEL_INVESTASI_DOKUMEN } from "../../_lib/interface";
 import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { apiGetDokumenInvestasiById } from "../../_lib/api_interface";
+import { Investasi_SkeletonListDokumen } from "../../_component/skeleton_view";
+import { clientLogger } from "@/util/clientLogger";
 
-export function Investasi_ViewRekapDokumen({
-  dataDokumen,
-  investasiId,
-}: {
-  dataDokumen: any[];
-  investasiId: string;
-}) {
-  const [data, setData] = useState<MODEL_INVESTASI_DOKUMEN[]>(dataDokumen);
+export function Investasi_ViewRekapDokumen() {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
+
+  const [data, setData] = useState<MODEL_INVESTASI_DOKUMEN[] | null>(null);
   const [activePage, setActivePage] = useState(1);
 
+  useShallowEffect(() => {
+    onLoadData();
+  }, []);
+
+  async function onLoadData() {
+    try {
+      const respone = await apiGetDokumenInvestasiById({
+        id: investasiId,
+        kategori: "get-all",
+        page: `${activePage}`,
+      });
+
+      if (respone.success) {
+        setData(respone.data);
+      }
+    } catch (error) {
+      clientLogger.error("Error get data dokumen", error);
+    }
+  }
+
+  if (data === null) {
+    return <Investasi_SkeletonListDokumen />;
+  }
 
   return (
     <>
@@ -34,16 +58,23 @@ export function Investasi_ViewRekapDokumen({
               </Center>
             )}
             data={data}
-            setData={setData}
+            setData={setData as any}
             moreData={async () => {
-              const loadData = await investasi_funGetAllDocumentById({
-                investasiId: investasiId,
-                page: activePage + 1,
-              });
+              try {
+                const respone = await apiGetDokumenInvestasiById({
+                  id: investasiId,
+                  kategori: "get-all",
+                  page: `${activePage + 1}`,
+                });
 
-              setActivePage((val) => val + 1);
+                if (respone.success) {
+                  setActivePage((val) => val + 1);
 
-              return loadData;
+                  return respone.data;
+                }
+              } catch (error) {
+                clientLogger.error("Error load data dokumen:", error);
+              }
             }}
           >
             {(item) => (

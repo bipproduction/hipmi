@@ -3,6 +3,8 @@ import { Paper, Grid, Center, Stack, Title, Group, Text } from "@mantine/core";
 import { IconMoodSmileBeam } from "@tabler/icons-react";
 import { MODEL_DONASI_INVOICE } from "../../model/interface";
 import TampilanRupiahDonasi from "../tampilan_rupiah";
+import moment from "moment";
+import "moment/locale/id";
 
 export function ComponentDonasi_CardDonatur({ data }: { data: MODEL_DONASI_INVOICE }){
     return (
@@ -35,9 +37,7 @@ export function ComponentDonasi_CardDonatur({ data }: { data: MODEL_DONASI_INVOI
                   </Text>
                 </Group>
                 <Text fz={"xs"}>
-                  {new Intl.DateTimeFormat("id-ID", {
-                    dateStyle: "full",
-                  }).format(data?.createdAt)}
+                  {moment(data.createdAt).format("DD MMM YYYY")}
                 </Text>
               </Stack>
             </Grid.Col>

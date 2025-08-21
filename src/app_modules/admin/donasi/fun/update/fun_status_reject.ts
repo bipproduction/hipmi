@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminDonasi } from "@/app/lib/router_admin/router_admin_donasi";
-import { RouterAdminDonasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import prisma from "@/lib/prisma";
+import { RouterAdminDonasi } from "@/lib/router_admin/router_admin_donasi";
+import { RouterAdminDonasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { revalidatePath } from "next/cache";
 
 export async function AdminDonasi_funUpdateStatusReject(

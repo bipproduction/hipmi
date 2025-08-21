@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import prisma from "@/lib/prisma";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { revalidatePath } from "next/cache";
 
 export async function voting_funUpdateIsArsipById({

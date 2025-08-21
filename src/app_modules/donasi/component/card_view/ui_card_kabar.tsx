@@ -1,15 +1,15 @@
 "use client";
 
 import { Stack, Text, Title } from "@mantine/core";
-
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
 } from "@/app_modules/_global/component";
+import moment from "moment";
+import "moment/locale/id";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_DONASI_KABAR } from "../../model/interface";
-
 export default function ComponentDonasi_ListKabar({
   kabar,
   route,
@@ -28,11 +28,7 @@ export default function ComponentDonasi_ListKabar({
         }}
       >
         <Stack>
-          <Text fz={"xs"}>
-            {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
-              kabar.createdAt
-            )}
-          </Text>
+          <Text fz={"xs"}>{moment(kabar.createdAt).format("DD-MM-YYYY")}</Text>
           <Title order={5}>{kabar.title}</Title>
         </Stack>
         {visible && <ComponentGlobal_CardLoadingOverlay />}

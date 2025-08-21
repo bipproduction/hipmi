@@ -1,7 +1,7 @@
 "use client";
 
-import { RouterHome } from "@/app/lib/router_hipmi/router_home";
-import { RouterVote } from "@/app/lib/router_hipmi/router_vote";
+import { RouterHome } from "@/lib/router_hipmi/router_home";
+import { RouterVote } from "@/lib/router_hipmi/router_vote";
 import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { ComponentGlobal_NotifikasiPeringatan } from "@/app_modules/_global/notif_global/notifikasi_peringatan";
 import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
@@ -70,7 +70,7 @@ export default function LayoutVote_Main({
                 <ActionIcon
                   // disabled={e.path === "" ? true : false}
                   variant="transparent"
-                  c={hotMenu === e.id ? MainColor.yellow : "white"}
+                  c={hotMenu === e.id ? MainColor.yellow : MainColor.white}
                   onClick={() =>
                     e.path === ""
                       ? ComponentGlobal_NotifikasiPeringatan("Cooming Soon")

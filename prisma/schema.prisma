@@ -2,8 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "binary"
+  provider      = "prisma-client-js"
+  engineType    = "binary"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -47,6 +48,9 @@ model User {
   User_Notifikasi                      Notifikasi[]                           @relation("UserNotifikasi")
   BusinessMaps                         BusinessMaps[]
   Investasi_Invoice                    Investasi_Invoice[]
+
+  EventSponsor   EventSponsor[]
+  EventTransaksi EventTransaksi[]
 }
 
 model MasterUserRole {
@@ -125,11 +129,13 @@ model Portofolio {
   updatedAt              DateTime                @default(now()) @updatedAt
   Profile                Profile?                @relation(fields: [profileId], references: [id])
   profileId              String?
-  MasterBidangBisnis     MasterBidangBisnis      @relation(fields: [masterBidangBisnisId], references: [id])
-  masterBidangBisnisId   String
   Portofolio_MediaSosial Portofolio_MediaSosial?
   BusinessMaps           BusinessMaps?
   logoId                 String?
+
+  MasterBidangBisnis                  MasterBidangBisnis                    @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId                String
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
 }
 
 model Portofolio_MediaSosial {
@@ -146,16 +152,45 @@ model Portofolio_MediaSosial {
   portofolioId String?     @unique
 }
 
-model MasterBidangBisnis {
-  id         String       @id
-  name       String
-  active     Boolean      @default(true)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @default(now()) @updatedAt
-  Portofolio Portofolio[]
+model Portofolio_BidangDanSubBidangBisnis {
+  id        String   @id @default(cuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Portofolio              Portofolio?            @relation(fields: [portofolioId], references: [id])
+  portofolioId            String?
+  MasterBidangBisnis      MasterBidangBisnis?    @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId    String?
+  MasterSubBidangBisnis   MasterSubBidangBisnis? @relation(fields: [masterSubBidangBisnisId], references: [id])
+  masterSubBidangBisnisId String?
 }
 
 // ------------------- MASTER -------------------------- //
+
+model MasterBidangBisnis {
+  id                                  String                                @id @default(uuid())
+  name                                String
+  slug                                String                                @default("NULL")
+  active                              Boolean                               @default(true)
+  createdAt                           DateTime                              @default(now())
+  updatedAt                           DateTime                              @default(now()) @updatedAt
+  Portofolio                          Portofolio[]
+  MasterSubBidangBisnis               MasterSubBidangBisnis[]
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
+}
+
+model MasterSubBidangBisnis {
+  id                                  String                                @id @default(cuid())
+  name                                String
+  slug                                String                                @default("NULL")
+  isActive                            Boolean                               @default(true)
+  createdAt                           DateTime                              @default(now())
+  updatedAt                           DateTime                              @default(now()) @updatedAt
+  MasterBidangBisnis                  MasterBidangBisnis?                   @relation(fields: [masterBidangBisnisId], references: [id])
+  masterBidangBisnisId                String?
+  Portofolio_BidangDanSubBidangBisnis Portofolio_BidangDanSubBidangBisnis[]
+}
 
 model MasterBank {
   id                String              @id @default(cuid())
@@ -166,6 +201,7 @@ model MasterBank {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   Investasi_Invoice Investasi_Invoice[]
+  EventTransaksi    EventTransaksi[]
 }
 
 model MasterStatus {
@@ -175,6 +211,25 @@ model MasterStatus {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Job       Job[]
+}
+
+model MasterStatusTransaksi {
+  id             String           @id @default(cuid())
+  name           String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  EventTransaksi EventTransaksi[]
+}
+
+model MasterEmotions {
+  id        Int       @id @default(autoincrement())
+  label     String
+  value     String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Sticker   Sticker[] @relation("StikerEmotions")
 }
 
 // -------------------- INVESTASI --------------------- //
@@ -593,6 +648,8 @@ model Event {
   Event_Peserta           Event_Peserta[]
   EventMaster_TipeAcara   EventMaster_TipeAcara? @relation(fields: [eventMaster_TipeAcaraId], references: [id])
   eventMaster_TipeAcaraId Int?
+  EventSponsor            EventSponsor[]
+  EventTransaksi          EventTransaksi[]
 }
 
 model EventMaster_TipeAcara {
@@ -618,6 +675,7 @@ model Event_Peserta {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isPresent Boolean  @default(false)
 
   Event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?
@@ -950,4 +1008,65 @@ model MasterKategoriApp {
   updatedAt DateTime @updatedAt
   name      String
   value     String?
+}
+
+// ======================= EVENT ======================= //
+
+model EventSponsor {
+  id         String   @id @default(cuid())
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  isTransfer Boolean? @default(false)
+  fileName   String
+  fileExt    String?
+  fileId     String
+
+  Author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
+
+  EventTransaksi EventTransaksi?
+}
+
+model EventTransaksi {
+  id              String   @id @default(cuid())
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  nominal         Int
+  status          String
+  transferImageId String?
+
+  MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
+  masterBankId String?
+
+  AuthorId User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
+
+  EventSponsor   EventSponsor? @relation(fields: [eventSponsorId], references: [id])
+  eventSponsorId String?       @unique
+
+  MasterStatusTransaksi   MasterStatusTransaksi? @relation(fields: [masterStatusTransaksiId], references: [id])
+  masterStatusTransaksiId String?
+}
+
+model Sticker {
+  id           String   @id @default(cuid())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String?
+  fileName     String?
+  fileExt      String?
+  fileId       String
+  jenisKelamin String?
+
+  MasterEmotions MasterEmotions[] @relation("StikerEmotions")
 }

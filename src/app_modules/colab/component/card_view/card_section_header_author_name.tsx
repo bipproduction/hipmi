@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import { ComponentGlobal_AvatarAndUsername } from "@/app_modules/_global/component";
 import UIGlobal_Drawer from "@/app_modules/_global/ui/ui_drawer";
 import { ActionIcon, Group, Stack } from "@mantine/core";

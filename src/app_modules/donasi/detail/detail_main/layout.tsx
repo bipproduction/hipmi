@@ -4,7 +4,7 @@ import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_ta
 import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
 import React, { useState } from "react";
 import ButtonDonasi from "../../component/footer_button_donasi";
-import { RouterDonasi } from "@/app/lib/router_hipmi/router_donasi";
+import { RouterDonasi } from "@/lib/router_hipmi/router_donasi";
 import { IconDotsVertical, IconMessageShare } from "@tabler/icons-react";
 import { UIGlobal_Drawer } from "@/app_modules/_global/ui";
 import { ActionIcon } from "@mantine/core";

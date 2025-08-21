@@ -1,65 +1,144 @@
 "use client";
 
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
 import { ComponentGlobal_LoaderAvatar } from "@/app_modules/_global/component";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
-import UIGlobal_LayoutHeaderTamplate from "@/app_modules/_global/ui/ui_header_tamplate";
-import UIGlobal_LayoutTamplate from "@/app_modules/_global/ui/ui_layout_tamplate";
+import { Component_Header } from "@/app_modules/_global/component/new/component_header";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import { apiGetUserById } from "@/app_modules/_global/lib/api_user";
+import UI_NewLayoutTamplate, {
+  UI_NewChildren,
+  UI_NewHeader,
+} from "@/app_modules/_global/ui/V2_layout_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_USER } from "@/app_modules/home/model/interface";
+import { RouterForum } from "@/lib/router_hipmi/router_forum";
+import { clientLogger } from "@/util/clientLogger";
 import { ActionIcon, Avatar } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LayoutForum_Main({
   children,
-  dataAuthor,
 }: {
   children: React.ReactNode;
-  dataAuthor: MODEL_USER;
 }) {
   const router = useRouter();
+  const [data, setData] = useState<MODEL_USER | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const responseUserId = await apiNewGetUserIdByToken();
+      if (responseUserId.success) {
+        setUserLoginId(responseUserId.userId);
+        const responseUser = await apiGetUserById({
+          id: responseUserId.userId,
+        });
+
+        if (responseUser.success) {
+          setData(responseUser.data);
+        }
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      clientLogger.error("Error get user", error);
+    }
+  };
 
   return (
     <>
-      <UIGlobal_LayoutTamplate
+      <UI_NewLayoutTamplate>
+        <UI_NewHeader>
+          <Component_Header
+            title="Forum"
+            iconRight={
+              !data || !userLoginId ? (
+                <CustomSkeleton height={30} width={30} circle />
+              ) : (
+                <ActionIcon
+                  radius={"xl"}
+                  variant="transparent"
+                  onClick={() => {
+                    setIsLoading(true);
+                    router.push(RouterForum.forumku + userLoginId);
+                  }}
+                >
+                  {isLoading ? (
+                    <Avatar
+                      size={30}
+                      radius={"100%"}
+                      style={{
+                        borderColor: "white",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                      }}
+                    >
+                      <ComponentGlobal_Loader variant="dots" />
+                    </Avatar>
+                  ) : (
+                    <ComponentGlobal_LoaderAvatar
+                      fileId={data.Profile.imageId as any}
+                      sizeAvatar={30}
+                    />
+                  )}
+                </ActionIcon>
+              )
+            }
+          />
+        </UI_NewHeader>
+
+        <UI_NewChildren>{children}</UI_NewChildren>
+      </UI_NewLayoutTamplate>
+
+      {/* <UIGlobal_LayoutTamplate
         header={
           <UIGlobal_LayoutHeaderTamplate
             title="Forum"
             iconRight={
-              <ActionIcon
-                radius={"xl"}
-                variant="transparent"
-                onClick={() => {
-                  setIsLoading(true);
-                  router.push(RouterForum.forumku + dataAuthor?.id);
-                }}
-              >
-                {isLoading ? (
-                  <Avatar
-                    size={30}
-                    radius={"100%"}
-                    style={{
-                      borderColor: "white",
-                      borderStyle: "solid",
-                      borderWidth: "1px",
-                    }}
-                  >
-                    <ComponentGlobal_Loader variant="dots" />
-                  </Avatar>
-                ) : (
-                  <ComponentGlobal_LoaderAvatar
-                    fileId={dataAuthor.Profile.imageId as any}
-                    sizeAvatar={30}
-                  />
-                )}
-              </ActionIcon>
+              !data ? (
+                <CustomSkeleton height={30} width={30} circle />
+              ) : (
+                <ActionIcon
+                  radius={"xl"}
+                  variant="transparent"
+                  onClick={() => {
+                    setIsLoading(true);
+                    router.push(RouterForum.forumku + data?.id);
+                  }}
+                >
+                  {isLoading ? (
+                    <Avatar
+                      size={30}
+                      radius={"100%"}
+                      style={{
+                        borderColor: "white",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                      }}
+                    >
+                      <ComponentGlobal_Loader variant="dots" />
+                    </Avatar>
+                  ) : (
+                    <ComponentGlobal_LoaderAvatar
+                      fileId={data.Profile.imageId as any}
+                      sizeAvatar={30}
+                    />
+                  )}
+                </ActionIcon>
+              )
             }
           />
         }
       >
         {children}
-      </UIGlobal_LayoutTamplate>
+      </UIGlobal_LayoutTamplate> */}
     </>
   );
 }

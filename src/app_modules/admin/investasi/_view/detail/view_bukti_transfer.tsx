@@ -1,4 +1,4 @@
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
+import { RouterAdminInvestasi } from "@/lib/router_admin/router_admin_investasi";
 import { Center, Image, Paper, Text } from "@mantine/core";
 
 export function AdminInvestasi_ViewBuktiTransfer({

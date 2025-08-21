@@ -5,12 +5,16 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
-import { DIRECTORY_ID } from "@/app/lib";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { DIRECTORY_ID } from "@/lib";
+import {
+  funGlobal_DeleteFileById,
+  funGlobal_UploadToStorage,
+} from "@/app_modules/_global/fun";
 import _ from "lodash";
 import { investasi_funUpdateInvestasi } from "../../_fun";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Investasi_ComponentButtonUpdateDataInvestasi({
   data,
@@ -25,6 +29,7 @@ export function Investasi_ComponentButtonUpdateDataInvestasi({
   const [isLoading, setIsLoading] = useState(false);
 
   async function onUpdate() {
+    setIsLoading(true);
     if (totalLembar === "0")
       return ComponentGlobal_NotifikasiPeringatan("Total lembar kosong");
 
@@ -36,9 +41,19 @@ export function Investasi_ComponentButtonUpdateDataInvestasi({
         file: file as any,
         dirId: DIRECTORY_ID.investasi_image,
       });
+
       if (!uploadImage.success) {
         setIsLoading(false);
         return ComponentGlobal_NotifikasiPeringatan("Gagal upload file gambar");
+      }
+
+      const deleteFile = await funGlobal_DeleteFileById({
+        fileId: data.imageId,
+      });
+      
+      if (!deleteFile.success) {
+        setIsLoading(false);
+        clientLogger.error("Error delete file:", deleteFile.message);
       }
 
       const updtWithImage = await investasi_funUpdateInvestasi({
@@ -74,6 +89,8 @@ export function Investasi_ComponentButtonUpdateDataInvestasi({
   return (
     <Stack>
       <Button
+        loading={isLoading}
+        loaderPosition="center"
         my={50}
         radius={50}
         bg={MainColor.yellow}

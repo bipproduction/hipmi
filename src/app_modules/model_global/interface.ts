@@ -21,3 +21,11 @@ export interface MODEL_NEW_DEFAULT_MASTER {
   updatedAt: Date;
 }
 
+export interface IDefaultMaster {
+  id: string;
+  name: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import {
   AspectRatio,
   Box,
@@ -22,6 +22,8 @@ import _ from "lodash";
 import ComponentGlobal_IsEmptyData from "@/app_modules/_global/component/is_empty_data";
 import { AccentColor } from "@/app_modules/_global/color/color_pallet";
 
+
+  // -- DELETE SOON -- //
 export default function BeritaInvestasi({
   dataInvestasi,
 }: {

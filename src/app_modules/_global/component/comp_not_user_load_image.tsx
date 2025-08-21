@@ -1,8 +1,8 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
-import { RouterImagePreview } from "@/app/lib/router_hipmi/router_image_preview";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
+import { RouterImagePreview } from "@/lib/router_hipmi/router_image_preview";
 import { Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ export function ComponentGlobal_NotUserLoadImage({
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId , size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();

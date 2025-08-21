@@ -1,6 +1,6 @@
 "use cleint";
 
-import { RouterPortofolio } from "@/app/lib/router_hipmi/router_katalog";
+import { RouterPortofolio } from "@/lib/router_hipmi/router_katalog";
 import {
   AccentColor,
   MainColor,

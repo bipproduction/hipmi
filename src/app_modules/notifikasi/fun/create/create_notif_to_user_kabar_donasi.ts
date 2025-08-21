@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import _ from "lodash";
 import mqtt_client from "@/util/mqtt_client";
 
@@ -30,7 +30,6 @@ export async function notifikasiToUser_CreateKabarDonasi({
   const dataFix = Array.from(data);
 
   for (let authorId of dataFix) {
-    console.log(authorId);
     const createNotifikasi = await prisma.notifikasi.create({
       data: {
         userRoleId: "1",

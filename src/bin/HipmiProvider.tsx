@@ -1,6 +1,6 @@
 "use client";
 
-import { GlobalEnv } from "@/app/lib/token";
+import { GlobalEnv } from "@/lib/token";
 
 export function HipmiProvider(
   { children }: { children: React.ReactNode },

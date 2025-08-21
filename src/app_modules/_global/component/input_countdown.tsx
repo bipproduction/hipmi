@@ -12,9 +12,14 @@ export default function ComponentGlobal_InputCountDown({
 }) {
   return (
     <>
-      <Text fz={"xs"} fs={"italic"} color="gray">
-        {maxInput - lengthInput < 0 ? 0 : maxInput - lengthInput} /{" "}
-        <Text span inherit c={maxInput - lengthInput < 0 ? "red" : ""} style={{transition: "0.5s"}}>
+      <Text fz={"sm"} fs={"italic"} color="gray">
+        {maxInput - lengthInput} /
+        <Text
+          span
+          inherit
+          c={maxInput - lengthInput < 0 ? "red" : ""}
+          style={{ transition: " all0.5s" }}
+        >
           {maxInput}
         </Text>
       </Text>

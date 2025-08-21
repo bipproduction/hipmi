@@ -1,8 +1,17 @@
-import { sessionCreate } from "@/app/auth/_lib/session_create";
-import prisma from "@/app/lib/prisma";
+import { sessionCreate } from "@/app/(auth)/_lib/session_create";
+import prisma from "@/lib/prisma";
+import backendLogger from "@/util/backendLogger";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  if (req.method === "POST") {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { success: false, message: "Method Not Allowed" },
+      { status: 405 }
+    );
+  }
+
+  try {
     const { data } = await req.json();
 
     const cekUsername = await prisma.user.findUnique({
@@ -12,20 +21,24 @@ export async function POST(req: Request) {
     });
 
     if (cekUsername)
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Username sudah digunakan",
-        }),
-        { status: 400 }
-      );
+      return NextResponse.json({
+        success: false,
+        message: "Username sudah digunakan",
+      });
 
     const createUser = await prisma.user.create({
       data: {
         username: data.username,
         nomor: data.nomor,
+        active: false,
       },
     });
+
+    if (!createUser)
+      return NextResponse.json(
+        { success: false, message: "Gagal Registrasi" },
+        { status: 500 }
+      );
 
     const token = await sessionCreate({
       sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
@@ -33,37 +46,26 @@ export async function POST(req: Request) {
       user: createUser as any,
     });
 
-    try {
-      const createUserSession = await prisma.userSession.create({
-        data: {
-          token: token as string,
-          userId: createUser.id,
-        },
-      });
-
-      if (!createUserSession)
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "Gagal Membuat Session",
-          }),
-          { status: 400 }
-        );
-    } catch (error) {
-      console.log(error);
-    }
-
-    return new Response(
-      JSON.stringify({
+    return NextResponse.json(
+      {
         success: true,
-        message: "Berhasil Login",
-      }),
-
-      { status: 200 }
+        message: "Registrasi Berhasil, Anda Sedang Login",
+        token: token,
+        // data: createUser,
+      },
+      { status: 201 }
     );
+  } catch (error) {
+    backendLogger.error("Error registrasi:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Maaf, Terjadi Keselahan",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
-  return new Response(
-    JSON.stringify({ success: false, message: "Method Not Allowed" }),
-    { status: 405 }
-  );
 }

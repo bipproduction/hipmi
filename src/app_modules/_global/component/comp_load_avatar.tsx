@@ -4,7 +4,7 @@ import { Avatar, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import ComponentGlobal_Loader from "./loader";
-import { APIs } from "@/app/lib";
+import { APIs } from "@/lib";
 
 export function ComponentGlobal_LoaderAvatar({
   fileId,
@@ -17,7 +17,7 @@ export function ComponentGlobal_LoaderAvatar({
 }) {
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
-  const url = APIs.GET({ fileId: fileId, size: imageSize });
+  const url = APIs.GET({ fileId: fileId, size: imageSize ? imageSize : "400" });
 
   useShallowEffect(() => {
     onLoadImage();

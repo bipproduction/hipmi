@@ -14,7 +14,7 @@ export default function Admin_UiNavbar({
   setActiveId,
   setActiveChildId,
 }: {
-  userRoleId: string;
+  userRoleId: string | null;
   activeId: string;
   activeChildId: string;
   setActiveId: (val: any) => void;
@@ -199,5 +199,5 @@ export default function Admin_UiNavbar({
     </Box>
   ));
 
-  return userRoleId == "2" ? adminNavbar : developerNavbar;
+  return userRoleId == "3" ? developerNavbar : adminNavbar;
 }

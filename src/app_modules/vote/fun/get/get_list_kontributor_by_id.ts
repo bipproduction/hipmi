@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function Vote_getListKontributorById(votingId: string) {
   const data = await prisma.voting_Kontributor.findMany({

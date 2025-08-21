@@ -1,4 +1,4 @@
-import { RouterColab } from "@/app/lib/router_hipmi/router_colab";
+import { RouterColab } from "@/lib/router_hipmi/router_colab";
 import { ComponentGlobal_CardStyles } from "@/app_modules/_global/component";
 import { Stack } from "@mantine/core";
 import { MODEL_COLLABORATION } from "../../model/interface";

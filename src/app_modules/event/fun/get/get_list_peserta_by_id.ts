@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function Event_getListPesertaById(eventId: string) {
   const data = await prisma.event_Peserta.findMany({
@@ -13,12 +13,14 @@ export async function Event_getListPesertaById(eventId: string) {
       createdAt: true,
       updatedAt: true,
       userId: true,
+
+      isPresent: true,
       User: {
         select: {
           Profile: true,
         },
       },
-      // Event: true,
+      Event: true,
       eventId: true,
     },
   });

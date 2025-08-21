@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/app/lib";
+import { prisma } from "@/lib";
 import { MODEL_INVESTASI_DOKUMEN } from "../../_lib/interface";
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import { revalidatePath } from "next/cache";
 
 export async function investasi_funUpdateDocument({

@@ -1,6 +1,6 @@
 "use server";
 
-import { ServerEnv } from "@/app/lib/server_env";
+import { ServerEnv } from "@/lib/server_env";
 import { unsealData } from "iron-session";
 import _ from "lodash";
 import { cookies } from "next/headers";

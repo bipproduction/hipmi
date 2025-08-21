@@ -1,22 +1,25 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
-import { RouterImagePreview } from "@/app/lib";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
+import { RouterImagePreview } from "@/lib";
 import { Center, Image, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MainColor } from "@/app_modules/_global/color";
 
 export function Profile_ComponentLoadBackgroundImage({
   fileId,
+  size
 }: {
   fileId: string;
+  size?: number
 }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId,size: size ? size.toString() : "200" });
 
   useShallowEffect(() => {
     onLoadImage();
@@ -39,7 +42,7 @@ export function Profile_ComponentLoadBackgroundImage({
   if (!isImage)
     return (
       <>
-        <Center h={200} bg={"white"} style={{ borderRadius: "10px" }}>
+        <Center h={200} bg={MainColor.white} style={{ borderRadius: "10px" }}>
           <Image
             alt="No Image"
             maw={150}
@@ -62,7 +65,7 @@ export function Profile_ComponentLoadBackgroundImage({
             });
           }}
           style={{
-            borderColor: "white",
+            borderColor: MainColor.white,
             borderStyle: "solid",
             borderWidth: "1px",
             borderRadius: "5px",

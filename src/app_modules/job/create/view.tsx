@@ -2,15 +2,13 @@
 
 import {
   AspectRatio,
-  Button,
   Center,
-  FileButton,
   Image,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCamera, IconUpload } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
@@ -22,16 +20,15 @@ const ReactQuill = dynamic(
 );
 
 import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
-
-import {
   ComponentGlobal_BoxInformation,
   ComponentGlobal_BoxUploadImage,
+  ComponentGlobal_ButtonUploadFileImage,
   ComponentGlobal_CardStyles,
   ComponentGlobal_InputCountDown,
 } from "@/app_modules/_global/component";
+import { apiNewGetUserIdByToken } from "@/app_modules/_global/lib/api_fetch_global";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
+import { useShallowEffect } from "@mantine/hooks";
 import { Job_ComponentButtonSaveCreate } from "../component";
 import { defaultDeskripsi, defaultSyarat } from "../component/default_value";
 
@@ -43,16 +40,34 @@ export default function Job_Create() {
   });
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<any | null>();
+  const [userLoginId, setUserLoginId] = useState<string | null>(null);
 
-  // useShallowEffect(() => {
-  //   if (window && window.document) setReload(true);
-  // }, []);
+  useShallowEffect(() => {
+    handleGetUserLoginId();
+  }, []);
+
+  async function handleGetUserLoginId() {
+    try {
+      const response = await apiNewGetUserIdByToken();
+      if (response.success) {
+        setUserLoginId(response.userId);
+      } else {
+        setUserLoginId(null);
+      }
+    } catch (error) {
+      setUserLoginId(null);
+    }
+  }
+
+  if (!userLoginId) {
+    return <CustomSkeleton height={300} />;
+  }
 
   return (
     <Stack>
       <ComponentGlobal_BoxInformation informasi="Poster atau gambar lowongan kerja bersifat opsional, tidak wajib untuk dimasukkan dan upload lah gambar yang sesuai dengan deskripsi lowongan kerja. " />
 
-      <Stack spacing={"xs"}>
+      <Stack spacing={0}>
         <ComponentGlobal_BoxUploadImage>
           {img ? (
             <AspectRatio ratio={1 / 1} mah={265} mx={"auto"}>
@@ -65,43 +80,16 @@ export default function Job_Create() {
             </AspectRatio>
           ) : (
             <Stack justify="center" align="center" h={"100%"}>
-              <IconUpload color="white" />
-              <Text fz={10} fs={"italic"} c={"white"} fw={"bold"}>
-                Upload Gambar
-              </Text>
+              <IconPhoto size={100} />
             </Stack>
           )}
         </ComponentGlobal_BoxUploadImage>
 
         <Center>
-          <FileButton
-            onChange={async (files: any | null) => {
-              try {
-                const buffer = URL.createObjectURL(
-                  new Blob([new Uint8Array(await files.arrayBuffer())])
-                );
-                setImg(buffer);
-                setFile(files);
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-            accept="image/png,image/jpeg"
-          >
-            {(props) => (
-              <Button
-                {...props}
-                radius={"xl"}
-                w={100}
-                style={{
-                  backgroundColor: MainColor.yellow,
-                  border: `1px solid ${AccentColor.yellow}`,
-                }}
-              >
-                <IconCamera color="black" />
-              </Button>
-            )}
-          </FileButton>
+          <ComponentGlobal_ButtonUploadFileImage
+            onSetFile={setFile}
+            onSetImage={setImg}
+          />
         </Center>
       </Stack>
 
@@ -207,7 +195,11 @@ export default function Job_Create() {
         </Stack>
       </ComponentGlobal_CardStyles>
 
-      <Job_ComponentButtonSaveCreate value={value as any} file={file as any} />
+      <Job_ComponentButtonSaveCreate
+        userLoginId={userLoginId as string}
+        value={value as any}
+        file={file as any}
+      />
     </Stack>
   );
 }

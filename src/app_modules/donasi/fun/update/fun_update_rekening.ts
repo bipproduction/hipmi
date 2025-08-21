@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_DONASI } from "../../model/interface";
 
 export async function Donasi_funUpdateRekening(data: MODEL_DONASI) {

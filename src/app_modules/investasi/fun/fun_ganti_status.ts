@@ -1,8 +1,8 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterAdminInvestasi_OLD } from "@/app/lib/router_hipmi/router_admin";
-import { RouterInvestasi_OLD } from "@/app/lib/router_hipmi/router_investasi";
+import prisma from "@/lib/prisma";
+import { RouterAdminInvestasi_OLD } from "@/lib/router_hipmi/router_admin";
+import { RouterInvestasi_OLD } from "@/lib/router_hipmi/router_investasi";
 import moment from "moment";
 import { revalidatePath } from "next/cache";
 

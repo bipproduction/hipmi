@@ -1,30 +1,32 @@
 "use client";
 
-import { APIs } from "@/app/lib";
-import { pathAssetImage } from "@/app/lib/path_asset_image";
-import { RouterImagePreview } from "@/app/lib/router_hipmi/router_image_preview";
-import { Center, Image, Skeleton } from "@mantine/core";
+import { APIs } from "@/lib";
+import { pathAssetImage } from "@/lib/path_asset_image";
+import { RouterImagePreview } from "@/lib/router_hipmi/router_image_preview";
+import { Center, Image, MantineNumberSize, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-type IRadius = "xs" | "sm" | "md" | "lg" | "xl";
+type IRadius = MantineNumberSize | undefined
 export function ComponentGlobal_LoadImage({
   fileId,
   maw,
   h,
   radius,
+  style,
 }: {
   fileId: string;
   maw?: number | string;
   h?: number;
   radius?: IRadius;
+  style?: React.CSSProperties;
 }) {
   const router = useRouter();
   const [isImage, setIsImage] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const url = APIs.GET({ fileId: fileId });
+  const url = APIs.GET({ fileId: fileId, size: "500" });
 
   useShallowEffect(() => {
     onLoadImage();
@@ -44,7 +46,7 @@ export function ComponentGlobal_LoadImage({
 
   if (isImage === null)
     return (
-     
+
       <Center h={"100%"}>
         <Skeleton h={250} radius={"sm"} w={250} />
       </Center>
@@ -63,6 +65,9 @@ export function ComponentGlobal_LoadImage({
     <>
       <Center h={"100%"}>
         <Image
+          style={{
+            ...style
+          }}
           onClick={() => {
             setIsLoading(true);
             router.push(RouterImagePreview.main({ id: fileId }), {

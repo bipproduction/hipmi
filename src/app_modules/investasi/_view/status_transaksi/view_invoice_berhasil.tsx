@@ -1,35 +1,57 @@
 "use client";
 
-import { RouterAdminInvestasi } from "@/app/lib/router_admin/router_admin_investasi";
-import { AccentColor } from "@/app_modules/_global/color/color_pallet";
-import { ComponentGlobal_LoadImage, ComponentGlobal_TampilanRupiah } from "@/app_modules/_global/component";
+import {
+  AccentColor,
+  MainColor,
+} from "@/app_modules/_global/color/color_pallet";
+import {
+  ComponentGlobal_LoadImage,
+  ComponentGlobal_TampilanRupiah,
+} from "@/app_modules/_global/component";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import {
   Box,
   Button,
   Collapse,
   Grid,
   Group,
-  Image,
   Paper,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { IconBrandCashapp } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
+import { apiGetOneSahamInvestasiById } from "../../_lib/api_fetch_new_investasi";
 import { MODEL_INVOICE_INVESTASI } from "../../_lib/interface";
 
-export function Investasi_ViewTransaksiBerhasil({
-  dataTransaksi,
-}: {
-  dataTransaksi: any;
-}) {
-  const router = useRouter();
-  const [data, setData] = useState<MODEL_INVOICE_INVESTASI>(dataTransaksi);
-  const [isLoading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+export function Investasi_ViewTransaksiBerhasil() {
   const [opened, setOpened] = useState(false);
+
+  const param = useParams<{ id: string }>();
+  const [data, setData] = useState<MODEL_INVOICE_INVESTASI | null>(null);
+
+  useShallowEffect(() => {
+    handleLoadData();
+  }, []);
+
+  const handleLoadData = async () => {
+    try {
+      const response = await apiGetOneSahamInvestasiById({ id: param.id });
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setData(null);
+      }
+    } catch (error) {
+      console.error("Error get investasi", error);
+      setData(null);
+    }
+  };
+
+  if (!data) return <CustomSkeleton height={"50vh"} width={"100%"} />;
 
   return (
     <>
@@ -43,7 +65,7 @@ export function Investasi_ViewTransaksiBerhasil({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
           }}
         >
           <IconBrandCashapp size={100} />
@@ -60,7 +82,7 @@ export function Investasi_ViewTransaksiBerhasil({
             padding: "15px",
             cursor: "pointer",
             borderRadius: "10px",
-            color: "white",
+            color: MainColor.white,
             marginBottom: "15px",
           }}
         >
@@ -157,12 +179,7 @@ export function Investasi_ViewTransaksiBerhasil({
               transitionDuration={500}
               transitionTimingFunction="linear"
             >
-
-              <ComponentGlobal_LoadImage fileId={data.imageId}/>
-              {/* <Image
-                alt="foto"
-                src={RouterAdminInvestasi.api_bukti_transfer + data?.imagesId}
-              /> */}
+              <ComponentGlobal_LoadImage fileId={data.imageId} />
             </Collapse>
           </Stack>
         </Paper>

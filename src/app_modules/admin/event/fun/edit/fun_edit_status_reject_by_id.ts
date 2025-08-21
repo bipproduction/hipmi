@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { MODEL_EVENT } from "@/app_modules/event/model/interface";
+import prisma from "@/lib/prisma";
+import { MODEL_EVENT } from "@/app_modules/event/_lib/interface";
 import { revalidatePath } from "next/cache";
 
 export async function AdminEvent_funEditCatatanById(

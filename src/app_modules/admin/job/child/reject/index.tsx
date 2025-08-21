@@ -1,15 +1,21 @@
 "use client";
 
-import { RouterAdminJob } from "@/app/lib/router_admin/router_admin_job";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentGlobal_InputCountDown from "@/app_modules/_global/component/input_countdown";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
 import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
 import { ComponentAdminGlobal_TitlePage } from "@/app_modules/admin/_admin_global/_component";
+import Admin_DetailButton from "@/app_modules/admin/_admin_global/_component/button/detail_button";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
 import adminNotifikasi_funCreateToUser from "@/app_modules/admin/notifikasi/fun/create/fun_create_notif_user";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_JOB } from "@/app_modules/job/model/interface";
-import mqtt_client from "@/util/mqtt_client";
+import { RouterAdminGlobal } from "@/lib";
+import { IRealtimeData } from "@/lib/global_state";
+import { RouterAdminJob } from "@/lib/router_admin/router_admin_job";
+import { clientLogger } from "@/util/clientLogger";
 import {
+  Box,
   Button,
   Center,
   Group,
@@ -17,159 +23,146 @@ import {
   Pagination,
   Paper,
   ScrollArea,
-  Spoiler,
   Stack,
   Table,
   Text,
   TextInput,
-  Textarea
+  Textarea,
 } from "@mantine/core";
-import { IconBan, IconPhotoCheck, IconSearch } from "@tabler/icons-react";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { IconPhotoCheck, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { WibuRealtime } from "wibu-pkg";
 import { AdminJob_funEditCatatanById } from "../../fun/edit/fun_edit_catatan_by_id";
 import adminJob_getListReject from "../../fun/get/get_list_reject";
+import { apiGetAdminJobByStatus } from "../../lib/api_fetch_admin_job";
+import { Admin_V3_ComponentPaginationBreakpoint } from "@/app_modules/admin/_components_v3/comp_pagination_breakpoint";
 
-export default function AdminJob_TableReject({
-  dataReject,
-}: {
-  dataReject: any;
-}) {
+export default function AdminJob_TableReject() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Job Vacancy" />
-        <TableStatus listReject={dataReject} />
+        <TableStatus />
       </Stack>
     </>
   );
 }
 
-function TableStatus({ listReject }: { listReject: any }) {
+function TableStatus() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_JOB[]>(listReject.data);
-  const [nPage, setNPage] = useState(listReject.nPage);
+  const [data, setData] = useState<MODEL_JOB[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
 
   const [reject, setReject] = useState(false);
   const [jobId, setJobId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
   const [catatan, setCatatan] = useState("");
+  const [isLoadingShowImage, setLoadingShowImage] = useState(false);
+  const [dataId, setDataId] = useState("");
 
-  async function onSearch(s: string) {
-    setSearch(s);
-    const loadData = await adminJob_getListReject({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  useShallowEffect(() => {
+    loadInitialData();
+  }, [activePage, isSearch]);
+  const loadInitialData = async () => {
+    try {
+      const response = await apiGetAdminJobByStatus({
+        name: "Reject",
+        page: `${activePage}`,
+        search: isSearch,
+      });
+
+      if (response?.success && response?.data.data) {
+        setData(response.data.data);
+        setNPage(response.data.nPage || 1);
+      } else {
+        console.error("Invalid data format recieved:", response);
+        setData([]);
+      }
+    } catch (error) {
+      clientLogger.error("Invalid data format recieced:", error);
+      setData([]);
+    }
+  };
+
+  const onSearch = async (searchTerm: string) => {
+    setSearch(searchTerm);
     setActivePage(1);
-  }
+  };
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminJob_getListReject({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const onNextPage = (page: number) => {
+    setActivePage(page);
+  };
 
-  const rowTable = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={150}>
-          <Text>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          w={200}
-          maxHeight={50}
-          hideLabel="sembunyikan"
-          showLabel="tampilkan"
-        >
-          {e.title}
-        </Spoiler>
-      </td>
-      <td>
-        <Center w={150}>
-          {e.imageId ? (
-            <Button
-              loading={isLoading && e?.imageId === jobId}
-              loaderPosition="center"
-              color="green"
-              radius={"xl"}
-              leftIcon={<IconPhotoCheck />}
-              onClick={() => {
-                setJobId(e?.imageId);
-                setIsLoading(true);
-                router.push(RouterAdminJob.detail_poster + e?.imageId);
-              }}
-            >
-              Lihat
-            </Button>
-          ) : (
-            <Center w={150}>
-              <Text fw={"bold"} fz={"xs"} fs={"italic"}>
-                Tidak ada poster
-              </Text>
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
             </Center>
-          )}
-        </Center>
-      </td>
-      <td>
-        <Spoiler
-          w={400}
-          maxHeight={50}
-          hideLabel="sembunyikan"
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.content }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          <div dangerouslySetInnerHTML={{ __html: e.deskripsi }} />
-        </Spoiler>
-      </td>
-      <td>
-        <Spoiler
-          hideLabel="sembunyikan"
-          w={400}
-          maxHeight={50}
-          showLabel="tampilkan"
-        >
-          {e.catatan}
-        </Spoiler>
-      </td>
-      <td>
-        <Button
-          color={"red"}
-          leftIcon={<IconBan />}
-          radius={"xl"}
-          onClick={() => {
-            setReject(true);
-            setJobId(e.id);
-            setCatatan(e.catatan);
-          }}
-        >
-          <Stack spacing={0}>
-            <Text fz={10}>Tambah</Text>
-            <Text fz={10}>Catatan</Text>
-          </Stack>
-        </Button>
-      </td>
-    </tr>
-  ));
+          </td>
+        </tr>
+      );
+    }
+
+    return data?.map((e, i) => (
+      <tr key={i}>
+        <td>
+          <Center>
+            <Text c={AdminColor.white}>{e?.Author?.username}</Text>
+          </Center>
+        </td>
+
+        <td>
+          <Center>
+            <Box w={150}>
+              <Text c={"white"} truncate>
+                {e.title}
+              </Text>
+            </Box>
+          </Center>
+        </td>
+        <td>
+          <Center>
+            {e.imageId ? (
+              <Button
+                loaderPosition="center"
+                loading={isLoadingShowImage && e.id === dataId}
+                color="green"
+                radius={"xl"}
+                leftIcon={<IconPhotoCheck />}
+                onClick={() => {
+                  setLoadingShowImage(true);
+                  setDataId(e.id);
+                  router.push(
+                    RouterAdminGlobal.preview_image({ id: e.imageId })
+                  );
+                }}
+              >
+                Lihat
+              </Button>
+            ) : (
+              <Center>
+                <Text c={AdminColor.white} fw={"bold"} fz={"xs"} fs={"italic"}>
+                  Tidak ada poster
+                </Text>
+              </Center>
+            )}
+          </Center>
+        </td>
+        <td>
+          <Center>
+            <Admin_DetailButton path={RouterAdminJob.detail({ id: e.id })} />
+          </Center>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
@@ -230,7 +223,7 @@ function TableStatus({ listReject }: { listReject: any }) {
       <Stack spacing={"xs"} h={"100%"}>
         <ComponentAdminGlobal_TitlePage
           name="Reject"
-          color="red.4"
+          color={AdminColor.softBlue}
           component={
             <TextInput
               icon={<IconSearch size={20} />}
@@ -243,59 +236,52 @@ function TableStatus({ listReject }: { listReject: any }) {
           }
         />
 
-        <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
-          <ScrollArea w={"100%"} h={"90%"}>
-            <Table
-              verticalSpacing={"md"}
-              horizontalSpacing={"md"}
-              p={"md"}
-              w={"100%"}
-              h={"100%"}
-              striped
-              highlightOnHover
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Center>Author</Center>
-                  </th>
-                  <th>
-                    <Text>Judul</Text>
-                  </th>
-                  <th>
-                    <Center>Poster</Center>
-                  </th>
-                  <th>
-                    <Text>Syarat Ketentuan</Text>
-                  </th>
-                  <th>
-                    <Text>Deskripsi</Text>
-                  </th>
-                  <th>
-                    <Text>Report</Text>
-                  </th>
-                  <th>
-                    <Center>Aksi</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{rowTable}</tbody>
-            </Table>
-          </ScrollArea>
-          <Center mt={"xl"}>
-            <Pagination
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
+        ) : (
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
+            <ScrollArea w={"100%"} h={"90%"}>
+              <Table
+                verticalSpacing={"md"}
+                horizontalSpacing={"md"}
+                p={"md"}
+                w={"100%"}
+                h={"100%"}
+              >
+                <thead>
+                  <tr>
+                    <th>
+                      <Center c={AdminColor.white}>Author</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Judul</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Poster</Center>
+                    </th>
+                    <th>
+                      <Center c={AdminColor.white}>Aksi</Center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableBody()}</tbody>
+              </Table>
+            </ScrollArea>
+            <Admin_V3_ComponentPaginationBreakpoint
               value={activePage}
               total={nPage}
               onChange={(val) => {
-                onPageClick(val);
+                onNextPage(val);
               }}
             />
-          </Center>
-        </Paper>
+          </Paper>
+        )}
       </Stack>
     </>
   );
 }
+
+
 
 async function onReject({
   jobId,
@@ -311,7 +297,7 @@ async function onReject({
     const loadData = await adminJob_getListReject({ page: 1 });
     onSetData(loadData);
 
-    const dataNotif = {
+    const dataNotifikasi: IRealtimeData = {
       appId: reject.data?.id as any,
       status: reject.data?.MasterStatus?.name as any,
       userId: reject.data?.authorId as any,
@@ -321,14 +307,15 @@ async function onReject({
     };
 
     const notif = await adminNotifikasi_funCreateToUser({
-      data: dataNotif as any,
+      data: dataNotifikasi as any,
     });
 
     if (notif.status === 201) {
-      mqtt_client.publish(
-        "USER",
-        JSON.stringify({ userId: reject?.data?.authorId, count: 1 })
-      );
+      WibuRealtime.setData({
+        type: "notification",
+        pushNotificationTo: "USER",
+        dataMessage: dataNotifikasi,
+      });
     }
 
     ComponentGlobal_NotifikasiBerhasil(reject.message);

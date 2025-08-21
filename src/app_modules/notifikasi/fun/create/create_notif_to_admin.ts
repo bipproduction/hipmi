@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_NOTIFIKASI } from "../../model/interface";
 
 export default async function notifikasiToAdmin_funCreate({
@@ -8,7 +8,6 @@ export default async function notifikasiToAdmin_funCreate({
 }: {
   data: MODEL_NOTIFIKASI;
 }) {
-
   const getAdmin = await prisma.user.findMany({
     where: {
       active: true,

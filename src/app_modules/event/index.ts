@@ -22,6 +22,8 @@ import LayoutEvent_DetailKontribusi from "./detail/kontribusi/layout";
 import Event_Riwayat from "./main/riwayat";
 import Event_DetailRiwayat from "./detail/riwayat";
 import LayoutEvent_DetailRiwayat from "./detail/riwayat/layout";
+import LayoutEvent_Peserta from "./detail/peserta/layout";
+import LayoutEvent_Sponsor from "./detail/sponsor/layout";
 
 export {
   Event_SplashScreen,
@@ -47,5 +49,7 @@ export {
   LayoutEvent_DetailKontribusi,
   Event_Riwayat ,
   Event_DetailRiwayat ,
-  LayoutEvent_DetailRiwayat ,
+  LayoutEvent_DetailRiwayat,
+  LayoutEvent_Peserta,
+  LayoutEvent_Sponsor
 };

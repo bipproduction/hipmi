@@ -1,4 +1,4 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
@@ -22,10 +22,9 @@ export function Investasi_ComponentCardDaftarDocument({
         justify="center"
         h={"100%"}
         onClick={() => {
-          router.push(
-            NEW_RouterInvestasi.file_prospektus({ id: data.fileId }),
-            { scroll: false }
-          );
+          router.push(NEW_RouterInvestasi.file_dokumen({ id: data.fileId }), {
+            scroll: false,
+          });
           setVisible(true);
         }}
       >

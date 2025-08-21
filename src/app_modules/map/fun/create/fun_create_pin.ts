@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import prisma from "@/lib/prisma";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";

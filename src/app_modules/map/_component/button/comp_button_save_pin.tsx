@@ -8,10 +8,20 @@ import {
 } from "@/app_modules/_global/notif_global";
 import { Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { map_funCreatePin } from "../../fun/create/fun_create_pin";
-import { DIRECTORY_ID } from "@/app/lib";
 import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { DIRECTORY_ID } from "@/lib";
+import { clientLogger } from "@/util/clientLogger";
+import { data } from "autoprefixer";
+import { apiCreatePinMap } from "../api_fetch_map";
 
+interface ICreatePinMAp {
+  latitude: string;
+  longitude: string;
+  namePin: string;
+  imageId: string;
+}
 export function ComponentMap_ButtonSavePin({
   namePin,
   lat,
@@ -26,38 +36,82 @@ export function ComponentMap_ButtonSavePin({
   file: File;
 }) {
   const router = useRouter();
-  async function onSavePin() {
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
+  const [loading, setLoading] = useState(false);
+
+  const handleUploadImage = async () => {
+    const uploadResult = await funGlobal_UploadToStorage({
       file: file,
       dirId: DIRECTORY_ID.map_image,
     });
 
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+    if (!uploadResult.success) {
+      setLoading(false);
+      ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+    }
 
-    const res = await map_funCreatePin({
-      data: {
-        latitude: lat as any,
-        longitude: long as any,
-        namePin: namePin as any,
-        imageId: uploadFileToStorage.data.id,
-        Portofolio: {
-          create: { id: portofolioId } as any,
-        },
-      },
+    return uploadResult.data.id;
+  };
+
+  const handleCreatePin = async (imageId: string) => {
+    const newData: ICreatePinMAp = {
+      latitude: lat,
+      longitude: long,
+      namePin: namePin,
+      imageId: imageId,
+    };
+
+    const respone = await apiCreatePinMap({
+      portofolioId: portofolioId,
+      data: newData,
     });
-    res.status === 200
-      ? (ComponentGlobal_NotifikasiBerhasil(res.message), router.back())
-      : ComponentGlobal_NotifikasiGagal(res.message);
-  }
+
+    if (respone && respone.success) {
+      ComponentGlobal_NotifikasiBerhasil(respone.message);
+      router.back();
+    }
+
+    return respone;
+  };
+
+  const validateInput = () => {
+    if (!namePin || !file) {
+      ComponentGlobal_NotifikasiPeringatan(
+        "Nama pin dan file gambar harus diisi"
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const onSavePin = async () => {
+    if (!validateInput()) return;
+
+    try {
+      setLoading(true);
+
+      const imageId = await handleUploadImage();
+      const createPinResult = await handleCreatePin(imageId);
+
+      if (!createPinResult.success) {
+        setLoading(false);
+        ComponentGlobal_NotifikasiPeringatan("Gagal membuat pin");
+      }
+    } catch (error) {
+      setLoading(false);
+      clientLogger.error("Error create pin", (error as Error).message);
+      ComponentGlobal_NotifikasiGagal("Terjadi kesalahan saat menyimpan pin");
+    }
+  };
 
   return (
     <>
       <Button
+        loading={loading}
         my={"xl"}
         style={{ transition: "0.5s" }}
-        disabled={namePin === "" || file === null ? true : false}
+        disabled={!namePin || !file}
         radius={"xl"}
+        loaderPosition="center"
         bg={MainColor.yellow}
         color="yellow"
         c={"black"}

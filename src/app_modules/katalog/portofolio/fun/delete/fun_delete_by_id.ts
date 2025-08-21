@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 import { MODEL_PORTOFOLIO } from "../../model/interface";
 import fs from "fs";
 import { revalidatePath } from "next/cache";

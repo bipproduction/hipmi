@@ -1,0 +1,331 @@
+[
+  {
+    "id": "1",
+    "name": "Teknologi dan Digital",
+    "slug": "teknologi_dan_digital",
+    "subBidangBisnis": [
+      {
+        "id": "TEK-01",
+        "name": "Software Developer",
+        "slug": "software_developer"
+      },
+      { "id": "TEK-02", "name": "Web Developer", "slug": "web_developer" },
+      {
+        "id": "TEK-03",
+        "name": "Mobile App Developer",
+        "slug": "mobile_app_developer"
+      },
+      { "id": "TEK-04", "name": "Konsultan IT", "slug": "konsultan_it" },
+      {
+        "id": "TEK-05",
+        "name": "Digital Marketing",
+        "slug": "digital_marketing"
+      },
+      { "id": "TEK-06", "name": "Cybersecurity", "slug": "cybersecurity" },
+      {
+        "id": "TEK-07",
+        "name": "AI & Machine Learning Services",
+        "slug": "ai_and_machine_learning_services"
+      },
+      {
+        "id": "TEK-08",
+        "name": "Data Analyst/Data Scientist",
+        "slug": "data_analyst_data_scientist"
+      },
+      {
+        "id": "TEK-09",
+        "name": "Blockchain Developer",
+        "slug": "blockchain_developer"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Kuliner",
+    "slug": "kuliner",
+    "subBidangBisnis": [
+      { "id": "KUL-01", "name": "Restoran", "slug": "restoran" },
+      { "id": "KUL-02", "name": "Kafe", "slug": "kafe" },
+      { "id": "KUL-03", "name": "Warung Makan", "slug": "warung_makan" },
+      { "id": "KUL-04", "name": "Catering", "slug": "catering" },
+      { "id": "KUL-05", "name": "Food Truck", "slug": "food_truck" },
+      {
+        "id": "KUL-06",
+        "name": "Minuman Kekinian",
+        "slug": "minuman_kekinian"
+      },
+      { "id": "KUL-07", "name": "Toko Roti & Kue", "slug": "toko_roti_kue" },
+      {
+        "id": "KUL-08",
+        "name": "Supplier Bahan Makanan",
+        "slug": "supplier_bahan_makanan"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Fashion dan Kecantikan",
+    "slug": "fashion_dan_kecantikan",
+    "subBidangBisnis": [
+      {
+        "id": "FAS-01",
+        "name": "Pakaian Dewasa & Anak",
+        "slug": "pakaian_dewasa_anak"
+      },
+      { "id": "FAS-02", "name": "Butik", "slug": "butik" },
+      {
+        "id": "FAS-03",
+        "name": "Desainer Fashion",
+        "slug": "desainer_fashion"
+      },
+      {
+        "id": "FAS-04",
+        "name": "Aksesoris & Perhiasan",
+        "slug": "aksesoris_perhiasan"
+      },
+      { "id": "FAS-05", "name": "Kosmetik", "slug": "kosmetik" },
+      { "id": "FAS-06", "name": "Skincare", "slug": "skincare" },
+      {
+        "id": "FAS-07",
+        "name": "Salon Kecantikan",
+        "slug": "salon_kecantikan"
+      },
+      { "id": "FAS-08", "name": "Barbershop", "slug": "barbershop" }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Otomotif",
+    "slug": "otomotif",
+    "subBidangBisnis": [
+      {
+        "id": "OTO-01",
+        "name": "Jual Beli Mobil/Motor",
+        "slug": "jual_beli_mobil_motor"
+      },
+      {
+        "id": "OTO-02",
+        "name": "Bengkel Mobil/Motor",
+        "slug": "bengkel_mobil_motor"
+      },
+      {
+        "id": "OTO-03",
+        "name": "Aksesori Kendaraan",
+        "slug": "aksesori_kendaraan"
+      },
+      {
+        "id": "OTO-04",
+        "name": "Rental Kendaraan",
+        "slug": "rental_kendaraan"
+      },
+      {
+        "id": "OTO-05",
+        "name": "Cuci Mobil/Motor",
+        "slug": "cuci_mobil_motor"
+      },
+      {
+        "id": "OTO-06",
+        "name": "Spare Part & Mesin Mobil",
+        "slug": "spare_part_mesin_mobil"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Industri Kreatif",
+    "slug": "industri_kreatif",
+    "subBidangBisnis": [
+      {
+        "id": "INK-01",
+        "name": "Fotografi & Videografi",
+        "slug": "fotografi_videografi"
+      },
+      { "id": "INK-02", "name": "Event Organizer", "slug": "event_organizer" },
+      { "id": "INK-03", "name": "Desain Grafis", "slug": "desain_grafis" },
+      {
+        "id": "INK-04",
+        "name": "Advertising & Branding",
+        "slug": "advertising_branding"
+      },
+      { "id": "INK-05", "name": "Jasa Percetakan", "slug": "jasa_percetakan" },
+      {
+        "id": "INK-06",
+        "name": "Dekorasi & Wedding Planner",
+        "slug": "dekorasi_wedding_planner"
+      },
+      {
+        "id": "INK-07",
+        "name": "Studio Musik & Produksi",
+        "slug": "studio_musik_produksi"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Konstruksi dan Pertukangan",
+    "slug": "konstruksi_dan_pertukangan",
+    "subBidangBisnis": [
+      {
+        "id": "KON-01",
+        "name": "Kontraktor Bangunan",
+        "slug": "kontraktor_bangunan"
+      },
+      { "id": "KON-02", "name": "Arsitek", "slug": "arsitek" },
+      { "id": "KON-03", "name": "Desain Interior", "slug": "desain_interior" },
+      {
+        "id": "KON-04",
+        "name": "Supplier Material Bangunan",
+        "slug": "supplier_material_bangunan"
+      },
+      {
+        "id": "KON-05",
+        "name": "Tukang & Renovasi Rumah",
+        "slug": "tukang_renovasi_rumah"
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Agribisnis dan Pertanian",
+    "slug": "agribisnis_dan_pertanian",
+    "subBidangBisnis": [
+      { "id": "AGR-01", "name": "Perkebunan", "slug": "perkebunan" },
+      { "id": "AGR-02", "name": "Peternakan", "slug": "peternakan" },
+      { "id": "AGR-03", "name": "Perikanan", "slug": "perikanan" },
+      {
+        "id": "AGR-04",
+        "name": "Supplier Bibit & Pupuk",
+        "slug": "supplier_bibit_pupuk"
+      },
+      {
+        "id": "AGR-05",
+        "name": "Hasil Tani Organik",
+        "slug": "hasil_tani_organik"
+      },
+      {
+        "id": "AGR-06",
+        "name": "Alat & Mesin Pertanian",
+        "slug": "alat_mesin_pertanian"
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Jasa Umum",
+    "slug": "jasa_umum",
+    "subBidangBisnis": [
+      { "id": "JAS-01", "name": "Jasa Kebersihan", "slug": "jasa_kebersihan" },
+      { "id": "JAS-02", "name": "Laundry", "slug": "laundry" },
+      { "id": "JAS-03", "name": "Penitipan Anak", "slug": "penitipan_anak" },
+      { "id": "JAS-04", "name": "Jasa Keamanan", "slug": "jasa_keamanan" },
+      {
+        "id": "JAS-05",
+        "name": "Jasa Pengiriman/Logistik",
+        "slug": "jasa_pengiriman_logistik"
+      },
+      { "id": "JAS-06", "name": "Jasa Ekspedisi", "slug": "jasa_ekspedisi" },
+      {
+        "id": "JAS-07",
+        "name": "Konsultan Bisnis",
+        "slug": "konsultan_bisnis"
+      },
+      { "id": "JAS-08", "name": "Jasa Hukum/Legal", "slug": "jasa_hukum_legal" }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Edukasi dan Pelatihan",
+    "slug": "edukasi_dan_pelatihan",
+    "subBidangBisnis": [
+      {
+        "id": "EDU-01",
+        "name": "Bimbingan Belajar",
+        "slug": "bimbingan_belajar"
+      },
+      { "id": "EDU-02", "name": "Kursus Bahasa", "slug": "kursus_bahasa" },
+      {
+        "id": "EDU-03",
+        "name": "Pelatihan Digital/Skill",
+        "slug": "pelatihan_digital_skill"
+      },
+      {
+        "id": "EDU-04",
+        "name": "LPK (Lembaga Pelatihan Kerja)",
+        "slug": "lpk_lembaga_pelatihan_kerja"
+      },
+      { "id": "EDU-05", "name": "Homeschooling", "slug": "homeschooling" }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Keuangan dan Investasi",
+    "slug": "keuangan_dan_investasi",
+    "subBidangBisnis": [
+      { "id": "KEU-01", "name": "Koperasi", "slug": "koperasi" },
+      { "id": "KEU-02", "name": "FinTEKh", "slug": "finTEKh" },
+      {
+        "id": "KEU-03",
+        "name": "Konsultan Keuangan",
+        "slug": "konsultan_keuangan"
+      },
+      {
+        "id": "KEU-04",
+        "name": "Investasi & Saham",
+        "slug": "investasi_saham"
+      },
+      { "id": "KEU-05", "name": "Asuransi", "slug": "asuransi" },
+      { "id": "KEU-06", "name": "Akuntan Publik", "slug": "akuntan_publik" }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Perdagangan Umum",
+    "slug": "perdagangan_umum",
+    "subBidangBisnis": [
+      { "id": "PER-01", "name": "Toko Kelontong", "slug": "toko_kelontong" },
+      { "id": "PER-02", "name": "Minimarket", "slug": "minimarket" },
+      {
+        "id": "PER-03",
+        "name": "Grosir & Distributor",
+        "slug": "grosir_distributor"
+      },
+      {
+        "id": "PER-04",
+        "name": "Dropshipper & Reseller",
+        "slug": "dropshipper_reseller"
+      },
+      {
+        "id": "PER-05",
+        "name": "Marketplace & E-commerce",
+        "slug": "marketplace_e_commerce"
+      },
+      { "id": "PER-06", "name": "Supplier Produk", "slug": "supplier_produk" }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "Pariwisata dan Hospitality",
+    "slug": "pariwisata_dan_hospitality",
+    "subBidangBisnis": [
+      { "id": "PAR-01", "name": "Agen Travel", "slug": "agen_travel" },
+      { "id": "PAR-02", "name": "Tour Guide", "slug": "tour_guide" },
+      {
+        "id": "PAR-03",
+        "name": "Villa & Penginapan",
+        "slug": "villa_penginapan"
+      },
+      { "id": "PAR-04", "name": "Homestay", "slug": "homestay" },
+      { "id": "PAR-05", "name": "Hotel", "slug": "hotel" },
+      {
+        "id": "PAR-06",
+        "name": "Sewa Motor/Travel",
+        "slug": "sewa_motor_travel"
+      },
+      {
+        "id": "PAR-07",
+        "name": "Sovenir & Oleh-Oleh",
+        "slug": "sovenir_oleh_oleh"
+      }
+    ]
+  }
+]

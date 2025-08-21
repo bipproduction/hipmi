@@ -1,4 +1,4 @@
-import { RouterMap } from "@/app/lib/router_hipmi/router_map";
+import { RouterMap } from "@/lib/router_hipmi/router_map";
 import { MainColor } from "@/app_modules/_global/color";
 import {
   ComponentGlobal_NotifikasiBerhasil,
@@ -9,67 +9,138 @@ import { MODEL_PORTOFOLIO_OLD } from "@/app_modules/model_global/portofolio";
 import { Button } from "@mantine/core";
 import _ from "lodash";
 
+import { DIRECTORY_ID } from "@/lib";
+import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
+import { clientLogger } from "@/util/clientLogger";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import funCreatePortofolio from "../../fun/fun_create_portofolio";
-import { funGlobal_UploadToStorage } from "@/app_modules/_global/fun";
-import { DIRECTORY_ID } from "@/app/lib";
+import { apiCreatePortofolio } from "../api_fetch_portofolio";
+
+
+type SubBidang = {
+  id: string;
+};
+interface ICreatePortofolio {
+  namaBisnis: string;
+  masterBidangBisnisId: string;
+  alamatKantor: string;
+  tlpn: string;
+  deskripsi: string;
+  fileId: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+  subBidang: SubBidang[];
+}
+
+
 
 export function Portofolio_ComponentButtonSelanjutnya({
   profileId,
   dataPortofolio,
-  file,
   dataMedsos,
+  file,
+  listSubBidangSelected,
 }: {
   profileId: string;
   dataPortofolio: MODEL_PORTOFOLIO_OLD;
-  file: File;
   dataMedsos: any;
+  file: File;
+  listSubBidangSelected?: SubBidang[];
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit() {
-    const porto = {
+  const validateData = () => {
+    if (_.includes(_.values(dataPortofolio), "")) {
+      ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
+      return false;
+    }
+
+    if (dataPortofolio.tlpn.length < 10) {
+      ComponentGlobal_NotifikasiPeringatan("Nomor telepon minimal 10 angka");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleCreatePortofolio = async (fileId: string) => {
+    const newData: ICreatePortofolio = {
       namaBisnis: dataPortofolio.namaBisnis,
       masterBidangBisnisId: dataPortofolio.masterBidangBisnisId,
+      // masterSubBidangBisnisId: dataPortofolio.masterSubBidangBisnisId as string,
       alamatKantor: dataPortofolio.alamatKantor,
       tlpn: dataPortofolio.tlpn,
       deskripsi: dataPortofolio.deskripsi,
+      facebook: dataMedsos.facebook,
+      twitter: dataMedsos.twitter,
+      instagram: dataMedsos.instagram,
+      tiktok: dataMedsos.tiktok,
+      youtube: dataMedsos.youtube,
+      fileId: fileId,
+      subBidang: listSubBidangSelected || []
     };
 
-    if (_.values(porto).includes(""))
-      return ComponentGlobal_NotifikasiPeringatan("Lengkapi Data");
-
-    const uploadFileToStorage = await funGlobal_UploadToStorage({
-      file: file,
-      dirId: DIRECTORY_ID.portofolio_logo,
-    });
-
-    if (!uploadFileToStorage.success)
-      return ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
-
-    const res = await funCreatePortofolio({
+    const response = await apiCreatePortofolio({
       profileId: profileId,
-      data: dataPortofolio as any,
-      medsos: dataMedsos,
-      fileId: uploadFileToStorage.data.id,
+      data: newData,
     });
-    if (res.status === 201) {
-      setLoading(true);
+
+    if (response.success) {
       ComponentGlobal_NotifikasiBerhasil("Berhasil disimpan");
-      router.replace(RouterMap.create + res.id, { scroll: false });
+      router.replace(RouterMap.create + response.data.id, { scroll: false });
     } else {
-      ComponentGlobal_NotifikasiGagal("Gagal disimpan");
+      setLoading(false);
+      throw new Error("Failed to create portfolio");
     }
-  }
+  };
+
+  const onSubmit = async () => {
+    if (!validateData()) return;
+
+    try {
+      setLoading(true);
+
+
+      const uploadFile = await funGlobal_UploadToStorage({
+        file: file,
+        dirId: DIRECTORY_ID.portofolio_logo,
+      });
+
+      if (!uploadFile.success) {
+        ComponentGlobal_NotifikasiPeringatan("Gagal upload gambar");
+        return;
+      }
+
+      await handleCreatePortofolio(uploadFile.data.id);
+    } catch (error) {
+      setLoading(false);
+      ComponentGlobal_NotifikasiGagal("Gagal disimpan");
+      console.error("Error create portofolio", error);
+    }
+  };
+
   return (
     <>
+      {/* <pre style={{ color: "white" }}>
+        {JSON.stringify(dataPortofolio, null, 2)}
+      </pre>
+      <pre style={{ color: "white" }}>
+        {JSON.stringify(listSubBidangSelected, null, 2)}
+      </pre> */}
+
       <Button
-        disabled={_.values(dataPortofolio).includes("") || file === null}
+        disabled={
+          _.values(dataPortofolio).includes("") ||
+          !file ||
+          listSubBidangSelected?.some((item) => !item.id)
+        }
         mt={"md"}
         radius={50}
-        loading={loading ? true : false}
+        loading={loading}
         loaderPosition="center"
         onClick={() => {
           onSubmit();

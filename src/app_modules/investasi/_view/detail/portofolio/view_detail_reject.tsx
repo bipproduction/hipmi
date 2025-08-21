@@ -1,6 +1,6 @@
 "use client";
 
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { AccentColor, MainColor } from "@/app_modules/_global/color";
 import ComponentGlobal_BoxInformation from "@/app_modules/_global/component/box_information";
 import { funGlobal_DeleteFileById } from "@/app_modules/_global/fun";
 import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
@@ -11,6 +11,8 @@ import { Investasi_ComponentDetailDataNonPublish } from "@/app_modules/investasi
 import { MODEL_INVESTASI } from "@/app_modules/investasi/_lib/interface";
 import { investasi_funEditStatusById } from "@/app_modules/investasi/fun/edit/fun_edit_status_by_id";
 import funDeleteInvestasi from "@/app_modules/investasi/fun/fun_delete_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
+import { clientLogger } from "@/util/clientLogger";
 import { Button, Group, Stack } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -23,63 +25,74 @@ export default function Investasi_ViewDetailReject({
 }) {
   const router = useRouter();
   const [data, setData] = useState(dataInvestasi);
-  const [openModal, setOpenModal] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [openModalDel, setOpenModalDel] = useState(false);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [isLoadingDel, setLoadingDel] = useState(false);
+  const [isLoadingEdit, setLoadingEdit] = useState(false);
 
   async function onAjukan() {
-    const res = await investasi_funEditStatusById({
-      investasiId: data.id,
-      statusId: "3",
-    });
-
-    if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil("Project Diajukan Kembali");
-      router.replace(NEW_RouterInvestasi.portofolio({ id: "3" }));
-    } else {
-      ComponentGlobal_NotifikasiGagal("Gagal Pengajuan");
+    try {
+      setLoadingEdit(true);
+      const res = await investasi_funEditStatusById({
+        investasiId: data.id,
+        statusId: "3",
+      });
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil("Project Diajukan Kembali");
+        router.replace(NEW_RouterInvestasi.portofolio({ id: "3" }));
+      } else {
+        ComponentGlobal_NotifikasiGagal("Gagal Pengajuan");
+      }
+    } catch (error) {
+      clientLogger.error("Error ajukan kembali", error);
+    } finally {
+      setLoadingEdit(false);
     }
   }
 
   async function onDelete() {
-    const res = await funDeleteInvestasi(data.id);
-    if (res.status === 200) {
-      setLoading(true);
+    try {
+      setLoadingDel(true);
+      const res = await funDeleteInvestasi(data.id);
+      if (res.status === 200) {
+        const delImage = await funGlobal_DeleteFileById({
+          fileId: data.imageId,
+        });
+        if (!delImage.success) {
+          ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus image ");
+        }
 
-      const delImage = await funGlobal_DeleteFileById({
-        fileId: data.imageId,
-      });
-      if (!delImage.success) {
-        ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus image ");
-      }
+        const delFileProspektus = await funGlobal_DeleteFileById({
+          fileId: data.prospektusFileId,
+        });
+        if (!delFileProspektus.success) {
+          ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus prospektus ");
+        }
 
-      const delFileProspektus = await funGlobal_DeleteFileById({
-        fileId: data.prospektusFileId,
-      });
-      if (!delFileProspektus.success) {
-        ComponentAdminGlobal_NotifikasiPeringatan("Gagal hapus prospektus ");
-      }
+        if (!_.isEmpty(data.DokumenInvestasi)) {
+          for (let i of data.DokumenInvestasi) {
+            const delFileDokumen = await funGlobal_DeleteFileById({
+              fileId: i.fileId,
+            });
 
-      if (!_.isEmpty(data.DokumenInvestasi)) {
-        for (let i of data.DokumenInvestasi) {
-          const delFileDokumen = await funGlobal_DeleteFileById({
-            fileId: i.fileId,
-          });
-
-          if (!delFileDokumen.success) {
-            ComponentAdminGlobal_NotifikasiPeringatan(
-              "Gagal hapus prospektus "
-            );
+            if (!delFileDokumen.success) {
+              ComponentAdminGlobal_NotifikasiPeringatan(
+                "Gagal hapus prospektus "
+              );
+            }
           }
         }
-      }
 
-      ComponentGlobal_NotifikasiBerhasil(res.message);
-      setOpenModal(false);
-      router.replace(NEW_RouterInvestasi.portofolio({ id: "4" }));
-      setLoading(false);
-    } else {
-      ComponentGlobal_NotifikasiGagal(res.message);
-      setLoading(false);
+        ComponentGlobal_NotifikasiBerhasil(res.message);
+        setOpenModalDel(false);
+        router.replace(NEW_RouterInvestasi.portofolio({ id: "4" }));
+      } else {
+        ComponentGlobal_NotifikasiGagal(res.message);
+      }
+    } catch (error) {
+      console.error("Error delete investasi", error);
+    } finally {
+      setLoadingDel(false);
     }
   }
 
@@ -88,23 +101,56 @@ export default function Investasi_ViewDetailReject({
       {/* Pop up */}
       <UIGlobal_Modal
         title={"Anda Yakin Menghapus Data?"}
-        opened={openModal}
-        close={() => setOpenModal(false)}
+        opened={openModalDel}
+        close={() => setOpenModalDel(false)}
         buttonKiri={
-          <Button radius={"xl"} onClick={() => setOpenModal(false)}>
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModalDel(false)}
+          >
             Batal
           </Button>
         }
         buttonKanan={
           <Button
             loaderPosition="center"
-            loading={isLoading}
-            color="red"
-            bg={"red"}
+            loading={isLoadingDel}
+            c={AccentColor.white}
+            style={{ backgroundColor: MainColor.red }}
             radius={"xl"}
             onClick={() => onDelete()}
           >
             Hapus
+          </Button>
+        }
+      />
+
+      <UIGlobal_Modal
+        title={"Anda Yakin Mengedit Kembali?"}
+        opened={openModalEdit}
+        close={() => setOpenModalEdit(false)}
+        buttonKiri={
+          <Button
+            style={{ backgroundColor: AccentColor.blue }}
+            c={AccentColor.white}
+            radius={"xl"}
+            onClick={() => setOpenModalEdit(false)}
+          >
+            Batal
+          </Button>
+        }
+        buttonKanan={
+          <Button
+            loaderPosition="center"
+            loading={isLoadingEdit}
+            style={{ backgroundColor: AccentColor.yellow }}
+            c={MainColor.darkblue}
+            radius={"xl"}
+            onClick={() => onAjukan()}
+          >
+            Edit
           </Button>
         }
       />
@@ -119,9 +165,9 @@ export default function Investasi_ViewDetailReject({
           {/* Tombol Ajukan */}
           <Button
             radius={"xl"}
-            bg={"orange.7"}
-            color="yellow"
-            onClick={() => onAjukan()}
+            style={{ backgroundColor: AccentColor.yellow }}
+            onClick={() => setOpenModalEdit(true)}
+            c={MainColor.darkblue}
           >
             Edit Kembali
           </Button>
@@ -129,9 +175,9 @@ export default function Investasi_ViewDetailReject({
           {/* Tombol Hapus */}
           <Button
             radius={"xl"}
-            bg={"red.7"}
-            color="red"
-            onClick={() => setOpenModal(true)}
+            style={{ backgroundColor: MainColor.red }}
+            c={AccentColor.white}
+            onClick={() => setOpenModalDel(true)}
           >
             Hapus
           </Button>

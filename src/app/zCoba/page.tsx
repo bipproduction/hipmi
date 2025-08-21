@@ -1,18 +1,60 @@
-import { funGetUserIdByToken } from "@/app_modules/_global/fun/get";
-import Coba_TestLoading from "@/app_modules/zCoba";
+"use client";
 
-export default async function Page() {
-  await new Promise((a, b) => {
-    setTimeout(a, 3000);
+import { MainColor } from "@/app_modules/_global/color";
+import {
+  Avatar,
+  Button,
+  Center,
+  FileButton,
+  Paper,
+  Stack,
+} from "@mantine/core";
+import { IconCamera } from "@tabler/icons-react";
+import { useState } from "react";
+import { DIRECTORY_ID } from "../../lib";
+
+export default function Page() {
+  const [data, setData] = useState({
+    name: "bagas",
+    hobi: [
+      {
+        id: "1",
+        name: "mancing",
+      },
+      {
+        id: "2",
+        name: "game",
+      },
+    ],
   });
-
-  const userLoginId = await funGetUserIdByToken();
 
   return (
     <>
-      {/* <CobaRealtime userLoginId={userLoginId} /> */}
-      <Coba_TestLoading userLoginId={userLoginId as string} />
-      {/* <ComponentGlobal_UI_LayoutTamplate /> */}
+      <Stack align="center" justify="center" h={"100vh"}>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+
+        <Button
+          onClick={() => {
+            const newData = [
+              {
+                id: "1",
+                name: "sepedah",
+              },
+              {
+                id: "2",
+                name: "berenang",
+              },
+            ];
+
+            setData({
+              ...data,
+              hobi: newData,
+            });
+          }}
+        >
+          Ganti
+        </Button>
+      </Stack>
     </>
   );
 }

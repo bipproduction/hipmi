@@ -1,4 +1,4 @@
-import { RouterAdminVote } from "@/app/lib/router_admin/router_admin_vote";
+import { RouterAdminVote } from "@/lib/router_admin/router_admin_vote";
 import { MODEL_NOTIFIKASI } from "@/app_modules/notifikasi/model/interface";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { admin_funVotingCheckStatus } from "../fun/get/fun_voting_check_status";
@@ -12,17 +12,11 @@ export async function adminNotifikasi_findRouterVoting({
   appId,
   notifikasiId,
   router,
-  activePage,
-  onLoadCountNotif,
-  onLoadDataNotifikasi,
   onChangeNavbar,
 }: {
   appId: string;
   notifikasiId: string;
   router: AppRouterInstance;
-  activePage: number;
-  onLoadCountNotif: (val: any) => void;
-  onLoadDataNotifikasi: (val: any) => void;
   onChangeNavbar: (val: {
     id: IAdmin_ActivePage;
     childId: IAdmin_ActiveChildId;
@@ -36,13 +30,6 @@ export async function adminNotifikasi_findRouterVoting({
     });
 
     if (updateReadNotifikasi.status == 200) {
-      const loadCountNotif = await adminNotifikasi_countNotifikasi();
-      onLoadCountNotif(loadCountNotif);
-
-      const loadListNotifikasi = await adminNotifikasi_getByUserId({
-        page: 1,
-      });
-      onLoadDataNotifikasi(loadListNotifikasi);
 
       const path = `/dev/admin/vote/child/table_${check.statusName}`;
 

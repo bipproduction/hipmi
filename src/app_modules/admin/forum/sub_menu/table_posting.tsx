@@ -1,17 +1,16 @@
 "use client";
 
-import { RouterAdminForum } from "@/app/lib/router_admin/router_admin_forum";
-import { RouterForum } from "@/app/lib/router_hipmi/router_forum";
+import { AdminColor } from "@/app_modules/_global/color/color_pallet";
 import ComponentAdminGlobal_HeaderTamplate from "@/app_modules/admin/_admin_global/header_tamplate";
+import CustomSkeleton from "@/app_modules/components/CustomSkeleton";
 import { MODEL_FORUM_POSTING } from "@/app_modules/forum/model/interface";
+import { RouterAdminForum } from "@/lib/router_admin/router_admin_forum";
+import { clientLogger } from "@/util/clientLogger";
 import {
   Badge,
   Box,
   Button,
   Center,
-  Group,
-  Modal,
-  Pagination,
   Paper,
   ScrollArea,
   Spoiler,
@@ -19,178 +18,206 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
-import { IconMessageCircle, IconSearch } from "@tabler/icons-react";
-import { IconFlag3 } from "@tabler/icons-react";
-import { IconEyeCheck, IconTrash } from "@tabler/icons-react";
-import _, { isEmpty } from "lodash";
+import { useShallowEffect } from "@mantine/hooks";
+import { IconFlag3, IconMessageCircle, IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { adminForum_funDeletePostingById } from "../fun/delete/fun_delete_posting_by_id";
-import { ComponentGlobal_NotifikasiBerhasil } from "@/app_modules/_global/notif_global/notifikasi_berhasil";
-import { ComponentGlobal_NotifikasiGagal } from "@/app_modules/_global/notif_global/notifikasi_gagal";
-import { useDisclosure } from "@mantine/hooks";
-import { adminForum_getListPosting } from "../fun/get/get_list_publish";
-import adminJob_getListPublish from "@/app_modules/admin/job/fun/get/get_list_publish";
+import { ComponentAdminGlobal_TitlePage } from "../../_admin_global/_component";
+import { Admin_V3_ComponentPaginationBreakpoint } from "../../_components_v3/comp_pagination_breakpoint";
 import ComponentAdminForum_ButtonDeletePosting from "../component/button_delete";
-import ComponentAdminGlobal_IsEmptyData from "../../_admin_global/is_empty_data";
+import { apiGetAdminForumPublish } from "../lib/api_fetch_admin_forum";
+import { Comp_SetInnerHTML } from "@/app_modules/_global/component/new/comp_set_inner_html";
+import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
+import { AdminForum_CompTableSetHtmlStiker } from "../component/comp_table_set_html_stiker";
 
-export default function AdminForum_TablePosting({
-  listPublish,
-}: {
-  listPublish: any;
-}) {
+export default function AdminForum_TablePosting() {
   return (
     <>
       <Stack>
         <ComponentAdminGlobal_HeaderTamplate name="Forum" />
-        <TablePublish listPublish={listPublish} />
-        {/* <pre>{JSON.stringify(listPublish, null, 2)}</pre> */}
+        <TablePublish />
       </Stack>
     </>
   );
 }
 
-function TablePublish({ listPublish }: { listPublish: any }) {
+function TablePublish() {
   const router = useRouter();
-  const [data, setData] = useState<MODEL_FORUM_POSTING[]>(listPublish.data);
-  const [nPage, setNPage] = useState(listPublish.nPage);
+  const [data, setData] = useState<MODEL_FORUM_POSTING[] | null>(null);
+  const [nPage, setNPage] = useState<number>(1);
   const [activePage, setActivePage] = useState(1);
   const [isSearch, setSearch] = useState("");
+  const [isDelete, setDelete] = useState(false);
 
-  async function onSearch(s: string) {
-    setSearch(s);
+  useShallowEffect(() => {
+    // Add custom style for stickers inside Quill editor
+    const style = document.createElement("style");
+    style.textContent = `
+        .chat-content img {
+        max-width: 70px !important;
+        max-height: 70px !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      // Clean up when component unmounts
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  useShallowEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const response = await apiGetAdminForumPublish({
+          page: `${activePage}`,
+          search: isSearch,
+        });
+
+        if (response?.success && response?.data.data) {
+          setData(response.data.data);
+          setNPage(response.data.nCount || 1);
+        } else {
+          console.error("Invalid data format recieved:", response);
+          setData([]);
+        }
+      } catch (error) {
+        clientLogger.error("Invlid data format recieved:", error);
+        setData([]);
+      }
+    };
+    loadInitialData();
+  }, [activePage, isSearch, isDelete]);
+
+  const onSearch = (searchTerm: string) => {
+    setSearch(searchTerm);
     setActivePage(1);
-    const loadData = await adminForum_getListPosting({
-      page: 1,
-      search: s,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
+  };
+
+  async function onDelete(val: boolean) {
+    setDelete(val);
   }
 
-  async function onPageClick(p: any) {
-    setActivePage(p);
-    const loadData = await adminForum_getListPosting({
-      search: isSearch,
-      page: p,
-    });
-    setData(loadData.data as any);
-    setNPage(loadData.nPage);
-  }
+  const onPageClick = (page: number) => {
+    setActivePage(page);
+  };
 
-  async function onLoadData() {
-     const loadData = await adminForum_getListPosting({
-       page: 1,
-     });
-     setData(loadData.data as any);
-     setNPage(loadData.nPage);
-  }
+  const renderTableBody = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <tr>
+          <td colSpan={12}>
+            <Center>
+              <Text color="gray">Tidak ada data</Text>
+            </Center>
+          </td>
+        </tr>
+      );
+    }
+    return data?.map((e, i) => (
+      <tr
+        key={i}
+        style={{
+          color: AdminColor.white,
+        }}
+      >
+        {/* Author */}
+        <td>
+          <Box w={100}>
+            <Text lineClamp={1}>{e?.Author?.username}</Text>
+          </Box>
+        </td>
 
-  const TableRows = data?.map((e, i) => (
-    <tr key={i}>
-      <td>
-        <Center w={200}>
-          <Text lineClamp={1}>{e?.Author?.username}</Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={100}>
-          <Badge
-            color={
-              (e?.ForumMaster_StatusPosting?.id as any) === 1 ? "green" : "red"
-            }
-          >
-            {e?.ForumMaster_StatusPosting?.status}
-          </Badge>
-        </Center>
-      </td>
-      <td>
-        <Box w={400}>
-          <Spoiler
-            // w={400}
-            maxHeight={60}
-            hideLabel="sembunyikan"
-            showLabel="tampilkan"
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: e?.diskusi,
+        {/* Status */}
+        <td>
+          <Center>
+            <Badge
+              color={
+                (e?.ForumMaster_StatusPosting?.id as any) === 1
+                  ? "green"
+                  : "red"
+              }
+            >
+              {e?.ForumMaster_StatusPosting?.status}
+            </Badge>
+          </Center>
+        </td> 
+
+        {/* Deskripsi */}
+        <td>
+          <AdminForum_CompTableSetHtmlStiker data={e.diskusi} classname="chat-content" />
+        </td>
+
+        {/* Jumlah komentar */}
+        <td>
+          <Center>
+            <Text fw={"bold"} fz={"lg"}>
+              {e?.Forum_Komentar.length}
+            </Text>
+          </Center>
+        </td>
+
+        {/* Jumlah report */}
+        <td>
+          <Center>
+            <Text
+              c={e?.Forum_ReportPosting?.length >= 3 ? "red" : AdminColor.white}
+              fw={"bold"}
+              fz={"lg"}
+            >
+              {e?.Forum_ReportPosting.length}
+            </Text>
+          </Center>
+        </td>
+
+        {/* Aksi */}
+        <td>
+          <Stack align="center" spacing={"xs"}>
+            <ButtonAction postingId={e?.id} />
+            <ComponentAdminForum_ButtonDeletePosting
+              postingId={e?.id}
+              onSuccesDelete={(val) => {
+                onDelete(val);
               }}
             />
-          </Spoiler>
-        </Box>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text>
-            {new Intl.DateTimeFormat(["id-ID"], { dateStyle: "medium" }).format(
-              e.createdAt
-            )}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text fw={"bold"} fz={"lg"}>
-            {e?.Forum_Komentar.length}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Center w={150}>
-          <Text
-            c={e?.Forum_ReportPosting?.length >= 3 ? "red" : "black"}
-            fw={"bold"}
-            fz={"lg"}
-          >
-            {e?.Forum_ReportPosting.length}
-          </Text>
-        </Center>
-      </td>
-      <td>
-        <Stack align="center" spacing={"xs"}>
-          <ButtonAction postingId={e?.id} />
-          <ComponentAdminForum_ButtonDeletePosting
-            postingId={e?.id}
-            onSuccesDelete={(val) => {
-              if (val) {
-                onLoadData();
-              }
-            }}
-          />
-        </Stack>
-      </td>
-    </tr>
-  ));
+          </Stack>
+        </td>
+
+        {/* <td>
+          <Box w={100}>
+            <Text>
+              {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
+                new Date(e?.createdAt)
+              )}
+            </Text>
+          </Box>
+        </td> */}
+      </tr>
+    ));
+  };
 
   return (
     <>
       <Stack spacing={"xs"} h={"100%"}>
-        <Group
-          position="apart"
-          bg={"green.4"}
-          p={"xs"}
-          style={{ borderRadius: "6px" }}
-        >
-          <Title order={4} c={"white"}>
-            Posting
-          </Title>
-          <TextInput
-            icon={<IconSearch size={20} />}
-            radius={"xl"}
-            placeholder="Cari postingan"
-            onChange={(val) => {
-              onSearch(val.currentTarget.value);
-            }}
-          />
-        </Group>
-        
-        {isEmpty(data) ? (
-          <ComponentAdminGlobal_IsEmptyData />
+        <ComponentAdminGlobal_TitlePage
+          name="Posting"
+          color={AdminColor.softBlue}
+          component={
+            <TextInput
+              icon={<IconSearch size={20} />}
+              radius={"xl"}
+              placeholder="Cari postingan"
+              onChange={(val) => {
+                onSearch(val.currentTarget.value);
+              }}
+            />
+          }
+        />
+
+        {!data ? (
+          <CustomSkeleton height={"80vh"} width={"100%"} />
         ) : (
-          <Paper p={"md"} withBorder shadow="lg" h={"80vh"}>
+          <Paper p={"md"} bg={AdminColor.softBlue} h={"80vh"}>
             <ScrollArea w={"100%"} h={"90%"} offsetScrollbars>
               <Table
                 verticalSpacing={"md"}
@@ -198,46 +225,40 @@ function TablePublish({ listPublish }: { listPublish: any }) {
                 p={"md"}
                 w={"100%"}
                 h={"100%"}
-                striped
-                highlightOnHover
               >
                 <thead>
                   <tr>
                     <th>
-                      <Center>Username</Center>
+                      <Text c={AdminColor.white}>Username</Text>
                     </th>
                     <th>
-                      <Center>Status</Center>
+                      <Center c={AdminColor.white}>Status</Center>
                     </th>
                     <th>
-                      <Text>Postingan</Text>
+                      <Text c={AdminColor.white}>Postingan</Text>
                     </th>
                     <th>
-                      <Center>Tanggal Publish</Center>
+                      <Center c={AdminColor.white}>Komentar Aktif</Center>
                     </th>
                     <th>
-                      <Center>Komentar Aktif</Center>
+                      <Center c={AdminColor.white}>Total Report Posting</Center>
                     </th>
+
                     <th>
-                      <Center>Total Report Posting</Center>
-                    </th>
-                    <th>
-                      <Center>Aksi</Center>
+                      <Center c={AdminColor.white}>Aksi</Center>
                     </th>
                   </tr>
                 </thead>
-                <tbody>{TableRows}</tbody>
+                <tbody>{renderTableBody()}</tbody>
               </Table>
             </ScrollArea>
-            <Center mt={"xl"}>
-              <Pagination
-                value={activePage}
-                total={nPage}
-                onChange={(val) => {
-                  onPageClick(val);
-                }}
-              />
-            </Center>
+            <Admin_V3_ComponentPaginationBreakpoint
+              value={activePage}
+              total={nPage}
+              onChange={(val) => {
+                onPageClick(val);
+              }}
+            />
           </Paper>
         )}
       </Stack>

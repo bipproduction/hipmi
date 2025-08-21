@@ -1,4 +1,4 @@
-import { NEW_RouterInvestasi } from "@/app/lib/router_hipmi/router_investasi";
+import { NEW_RouterInvestasi } from "@/lib/router_hipmi/router_investasi";
 import {
   ComponentGlobal_CardLoadingOverlay,
   ComponentGlobal_CardStyles,
@@ -17,7 +17,7 @@ import {
   Text,
 } from "@mantine/core";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { MODEL_INVESTASI_DOKUMEN } from "../../_lib/interface";
 import ComponentGlobal_Loader from "@/app_modules/_global/component/loader";
@@ -30,6 +30,8 @@ import {
   ComponentGlobal_NotifikasiBerhasil,
   ComponentGlobal_NotifikasiPeringatan,
 } from "@/app_modules/_global/notif_global";
+import { apiGetDokumenInvestasiById } from "../../_lib/api_interface";
+import { clientLogger } from "@/util/clientLogger";
 
 export function Investasi_ComponentCardRekapDocument({
   data,
@@ -38,6 +40,9 @@ export function Investasi_ComponentCardRekapDocument({
   data: MODEL_INVESTASI_DOKUMEN;
   onSetData: (val: any) => any[];
 }) {
+  const params = useParams<{ id: string }>();
+  const investasiId = params.id;
+
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
@@ -63,18 +68,22 @@ export function Investasi_ComponentCardRekapDocument({
 
       if (deleteFromDB.status !== 200) {
         ComponentGlobal_NotifikasiPeringatan(deleteFromDB.message);
+        return;
       }
       ComponentGlobal_NotifikasiBerhasil(deleteFromDB.message);
       setOpenModal(false);
 
-      const loadData = await investasi_funGetAllDocumentById({
-        investasiId: data.investasiId,
-        page: 1,
+      const respone = await apiGetDokumenInvestasiById({
+        id: investasiId,
+        kategori: "get-all",
+        page: "1",
       });
 
-      onSetData(loadData);
+      if (respone.success) {
+        onSetData(respone.data);
+      }
     } catch (error) {
-      console.log(error);
+      clientLogger.error("Error hapus dokumen", error);
     } finally {
       setIsLoadingDelete(false);
     }
@@ -88,7 +97,7 @@ export function Investasi_ComponentCardRekapDocument({
             span={"auto"}
             onClick={() => {
               router.push(
-                NEW_RouterInvestasi.file_prospektus({ id: data.fileId }),
+                NEW_RouterInvestasi.file_dokumen({ id: data.fileId }),
                 { scroll: false }
               );
               setVisible(true);
