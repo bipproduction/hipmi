@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.29](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.28...v1.4.29) (2025-08-25)
+
+
+### Bug Fixes
+
+* test new github ([555b6e7](https://wibugit.wibudev.com/bip/hipmi/commit/555b6e76332d867fc72b51cc1163fd6911a63288))
+
 ## [1.4.28](https://github.com/bipproduction/hipmi/compare/v1.4.27...v1.4.28) (2025-06-16)
 
 ## [1.4.27](https://github.com/bipproduction/hipmi/compare/v1.4.26...v1.4.27) (2025-06-16)

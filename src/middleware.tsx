@@ -59,6 +59,8 @@ export const middleware = async (req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
   const apiBaseUrl = new URL(req.url).origin || process.env.NEXT_PUBLIC_API_URL;
+  const dbUrl = process.env.DATABASE_URL;
+  console.log("DATABASE_URL >>", dbUrl);
 
   // Handle CORS preflight
   const corsResponse = handleCors(req);
