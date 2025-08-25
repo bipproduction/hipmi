@@ -21,8 +21,6 @@ async function POST(request: Request) {
       });
     }
 
-    console.log("data", data);
-
     const create = await prisma.profile.create({
       data: {
         userId: data.id,
