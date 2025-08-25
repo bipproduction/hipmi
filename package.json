@@ -1,11 +1,11 @@
 {
   "name": "hipmi",
-  "version": "1.4.28",
+  "version": "1.4.29",
   "private": true,
   "prisma": {
     "seed": "bun prisma/seed.ts"
   },
-  "scripts": { 
+  "scripts": {
     "dev": "next dev --experimental-https",
     "build": "next build",
     "build:dev": "next build",
