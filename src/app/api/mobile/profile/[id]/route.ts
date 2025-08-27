@@ -47,45 +47,82 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   }
 
   try {
+    let message;
     const { id } = params;
     const body = await request.json();
     const { data } = body;
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
 
-    const cekEmail = await prisma.profile.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-    
+    if (category === "profile") {
+      const cekEmail = await prisma.profile.findUnique({
+        where: {
+          email: data.email,
+        },
+      });
+      if (cekEmail && cekEmail.id != id)
+        return NextResponse.json({
+          success: false,
+          message: "Email sudah digunakan",
+        });
+      const updateData = await prisma.profile.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: data.name,
+          email: data.email,
+          alamat: data.alamat,
+          jenisKelamin: data.jenisKelamin,
+        },
+      });
+      if (!updateData) {
+        return NextResponse.json({ success: false, message: "Gagal update" });
+      }
 
-    if (cekEmail && cekEmail.id != id)
-      return NextResponse.json({
-        success: false,
-        message: "Email sudah digunakan",
+      message = "Berhasil edit profile";
+    } else if (category === "photo") {
+      const updateData = await prisma.profile.update({
+        where: {
+          id: id,
+        },
+        data: {
+          imageId: data.fileId,
+        },
       });
 
-    const updateData = await prisma.profile.update({
-      where: {
-        id: id,
-      },
-      data: {
-        name: data.name,
-        email: data.email,
-        alamat: data.alamat,
-        jenisKelamin: data.jenisKelamin,
-      },
-    });
+      if (!updateData) {
+        return NextResponse.json({
+          success: false,
+          message: "Gagal update foto",
+        });
+      }
 
-    if (!updateData) {
-      return NextResponse.json({ success: false, message: "Gagal update" });
+      message = "Berhasil edit foto profile";
+    } else if (category === "background") {
+      const updateData = await prisma.profile.update({
+        where: {
+          id: id,
+        },
+        data: {
+          imageBackgroundId: data.fileId,
+        },
+      });
+      if (!updateData) {
+        return NextResponse.json({
+          success: false,
+          message: "Gagal update background",
+        });
+      }
+
+      message = "Berhasil edit background profile";
     }
 
     return NextResponse.json({
       success: true,
-      message: "Berhasil edit profile",
+      message: message,
     });
   } catch (error) {
-    backendLogger.error("Error edit profile", error);
     return NextResponse.json(
       {
         success: false,
