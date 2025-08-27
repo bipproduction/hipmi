@@ -7,27 +7,15 @@ async function POST(request: Request) {
   try {
     const { data } = await request.json();
 
-    const existingEmail = await prisma.profile.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-
-    if (existingEmail) {
-      return NextResponse.json({
-        success: false,
-        message: "Email telah digunakan",
-        status: 400,
-      });
-    }
-
-    const create = await prisma.profile.create({
+    await prisma.profile.create({
       data: {
         userId: data.id,
         name: data.name,
         email: data.email,
         alamat: data.alamat,
         jenisKelamin: data.jenisKelamin,
+        imageId: data.imageId || "",
+        imageBackgroundId: data.imageBackgroundId || "",
       },
     });
 
