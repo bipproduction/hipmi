@@ -1,3 +1,4 @@
+import { funGetDirectoryNameByValue } from "@/app_modules/_global/fun/get";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -9,8 +10,10 @@ export async function POST(request: Request) {
   const dirId = formData.get("dirId");
 
   console.log("formData >>", formData);
-  console.log("file >>", file);
-  console.log("dirId >>", dirId);
+
+  const keyOfDirectory = await funGetDirectoryNameByValue({
+    value: dirId as string,
+  });
 
   try {
     const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
@@ -24,25 +27,28 @@ export async function POST(request: Request) {
     const dataRes = await res.json();
 
     if (res.ok) {
-      console.log(`Success upload ${dirId}: ${JSON.stringify(dataRes.data)}`);
+      console.log(
+        `Success upload ${keyOfDirectory}: ${JSON.stringify(dataRes.data, null, 2)}`
+      );
       return NextResponse.json(
         { success: true, data: dataRes.data },
         { status: 200 }
       );
     } else {
       const errorText = await res.text();
-      console.log(`Failed upload ${dirId}: ${errorText}`);
+      console.log(`Failed upload ${keyOfDirectory}: ${errorText}`);
       return NextResponse.json(
         { success: false, message: errorText },
         { status: 400 }
       );
     }
   } catch (error) {
+    console.log("Error upload >>", (error as Error).message || error);
     return NextResponse.json(
       {
         success: false,
         message: "Failed upload file",
-        data: error,
+        reason: (error as Error).message || error,
       },
       { status: 500 }
     );
