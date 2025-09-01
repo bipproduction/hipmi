@@ -2,14 +2,8 @@ import { funGetDirectoryNameByValue } from "@/app_modules/_global/fun/get";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const contentType = request.headers.get("content-type");
-  console.log("Incoming Content-Type:", contentType);
-
   const formData = await request.formData();
-  const file: any = formData.get("file");
   const dirId = formData.get("dirId");
-
-  console.log("formData >>", formData);
 
   const keyOfDirectory = await funGetDirectoryNameByValue({
     value: dirId as string,
@@ -27,11 +21,12 @@ export async function POST(request: Request) {
     const dataRes = await res.json();
 
     if (res.ok) {
-      console.log(
-        `Success upload ${keyOfDirectory}: ${JSON.stringify(dataRes.data, null, 2)}`
-      );
       return NextResponse.json(
-        { success: true, data: dataRes.data },
+        {
+          success: true,
+          data: dataRes.data,
+          message: "Success upload file " + keyOfDirectory,
+        },
         { status: 200 }
       );
     } else {
