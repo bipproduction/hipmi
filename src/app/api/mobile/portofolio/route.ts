@@ -51,6 +51,8 @@ async function POST(request: Request) {
   try {
     const { data } = await request.json();
 
+    console.log("DATA >>", data);
+
     const createPortofolio = await prisma.portofolio.create({
       data: {
         profileId: data.id,
@@ -64,37 +66,37 @@ async function POST(request: Request) {
       },
     });
 
-    // if (data.subBidang.length > 0 || data.subBidang.map((item: any) => item.id !== "")) {
-    //   for (let i of data.subBidang) {
-    //     const createSubBidang =
-    //       await prisma.portofolio_BidangDanSubBidangBisnis.create({
-    //         data: {
-    //           portofolioId: createPortofolio.id,
-    //           masterBidangBisnisId: data.masterBidangBisnisId,
-    //           masterSubBidangBisnisId: i.id,
-    //         },
-    //       });
+    if (data.subBidang.length > 0 || data.subBidang.map((item: any) => item.id !== "")) {
+      for (let i of data.subBidang) {
+        const createSubBidang =
+          await prisma.portofolio_BidangDanSubBidangBisnis.create({
+            data: {
+              portofolioId: createPortofolio.id,
+              masterBidangBisnisId: data.masterBidangBisnisId,
+              masterSubBidangBisnisId: i.id,
+            },
+          });
 
-    //     console.log("CREATE SUB BIDANG >>", createSubBidang);
-    //     if (!createSubBidang)
-    //       return NextResponse.json(
-    //         {
-    //           success: false,
-    //           message: "Gagal membuat sub bidang bisnis",
-    //         },
-    //         { status: 400 }
-    //       );
-    //   }
-    // }
+        console.log("CREATE SUB BIDANG >>", createSubBidang);
+        if (!createSubBidang)
+          return NextResponse.json(
+            {
+              success: false,
+              message: "Gagal membuat sub bidang bisnis",
+            },
+            { status: 400 }
+          );
+      }
+    }
 
-    // if (!createPortofolio)
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Gagal membuat portofolio",
-    //     },
-    //     { status: 400 }
-    //   );
+    if (!createPortofolio)
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Gagal membuat portofolio",
+        },
+        { status: 400 }
+      );
 
     const createMedsos = await prisma.portofolio_MediaSosial.create({
       data: {
