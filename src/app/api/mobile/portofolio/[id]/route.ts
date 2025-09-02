@@ -11,14 +11,49 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       where: {
         id: id,
       },
-      include: {
+      select: {
+        id: true,
+        id_Portofolio: true,
+        namaBisnis: true,
+        alamatKantor: true,
+        tlpn: true,
+        deskripsi: true,
+        logoId: true,
+        masterBidangBisnisId: true,
         Profile: {
-          include: {
-            User: true,
+          select: {
+            userId: true,
+          }
+        },
+        MasterBidangBisnis: {
+          select: {
+            id: true,
+            name: true,
+            active: true,
           },
         },
-        MasterBidangBisnis: true,
-        Portofolio_MediaSosial: true,
+        Portofolio_MediaSosial: {
+          select: {
+            id: true,
+            facebook: true,
+            instagram: true,
+            tiktok: true,
+            twitter: true,
+            youtube: true,
+          },
+        },
+        Portofolio_BidangDanSubBidangBisnis: {
+          select: {
+            id: true,
+            MasterSubBidangBisnis: {
+              select: {
+                id: true,
+                name: true,
+                masterBidangBisnisId: true,
+              },
+            },
+          },
+        },
       },
     });
 
