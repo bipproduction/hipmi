@@ -22,8 +22,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         masterBidangBisnisId: true,
         Profile: {
           select: {
+            id: true,
             userId: true,
-          }
+          },
         },
         MasterBidangBisnis: {
           select: {
@@ -204,6 +205,25 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
     let message;
 
     if (category === "detail") {
+      console.log("UPDATE PORTOFOLIO DETAIL >>");
+      console.log("DATA >>", data);
+
+      const checkData = await prisma.portofolio.findUnique({
+        where: { id },
+        include: {
+          Portofolio_BidangDanSubBidangBisnis: true,
+        },
+      });
+
+      if (!checkData) {
+        return NextResponse.json({
+          success: false,
+          message: "Data tidak ditemukan",
+        });
+      }
+
+      console.log("CHECK DATA >>", checkData);
+
       const updateDetail = await prisma.portofolio.update({
         where: { id },
         data: {
@@ -214,12 +234,75 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           masterBidangBisnisId: data.masterBidangBisnisId,
         },
       });
+
       if (!updateDetail) {
         return NextResponse.json({
           success: false,
           message: "Gagal mengupdate detail portofolio",
         });
       }
+
+      const bidangBerubah =
+        checkData.masterBidangBisnisId !== data.masterBidangBisnisId;
+
+      if (bidangBerubah) {
+        // Bidang berubah → hapus semua sub bidang lama
+        await prisma.portofolio_BidangDanSubBidangBisnis.deleteMany({
+          where: { portofolioId: id },
+        });
+
+        // Tambahkan sub bidang baru
+        for (const sub of data.subBidang) {
+          await prisma.portofolio_BidangDanSubBidangBisnis.create({
+            data: {
+              portofolioId: id,
+              masterBidangBisnisId: data.masterBidangBisnisId,
+              masterSubBidangBisnisId: sub.MasterSubBidangBisnis.id,
+            },
+          });
+        }
+      } else {
+        // Bidang tidak berubah → sinkronisasi sub bidang
+
+        const existingSub = checkData.Portofolio_BidangDanSubBidangBisnis;
+
+        const incomingIds = data.subBidang.map(
+          (sub: any) => sub.MasterSubBidangBisnis.id
+        );
+
+        const existingIds = existingSub.map(
+          (item) => item.masterSubBidangBisnisId
+        );
+
+        // 1. Hapus sub bidang yang sudah tidak dipilih
+        const toDelete = existingSub.filter(
+          (item) => !incomingIds.includes(item.masterSubBidangBisnisId)
+        );
+
+        await prisma.portofolio_BidangDanSubBidangBisnis.deleteMany({
+          where: {
+            id: {
+              in: toDelete.map((item) => item.id),
+            },
+          },
+        });
+
+        // 2. Tambahkan sub bidang baru yang belum ada di DB
+        const toCreate = data.subBidang.filter(
+          (sub: any) => !existingIds.includes(sub.MasterSubBidangBisnis.id)
+        );
+
+        for (const sub of toCreate) {
+          await prisma.portofolio_BidangDanSubBidangBisnis.create({
+            data: {
+              portofolioId: id,
+              masterBidangBisnisId: data.masterBidangBisnisId,
+              masterSubBidangBisnisId: sub.MasterSubBidangBisnis.id,
+            },
+          });
+        }
+      }
+
       message = "Berhasil mengupdate detail portofolio";
     } else if (category === "medsos") {
       const updateMedsos = await prisma.portofolio_MediaSosial.update({
