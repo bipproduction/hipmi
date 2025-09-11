@@ -7,7 +7,6 @@ export { POST };
 async function POST(request: Request) {
   try {
     const { data } = await request.json();
-
     const create = await prisma.event.create({
       data: {
         title: _.startCase(data.title),
@@ -30,8 +29,6 @@ async function POST(request: Request) {
       },
     });
 
-    if (!create) return { status: 400, message: "Gagal disimpan" };
-
     return NextResponse.json(
       {
         success: true,
@@ -45,6 +42,7 @@ async function POST(request: Request) {
       {
         success: false,
         message: "Error create event",
+        reason: (error as Error).message,
       },
       { status: 500 }
     );
