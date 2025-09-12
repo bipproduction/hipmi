@@ -1,8 +1,9 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import moment from "moment";
 
-export { POST };
+export { POST, GET };
 
 async function POST(request: Request) {
   try {
@@ -42,6 +43,91 @@ async function POST(request: Request) {
       {
         success: false,
         message: "Error create event",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function GET(request: Request) {
+  try {
+    const allData = await prisma.event.findMany({
+      where: {
+        active: true,
+        eventMaster_StatusId: "1",
+        isArsip: false,
+      },
+    });
+
+    for (let i of allData) {
+      if (moment(i.tanggalSelesai).diff(moment(), "minutes") < 0) {
+        const updateArsip = await prisma.event.update({
+          where: {
+            id: i.id,
+          },
+          data: {
+            isArsip: true,
+          },
+        });
+
+        if (!updateArsip) {
+          console.log("gagal update arsip");
+          return [];
+        }
+      }
+    }
+
+    // const takeData = 10;
+    // const skipData = page * takeData - takeData;
+
+    const data = await prisma.event.findMany({
+      //   take: takeData,
+      //   skip: skipData,
+
+      orderBy: [
+        {
+          tanggal: "asc",
+        },
+      ],
+      where: {
+        active: true,
+        eventMaster_StatusId: "1",
+        isArsip: false,
+      },
+      select: {
+        id: true,
+        title: true,
+        deskripsi: true,
+        tanggal: true,
+        tanggalSelesai: true,
+        EventMaster_Status: {
+          select: {
+            name: true,
+          },
+        },
+        authorId: true,
+        Author: {
+          include: {
+            Profile: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Success get event",
+        data: data,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error get event",
         reason: (error as Error).message,
       },
       { status: 500 }
