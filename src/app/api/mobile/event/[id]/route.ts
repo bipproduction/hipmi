@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { NextResponse } from "next/server";
 
-export { GET, PUT };
+export { DELETE, GET, PUT };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -31,9 +31,13 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           },
         },
         authorId: true,
+        Author: {
+          include: {
+            Profile: true,
+          },
+        },
       },
     });
-
 
     return NextResponse.json(
       {
@@ -75,8 +79,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    console.log("[UPDATE]", update);
-
     return NextResponse.json(
       {
         success: true,
@@ -89,6 +91,38 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       {
         success: false,
         message: "Update gagal",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+
+    const deleteData = await prisma.event.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Delete berhasil",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Delete gagal",
         reason: (error as Error).message,
       },
       { status: 500 }
