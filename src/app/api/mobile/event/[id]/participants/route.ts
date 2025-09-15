@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export { POST , GET};
+export { GET, POST };
 
 async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { userId } = await request.json();
-
 
     const createJoin = await prisma.event_Peserta.create({
       data: {
@@ -49,6 +48,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+
     const data = await prisma.event_Peserta.findMany({
       where: {
         eventId: id,
@@ -63,6 +63,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             username: true,
             Profile: {
               select: {
+                id: true,
                 name: true,
                 imageId: true,
               },
