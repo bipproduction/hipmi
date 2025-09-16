@@ -40,13 +40,32 @@ export function Job_ViewNotUserJobVacany() {
                   {data.title}
                 </Text>
               </Center>
-              <Stack spacing={0}>
-                <Text>
-                  <div dangerouslySetInnerHTML={{ __html: data.content }} />
-                </Text>
-                <Text>
-                  <div dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
-                </Text>
+
+              <Stack spacing={"lg"}>
+                <Stack spacing={0}>
+                  <Text fz={16} fw={"bold"}>
+                    Syarat & Ketentuan
+                  </Text>
+                  <Text>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: data?.content.replace(/\n/g, "<br />"),
+                      }}
+                    />
+                  </Text>
+                </Stack>
+                <Stack spacing={0}>
+                  <Text fz={16} fw={"bold"}>
+                    Deskripsi
+                  </Text>
+                  <Text>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: data.deskripsi.replace(/\n/g, "<br />"),
+                      }}
+                    />
+                  </Text>
+                </Stack>
               </Stack>
             </Stack>
           </Stack>
