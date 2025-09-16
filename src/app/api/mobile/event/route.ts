@@ -83,7 +83,6 @@ async function GET(request: Request) {
 
           if (!updateArsip) {
             console.log("gagal update arsip");
-            return [];
           }
         }
       }
@@ -138,6 +137,19 @@ async function GET(request: Request) {
               id: true,
               title: true,
               tanggal: true,
+              Author: {
+                select: {
+                  id: true,
+                  username: true,
+                  Profile: {
+                    select: {
+                      id: true,
+                      name: true,
+                      imageId: true,
+                    },
+                  },
+                },
+              },
               Event_Peserta: {
                 take: 4,
                 orderBy: {
@@ -162,25 +174,25 @@ async function GET(request: Request) {
             },
           },
 
-          User: {
-            select: {
-              id: true,
-              username: true,
-              Profile: {
-                select: {
-                  id: true,
-                  name: true,
-                  imageId: true,
-                },
-              },
-            },
-          },
+          // User: {
+          //   select: {
+          //     id: true,
+          //     username: true,
+          //     Profile: {
+          //       select: {
+          //         id: true,
+          //         name: true,
+          //         imageId: true,
+          //       },
+          //     },
+          //   },
+          // },
         },
       });
 
       fixData = data;
     } else if (category === "all-history") {
-      fixData = await prisma.event.findMany({
+      const data = await prisma.event.findMany({
         orderBy: {
           tanggal: "desc",
         },
@@ -204,8 +216,10 @@ async function GET(request: Request) {
           },
         },
       });
+
+      fixData = data;
     } else if (category === "my-history") {
-      fixData = await prisma.event.findMany({
+      const data = await prisma.event.findMany({
         orderBy: {
           tanggal: "desc",
         },
@@ -230,15 +244,14 @@ async function GET(request: Request) {
           },
         },
       });
+
+      fixData = data;
     }
 
     return NextResponse.json(
       {
         success: true,
-        message:
-          category === ""
-            ? "Success get event, but category is empty"
-            : "Success get event",
+        message: "Success get event",
         data: fixData,
       },
       { status: 200 }
