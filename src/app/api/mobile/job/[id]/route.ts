@@ -62,8 +62,6 @@ async function DELETE(
       },
     });
 
-    console.log("[DELETE DATA JOB]", deleteData);
-
     return NextResponse.json(
       {
         success: true,
@@ -87,25 +85,43 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { data } = await request.json();
-    
-    const updateData = await prisma.job.update({
-      where: {
-        id: id,
-      },
-      data: {
-        title: data.title,
-        content: data.content,
-        deskripsi: data.deskripsi,
-        // authorId: data.authorId, 
-        imageId: data.imageId || null,
-      },
-    });
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
+    let fixData;
+
+    if (category === "archive") {
+      const updateData = await prisma.job.update({
+        where: {
+          id: id,
+        },
+        data: {
+          isArsip: data,
+        },
+      });
+
+      fixData = updateData;
+    } else if (category === "edit") {
+      const updateData = await prisma.job.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: data.title,
+          content: data.content,
+          deskripsi: data.deskripsi,
+          // authorId: data.authorId,
+          imageId: data.imageId || null,
+        },
+      });
+
+      fixData = updateData;
+    }
 
     return NextResponse.json(
       {
         success: true,
         message: "Berhasil update data",
-        data: updateData,
+        data: fixData,
       },
       { status: 200 }
     );

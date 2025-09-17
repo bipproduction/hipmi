@@ -1,0 +1,54 @@
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+
+export { POST };
+
+async function POST(request: Request) {
+  try {
+    const { data } = await request.json();
+
+    console.log("[DATA]", data);
+
+    const create = await prisma.voting.create({
+      data: {
+        title: data.title,
+        deskripsi: data.deskripsi,
+        awalVote: data.awalVote,
+        akhirVote: data.akhirVote,
+        authorId: data.authorId,
+      },
+    });
+
+    if (!create) return { status: 400, message: "Gagal Membuat Vote" };
+
+    for (let v of data.listVote) {
+      const val = v.value;
+
+      const namaVote = await prisma.voting_DaftarNamaVote.create({
+        data: {
+          value: val,
+          votingId: create.id,
+        },
+      });
+
+      if (!namaVote) return { status: 400, message: "Gagal Membuat List" };
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Success create voting",
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error create voting",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+}
