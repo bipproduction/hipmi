@@ -40,53 +40,105 @@ async function POST(request: Request) {
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
+  const category = searchParams.get("category");
+  const authorId = searchParams.get("authorId");
+  let fixData;
 
   try {
-    const data = await prisma.job.findMany({
-      where: {
-        isActive: true,
-        isArsip: false,
-        MasterStatus: {
-          name: "Publish",
-        },
-        title: {
-          contains: search || "",
-          mode: "insensitive",
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        id: true,
-        title: true,
-        deskripsi: true,
-        authorId: true,
-        MasterStatus: {
-          select: {
-            name: true,
+    if (category === "archive") {
+      const data = await prisma.job.findMany({
+        where: {
+          authorId: authorId,
+          isActive: true,
+          isArsip: true,
+          MasterStatus: {
+            name: "Publish",
           },
+        //   title: {
+        //     contains: search || "",
+        //     mode: "insensitive",
+        //   },
         },
-        Author: {
-          select: {
-            id: true,
-            username: true,
-            Profile: {
-              select: {
-                id: true,
-                name: true,
-                imageId: true,
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          deskripsi: true,
+          authorId: true,
+          MasterStatus: {
+            select: {
+              name: true,
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+
+      fixData = data;
+    } else if (category === "beranda") {
+     const data = await prisma.job.findMany({
+       where: {
+         isActive: true,
+         isArsip: false,
+         MasterStatus: {
+           name: "Publish",
+         },
+         title: {
+           contains: search || "",
+           mode: "insensitive",
+         },
+       },
+       orderBy: {
+         createdAt: "desc",
+       },
+       select: {
+         id: true,
+         title: true,
+         deskripsi: true,
+         authorId: true,
+         MasterStatus: {
+           select: {
+             name: true,
+           },
+         },
+         Author: {
+           select: {
+             id: true,
+             username: true,
+             Profile: {
+               select: {
+                 id: true,
+                 name: true,
+                 imageId: true,
+               },
+             },
+           },
+         },
+       },
+     });
+
+      fixData = data;
+    }
+
     return NextResponse.json(
       {
         success: true,
         message: "Success get data job-vacancy",
-        data: data,
+        data: fixData,
       },
       { status: 200 }
     );
