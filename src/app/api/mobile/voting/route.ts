@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export { POST };
+export { POST, GET };
 
 async function POST(request: Request) {
   try {
@@ -49,6 +49,75 @@ async function POST(request: Request) {
         reason: (error as Error).message,
       },
       { status: 500 }
+    );
+  }
+}
+
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search");
+  
+  try {
+    const data = await prisma.voting.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+      where: {
+        voting_StatusId: "1",
+        isArsip: false,
+        isActive: true,
+        akhirVote: {
+          gte: new Date(),
+        },
+        title: {
+          contains: search || "",
+          mode: "insensitive",
+        },
+      },
+      include: {
+        Voting_DaftarNamaVote: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+        Author: {
+          select: {
+            id: true,
+            username: true,
+            Profile: {
+              select: {
+                id: true,
+                name: true,
+                imageId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    console.log("[DATA]", data);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mendapatkan data",
+        data: data,
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal mendapatkan data",
+        reason: (error as Error).message,
+      },
+      {
+        status: 500,
+      }
     );
   }
 }
