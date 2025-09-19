@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import _ from "lodash";
 
 export { POST, GET };
 
 async function POST(request: Request) {
   try {
     const { data } = await request.json();
-
-    console.log("[DATA]", data);
 
     const create = await prisma.voting.create({
       data: {
@@ -56,53 +55,181 @@ async function POST(request: Request) {
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
-  
+  const category = searchParams.get("category");
+  const authorId = searchParams.get("authorId");
+
+  let fixData;
+
   try {
-    const data = await prisma.voting.findMany({
-      orderBy: {
-        updatedAt: "desc",
-      },
-      where: {
-        voting_StatusId: "1",
-        isArsip: false,
-        isActive: true,
-        akhirVote: {
-          gte: new Date(),
+    if (category === "beranda") {
+      fixData = await prisma.voting.findMany({
+        orderBy: {
+          updatedAt: "desc",
         },
-        title: {
-          contains: search || "",
-          mode: "insensitive",
-        },
-      },
-      include: {
-        Voting_DaftarNamaVote: {
-          orderBy: {
-            createdAt: "asc",
+        where: {
+          voting_StatusId: "1",
+          isArsip: false,
+          isActive: true,
+          akhirVote: {
+            gte: new Date(),
+          },
+          title: {
+            contains: search || "",
+            mode: "insensitive",
           },
         },
-        Author: {
-          select: {
-            id: true,
-            username: true,
-            Profile: {
-              select: {
-                id: true,
-                name: true,
-                imageId: true,
+        include: {
+          Voting_DaftarNamaVote: {
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+    } else if (category === "contribution") {
+      const data = await prisma.voting_Kontributor.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          authorId: authorId,
+        },
+        include: {
+          Voting: {
+            select: {
+              id: true,
+              title: true,
+              awalVote: true,
+              akhirVote: true,
+              Author: {
+                select: {
+                  id: true,
+                  username: true,
+                  Profile: {
+                    select: {
+                      id: true,
+                      name: true,
+                      imageId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
 
-    console.log("[DATA]", data);
+      const result = data.map((item) => ({
+        contributionId: item.id,
+        isActive: item.isActive,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        votingId: item.votingId,
+        authorId: item.authorId,
+        voting_DaftarNamaVoteId: item.voting_DaftarNamaVoteId,
+        id: item.Voting?.id,
+        title: item.Voting?.title,
+        awalVote: item.Voting?.awalVote,
+        akhirVote: item.Voting?.akhirVote,
+        Author: item.Voting?.Author,
+      }));
+
+      fixData = result;
+    } else if (category === "all-history") {
+      fixData = await prisma.voting.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          voting_StatusId: "1",
+          isActive: true,
+          akhirVote: {
+            lte: new Date(),
+          },
+          title: {
+            contains: search || "",
+            mode: "insensitive",
+          },
+        },
+        include: {
+          Voting_DaftarNamaVote: {
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    } else if (category === "my-history") {
+      fixData = await prisma.voting.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          authorId: authorId as any,
+          voting_StatusId: "1",
+          isActive: true,
+          akhirVote: {
+            lte: new Date(),
+          },
+          title: {
+            contains: search || "",
+            mode: "insensitive",
+          },
+        },
+        include: {
+          Voting_DaftarNamaVote: {
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     return NextResponse.json(
       {
         success: true,
         message: "Berhasil mendapatkan data",
-        data: data,
+        data: fixData,
       },
       {
         status: 200,

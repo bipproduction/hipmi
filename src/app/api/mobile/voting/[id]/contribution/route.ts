@@ -7,49 +7,78 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const authorId = searchParams.get("authorId");
-  //   const category = searchParams.get("category");
+  const category = searchParams.get("category");
 
-  console.log("[ID Voting]", id);
-  console.log("[AUTHOR ID  Voting]", authorId);
-
-  console.log("[CEK DATA]");
+  console.log("[ID]", id);
+  console.log("[AUTHOR ID]", authorId);
+  console.log("[CATEGORY]", category);
 
   let fixData;
 
   try {
-    const cek = await prisma.voting_Kontributor.count({
-      where: {
-        authorId: authorId,
-        votingId: id,
-      },
-    });
+    if (category === "checked") {
+      const cek = await prisma.voting_Kontributor.count({
+        where: {
+          authorId: authorId,
+          votingId: id,
+        },
+      });
 
-    const cekPilihan = await prisma.voting_Kontributor.findFirst({
-      where: {
-        authorId: authorId,
-        votingId: id,
-      },
-      select: {
-        Voting_DaftarNamaVote: {
-          select: {
-            value: true,
+      const cekPilihan = await prisma.voting_Kontributor.findFirst({
+        where: {
+          authorId: authorId,
+          votingId: id,
+        },
+        select: {
+          Voting_DaftarNamaVote: {
+            select: {
+              value: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (cek > 0) {
-      fixData = true;
-    } else {
-      fixData = false;
+      if (cek > 0) {
+        fixData = true;
+      } else {
+        fixData = false;
+      }
+
+      fixData = {
+        isContribution: cek > 0,
+        nameChoice: cekPilihan?.Voting_DaftarNamaVote?.value,
+      };
+    } else if (category === "list") {
+      const listKontributor = await prisma.voting_Kontributor.findMany({
+        where: {
+          votingId: id,
+        },
+        select: {
+          Voting_DaftarNamaVote: {
+            select: {
+              value: true,
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      console.log("[LIST KONTRIBUTOR]", listKontributor);
+
+      fixData = listKontributor;
     }
-
-    fixData = {
-      isContribution: cek > 0,
-      nameChoice: cekPilihan?.Voting_DaftarNamaVote?.value,
-    };
-
-    console.log("[FIX DATA]", fixData);
 
     return NextResponse.json({
       success: true,
