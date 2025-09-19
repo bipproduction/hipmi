@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import _ from "lodash";
 
 export { GET, DELETE, PUT, POST };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
   try {
-    const { id } = params;
-    console.log("[ID]", id);
-
     const data = await prisma.voting.findUnique({
       where: {
         id: id,
@@ -37,6 +36,26 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    const listNamaVote = data?.Voting_DaftarNamaVote || [];
+
+    for (let v of listNamaVote) {
+
+      const kontributor = await prisma.voting_Kontributor.findMany({
+        where: {
+          voting_DaftarNamaVoteId: v.id,
+        },
+      });
+
+      const updateData = await prisma.voting_DaftarNamaVote.update({
+        where: {
+          id: v.id,
+        },
+        data: {
+          jumlah: kontributor.length,
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: "Success get voting",
@@ -65,15 +84,12 @@ async function DELETE(
       },
     });
 
-    console.log("[DELETE LIST VOTE NAME]", deleteListVoteName);
-
     const deleteData = await prisma.voting.delete({
       where: {
         id: id,
       },
     });
 
-    console.log("[DELETE DATA]", deleteData);
 
     return NextResponse.json({
       success: true,
@@ -89,88 +105,94 @@ async function DELETE(
 }
 
 async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { data } = await request.json();
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  let fixData;
+
   try {
-    const { id } = params;
-    const { data } = await request.json();
-
-    console.log("[ID]", id);
-    console.log("[DATA]", data);
-
-    const updateVoting = await prisma.voting.update({
-      where: {
-        id: id,
-      },
-      data: {
-        title: data.title,
-        deskripsi: data.deskripsi.trim(),
-        awalVote: data.awalVote,
-        akhirVote: data.akhirVote,
-      },
-      select: {
-        Voting_DaftarNamaVote: {
-          where: {
-            isActive: true,
+    if (category === "edit") {
+      const updateVoting = await prisma.voting.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: data.title,
+          deskripsi: data.deskripsi.trim(),
+          awalVote: data.awalVote,
+          akhirVote: data.akhirVote,
+        },
+        select: {
+          Voting_DaftarNamaVote: {
+            where: {
+              isActive: true,
+            },
           },
         },
-      },
-    });
-
-    console.log("[UPDATE VOTING]", updateVoting);
-
-    if (!updateVoting)
-      return NextResponse.json({ status: 400, message: "Gagal Update" });
-
-    const deleatePrevPilihan = await prisma.voting_DaftarNamaVote.deleteMany({
-      where: {
-        votingId: id,
-      },
-    });
-
-    console.log("[DELETE PREV PILIHAN]", deleatePrevPilihan);
-
-    if (!deleatePrevPilihan)
-      return NextResponse.json({
-        status: 400,
-        message: "Gagal Update Pilihan",
       });
 
-    for (let v of data.listVote) {
-      console.log("[VOTING LIST >>]", v);
-      const namaPilihan = await prisma.voting_DaftarNamaVote.create({
-        data: {
-          value: v,
+      if (!updateVoting)
+        return NextResponse.json({ status: 400, message: "Gagal Update" });
+
+      const deleatePrevPilihan = await prisma.voting_DaftarNamaVote.deleteMany({
+        where: {
           votingId: id,
         },
       });
 
-      console.log("[NAMA PILIHAN]", namaPilihan);
-
-      if (!namaPilihan)
+      if (!deleatePrevPilihan)
         return NextResponse.json({
           status: 400,
-          message: "Gagal Membuat List",
+          message: "Gagal Update Pilihan",
         });
+
+      for (let v of data.listVote) {
+        const namaPilihan = await prisma.voting_DaftarNamaVote.create({
+          data: {
+            value: v,
+            votingId: id,
+          },
+        });
+
+        if (!namaPilihan)
+          return NextResponse.json({
+            status: 400,
+            message: "Gagal Membuat List",
+          });
+      }
+    } else if (category === "archive") {
+      const updateVoting = await prisma.voting.update({
+        where: {
+          id: id,
+        },
+        data: {
+          isArsip: data,
+        },
+      });
+
+
+      if (!updateVoting)
+        return NextResponse.json({ status: 400, message: "Gagal Update" });
     }
 
     return NextResponse.json({
       success: true,
-      message: "Berhasil menghapus data",
+      message: "Berhasil mengupdate data",
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: "Gagal menghapus data",
+      message: "Gagal mengupdate data",
       reason: (error as Error).message,
     });
   }
 }
 
+// Voting masuk melalui API ini
 async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
-
-  console.log("[ID]", id);
-  console.log("[CHOOSE ID]", data);
 
   try {
     const findData = await prisma.voting_DaftarNamaVote.findFirst({
@@ -198,7 +220,6 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    console.log("[UPDATE DATA]", updateData);
 
     if (!updateData)
       return NextResponse.json({
@@ -222,8 +243,6 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         },
       },
     });
-
-    console.log("[CREATE KONTRIBUTOR]", createKontributor);
 
     if (!createKontributor)
       return NextResponse.json({
