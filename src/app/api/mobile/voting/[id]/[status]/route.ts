@@ -14,19 +14,36 @@ async function GET(
     const fixStatusName = _.startCase(status);
     console.log("[STATUS]", fixStatusName);
 
-    const data = await prisma.voting.findMany({
-      where: {
-        authorId: id,
-        Voting_Status: {
-          name: fixStatusName,
+    let fixData;
+
+    if (fixStatusName === "Publish") {
+      fixData = await prisma.voting.findMany({
+        where: {
+          authorId: id,
+          isActive: true,
+          akhirVote: {
+            gte: new Date(),
+          },
+          Voting_Status: {
+            name: fixStatusName,
+          },
         },
-      },
-    });
+      });
+    } else {
+      fixData = await prisma.voting.findMany({
+        where: {
+          authorId: id,
+          Voting_Status: {
+            name: fixStatusName,
+          },
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
       message: "Success get voting",
-      data: data,
+      data: fixData,
     });
   } catch (error) {
     console.log("[ERROR]", error);
