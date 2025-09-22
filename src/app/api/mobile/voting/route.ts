@@ -18,7 +18,11 @@ async function POST(request: Request) {
       },
     });
 
-    if (!create) return { status: 400, message: "Gagal Membuat Vote" };
+    if (!create)
+      return NextResponse.json({
+        status: 400,
+        message: "Gagal Membuat Vote",
+      });
 
     for (let v of data.listVote) {
       const val = v.value;
@@ -30,7 +34,11 @@ async function POST(request: Request) {
         },
       });
 
-      if (!namaVote) return { status: 400, message: "Gagal Membuat List" };
+      if (!namaVote)
+        return NextResponse.json({
+          status: 400,
+          message: "Gagal Membuat List",
+        });
     }
 
     return NextResponse.json(
