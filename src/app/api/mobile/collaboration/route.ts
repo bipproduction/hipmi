@@ -40,43 +40,142 @@ async function POST(request: Request) {
 
 async function GET(request: Request) {
   let fixData;
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const authorId = searchParams.get("authorId");
+
+  console.log("[CATEGORY]", category);
+  console.log("[AUTHOR_ID]", authorId);
+
   try {
-    fixData = await prisma.projectCollaboration.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: {
-        projectCollaborationMaster_StatusId: 1,
-        isActive: true,
-      },
-      select: {
-        id: true,
-        isActive: true,
-        title: true,
-        lokasi: true,
-        purpose: true,
-        benefit: true,
-        Author: {
-          select: {
-            id: true,
-            username: true,
-            Profile: {
-              select: {
-                id: true,
-                name: true,
-                imageId: true,
+    if (category === "beranda") {
+      fixData = await prisma.projectCollaboration.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          projectCollaborationMaster_StatusId: 1,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          isActive: true,
+          title: true,
+          lokasi: true,
+          purpose: true,
+          benefit: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+          ProjectCollaborationMaster_Industri: true,
+          ProjectCollaboration_Partisipasi: {
+            where: {
+              isActive: true,
+            },
+          },
+        },
+      });
+    } else if (category === "participant") {
+      fixData = await prisma.projectCollaboration_Partisipasi.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          userId: authorId,
+          isActive: true,
+          AND: {
+            ProjectCollaboration: {
+              isActive: true,
+            },
+          },
+        },
+        select: {
+          id: true,
+          isActive: true,
+          ProjectCollaboration: {
+            select: {
+              id: true,
+              isActive: true,
+              title: true,
+              lokasi: true,
+              purpose: true,
+              benefit: true,
+              Author: {
+                select: {
+                  id: true,
+                  Profile: true,
+                },
+              },
+              ProjectCollaborationMaster_Industri: true,
+              ProjectCollaboration_Partisipasi: {
+                where: {
+                  isActive: true,
+                },
               },
             },
           },
         },
-        ProjectCollaborationMaster_Industri: true,
-        ProjectCollaboration_Partisipasi: {
-          where: {
-            isActive: true,
+      });
+    } else if (category === "my-project") {
+      fixData = await prisma.projectCollaboration.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { userId: authorId, isActive: true },
+        select: {
+          id: true,
+          isActive: true,
+          title: true,
+          lokasi: true,
+          purpose: true,
+          benefit: true,
+          // jumlah_partisipan: true,
+          Author: {
+            select: {
+              id: true,
+              Profile: true,
+            },
+          },
+          ProjectCollaborationMaster_Industri: true,
+          ProjectCollaboration_Partisipasi: {
+            where: {
+              isActive: true,
+            },
           },
         },
-      },
-    });
+      });
+    } else if (category === "group") {
+      fixData = await prisma.projectCollaboration_AnggotaRoomChat.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          userId: authorId as any,
+        },
+        select: {
+          ProjectCollaboration_RoomChat: {
+            select: {
+              id: true,
+              name: true,
+              isActive: true,
+              ProjectCollaboration_AnggotaRoomChat: {
+                select: {
+                  User: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     return NextResponse.json(
       {
