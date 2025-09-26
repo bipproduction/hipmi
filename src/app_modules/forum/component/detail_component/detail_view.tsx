@@ -9,7 +9,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { Comp_V3_SetInnerHTMLWithStiker } from "@/app_modules/_global/component/new/comp_V3_set_html_with_stiker";
 import { MainColor } from "@/app_modules/_global/color";
 
-export default function ComponentForum_DetailForumView({
+export default function   ComponentForum_DetailForumView({
   data,
   totalKomentar,
   userLoginId,
