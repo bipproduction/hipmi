@@ -95,37 +95,58 @@ async function DELETE(
 
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
+    let fixData;
     const { id } = params;
     const { data } = await request.json();
-
     console.log("[PUT INVESTASI]", id, data);
 
-    const updateData = await prisma.investasi.update({
-      where: {
-        id: id,
-      },
-      data: {
-        authorId: data.authorId,
-        title: data.title,
-        targetDana: data.targetDana,
-        hargaLembar: data.hargaLembar,
-        totalLembar: data.totalLembar,
-        roi: data.roi,
-        masterPencarianInvestorId: data.masterPencarianInvestorId,
-        masterPeriodeDevidenId: data.masterPeriodeDevidenId,
-        masterPembagianDevidenId: data.masterPembagianDevidenId,
-        imageId: data.imageId,
-        
-      },
-    });
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
 
-    console.log("[UPDATE INVESTASI]", updateData);
+    console.log("[Category]", category);
+
+    if (category === "data") {
+      const updateData = await prisma.investasi.update({
+        where: {
+          id: id,
+        },
+        data: {
+          authorId: data.authorId,
+          title: data.title,
+          targetDana: data.targetDana,
+          hargaLembar: data.hargaLembar,
+          totalLembar: data.totalLembar,
+          roi: data.roi,
+          masterPencarianInvestorId: data.masterPencarianInvestorId,
+          masterPeriodeDevidenId: data.masterPeriodeDevidenId,
+          masterPembagianDevidenId: data.masterPembagianDevidenId,
+          imageId: data.imageId,
+        },
+      });
+
+      // console.log("[UPDATE INVESTASI]", updateData);
+
+      fixData = updateData;
+    } else if (category === "prospectus") {
+      const updateData = await prisma.investasi.update({
+        where: {
+          id: id,
+        },
+        data: {
+          prospektusFileId: data,
+        },
+      });
+
+      // console.log("[UPDATE PROSPEKTUS]", updateData);
+
+      fixData = updateData;
+    }
 
     return NextResponse.json({
       status: 200,
       success: true,
       message: "Berhasil Mengupdate Data",
-      data: updateData,
+      data: fixData,
     });
   } catch (error) {
     return NextResponse.json({
