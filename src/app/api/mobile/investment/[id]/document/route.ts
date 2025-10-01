@@ -1,0 +1,131 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
+
+export { POST, GET, DELETE };
+
+async function POST(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { data } = await request.json();
+  console.log("[POST DOCUMENT ID]", id);
+  console.log("[POST DOCUMENT DATA]", data);
+
+  try {
+    const create = await prisma.dokumenInvestasi.upsert({
+      where: {
+        id: id,
+      },
+      create: {
+        investasiId: id,
+        title: data.title,
+        fileId: data.fileId,
+      },
+      update: {
+        title: data.title,
+        fileId: data.fileId,
+      },
+    });
+
+    if (!create)
+      return NextResponse.json({
+        status: 201,
+        success: true,
+        message: "Berhasil Menambahkan Dokumen",
+      });
+
+    return NextResponse.json({
+      status: 201,
+      success: true,
+      message: "Berhasil Menambahkan Dokumen",
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      status: 500,
+      success: false,
+      message: "Error Menambahkan Dokumen",
+      reason: (error as Error).message,
+    });
+  }
+}
+
+async function GET(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+
+  try {
+    let fixData;
+
+    if (category === "one-document") {
+      fixData = await prisma.dokumenInvestasi.findUnique({
+        where: {
+          id: id,
+        },
+      });
+    } else if (category == "all-document") {
+      fixData = await prisma.dokumenInvestasi.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          investasiId: id,
+          active: true,
+        },
+      });
+    }
+
+    return NextResponse.json({
+      status: 200,
+      success: true,
+      message: "Berhasil Mendapatkan Data",
+      data: fixData,
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      status: 500,
+      success: false,
+      message: "Error Mendapatkan Data",
+      reason: (error as Error).message,
+    });
+  }
+}
+
+async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  try {
+    const deleteData = await prisma.dokumenInvestasi.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    const deleteFile = await fetch(
+      `https://wibu-storage.wibudev.com/api/files/${deleteData.fileId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.WS_APIKEY}`,
+        },
+      }
+    );
+    
+    return NextResponse.json({
+      status: 200,
+      success: true,
+      message: "Berhasil Menghapus Dokumen",
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      status: 500,
+      success: false,
+      message: "Error Menghapus Dokumen",
+      reason: (error as Error).message,
+    });
+  }
+}

@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export { GET, DELETE, PUT };
+export { DELETE, GET, PUT };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
@@ -52,19 +52,70 @@ async function DELETE(
   const { id } = params;
 
   try {
-    // const checkData = await prisma.investasi.findUnique({
-    //   where: {
-    //     id: id,
-    //   },
-    // });
+    const checkData = await prisma.investasi.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        imageId: true,
+        prospektusFileId: true,
+        DokumenInvestasi: true,
+      },
+    });
 
-    // if (!checkData) {
-    //   return NextResponse.json({
-    //     status: 404,
-    //     success: false,
-    //     message: "Data tidak ditemukan",
-    //   });
-    // }
+    if (!checkData) {
+      return NextResponse.json({
+        status: 404,
+        success: false,
+        message: "Data tidak ditemukan",
+      });
+    }
+
+    const listDocument = checkData.DokumenInvestasi;
+
+    for (let i of listDocument) {
+      const deleteFile = await fetch(
+        `https://wibu-storage.wibudev.com/api/files/${i.fileId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${process.env.WS_APIKEY}`,
+          },
+        }
+      );
+
+      if (!deleteFile.ok) {
+        console.log("[DELETE FILE]", deleteFile);
+      }
+
+      const delDocument = await prisma.dokumenInvestasi.delete({
+        where: {
+          id: i.id,
+        },
+      });
+
+      console.log("[DELETE DOCUMENT]", delDocument);
+    }
+
+    const delImage = await fetch(
+      `https://wibu-storage.wibudev.com/api/files/${checkData.imageId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.WS_APIKEY}`,
+        },
+      }
+    );
+
+    const delProspektus = await fetch(
+      `https://wibu-storage.wibudev.com/api/files/${checkData.prospektusFileId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.WS_APIKEY}`,
+        },
+      }
+    );
 
     const data = await prisma.investasi.delete({
       where: {
@@ -72,16 +123,10 @@ async function DELETE(
       },
     });
 
-    const fixData = {
-      imageId: data.imageId,
-      prospektusFileId: data.prospektusFileId,
-    };
-
     return NextResponse.json({
       status: 200,
       success: true,
       message: "Berhasil Menghapus Data",
-      data: fixData,
     });
   } catch (error) {
     return NextResponse.json({
