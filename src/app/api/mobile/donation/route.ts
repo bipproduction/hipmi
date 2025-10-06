@@ -1,4 +1,6 @@
+import _ from "lodash";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export { POST };
 
@@ -6,11 +8,9 @@ async function POST(request: Request) {
   const { data } = await request.json();
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
-
-  console.log("[DATA]", data);
-  console.log("[CATEGORY]", category);
-
   let fixData;
+
+  
   try {
     // CODE HERE
 
@@ -27,11 +27,11 @@ async function POST(request: Request) {
     } else if (category === "permanent") {
       const dataDonasi = await prisma.donasi.create({
         data: {
-          target: data.target,
+          authorId: data.authorId,
           title: data.title,
+          target: data.target,
           donasiMaster_DurasiId: data.donasiMaster_DurasiId,
           donasiMaster_KategoriId: data.donasiMaster_KategoriId,
-          authorId: data.authorId,
           namaBank: data.namaBank,
           rekening: data.rekening,
           imageId: data.imageId,
@@ -48,23 +48,33 @@ async function POST(request: Request) {
         },
       });
 
-      if (!dataDonasi) return { status: 400, message: "Gagal disimpan" };
+      if (!dataDonasi)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          reason: "Gagal menambah donasi",
+        });
       const del = await prisma.donasi_TemporaryCreate.delete({
         where: {
-          id: data.id,
+          id: data.temporaryId,
         },
       });
 
       const dataCerita = await prisma.donasi_Cerita.create({
         data: {
           donasiId: dataDonasi.id,
-          pembukaan: data.CeritaDonasi.pembukaan,
-          cerita: data.CeritaDonasi.cerita,
+          pembukaan: data.pembukaan,
+          cerita: data.cerita,
           imageId: data.imageCeritaId,
         },
       });
 
-      if (!dataCerita) return { status: 400, message: "Gagal disimpan" };
+      if (!dataCerita)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          reason: "Gagal menambah cerita donasi",
+        });
     }
 
     return NextResponse.json({
@@ -78,7 +88,7 @@ async function POST(request: Request) {
     return NextResponse.json({
       status: 500,
       success: false,
-      error: "Gagal menambah donasi",
+      message: "Error menambah donasi",
       reason: (error as Error).message,
     });
   }

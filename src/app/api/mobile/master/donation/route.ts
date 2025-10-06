@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export { GET };
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
-  console.log("[CATEGORY]", category);
   let fixData;
 
   try {
