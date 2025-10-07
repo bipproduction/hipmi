@@ -1,5 +1,6 @@
 import { prisma } from "@/lib";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
 // GET ALL DATA MASTER UNTUK INVESTASI
 export async function GET(request: Request) {
