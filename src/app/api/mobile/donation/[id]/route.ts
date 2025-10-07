@@ -9,9 +9,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const category = searchParams.get("category");
   let fixData;
 
-  console.log("[ID]", id);
-  console.log("[CATEGORY]", category);
-
   try {
     if (category === "temporary") {
       fixData = await prisma.donasi_TemporaryCreate.findUnique({
@@ -61,8 +58,6 @@ async function DELETE(
 ) {
   try {
     const id = params.id;
-    console.log("[ID]", id);
-
     const checkData = await prisma.donasi.findUnique({
       where: {
         id: id,
@@ -75,8 +70,6 @@ async function DELETE(
         },
       },
     });
-
-    console.log(["DATA"], checkData);
 
     const deleteStory = await prisma.donasi_Cerita.delete({
       where: {
@@ -154,10 +147,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
 
-  console.log("[ID]", id);
-  console.log("[DATA]", data);
-  console.log("[CATEGORY]", category);
-
   try {
     if (category === "edit-donation") {
       if (data && data.newImageId) {
@@ -203,8 +192,67 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       if (!deleteImageDonasi) {
         console.log("[DELETE IMAGE DONASI]", deleteImageDonasi);
       }
+
     } else if (category === "edit-story") {
+
+      if (data && data.newImageId) {
+        await prisma.donasi_Cerita.update({
+          where: {
+            donasiId: id,
+          },
+          data: {
+            imageId: data.newImageId,
+          },
+        });
+      }
+
+      const update = await prisma.donasi_Cerita.update({
+        where: {
+          donasiId: id,
+        },
+        data: {
+          pembukaan: data.pembukaan,
+          cerita: data.cerita,
+        },
+      });
+
+      if (!update)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          reason: "Gagal mengupdate cerita donasi",
+        });
+
+      const deleteImageStory = await fetch(
+        `https://wibu-storage.wibudev.com/api/files/${data.imageId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${process.env.WS_APIKEY}`,
+          },
+        }
+      );
+
+      if (!deleteImageStory) {
+        console.log("[DELETE IMAGE STORY]", deleteImageStory);
+      }
     } else if (category === "edit-bank-account") {
+      const update = await prisma.donasi.update({
+        where: {
+          id: id,
+        },
+        data: {
+          namaBank: data.namaBank,
+          rekening: data.rekening,
+        },
+      });
+
+      if (!update)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          reason: "Gagal mengupdate bank donasi",
+        });
     }
 
     return NextResponse.json({
