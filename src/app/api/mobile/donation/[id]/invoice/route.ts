@@ -7,8 +7,6 @@ export { POST, GET, PUT };
 async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
-  console.log("[ID]", id);
-  console.log("[DATA]", data);
 
   try {
     const create = await prisma.donasi_Invoice.create({
@@ -126,10 +124,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const status = searchParams.get("status");
   const fixStatus = _.startCase(status as string);
 
-  console.log("[ID]", id);
-  console.log("[DATA]", data);
-  console.log("[STATUS]", fixStatus);
-
   try {
     const checkStatus = await prisma.donasiMaster_StatusInvoice.findFirst({
       where: {
@@ -167,8 +161,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
       },
     });
-
-    console.log("[UPDATE]", update);
 
     return NextResponse.json({
       status: 200,

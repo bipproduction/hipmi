@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import _ from "lodash";
 
-export { POST, GET };
+export { POST, GET, PUT, DELETE };
 
 async function POST(
   request: NextRequest,
@@ -10,8 +10,7 @@ async function POST(
 ) {
   const { id } = params;
   const { data } = await request.json();
-  console.log("[ID]", id);
-  console.log("[DATA]", data);
+
 
   try {
     if (data && data?.imageId) {
@@ -34,8 +33,6 @@ async function POST(
           donasiId: id,
         },
       });
-
-      console.log("[CREATE]", create);
 
       if (!create)
         return NextResponse.json({ status: 400, message: "Gagal disimpan" });
@@ -66,12 +63,12 @@ async function GET(
   const category = searchParams.get("category");
   let fixData;
 
-  console.log("[CATEGORY]", category);
-  console.log("[ID]", id);
-
   try {
     if (category === "get-all") {
       fixData = await prisma.donasi_Kabar.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
         where: {
           donasiId: id,
           active: true,
@@ -117,6 +114,108 @@ async function GET(
       status: 500,
       success: false,
       message: "Error Get Donation News",
+      reason: (error as Error).message,
+    });
+  }
+}
+
+async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { data } = await request.json();
+
+  try {
+    if (data && data.newImageId) {
+      const updateWithImage = await prisma.donasi_Kabar.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: data.title,
+          deskripsi: data.deskripsi,
+          imageId: data.newImageId,
+        },
+      });
+
+      if (!updateWithImage)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          message: "Gagal Update",
+        });
+    } else {
+      const updateData = await prisma.donasi_Kabar.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: data.title,
+          deskripsi: data.deskripsi,
+        },
+      });
+
+      if (!updateData)
+        return NextResponse.json({
+          status: 400,
+          success: false,
+          message: "Gagal Update",
+        });
+    }
+    return NextResponse.json({
+      status: 200,
+      success: true,
+      message: "Berhasil Update",
+    });
+  } catch (error) {
+    console.error("[ERROR UPDATE NEWS]", error);
+    return NextResponse.json({
+      status: 500,
+      success: false,
+      message: "Error Update Donation News",
+      reason: (error as Error).message,
+    });
+  }
+}
+
+async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  try {
+    const deleteData = await prisma.donasi_Kabar.delete({
+      where: {
+        id: id,
+      },
+      select: {
+        imageId: true,
+      },
+    });
+
+    const deleteImage = await fetch(
+      `https://wibu-storage.wibudev.com/api/files/${deleteData?.imageId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.WS_APIKEY}`,
+        },
+      }
+    );
+
+    if (!deleteImage) {
+      console.log("[FAILED DELETE IMAGE]", deleteImage);
+    }
+
+    return NextResponse.json({
+      status: 200,
+      success: true,
+      message: "Berhasil Delete",
+    });
+  } catch (error) {
+    console.error("[ERROR DELETE NEWS]", error);
+    return NextResponse.json({
+      status: 500,
+      success: false,
+      message: "Error Delete Donation News",
       reason: (error as Error).message,
     });
   }

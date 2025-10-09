@@ -100,9 +100,6 @@ export async function GET(request: Request) {
   const authorId = searchParams.get("authorId");
   let fixData;
 
-  console.log("[CATEGORY]", category);
-  console.log("[AUTHOR ID]", authorId);
-
   try {
     if (category === "beranda") {
       const data = await prisma.donasi.findMany({

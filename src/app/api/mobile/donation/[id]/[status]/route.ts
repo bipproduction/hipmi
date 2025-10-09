@@ -19,8 +19,6 @@ async function GET(
       },
     });
 
-    console.log("[CHECK STATUS]", checkStatus);
-
     if (!checkStatus)
       return NextResponse.json({
         status: 400,
