@@ -22,7 +22,19 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           id: id,
         },
         include: {
-          Author: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
           imageDonasi: true,
           CeritaDonasi: true,
           DonasiMaster_Ketegori: true,
@@ -192,9 +204,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       if (!deleteImageDonasi) {
         console.log("[DELETE IMAGE DONASI]", deleteImageDonasi);
       }
-
     } else if (category === "edit-story") {
-
       if (data && data.newImageId) {
         await prisma.donasi_Cerita.update({
           where: {
