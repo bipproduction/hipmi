@@ -55,6 +55,16 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             },
           },
         },
+        BusinessMaps: {
+          select: {
+            id: true,
+            namePin: true,
+            latitude: true,
+            longitude: true,
+            imageId: true,
+            pinId: true,
+          },
+        },
       },
     });
 
@@ -98,6 +108,7 @@ async function DELETE(request: Request, context: { params: { id: string } }) {
       include: {
         BusinessMaps: {
           select: {
+            id: true,
             pinId: true,
             imageId: true,
           },
@@ -123,60 +134,65 @@ async function DELETE(request: Request, context: { params: { id: string } }) {
         }
       }
 
-      if (data?.BusinessMaps?.pinId != null) {
+      if (data?.BusinessMaps) {
         const pinId = data?.BusinessMaps?.pinId;
-        const deletePin = await fetch(
-          `https://wibu-storage.wibudev.com/api/files/${pinId}/delete`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${process.env.WS_APIKEY}`,
-            },
-          }
-        );
 
-        if (deletePin.ok) {
-          console.log(`Success delete pin`);
+        if (pinId) {
+          const deletePin = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${pinId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deletePin.ok) {
+            console.log(`Success delete business map pin`);
+          }
         }
 
-        const imageId = data?.BusinessMaps?.imageId;
-        const deleteImage = await fetch(
-          `https://wibu-storage.wibudev.com/api/files/${imageId}/delete`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${process.env.WS_APIKEY}`,
-            },
-          }
-        );
+        const mapImageId = data?.BusinessMaps?.imageId;
 
-        if (deleteImage.ok) {
-          console.log(`Success delete image`);
+        if (mapImageId) {
+          const deleteImage = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${mapImageId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deleteImage.ok) {
+            console.log(`Success delete business map image `);
+          }
         }
       }
+
+      const deletePortoMedsos = await prisma.portofolio_MediaSosial.delete({
+        where: {
+          portofolioId: id,
+        },
+      });
+
+      const deleteMap = await prisma.businessMaps.delete({
+        where: {
+          portofolioId: id,
+        },
+      });
+
+      const deletePortofolio = await prisma.portofolio.delete({
+        where: {
+          id: id,
+        },
+      });
+
     } catch (error) {
       console.error("Error delete logo", error);
     }
-
-    const deletePortoMedsos = await prisma.portofolio_MediaSosial.delete({
-      where: {
-        portofolioId: id,
-      },
-    });
-
-    // const deleteMap = await prisma.businessMaps.delete({
-    //   where: {
-    //     portofolioId: id,
-    //   },
-    // });
-
-    // console.log("DELETE PORTOFOLIO MEDSOS >>", deletePortoMedsos);
-
-    const deletePortofolio = await prisma.portofolio.delete({
-      where: {
-        id: id,
-      },
-    });
 
     return NextResponse.json(
       { success: true, message: "Berhasil menghapus data" },
@@ -205,9 +221,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
     let message;
 
     if (category === "detail") {
-      console.log("UPDATE PORTOFOLIO DETAIL >>");
-      console.log("DATA >>", data);
-
       const checkData = await prisma.portofolio.findUnique({
         where: { id },
         include: {
@@ -221,8 +234,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           message: "Data tidak ditemukan",
         });
       }
-
-      console.log("CHECK DATA >>", checkData);
 
       const updateDetail = await prisma.portofolio.update({
         where: { id },
