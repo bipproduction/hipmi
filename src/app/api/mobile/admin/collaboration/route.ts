@@ -8,8 +8,6 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
   const category = searchParams.get("category");
   let fixData;
 
-  console.log(["CATEGORY", category]);
-
   try {
     if (category === "dashboard") {
       const publish = await prisma.projectCollaboration.count({
