@@ -10,9 +10,6 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
   const search = searchParams.get("search");
   let fixData;
 
-  console.log("[CAT]", category);
-  
-
   try {
     if (category === "dashboard") {
       const publish = await prisma.job.count({
