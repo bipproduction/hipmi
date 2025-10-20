@@ -1,12 +1,10 @@
-
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export { GET, PUT };
+
+async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
@@ -17,7 +15,9 @@ export async function GET(
   let fixData;
   try {
     if (category === "get-all") {
-      fixData = await prisma.forum_Komentar.findMany({
+      const getData = await prisma.forum_Komentar.findMany({
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         orderBy: {
           createdAt: "desc",
         },
@@ -38,6 +38,11 @@ export async function GET(
           },
         },
       });
+
+      fixData = getData.map((v: any) => ({
+        ..._.omit(v, ["Forum_ReportKomentar"]),
+        countReport: v.Forum_ReportKomentar.length,
+      }));
     } else if (category === "get-one") {
       fixData = await prisma.forum_Komentar.findUnique({
         where: {
@@ -63,10 +68,44 @@ export async function GET(
       { status: 200 }
     );
   } catch (error) {
+    console.error(`[ERROR GET ${category} COMMENT]`, error);
     return NextResponse.json(
       {
         success: false,
         message: "Error get detail data comment",
+        reason: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  try {
+    const deleteData = await prisma.forum_Komentar.update({
+      where: {
+        id: id,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Success deactivate comment",
+        data: deleteData,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("[ERROR DEACTIVATE COMMENT]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error deactivate comment",
         reason: (error as Error).message,
       },
       { status: 500 }
