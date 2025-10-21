@@ -15,9 +15,6 @@ async function GET(request: Request) {
   const skipData = Number(page) * takeData - takeData;
   let fixData;
 
-  console.log("CATEGORY", category);
-  console.log("FIX TO STATUS", fixToStatus);
-
   try {
     if (category === "dashboard") {
       const publish = await prisma.voting.count({
@@ -79,8 +76,44 @@ async function GET(request: Request) {
         history,
       };
     } else if (category === "history") {
+      fixData = await prisma.voting.findMany({
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: {
+          Voting_Status: {
+            name: "Publish",
+          },
+          isActive: true,
+          isArsip: false,
+          akhirVote: {
+            lte: new Date(),
+          },
+          title: {
+            contains: search ? search : "",
+            mode: "insensitive",
+          },
+        },
+        include: {
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          Voting_Kontributor: true,
+          Voting_DaftarNamaVote: true,
+        },
+      });
     } else {
-
       // ====== Status Publish Start ====== //
       if (fixToStatus === "Publish") {
         const getAllData = await prisma.voting.findMany({
