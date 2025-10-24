@@ -11,8 +11,6 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
-    console.log("userId", userId);
-
     const checkDataEvent = await prisma.event.findUnique({
       where: {
         id: id,
@@ -52,8 +50,6 @@ export async function GET(
         eventId: id,
       },
     });
-
-    console.log("checkPeserta", checkPeserta);
 
     if (checkPeserta) {
       peserta = true;
@@ -116,33 +112,6 @@ export async function POST(
     console.log("id", id);
     console.log("data", data);
 
-    // const checkEvent = await prisma.event.findUnique({
-    //   where: {
-    //     id: id,
-    //   },
-    // });
-
-    // if (!checkEvent) {
-    //   return NextResponse.json(
-    //     { message: "Event Not Found", response: null },
-    //     { status: 400 }
-    //   );
-    // }
-
-    // const checkPeserta = await prisma.event_Peserta.findFirst({
-    //   where: {
-    //     userId: userId,
-    //     eventId: id,
-    //   },
-    // });
-
-    // if (!checkPeserta) {
-    //   return NextResponse.json(
-    //     { message: "Peserta Not Found", response: null },
-    //     { status: 400 }
-    //   );
-    // }
-
     if (category === "join_and_confirm") {
       const join = await prisma.event_Peserta.create({
         data: {
@@ -152,14 +121,13 @@ export async function POST(
         },
       });
 
-      console.log("join", join);
       fixData = join;
     } else if (category === "confirmation") {
       const checkPeserta = await prisma.event_Peserta.findFirst({
         where: {
           userId: data.userId,
           eventId: id,
-          isPresent: true,
+          isPresent: false,
         },
       });
 
@@ -179,7 +147,6 @@ export async function POST(
         },
       });
 
-      console.log("confirm", confirm);
       fixData = confirm;
     }
 
