@@ -10,7 +10,6 @@ async function GET(request: Request) {
   const search = searchParams.get("search");
   const takeData = 10;
   const skipData = Number(page) * takeData - takeData;
-
   console.log("[CATEGORY]", category);
   let fixData;
   try {
