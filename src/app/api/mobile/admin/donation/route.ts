@@ -12,7 +12,6 @@ async function GET(request: Request) {
   const skipData = Number(page) * takeData - takeData;
 
   console.log("[CATEGORY]", category);
-
   let fixData;
   try {
     if (category === "dashboard") {
