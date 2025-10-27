@@ -1,40 +1,101 @@
-import { prisma } from "@/lib";
-import backendLogger from "@/util/backendLogger";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { name: string } }
-) {
-  
+export { GET };
+
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const fixToStatus = _.startCase(category || "");
+
+  const search = searchParams.get("search");
+  const page = searchParams.get("page");
+  const takeData = 10;
+  const skipData = Number(page) * takeData - takeData;
+  let fixData;
+
   try {
-    let fixData;
-    const { name } = params;
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search");
-    const page = searchParams.get("page");
-    const takeData = 10
-    const skipData = Number(page) * takeData - takeData;
-    
-    const fixStatus = _.startCase(name);
+    if (category === "dashboard") {
+      const publish = await prisma.voting.count({
+        where: {
+          Voting_Status: {
+            name: "Publish",
+          },
+          isActive: true,
+          isArsip: false,
+          akhirVote: {
+            gte: new Date(),
+          },
+        },
+      });
 
-    if (!page) {
+      const review = await prisma.voting.count({
+        where: {
+          Voting_Status: {
+            name: "Review",
+          },
+          isActive: true,
+          isArsip: false,
+          akhirVote: {
+            gte: new Date(),
+          },
+        },
+      });
+
+      const reject = await prisma.voting.count({
+        where: {
+          Voting_Status: {
+            name: "Reject",
+          },
+          isActive: true,
+          isArsip: false,
+          akhirVote: {
+            gte: new Date(),
+          },
+        },
+      });
+
+      const history = await prisma.voting.count({
+        where: {
+          Voting_Status: {
+            name: "Publish",
+          },
+          isActive: true,
+          isArsip: false,
+          akhirVote: {
+            lte: new Date(),
+          },
+        },
+      });
+
+      fixData = {
+        publish,
+        review,
+        reject,
+        history,
+      };
+    } else if (category === "history") {
       fixData = await prisma.voting.findMany({
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         orderBy: {
-          createdAt: "desc",
+          updatedAt: "desc",
         },
         where: {
           Voting_Status: {
-            name: fixStatus,
+            name: "Publish",
           },
           isActive: true,
+          isArsip: false,
+          akhirVote: {
+            lte: new Date(),
+          },
           title: {
             contains: search ? search : "",
             mode: "insensitive",
           },
-          isArsip: false,
         },
         include: {
           Author: {
@@ -54,11 +115,12 @@ export async function GET(
         },
       });
     } else {
-      if (fixStatus === "Publish") {
+      // ====== Status Publish Start ====== //
+      if (fixToStatus === "Publish") {
         const getAllData = await prisma.voting.findMany({
           where: {
             Voting_Status: {
-              name: fixStatus,
+              name: "Publish",
             },
             isActive: true,
             isArsip: false,
@@ -82,14 +144,14 @@ export async function GET(
         }
 
         const data = await prisma.voting.findMany({
-          take: takeData,
-          skip: skipData,
+          take: page ? takeData : undefined,
+          skip: page ? skipData : undefined,
           orderBy: {
             createdAt: "desc",
           },
           where: {
             Voting_Status: {
-              name: fixStatus,
+              name: "Publish",
             },
             isActive: true,
             title: {
@@ -119,37 +181,20 @@ export async function GET(
           },
         });
 
-        const nCount = await prisma.voting.count({
-          where: {
-            Voting_Status: {
-              name: fixStatus,
-            },
-            isActive: true,
-            title: {
-              contains: search ? search : "",
-              mode: "insensitive",
-            },
-            akhirVote: {
-              gte: new Date(),
-            },
-            isArsip: false,
-          },
-        });
+        fixData = data;
 
-        fixData = {
-          data: data,
-          nPage: _.ceil(nCount / takeData),
-        };
+        // ====== Status Publish End ====== //
       } else {
+        // ====== Status Other Start ====== //
         const data = await prisma.voting.findMany({
-          take: takeData,
-          skip: skipData,
+          take: page ? takeData : undefined,
+          skip: page ? skipData : undefined,
           orderBy: {
             createdAt: "desc",
           },
           where: {
             Voting_Status: {
-              name: fixStatus,
+              name: fixToStatus,
             },
             isActive: true,
             title: {
@@ -176,41 +221,26 @@ export async function GET(
           },
         });
 
-        const nCount = await prisma.voting.count({
-          where: {
-            Voting_Status: {
-              name: fixStatus,
-            },
-            isActive: true,
-            title: {
-              contains: search ? search : "",
-              mode: "insensitive",
-            },
-            isArsip: false,
-          },
-        });
+        fixData = data;
 
-        fixData = {
-          data: data,
-          nPage: _.ceil(nCount / takeData),
-        };
+        // ====== Status Other End ====== //
       }
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Success get data voting status",
+        message: `Success get data voting ${category}`,
         data: fixData,
       },
       { status: 200 }
     );
   } catch (error) {
-    backendLogger.error("Error get data voting status ", error);
+    console.log(`[ERROR GET DATA VOTING: ${category}]`, error);
     return NextResponse.json(
       {
         success: false,
-        message: "Error get data voting status",
+        message: `Error get data voting ${category}`,
         reason: (error as Error).message,
       },
       { status: 500 }

@@ -9,6 +9,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         const { searchParams } = new URL(request.url);
         const userId = searchParams.get("userId");
 
+        console.log("id", id);
+        console.log("userId", userId);
+
         let fixData
 
         const checkParticipant = await prisma.event_Peserta.findFirst({
