@@ -48,7 +48,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       reason: (error as Error).message,
     });
   }
-}
+} 
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
