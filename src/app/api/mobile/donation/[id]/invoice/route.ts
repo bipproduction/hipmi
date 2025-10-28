@@ -13,7 +13,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       data: {
         donasiId: id,
         nominal: data.nominal,
-        donasiMaster_BankId: data.bankId,
+        masterBankId: data.bankId,
         authorId: data.authorId,
       },
       select: {
@@ -48,7 +48,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       reason: (error as Error).message,
     });
   }
-}
+} 
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -65,6 +65,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         createdAt: true,
         donasiMaster_BankId: true,
         donasiMaster_StatusInvoiceId: true,
+MasterBank: true,
         Donasi: {
           select: {
             id: true,
@@ -137,13 +138,14 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         message: "Status tidak ditemukan",
       });
     }
+
     const update = await prisma.donasi_Invoice.update({
       where: {
         id: id,
       },
       data: {
         donasiMaster_StatusInvoiceId: checkStatus.id,
-        imageId: data.fileId,
+        imageId: data || null,
       },
       select: {
         id: true,
@@ -161,6 +163,8 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
       },
     });
+
+    console.log("[UPDATE INVOICE]", update);
 
     return NextResponse.json({
       status: 200,

@@ -42,11 +42,23 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    const successInvoice = await prisma.donasi_Invoice.count({
+      where: {
+        donasiId: donasiId,
+        DonasiMaster_StatusInvoice: {
+          name: "Berhasil",
+        },
+      },    
+    });
+
     return NextResponse.json(
       {
         success: true,
         message: "Data Donasi Berhasil Diambil",
-        data: data,
+        data: {
+          donasi: data,
+          donatur: successInvoice,
+        },
       },
       { status: 200 }
     );
