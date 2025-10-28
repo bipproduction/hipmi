@@ -202,6 +202,7 @@ model MasterBank {
   updatedAt         DateTime            @updatedAt
   Investasi_Invoice Investasi_Invoice[]
   EventTransaksi    EventTransaksi[]
+  Donasi_Invoice    Donasi_Invoice[]
 }
 
 model MasterStatus {
@@ -576,7 +577,9 @@ model Donasi_Invoice {
   Images                       Images?                     @relation(fields: [imagesId], references: [id])
   imagesId                     String?
 
-  imageId String?
+  imageId      String?
+  MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
+  masterBankId String?     @default("null")
 }
 
 model Donasi_Kabar {
