@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import moment from "moment";
 
 export { POST, GET };
+
 async function POST(request: Request) {
   const { data } = await request.json();
   console.log(["DATA INVESTASI"], data);
