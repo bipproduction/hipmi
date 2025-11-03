@@ -46,12 +46,14 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         MasterPeriodeDeviden: true,
         MasterProgresInvestasi: true,
         masterStatusInvestasiId: true,
+        countDown: true,
         Investasi_Invoice: {
           where: {
-            statusInvoiceId: "1",
+            statusInvoiceId: {
+              in: ["1", "2", "3", "4"],
+            },
           },
         },
-        countDown: true,
       },
     });
 
