@@ -17,7 +17,11 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             Profile: true,
           },
         },
-        Investasi_Invoice: true,
+        Investasi_Invoice: {
+          where: {
+            statusInvoiceId: "1"
+          }
+        },
         MasterStatusInvestasi: true,
         BeritaInvestasi: true,
         DokumenInvestasi: true,

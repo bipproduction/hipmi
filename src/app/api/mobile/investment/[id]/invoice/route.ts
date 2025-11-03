@@ -48,6 +48,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
 
+  console.log("[ID INVOICE]", id);
+  
+
   let fixData;
 
   try {
@@ -79,6 +82,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           },
         },
       });
+
+      console.log("[DATA INVOICE]", data ? true : false);
 
       const { ...allData } = data;
       const Investor = data?.Investasi?.Investasi_Invoice;

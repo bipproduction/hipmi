@@ -5,7 +5,7 @@ export { GET, PUT };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
-
+  
   try {
     const data = await prisma.investasi.findUnique({
       where: {
@@ -49,9 +49,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         countDown: true,
         Investasi_Invoice: {
           where: {
-            statusInvoiceId: {
-              in: ["1", "2", "3", "4"],
-            },
+            statusInvoiceId: "2",
           },
         },
       },
@@ -83,11 +81,11 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
 
-  console.log("[=======Start Investment console=======]")
+  console.log("[=======Start Investment console=======]");
   console.log("[ID]", id);
   console.log("[DATA]", data);
   console.log("[STATUS]", status);
-  console.log("[=======End Investment console=======]")
+  console.log("[=======End Investment console=======]");
 
   const publishTime = new Date();
 
