@@ -65,10 +65,10 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
         data: {
           statusInvoiceId: "4",
         },
-        select: {
-          StatusInvoice: true,
-          authorId: true,
-        },
+        // select: {
+        //   StatusInvoice: true,
+        //   authorId: true,
+        // },
       });
 
       fixData = updt;

@@ -47,82 +47,112 @@ async function POST(request: Request) {
 }
 
 async function GET(request: Request) {
-  let fixData;
   const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const authorId = searchParams.get("authorId");
 
+  console.log("[CATEGORY]", category);
+  console.log("[AUTHOR ID]", authorId);
+  let fixData;
   try {
-    const data = await prisma.investasi.findMany({
-      where: {
-        masterStatusInvestasiId: "1",
-        masterProgresInvestasiId: "1",
-      },
-      select: {
-        id: true,
-        MasterPencarianInvestor: true,
-        countDown: true,
-        progress: true,
-      },
-    });
+    if (category === "bursa") {
+      const data = await prisma.investasi.findMany({
+        where: {
+          masterStatusInvestasiId: "1",
+          masterProgresInvestasiId: "1",
+        },
+        select: {
+          id: true,
+          MasterPencarianInvestor: true,
+          countDown: true,
+          progress: true,
+        },
+      });
 
-    for (let a of data) {
-      if (
-        (a.MasterPencarianInvestor?.name as any) -
-          moment(new Date()).diff(new Date(a.countDown as any), "days") <=
-        0
-      ) {
-        await prisma.investasi.update({
-          where: {
-            id: a.id,
-          },
-          data: {
-            masterProgresInvestasiId: "3",
-          },
-        });
+      for (let a of data) {
+        if (
+          (a.MasterPencarianInvestor?.name as any) -
+            moment(new Date()).diff(new Date(a.countDown as any), "days") <=
+          0
+        ) {
+          await prisma.investasi.update({
+            where: {
+              id: a.id,
+            },
+            data: {
+              masterProgresInvestasiId: "3",
+            },
+          });
+        }
+
+        if (a.progress === "100") {
+          await prisma.investasi.update({
+            where: {
+              id: a.id,
+            },
+            data: {
+              masterProgresInvestasiId: "2",
+            },
+          });
+        }
       }
 
-       if (a.progress === "100") {
-         await prisma.investasi.update({
-           where: {
-             id: a.id,
-           },
-           data: {
-             masterProgresInvestasiId: "2",
-           },
-         });
-       }
-    }
-
-    const dataAwal = await prisma.investasi.findMany({
-      orderBy: [
-        {
-          masterProgresInvestasiId: "asc",
+      const dataAwal = await prisma.investasi.findMany({
+        orderBy: [
+          {
+            masterProgresInvestasiId: "asc",
+          },
+          {
+            countDown: "desc",
+          },
+        ],
+        where: {
+          masterStatusInvestasiId: "1",
         },
-        {
-          countDown: "desc",
-        },
-      ],
-      where: {
-        masterStatusInvestasiId: "1",
-      },
-      select: {
-        id: true,
-        imageId: true,
-        title: true,
-        progress: true,
-        countDown: true,
-        MasterPencarianInvestor: {
-          select: {
-            name: true,
+        select: {
+          id: true,
+          imageId: true,
+          title: true,
+          progress: true,
+          countDown: true,
+          MasterPencarianInvestor: {
+            select: {
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    fixData = dataAwal.map((v: any) => ({
-      ..._.omit(v, ["MasterPencarianInvestor"]),
-      pencarianInvestor: v.MasterPencarianInvestor.name,
-    }));
+      fixData = dataAwal.map((v: any) => ({
+        ..._.omit(v, ["MasterPencarianInvestor"]),
+        pencarianInvestor: v.MasterPencarianInvestor.name,
+      }));
+    } else if (category === "my-holding") {
+      const data = await prisma.investasi_Invoice.findMany({
+        where: {
+          authorId: authorId,
+          statusInvoiceId: "1",
+        },
+        select: {
+          id: true,
+          investasiId: true,
+          nominal: true,
+          lembarTerbeli: true,
+          Investasi: {
+            select: {
+              title: true,
+              progress: true,
+            },
+          },
+        },
+      });
 
+      fixData = data.map((v: any) => ({
+        ..._.omit(v, ["Investasi"]),
+        title: v.Investasi.title,
+        progress: v.Investasi.progress,
+      }));
+    }
     return NextResponse.json({
       status: 200,
       success: true,
