@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.bip.hipmimobileapp",
+    "sha256_cert_fingerprints": ["CFF8431520BFAE665025B68138774A4E64AA6338D2DF6C7D900A71F0551FFD2D"]
+  }
+}]
