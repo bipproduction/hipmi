@@ -18,6 +18,7 @@ const CONFIG: MiddlewareConfig = {
   userPath: "/dev/home",
   publicRoutes: [
     "/",
+    "/.well-known/*",
     "/privacy-policy.html",
     "/api/not-user/*",
     "/api/voting/*",
