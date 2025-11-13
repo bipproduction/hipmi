@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "BMY6GT6W3D.com.anonymous.hipmi-mobile",
-        "paths": ["/app/*"]
+        "paths": ["*"]
       }
     ]
   }
