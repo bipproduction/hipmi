@@ -16,14 +16,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nomor } = body;
 
+    const msg = `HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.\n\n>> Kode OTP anda: ${codeOtp}.`;
+    const encodedMsg = encodeURIComponent(msg);
+
     const res = await fetch(
-      `https://wa.wibudev.com/code?nom=${nomor}&text=HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.
-      \n
-      >> Kode OTP anda: ${codeOtp}.
-      `
+      `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMsg}`,
+      { cache: "no-cache" }
     );
 
     const sendWa = await res.json();
+
     if (sendWa.status !== "success")
       return NextResponse.json(
         {
