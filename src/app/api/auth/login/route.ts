@@ -29,11 +29,12 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
+    const msg = `HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.\n\n>> Kode OTP anda: ${codeOtp}.`;
+    const encodedMsg = encodeURIComponent(msg);
+
     const res = await fetch(
-      `https://wa.wibudev.com/code?nom=${nomor}&text=HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.
-      \n
-      >> Kode OTP anda: ${codeOtp}.
-      `
+      `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMsg}`,
+      { cache: "no-cache" }
     );
 
     const sendWa = await res.json();
@@ -62,7 +63,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 }
