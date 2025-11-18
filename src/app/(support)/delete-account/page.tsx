@@ -20,6 +20,7 @@ export default function DeleteAccount() {
   const [data, setData] = useState({
     description: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Hanya di client, setelah mount
@@ -31,15 +32,32 @@ export default function DeleteAccount() {
   }, []);
 
   const handlerSubmit = async () => {
-    if (!phoneNumber || !data.description) {
+    if (!phoneNumber) {
       return notifications.show({
         title: "Error",
-        message: "Please fill in description & phone number",
+        message: "Please check your phone number",
+        color: "red",
+      });
+    }
+
+    if (!data.description) {
+      return notifications.show({
+        title: "Error",
+        message: "Please fill in description with 'Delete Account'",
+        color: "red",
+      });
+    }
+
+    if (data.description !== "Delete Account") {
+      return notifications.show({
+        title: "Error",
+        message: "Please fill in description with 'Delete Account'",
         color: "red",
       });
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch("/api/helper/delete-account", {
         method: "POST",
         headers: {
@@ -67,12 +85,14 @@ export default function DeleteAccount() {
       if (!result.success) {
         notifications.show({
           title: "Error",
-          message: result.error,
+          message: result.error || "Failed to delete account.",
           color: "red",
         });
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -121,7 +141,7 @@ export default function DeleteAccount() {
               />
             </Grid.Col>
             <Grid.Col span={4}>
-              <Button onClick={handlerSubmit} w={"100%"}>
+              <Button onClick={handlerSubmit} w={"100%"} loading={isLoading}>
                 Submit
               </Button>
             </Grid.Col>

@@ -18,7 +18,8 @@ export async function POST(req: Request) {
 
     const data = await resend.emails.send({
       from: `${email} <onboarding@resend.dev>`,
-      to: ["bip.baliinteraktifperkasa@gmail.com"], // ganti sesuai email kamu
+      to: ["bagasbanuna02@gmail.com"],
+      // to: ["bip.baliinteraktifperkasa@gmail.com"],
       subject: title,
       html: `
           <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">

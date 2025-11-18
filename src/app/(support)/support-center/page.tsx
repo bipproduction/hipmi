@@ -1,15 +1,15 @@
 "use client";
 import {
-    Box,
-    Button,
-    Group,
-    Paper,
-    SimpleGrid,
-    Stack,
-    Text,
-    Textarea,
-    TextInput,
-    Title
+  Box,
+  Button,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconBrandGmail, IconLocation } from "@tabler/icons-react";
@@ -22,6 +22,7 @@ export default function SupportCenter() {
     title: "",
     description: "",
   });
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!data.email || !data.title || !data.description) {
@@ -32,35 +33,43 @@ export default function SupportCenter() {
       });
     }
 
-    const response = await fetch("/api/helper/support-center", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
+    try {
+      setLoading(true);
 
-    if (result.success) {
-      notifications.show({
-        title: "Success",
-        color: "green",
-        message: "Message sent successfully.",
+      const response = await fetch("/api/helper/support-center", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+      const result = await response.json();
 
-      setData({
-        email: "",
-        title: "",
-        description: "",
-      });
-    }
+      if (result.success) {
+        notifications.show({
+          title: "Success",
+          color: "green",
+          message: "Message sent successfully.",
+        });
 
-    if (!result.success) {
-      notifications.show({
-        title: "Error",
-        color: "red",
-        message: result.error,
-      });
+        setData({
+          email: "",
+          title: "",
+          description: "",
+        });
+      }
+
+      if (!result.success) {
+        notifications.show({
+          title: "Error",
+          color: "red",
+          message: result.error || "Failed to send message.",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -177,7 +186,11 @@ export default function SupportCenter() {
                 }}
               />
 
-              <Button color="yellow" onClick={() => handleSubmit()}>
+              <Button
+                loading={isLoading}
+                color="yellow"
+                onClick={() => handleSubmit()}
+              >
                 Submit
               </Button>
             </Stack>
