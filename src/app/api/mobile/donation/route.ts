@@ -47,6 +47,8 @@ async function POST(request: Request) {
         },
       });
 
+      console.log("[DATA DONASI]", dataDonasi);
+
       if (!dataDonasi)
         return NextResponse.json({
           status: 400,
@@ -67,6 +69,8 @@ async function POST(request: Request) {
           imageId: data.imageCeritaId,
         },
       });
+
+      console.log("[DATA CERITA]", dataCerita);
 
       if (!dataCerita)
         return NextResponse.json({
