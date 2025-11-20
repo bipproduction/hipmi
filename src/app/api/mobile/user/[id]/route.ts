@@ -46,17 +46,6 @@ export async function DELETE(
         id: id,
       },
       select: {
-        Profile: {
-          select: {
-            id: true,
-            Portofolio: {
-              select: {
-                id: true,
-              },
-            },
-          },
-        },
-
         // EVENT START
         Event: {
           select: {
@@ -121,6 +110,7 @@ export async function DELETE(
         Job: {
           select: {
             id: true,
+            imageId: true,
           },
         },
         // JOB END
@@ -152,19 +142,18 @@ export async function DELETE(
         Investasi: {
           select: {
             id: true,
+            prospektusFileId: true,
+            imageId: true,
             BeritaInvestasi: {
               select: {
                 id: true,
+                imageId: true,
               },
             },
             DokumenInvestasi: {
               select: {
                 id: true,
-              },
-            },
-            ProspektusInvestasi: {
-              select: {
-                id: true,
+                fileId: true,
               },
             },
           },
@@ -173,6 +162,7 @@ export async function DELETE(
         Investasi_Invoice: {
           select: {
             id: true,
+            imageId: true,
           },
         },
 
@@ -182,19 +172,23 @@ export async function DELETE(
         Donasi: {
           select: {
             id: true,
+            imageId: true,
             CeritaDonasi: {
               select: {
                 id: true,
+                imageId: true,
               },
             },
             Donasi_Kabar: {
               select: {
                 id: true,
+                imageId: true,
               },
             },
             Donasi_PencairanDana: {
               select: {
                 id: true,
+                imageId: true,
               },
             },
           },
@@ -203,26 +197,46 @@ export async function DELETE(
         Donasi_Invoice: {
           select: {
             id: true,
+            imageId: true,
           },
         },
 
         // DONATION END
+
+        // PROFILE & PORTOFOLOIO START
+        Profile: {
+          select: {
+            id: true,
+            Portofolio: {
+              select: {
+                id: true,
+                logoId: true,
+                BusinessMaps: {
+                  select: {
+                    id: true,
+                    imageId: true,
+                  },
+                },
+                Portofolio_MediaSosial: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        // PROFILE & PORTOFOLOIO END
       },
     });
 
+    // =================================================== //
+    // ================ START DELETE ALL ================= //
+    // =================================================== //
+
     // EVENT DELETE START
-    for (let event of checkUser?.Event as any) {
-      const deleteEvent = await prisma.event.findFirst({
-        where: {
-          id: event.id,
-        },
-      });
-
-      console.log(["DELETE EVENT", deleteEvent]);
-    }
-
     for (let event of checkUser?.Event_Peserta as any) {
-      const deleteEvent = await prisma.event_Peserta.findFirst({
+      const deleteEvent = await prisma.event_Peserta.delete({
         where: {
           id: event.id,
         },
@@ -237,22 +251,23 @@ export async function DELETE(
 
       console.log(["DELETE EVENT PESERTA", deleteEvent]);
     }
-    // EVENT DELETE END
 
-    // COLLABORATION START
-    for (let project of checkUser?.ProjectCollaboration as any) {
-      const deleteProject = await prisma.projectCollaboration.findFirst({
+    for (let event of checkUser?.Event as any) {
+      const deleteEvent = await prisma.event.delete({
         where: {
-          id: project.id,
+          id: event.id,
         },
       });
 
-      console.log(["DELETE PROJECT", deleteProject]);
+      console.log(["DELETE EVENT", deleteEvent]);
     }
+    // EVENT DELETE END
+
+    // COLLABORATION START
 
     for (let project of checkUser?.ProjectCollaboration_Partisipasi as any) {
       const deleteProject =
-        await prisma.projectCollaboration_Partisipasi.findFirst({
+        await prisma.projectCollaboration_Partisipasi.delete({
           where: {
             id: project.id,
           },
@@ -262,19 +277,18 @@ export async function DELETE(
     }
 
     for (let project of checkUser?.ProjectCollaboration_RoomChat as any) {
-      const deleteProject =
-        await prisma.projectCollaboration_RoomChat.findFirst({
-          where: {
-            id: project.id,
-          },
-        });
+      const deleteProject = await prisma.projectCollaboration_RoomChat.delete({
+        where: {
+          id: project.id,
+        },
+      });
 
       console.log(["DELETE PROJECT ROOMCHAT", deleteProject]);
     }
 
     for (let project of checkUser?.ProjectCollaboration_AnggotaRoomChat as any) {
       const deleteProject =
-        await prisma.projectCollaboration_AnggotaRoomChat.findFirst({
+        await prisma.projectCollaboration_AnggotaRoomChat.delete({
           where: {
             id: project.id,
           },
@@ -284,31 +298,49 @@ export async function DELETE(
     }
 
     for (let project of checkUser?.ProjectCollaboration_Message as any) {
-      const deleteProject = await prisma.projectCollaboration_Message.findFirst(
-        {
-          where: {
-            id: project.id,
-          },
-        }
-      );
+      const deleteProject = await prisma.projectCollaboration_Message.delete({
+        where: {
+          id: project.id,
+        },
+      });
 
       console.log(["DELETE PROJECT MESSAGE", deleteProject]);
     }
+
+    for (let project of checkUser?.ProjectCollaboration as any) {
+      const deleteProject = await prisma.projectCollaboration.delete({
+        where: {
+          id: project.id,
+        },
+      });
+
+      console.log(["DELETE PROJECT", deleteProject]);
+    }
+
     // COLLABORATION END
 
     // VOTING START
+    for (let voting of checkUser?.Voting_Kontributor as any) {
+      const deleteVotingKontributor = await prisma.voting_Kontributor.delete({
+        where: {
+          id: voting.id,
+        },
+      });
+
+      console.log(["DELETE VOTING KONTRIBUTOR", deleteVotingKontributor]);
+    }
+
     for (let voting of checkUser?.Voting as any) {
       for (let id of voting?.Voting_DaftarNamaVote as any) {
-        const deleteVotingListName =
-          await prisma.voting_DaftarNamaVote.findFirst({
-            where: {
-              id: id.id,
-            },
-          });
+        const deleteVotingListName = await prisma.voting_DaftarNamaVote.delete({
+          where: {
+            id: id.id,
+          },
+        });
         console.log(["DELETE VOTING LIST NAME", deleteVotingListName]);
       }
 
-      const deleteVoting = await prisma.voting.findFirst({
+      const deleteVoting = await prisma.voting.delete({
         where: {
           id: voting.id,
         },
@@ -319,7 +351,23 @@ export async function DELETE(
 
     // JOB START
     for (let job of checkUser?.Job as any) {
-      const deleteJob = await prisma.job.findFirst({
+      if (job.imageId) {
+        const deleteJobImage = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${job.imageId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteJobImage.ok) {
+          console.log("Success delete job image");
+        }
+      }
+
+      const deleteJob = await prisma.job.delete({
         where: {
           id: job.id,
         },
@@ -329,26 +377,9 @@ export async function DELETE(
     // JOB END
 
     // FORUM START
-    for (let forum of checkUser?.Forum_Posting as any) {
-      const deleteForum = await prisma.forum_Posting.findFirst({
-        where: {
-          id: forum.id,
-        },
-      });
-      console.log(["DELETE FORUM POSTING", deleteForum]);
-    }
-
-    for (let forum of checkUser?.Forum_Komentar as any) {
-      const deleteForum = await prisma.forum_Komentar.findFirst({
-        where: {
-          id: forum.id,
-        },
-      });
-      console.log(["DELETE FORUM KOMENTAR", deleteForum]);
-    }
 
     for (let forum of checkUser?.Forum_ReportKomentar as any) {
-      const deleteForum = await prisma.forum_ReportKomentar.findFirst({
+      const deleteForum = await prisma.forum_ReportKomentar.delete({
         where: {
           id: forum.id,
         },
@@ -357,19 +388,53 @@ export async function DELETE(
     }
 
     for (let forum of checkUser?.Forum_ReportPosting as any) {
-      const deleteForum = await prisma.forum_ReportPosting.findFirst({
+      const deleteForum = await prisma.forum_ReportPosting.delete({
         where: {
           id: forum.id,
         },
       });
       console.log(["DELETE FORUM REPORT POSTING", deleteForum]);
     }
+
+    for (let forum of checkUser?.Forum_Komentar as any) {
+      const deleteForum = await prisma.forum_Komentar.delete({
+        where: {
+          id: forum.id,
+        },
+      });
+      console.log(["DELETE FORUM KOMENTAR", deleteForum]);
+    }
+
+    for (let forum of checkUser?.Forum_Posting as any) {
+      const deleteForum = await prisma.forum_Posting.delete({
+        where: {
+          id: forum.id,
+        },
+      });
+      console.log(["DELETE FORUM POSTING", deleteForum]);
+    }
     // FORUM END
 
     // INVESTASI START
 
     for (let invoice of checkUser?.Investasi_Invoice as any) {
-      const deleteInvoice = await prisma.investasi_Invoice.findFirst({
+      if (invoice?.imageId) {
+        const deleteInvoiceImage = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${invoice.imageId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteInvoiceImage.ok) {
+          console.log("Success delete invoice image");
+        }
+      }
+
+      const deleteInvoice = await prisma.investasi_Invoice.delete({
         where: {
           id: invoice.id,
         },
@@ -379,7 +444,22 @@ export async function DELETE(
 
     for (let investasi of checkUser?.Investasi as any) {
       for (let berita of investasi?.BeritaInvestasi as any) {
-        const deleteBerita = await prisma.beritaInvestasi.findFirst({
+        if (berita?.imageId) {
+          const deleteBeritaImage = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${berita.imageId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deleteBeritaImage.ok) {
+            console.log("Success delete image berita investasi");
+          }
+        }
+        const deleteBerita = await prisma.beritaInvestasi.delete({
           where: {
             id: berita.id,
           },
@@ -388,7 +468,22 @@ export async function DELETE(
       }
 
       for (let dokumen of investasi?.DokumenInvestasi as any) {
-        const deleteDokumen = await prisma.dokumenInvestasi.findFirst({
+        if (dokumen?.fileId) {
+          const deleteDokumenImage = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${dokumen.fileId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deleteDokumenImage.ok) {
+            console.log("Success delete image dokumen investasi");
+          }
+        }
+        const deleteDokumen = await prisma.dokumenInvestasi.delete({
           where: {
             id: dokumen.id,
           },
@@ -396,14 +491,39 @@ export async function DELETE(
         console.log(["DELETE DOKUMEN INVESTASI", deleteDokumen]);
       }
 
-      const deleteProspektus = await prisma.prospektusInvestasi.findFirst({
-        where: {
-          investasiId: investasi.id,
-        },
-      });
-      console.log(["DELETE PROSPEKTUS INVESTASI", deleteProspektus]);
+      if (investasi?.prospektusFileId) {
+        const deleteProspektusFile = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${investasi.prospektusFileId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
 
-      const deleteInvestasi = await prisma.investasi.findFirst({
+        if (deleteProspektusFile.ok) {
+          console.log("Success delete prospektus file investasi");
+        }
+      }
+
+      if (investasi?.imageId) {
+        const deleteInvestasiImage = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${investasi.imageId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteInvestasiImage.ok) {
+          console.log("Success delete image investasi");
+        }
+      }
+
+      const deleteInvestasi = await prisma.investasi.delete({
         where: {
           id: investasi.id,
         },
@@ -414,18 +534,48 @@ export async function DELETE(
 
     // DONASI START
 
-    for (let donasi of checkUser?.Donasi_Invoice as any) {
-      const deleteInvoice = await prisma.donasi_Invoice.findFirst({
+    for (let donasiInvoice of checkUser?.Donasi_Invoice as any) {
+      if (donasiInvoice?.imageId) {
+        const deleteInvoiceImage = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${donasiInvoice.imageId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteInvoiceImage.ok) {
+          console.log("Success delete invoice image");
+        }
+      }
+      const deleteInvoice = await prisma.donasi_Invoice.delete({
         where: {
-          id: donasi.id,
+          id: donasiInvoice.id,
         },
       });
       console.log(["DELETE INVOICE DONASI", deleteInvoice]);
     }
 
-    for (let invoice of checkUser?.Donasi as any) {
-      for (let kabar of invoice?.Donasi_Kabar as any) {
-        const deleteKabar = await prisma.donasi_Kabar.findFirst({
+    for (let donasi of checkUser?.Donasi as any) {
+      for (let kabar of donasi?.Donasi_Kabar as any) {
+        if (kabar?.imageId) {
+          const deleteKabarImage = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${kabar.imageId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deleteKabarImage.ok) {
+            console.log("Success delete kabar image");
+          }
+        }
+        const deleteKabar = await prisma.donasi_Kabar.delete({
           where: {
             id: kabar.id,
           },
@@ -433,28 +583,70 @@ export async function DELETE(
         console.log(["DELETE KABAR DONASI", deleteKabar]);
       }
 
-      for (let pencairanDana of invoice?.Donasi_PencairanDana as any) {
-        const deletePencairanDana = await prisma.donasi_PencairanDana.findFirst(
-          {
-            where: {
-              id: pencairanDana.id,
-            },
+      for (let pencairanDana of donasi?.Donasi_PencairanDana as any) {
+        if (pencairanDana?.imageId) {
+          const deletePencairanDanaImage = await fetch(
+            `https://wibu-storage.wibudev.com/api/files/${pencairanDana.imageId}/delete`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${process.env.WS_APIKEY}`,
+              },
+            }
+          );
+
+          if (deletePencairanDanaImage.ok) {
+            console.log("Success delete pencairan dana image");
           }
-        );
+        }
+
+        const deletePencairanDana = await prisma.donasi_PencairanDana.delete({
+          where: {
+            id: pencairanDana.id,
+          },
+        });
         console.log(["DELETE PENCAIRAN DANA DONASI", deletePencairanDana]);
       }
 
-      const deleteCerita = await prisma.donasi_Cerita.findFirst({
+      const deleteImageCerita = await fetch(
+        `https://wibu-storage.wibudev.com/api/files/${donasi?.CeritaDonasi?.imageId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${process.env.WS_APIKEY}`,
+          },
+        }
+      );
+
+      if (deleteImageCerita.ok) {
+        console.log("Success delete image cerita donasi");
+      }
+
+      const deleteCerita = await prisma.donasi_Cerita.delete({
         where: {
-          id: invoice.id,
+          donasiId: donasi.id,
         },
       });
 
       console.log(["DELETE CERITA DONASI", deleteCerita]);
 
-      const deleteDonasi = await prisma.donasi.findFirst({
+      const deleteImageDonasi = await fetch(
+        `https://wibu-storage.wibudev.com/api/files/${donasi?.imageId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${process.env.WS_APIKEY}`,
+          },
+        }
+      );
+
+      if (deleteImageDonasi.ok) {
+        console.log("Success delete image donasi");
+      }
+
+      const deleteDonasi = await prisma.donasi.delete({
         where: {
-          id: invoice.id,
+          id: donasi.id,
         },
       });
       console.log(["DELETE DONASI", deleteDonasi]);
@@ -464,57 +656,77 @@ export async function DELETE(
 
     // PORTOFOLIO DELETE START
     for (const portofolio of checkUser?.Profile?.Portofolio as any) {
-      const deletePortofolio = await prisma.portofolio.findFirst({
+      if (portofolio?.BusinessMaps?.id) {
+        const deleteLogo = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${portofolio?.BusinessMaps?.imageId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteLogo.ok) {
+          console.log("Success delete logo");
+        }
+
+        const deleteMaps = await prisma.businessMaps.delete({
+          where: {
+            id: portofolio?.BusinessMaps?.id,
+          },
+        });
+        console.log(["DELETE MAPS", deleteMaps]);
+      }
+
+      if (portofolio?.Portofolio_MediaSosial?.id) {
+        const deleteSosialMedia = await prisma.portofolio_MediaSosial.delete({
+          where: {
+            portofolioId: portofolio.id,
+          },
+        });
+        console.log(["DELETE SOSIAL MEDIA", deleteSosialMedia]);
+      }
+
+      if (portofolio?.logoId) {
+        const deleteLogo = await fetch(
+          `https://wibu-storage.wibudev.com/api/files/${portofolio?.logoId}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${process.env.WS_APIKEY}`,
+            },
+          }
+        );
+
+        if (deleteLogo.ok) {
+          console.log("Success delete logo");
+        }
+      }
+
+      const deletePortofolio = await prisma.portofolio.delete({
         where: {
           id: portofolio.id,
         },
-        select: {
-          logoId: true,
-        },
       });
-
-      // const deleteLogo = await fetch(
-      //   `https://wibu-storage.wibudev.com/api/files/${deletePortofolio.logoId}/delete`,
-      //   {
-      //     method: "DELETE",
-      //     headers: {
-      //       Authorization: `Bearer ${process.env.WS_APIKEY}`,
-      //     },
-      //   }
-      // );
-
-      // if (deleteLogo.ok) {
-      //   console.log("Success delete logo");
-      // }
 
       console.log(["DELETE PORTOFOLIO", deletePortofolio]);
-
-      const deleteMaps = await prisma.businessMaps.findFirst({
-        where: {
-          portofolioId: portofolio.id,
-        },
-      });
-
-      console.log(["DELETE MAPS", deleteMaps]);
-
-      const deleteSosialMedia = await prisma.portofolio_MediaSosial.findFirst({
-        where: {
-          portofolioId: portofolio.id,
-        },
-      });
-
-      console.log(["DELETE SOSIAL MEDIA", deleteSosialMedia]);
-
-      console.log(["DELETE PORTOFOLIOID:", portofolio.id]);
     }
 
-    const deleteProfile = await prisma.profile.findFirst({
+    const deleteProfile = await prisma.profile.delete({
       where: {
         userId: id,
       },
     });
     console.log(["DELETE PROFILE", deleteProfile]);
     // PORTOFOLIO DELETE END
+
+    const deleteUser = await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log(["DELETE USER", deleteUser]);
 
     console.log("[END DELETE ALL >>>]");
 
