@@ -19,6 +19,7 @@ const CONFIG: MiddlewareConfig = {
   publicRoutes: [
     "/",
     "/.well-known/*",
+    "/terms-of-service.html",
     "/privacy-policy.html",
     "/api/helper/*",
     "/api/not-user/*",

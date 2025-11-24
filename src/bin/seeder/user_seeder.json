@@ -3,12 +3,14 @@
     "name": "bagas_admin",
     "nomor": "6282340374412",
     "masterUserRoleId": "3",
-    "active": true
+    "active": true,
+    "termsOfServiceAccepted": true
   },
   {
     "name": "fahmi_admin",
     "nomor": "628123833845",
     "masterUserRoleId": "2",
-    "active": true
+    "active": true,
+    "termsOfServiceAccepted": true
   }
 ]

@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         username: true,
         active: true,
         masterUserRoleId: true,
+        termsOfServiceAccepted: true,
       },
     });
 
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
         message: "Berhasil Login",
         roleId: dataUser.masterUserRoleId,
         active: dataUser.active,
+        termsOfServiceAccepted: dataUser.termsOfServiceAccepted,
         token: token,
       },
       { status: 200 }
@@ -76,7 +78,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
