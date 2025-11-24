@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.17](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.16...v1.5.17) (2025-11-24)
+
+
+### Bug Fixes
+
+* delete all data user ([fb9515d](https://wibugit.wibudev.com/wibu/hipmi/commit/fb9515dfe465ef07d43460ca4e9bb31705ec48b8))
+
 ## [1.5.16](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.15...v1.5.16) (2025-11-20)
 
 ## [1.5.15](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.14...v1.5.15) (2025-11-18)
