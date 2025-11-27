@@ -1,30 +1,37 @@
 [
   {
     "id": "1",
-    "name": "Event"
+    "name": "Event",
+    "value": "event"
   },
   {
     "id": "2",
-    "name": "Job"
+    "name": "Job",
+    "value": "job"
   },
   {
     "id": "3",
-    "name": "Voting"
+    "name": "Voting",
+    "value": "voting"
   },
   {
     "id": "4",
-    "name": "Donasi"
+    "name": "Donasi",
+    "value": "donasi"
   },
   {
     "id": "5",
-    "name": "Investasi"
+    "name": "Investasi",
+    "value": "investasi"
   },
   {
     "id": "6",
-    "name": "Forum"
+    "name": "Forum",
+    "value": "forum"
   },
   {
     "id": "7",
-    "name": "Collaboration"
+    "name": "Collaboration",
+    "value": "collaboration"
   }
 ]

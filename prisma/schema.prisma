@@ -49,8 +49,12 @@ model User {
   BusinessMaps                         BusinessMaps[]
   Investasi_Invoice                    Investasi_Invoice[]
 
-  EventSponsor   EventSponsor[]
-  EventTransaksi EventTransaksi[]
+  EventSponsor           EventSponsor[]
+  EventTransaksi         EventTransaksi[]
+  termsOfServiceAccepted Boolean          @default(false)
+
+  blockedUsers BlockedUser[] @relation("Blocking")
+  blockedBy    BlockedUser[] @relation("BlockedBy")
 }
 
 model MasterUserRole {
@@ -1011,6 +1015,8 @@ model MasterKategoriApp {
   updatedAt DateTime @updatedAt
   name      String
   value     String?
+
+  blockedUsers BlockedUser[]
 }
 
 // ======================= EVENT ======================= //
@@ -1072,4 +1078,21 @@ model Sticker {
   jenisKelamin String?
 
   MasterEmotions MasterEmotions[] @relation("StikerEmotions")
+}
+
+model BlockedUser {
+  id        String   @id @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blockerId String // ID user yang memblokir
+  blockedId String // ID user yang diblokir
+
+  menuFeatureId String
+  menuFeature   MasterKategoriApp @relation(fields: [menuFeatureId], references: [id])
+
+  blocker User @relation("BlockedBy", fields: [blockerId], references: [id])
+  blocked User @relation("Blocking", fields: [blockedId], references: [id])
+
+  @@unique([blockerId, blockedId])
 }

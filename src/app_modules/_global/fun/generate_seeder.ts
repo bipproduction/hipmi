@@ -60,12 +60,14 @@ async function seederUser() {
         username: i.name,
         masterUserRoleId: i.masterUserRoleId,
         active: i.active,
+        termsOfServiceAccepted: i.termsOfServiceAccepted,
       },
       update: {
         nomor: i.nomor,
         username: i.name,
         masterUserRoleId: i.masterUserRoleId,
         active: i.active,
+        termsOfServiceAccepted: i.termsOfServiceAccepted,
       },
     });
   }
@@ -564,10 +566,12 @@ async function masterKategoriApp() {
       create: {
         id: a.id,
         name: a.name,
+        value: a.value,
       },
       update: {
         id: a.id,
         name: a.name,
+        value: a.value,
       },
     });
   }

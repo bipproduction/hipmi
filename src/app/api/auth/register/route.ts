@@ -14,6 +14,8 @@ export async function POST(req: Request) {
   try {
     const { data } = await req.json();
 
+    console.log("data >>", data);
+
     const cekUsername = await prisma.user.findUnique({
       where: {
         username: data.username,
@@ -26,11 +28,20 @@ export async function POST(req: Request) {
         message: "Username sudah digunakan",
       });
 
+    // ✅ Validasi wajib setuju Terms
+    if (data.termsOfServiceAccepted !== true) {
+      return NextResponse.json({
+        success: false,
+        message: "You must agree to the Terms of Service",
+      });
+    }
+
     const createUser = await prisma.user.create({
       data: {
         username: data.username,
         nomor: data.nomor,
         active: false,
+        termsOfServiceAccepted: data.termsOfServiceAccepted,
       },
     });
 
@@ -51,7 +62,7 @@ export async function POST(req: Request) {
         success: true,
         message: "Registrasi Berhasil, Anda Sedang Login",
         token: token,
-        // data: createUser,
+        // data: createUser,x
       },
       { status: 201 }
     );
@@ -65,7 +76,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

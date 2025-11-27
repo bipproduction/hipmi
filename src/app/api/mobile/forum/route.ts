@@ -36,11 +36,109 @@ async function GET(request: Request) {
   let fixData;
   const { searchParams } = new URL(request.url);
   const authorId = searchParams.get("authorId");
+  const userLoginId = searchParams.get("userLoginId");
   const search = searchParams.get("search");
+  const category = searchParams.get("category");
+  const page = searchParams.get("page");
+  const takeData = 5;
+  const skipData = (Number(page) - 1) * takeData;
+
+
+  // console.log("authorId", authorId);
+  // console.log("userLoginId", userLoginId);
+  // console.log("search", search);
+  // console.log("category", category);
+  console.log("page", page);
 
   try {
-    if (authorId) {
+    if (category === "beranda") {
+      const blockUserId = await prisma.blockedUser
+        .findMany({
+          where: {
+            blockerId: userLoginId as string,
+          },
+          select: {
+            blockedId: true,
+          },
+        })
+        .then((res) => {
+          return res.map((item) => item.blockedId);
+        });
+
+      console.log("blockUserId", blockUserId);
+
       const data = await prisma.forum_Posting.findMany({
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          isActive: true,
+          diskusi: {
+            mode: "insensitive",
+            contains: search || "",
+          },
+          authorId: {
+            notIn: blockUserId,
+          },
+        },
+        
+        select: {
+          id: true,
+          diskusi: true,
+          createdAt: true,
+          isActive: true,
+          authorId: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+          Forum_Komentar: {
+            where: {
+              isActive: true,
+            },
+          },
+          ForumMaster_StatusPosting: {
+            select: {
+              id: true,
+              status: true,
+            },
+          },
+          forumMaster_StatusPostingId: true,
+        },
+      });
+
+      const newData = data.map((item) => {
+        const count = item.Forum_Komentar?.length ?? 0;
+        return {
+          ..._.omit(item, ["Forum_Komentar"]),
+          count,
+        };
+      });
+
+      fixData = newData;
+    } else if (category === "forumku") {
+
+      const count = await prisma.forum_Posting.count({
+        where: {
+          isActive: true,
+          authorId: authorId,
+        },
+      })
+
+      const data = await prisma.forum_Posting.findMany({
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         orderBy: {
           createdAt: "desc",
         },
@@ -90,62 +188,18 @@ async function GET(request: Request) {
         };
       });
 
-      fixData = newData;
+      const dataFix = {
+        data: newData,
+        count,
+      }
+
+      fixData = dataFix;
     } else {
-      const data = await prisma.forum_Posting.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        where: {
-          isActive: true,
-          diskusi: {
-            mode: "insensitive",
-            contains: search || "",
-          },
-        },
-        select: {
-          id: true,
-          diskusi: true,
-          createdAt: true,
-          isActive: true,
-          authorId: true,
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: {
-                select: {
-                  id: true,
-                  name: true,
-                  imageId: true,
-                },
-              },
-            },
-          },
-          Forum_Komentar: {
-            where: {
-              isActive: true,
-            },
-          },
-          ForumMaster_StatusPosting: {
-            select: {
-              id: true,
-              status: true,
-            },
-          },
-          forumMaster_StatusPostingId: true,
-        },
+      return NextResponse.json({
+        success: false,
+        message: "Gagal mendapatkan data",
+        reason: "Kategori tidak ditemukan",
       });
-
-      const newData = data.map((item) => {
-        const count = item.Forum_Komentar?.length ?? 0;
-        return {
-          ..._.omit(item, ["Forum_Komentar"]),
-          count,
-        };
-      });
-
-      fixData = newData;
     }
 
     return NextResponse.json({
@@ -153,7 +207,6 @@ async function GET(request: Request) {
       message: "Berhasil mendapatkan data",
       data: fixData,
     });
-
   } catch (error) {
     console.log("[ERROR]", error);
     return NextResponse.json({
