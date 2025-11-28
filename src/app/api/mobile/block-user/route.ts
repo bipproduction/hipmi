@@ -55,12 +55,6 @@ async function GET(request: Request) {
   const takeData = 10;
   const skipData = page * takeData - takeData;
 
-  // console.log("[BLOCKED ID]", id);
-  // console.log("[PAGE]", page);
-  // console.log("[TAKE DATA]", takeData);
-  // console.log("[SKIP DATA]", skipData);
-  // console.log("[SEARCH]", search);
-
   try {
     const data = await prisma.blockedUser.findMany({
       take: page ? takeData : undefined,
