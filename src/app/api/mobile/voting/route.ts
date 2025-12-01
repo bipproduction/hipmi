@@ -72,7 +72,7 @@ async function GET(request: Request) {
     if (category === "beranda") {
       fixData = await prisma.voting.findMany({
         orderBy: {
-          updatedAt: "desc",
+          awalVote: "asc"
         },
         where: {
           voting_StatusId: "1",
