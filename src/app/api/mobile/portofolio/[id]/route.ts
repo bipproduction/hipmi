@@ -114,7 +114,7 @@ async function DELETE(request: Request, context: { params: { id: string } }) {
           },
         },
       },
-    });
+    }); 
 
     try {
       if (data?.logoId != null) {
@@ -134,7 +134,7 @@ async function DELETE(request: Request, context: { params: { id: string } }) {
         }
       }
 
-      if (data?.BusinessMaps) {
+      if (data?.BusinessMaps !== null) {
         const pinId = data?.BusinessMaps?.pinId;
 
         if (pinId) {
@@ -172,24 +172,23 @@ async function DELETE(request: Request, context: { params: { id: string } }) {
         }
       }
 
-      const deletePortoMedsos = await prisma.portofolio_MediaSosial.delete({
+      const deleteMap = await prisma.businessMaps.delete({
         where: {
-          portofolioId: id,
+          id: data?.BusinessMaps?.id,
         },
       });
 
-      const deleteMap = await prisma.businessMaps.delete({
+      const deletePortoMedsos = await prisma.portofolio_MediaSosial.delete({
         where: {
-          portofolioId: id,
+          portofolioId: data?.id,
         },
       });
 
       const deletePortofolio = await prisma.portofolio.delete({
         where: {
-          id: id,
+          id: data?.id,
         },
       });
-
     } catch (error) {
       console.error("Error delete logo", error);
     }
