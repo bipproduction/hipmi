@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-
     const codeOtp = randomOTP();
     const body = await req.json();
     console.log("[Masuk API]", body);
@@ -39,22 +38,28 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
-    const msg = `HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPAADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.\n\n\n> Kode OTP anda: ${codeOtp}.`;
-    // const msg = `HIPMI%20-%20Kode%20ini%20bersifat%20RAHASIA%20dan%20JANGAN%20DI%20BAGIKAN%20KEPADA%20SIAPAPUN%2C%20termasuk%20anggota%20ataupun%20pengurus%20HIPMI%20lainnya.%20Kode%20OTP%20anda%3A%20${codeOtp}.`;
-    const encodedMsg = encodeURIComponent(msg);
+    // const msg = `HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPAADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.\n\n\n> Kode OTP anda: ${codeOtp}.`;
+    // const encodedMsg = encodeURIComponent(msg);
+    const msg = `HIPMI%20-%20Kode%20ini%20bersifat%20RAHASIA%20dan%20JANGAN%20DI%20BAGIKAN%20KEPADA%20SIAPAPUN%2C%20termasuk%20anggota%20ataupun%20pengurus%20HIPMI%20lainnya.%20Kode%20OTP%20anda%3A%20${codeOtp}.`;
 
     const res = await fetch(
-      `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMsg}`,
-      { cache: "no-cache" }
+      `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=${nomor}&text=${msg}`,
+      {
+        cache: "no-cache",
+        headers: {
+          Authorization: `Bearer ${process.env.WA_SERVER_TOKEN}`,
+        },
+      }
     );
 
-    const sendWa = await res.json();
-
-    if (sendWa.status !== "success")
+    if (res.status !== 200)
       return NextResponse.json(
         { success: false, message: "Nomor Whatsapp Tidak Aktif" },
         { status: 400 }
       );
+
+    const sendWa = await res.text();
+    console.log("WA Response:", sendWa);
 
     return NextResponse.json(
       {
