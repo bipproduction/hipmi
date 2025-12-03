@@ -65,14 +65,23 @@ async function GET(request: Request) {
   const search = searchParams.get("search");
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
+  const userLoginId = searchParams.get("userLoginId");
+
+  console.log("userLoginId >>", userLoginId);
 
   let fixData;
 
   try {
     if (category === "beranda") {
-      fixData = await prisma.voting.findMany({
+      if (!userLoginId) {
+        return NextResponse.json(
+          { success: false, message: "User ID required" },
+          { status: 400 }
+        );
+      }
+      const data = await prisma.voting.findMany({
         orderBy: {
-          awalVote: "asc"
+          awalVote: "asc",
         },
         where: {
           voting_StatusId: "1",
@@ -84,6 +93,13 @@ async function GET(request: Request) {
           title: {
             contains: search || "",
             mode: "insensitive",
+          },
+          NOT: {
+            Voting_Kontributor: {
+              some: {
+                authorId: userLoginId,
+              },
+            },
           },
         },
         include: {
