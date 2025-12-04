@@ -24,17 +24,17 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       });
 
       fixData = createWithFile;
+    } else {
+      const createWitOutFile = await prisma.beritaInvestasi.create({
+        data: {
+          investasiId: id,
+          title: _.startCase(data.title),
+          deskripsi: data.deskripsi,
+        },
+      });
+
+      fixData = createWitOutFile;
     }
-
-    const createWitOutFile = await prisma.beritaInvestasi.create({
-      data: {
-        investasiId: id,
-        title: _.startCase(data.title),
-        deskripsi: data.deskripsi,
-      },
-    });
-
-    fixData = createWitOutFile;
 
     return NextResponse.json({
       status: 201,
