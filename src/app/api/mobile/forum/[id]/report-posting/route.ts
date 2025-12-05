@@ -11,6 +11,18 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
   console.log("[ID]", id);
 
   try {
+    const content = await prisma.forum_Posting.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    const msg = `Report Postingan: "${content?.diskusi}"`;
+    const res = await fetch(
+      `https://wa.wibudev.com/code?nom=6282340374412&text=${msg}`,
+      { cache: "no-cache" }
+    );
+
     if (data.categoryId) {
       fixData = await prisma.forum_ReportPosting.create({
         data: {

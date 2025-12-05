@@ -29,6 +29,11 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             },
           },
         },
+        Event: {
+          select: {
+            tanggal: true,
+          },
+        },
       },
     });
 
