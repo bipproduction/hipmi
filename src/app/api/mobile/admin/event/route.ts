@@ -153,6 +153,7 @@ async function GET(request: Request) {
         select: {
             id: true,
             title: true,
+            tanggal: true,
             Author: {
               select: {
                 id: true,

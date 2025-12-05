@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export { GET };
 
@@ -12,7 +13,6 @@ async function GET(request: Request) {
   const skipData = Number(page) * takeData - takeData;
   console.log("[CATEGORY]", category);
   let fixData;
-
   
   try {
     if (category === "dashboard") {
