@@ -55,9 +55,6 @@ model User {
 
   blockedUsers BlockedUser[] @relation("Blocking")
   blockedBy    BlockedUser[] @relation("BlockedBy")
-
-  acceptedTermsAt      DateTime?
-  acceptedForumTermsAt DateTime?
 }
 
 model MasterUserRole {

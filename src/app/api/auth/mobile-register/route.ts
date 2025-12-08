@@ -41,6 +41,7 @@ export async function POST(req: Request) {
         nomor: data.nomor,
         active: false,
         termsOfServiceAccepted: data.termsOfServiceAccepted,
+        acceptedTermsAt: new Date(),
       },
     });
 

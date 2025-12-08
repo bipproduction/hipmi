@@ -25,7 +25,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
 
     const msg = `Report Komentar: "${content?.komentar}" dengan kategori \n\n\n${reportList?.title} : \n\n${reportList?.deskripsi}`;
     const res = await fetch(
-      `https://wa.wibudev.com/code?nom=6282340374412&text=${msg}`,
+      `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=6282340374412&text=${msg}`,
       { cache: "no-cache" }
     );
 
