@@ -113,6 +113,7 @@ async function GET(request: Request) {
               Author: {
                 select: {
                   id: true,
+                  username: true,
                   Profile: true,
                 },
               },
@@ -141,6 +142,7 @@ async function GET(request: Request) {
           Author: {
             select: {
               id: true,
+              username: true,
               Profile: true,
             },
           },
