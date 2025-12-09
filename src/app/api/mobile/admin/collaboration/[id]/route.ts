@@ -78,6 +78,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
             select: {
               User: {
                 select: {
+                  nomor: true,
                   username: true,
                   id: true,
                   Profile: {

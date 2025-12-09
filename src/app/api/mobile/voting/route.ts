@@ -123,6 +123,10 @@ async function GET(request: Request) {
           },
         },
       });
+
+      fixData = data;
+
+      
     } else if (category === "contribution") {
       const data = await prisma.voting_Kontributor.findMany({
         orderBy: {
