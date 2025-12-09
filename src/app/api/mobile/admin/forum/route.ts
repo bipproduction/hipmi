@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import _ from "lodash";
 
 export { GET };
 
@@ -51,7 +52,7 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         reportComment,
       };
     } else if (category === "posting") {
-      fixData = await prisma.forum_Posting.findMany({
+      const data = await prisma.forum_Posting.findMany({
         take: page ? takeData : undefined,
         skip: page ? skipData : undefined,
         orderBy: {
@@ -75,10 +76,24 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
               Profile: true,
             },
           },
+          _count: {
+            select: {
+              Forum_ReportPosting: true,
+              Forum_Komentar: true,
+            },
+          },
         },
       });
+
+      fixData = data.map((item) => ({
+        ..._.omit(item, "_count"),
+        reportPosting: item._count.Forum_ReportPosting,
+        komentar: item._count.Forum_Komentar,
+      }));
+
+      console.log("fixData >>", fixData);
     } else if (category === "report_posting") {
-      fixData = await prisma.forum_ReportPosting.findMany({
+      const data = await prisma.forum_ReportPosting.findMany({
         take: page ? takeData : undefined,
         skip: page ? skipData : undefined,
         orderBy: {
@@ -123,8 +138,25 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
           },
         },
       });
+
+      const filterLatest = (data: any) =>
+        Object.values(
+          data.reduce((acc: any, item: any) => {
+            const key = item.Forum_Posting?.id;
+            if (!key) return acc;
+            if (
+              !acc[key] ||
+              new Date(item.createdAt) > new Date(acc[key].createdAt)
+            ) {
+              acc[key] = item;
+            }
+            return acc;
+          }, {})
+        );
+
+      fixData = filterLatest(data);
     } else if (category === "report_comment") {
-      fixData = await prisma.forum_ReportKomentar.findMany({
+      const data = await prisma.forum_ReportKomentar.findMany({
         take: page ? takeData : undefined,
         skip: page ? skipData : undefined,
         orderBy: {
@@ -160,6 +192,23 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
           },
         },
       });
+
+      const filterLatest = (data: any) =>
+        Object.values(
+          data.reduce((acc: any, item: any) => {
+            const key = item.Forum_Komentar?.id;
+            if (!key) return acc;
+            if (
+              !acc[key] ||
+              new Date(item.createdAt) > new Date(acc[key].createdAt)
+            ) {
+              acc[key] = item;
+            }
+            return acc;
+          }, {})
+        );
+
+      fixData = filterLatest(data);
     } else {
       return NextResponse.json(
         {
@@ -170,7 +219,6 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         { status: 400 }
       );
     }
-
 
     return NextResponse.json(
       {
