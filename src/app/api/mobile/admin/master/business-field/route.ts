@@ -58,8 +58,6 @@ async function POST(request: Request) {
   try {
     const { data } = (await request.json()) as RequestBody;
 
-    console.log("body >>", data.bidang.name);
-
     if (!data.bidang.name || !Array.isArray(data.subBidang)) {
       return NextResponse.json(
         {
@@ -80,7 +78,6 @@ async function POST(request: Request) {
       `;
       const lastId = rows[0]?.id ?? null;
       const bidangId = lastId ? String(Number(lastId) + 1) : "1";
-      console.log("bidangId >>", bidangId);
 
       const slugName = data.bidang.name.toLowerCase().replace(/\s+/g, "_");
 
@@ -96,8 +93,6 @@ async function POST(request: Request) {
       const existingSubCount = await tx.masterSubBidangBisnis.count({
         where: { masterBidangBisnisId: createdBidang.id },
       });
-
-      console.log("existingSubCount >>", existingSubCount);
 
       // 3) generate unique ids satu-per-satu (cek ke DB via tx)
       const subBidangToCreate: {
