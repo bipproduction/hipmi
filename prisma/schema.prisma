@@ -587,7 +587,7 @@ model Donasi_Invoice {
 
   imageId      String?
   MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
-  masterBankId String?     @default("null")
+  masterBankId String?     
 }
 
 model Donasi_Kabar {

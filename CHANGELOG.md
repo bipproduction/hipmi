@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.28](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.27...v1.5.28) (2025-12-17)
+
 ## [1.5.27](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.26...v1.5.27) (2025-12-17)
 
 ## [1.5.26](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.25...v1.5.26) (2025-12-10)
