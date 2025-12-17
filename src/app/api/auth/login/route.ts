@@ -33,17 +33,23 @@ export async function POST(req: Request) {
     // const encodedMsg = encodeURIComponent(msg);
 
     const res = await fetch(
-      `https://wa.wibudev.com/code?nom=${nomor}&text=${msg}`,
-      { cache: "no-cache" }
+      `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=${nomor}&text=${msg}`,
+      {
+        cache: "no-cache",
+        headers: {
+          Authorization: `Bearer ${process.env.WA_SERVER_TOKEN}`,
+        },
+      }
     );
 
-    const sendWa = await res.json();
-
-    if (sendWa.status !== "success")
+    if (res.status !== 200)
       return NextResponse.json(
         { success: false, message: "Nomor Whatsapp Tidak Aktif" },
         { status: 400 }
       );
+
+    const sendWa = await res.text();
+    console.log("WA Response:", sendWa);
 
     return NextResponse.json(
       {
@@ -63,5 +69,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } 
+  }
 }
