@@ -70,7 +70,7 @@ export async function GET(
 
         for (let i of getAllData) {
           if (moment(i.akhirVote).diff(moment(), "minutes") < 0) {
-            await prisma.event.update({
+            await prisma.voting.update({
               where: {
                 id: i.id,
               },

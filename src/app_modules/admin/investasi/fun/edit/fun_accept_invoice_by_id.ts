@@ -13,10 +13,10 @@ export async function adminInvestasi_funAcceptTransaksiById({
   invoiceId: string;
   investasiId: string;
   lembarTerbeli: string;
-  }) {
-  console.log("Ini invoiceid", invoiceId)
-  console.log("Ini investasid", investasiId)
-  console.log("Ini lembar terbeli", lembarTerbeli)
+}) {
+  console.log("Ini invoiceid", invoiceId);
+  console.log("Ini investasid", investasiId);
+  console.log("Ini lembar terbeli", lembarTerbeli);
 
   const dataInvestasi: any = await prisma.investasi.findFirst({
     where: {
@@ -50,7 +50,6 @@ export async function adminInvestasi_funAcceptTransaksiById({
       statusInvoiceId: "1",
     },
   });
-  
 
   if (!updt) {
     return { status: 400, message: "Gagal Update Status" };
@@ -87,6 +86,3 @@ export async function adminInvestasi_funAcceptTransaksiById({
     };
   }
 }
-
-
-

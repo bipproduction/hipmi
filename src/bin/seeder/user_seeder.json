@@ -1,14 +1,23 @@
 [
   {
-    "name": "bagas_admin",
+    "name": "default_user",
     "nomor": "6282340374412",
+    "masterUserRoleId": "1",
+    "active": true,
+    "termsOfServiceAccepted": false
+  },
+  {
+    "name": "admin_911",
+    "nomor": "6281339158911",
     "masterUserRoleId": "3",
-    "active": true
+    "active": true,
+    "termsOfServiceAccepted": false
   },
   {
     "name": "fahmi_admin",
     "nomor": "628123833845",
     "masterUserRoleId": "2",
-    "active": true
+    "active": true,
+    "termsOfServiceAccepted": false
   }
 ]

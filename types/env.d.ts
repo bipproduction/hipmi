@@ -9,7 +9,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_WIBU_REALTIME_TOKEN?: string;
     NEXT_PUBLIC_BASE_TOKEN_KEY?: string;
     NEXT_PUBLIC_BASE_SESSION_KEY?: string;
-    NEXT_PUBLIC_API_URL?: string;
+    RESEND_APIKEY?: string;
+    WA_SERVER_TOKEN?: string;
   }
 }
-

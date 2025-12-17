@@ -49,8 +49,16 @@ model User {
   BusinessMaps                         BusinessMaps[]
   Investasi_Invoice                    Investasi_Invoice[]
 
-  EventSponsor   EventSponsor[]
-  EventTransaksi EventTransaksi[]
+  EventSponsor           EventSponsor[]
+  EventTransaksi         EventTransaksi[]
+  termsOfServiceAccepted Boolean          @default(false)
+
+  blockedUsers BlockedUser[] @relation("Blocking")
+  blockedBy    BlockedUser[] @relation("BlockedBy")
+
+  acceptedTermsAt      DateTime?
+  acceptedForumTermsAt DateTime?
+  tokenUserDevices     TokenUserDevice[]
 }
 
 model MasterUserRole {
@@ -202,6 +210,7 @@ model MasterBank {
   updatedAt         DateTime            @updatedAt
   Investasi_Invoice Investasi_Invoice[]
   EventTransaksi    EventTransaksi[]
+  Donasi_Invoice    Donasi_Invoice[]
 }
 
 model MasterStatus {
@@ -576,7 +585,9 @@ model Donasi_Invoice {
   Images                       Images?                     @relation(fields: [imagesId], references: [id])
   imagesId                     String?
 
-  imageId String?
+  imageId      String?
+  MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
+  masterBankId String?     
 }
 
 model Donasi_Kabar {
@@ -963,16 +974,19 @@ model NomorAdmin {
 }
 
 model Notifikasi {
-  id          String   @id @default(cuid())
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isRead      Boolean  @default(false)
+  id          String    @id @default(cuid())
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   appId       String
   kategoriApp String
   pesan       String
   title       String?
   status      String?
+  
+  isRead      Boolean   @default(false)
+  readAt      DateTime? // kapan user membaca notifikasi ini
+  deepLink    String? // misal: "announcement/123", "user/profile/cmha6wb9w0001cfndwl9fcse6"
 
   Role       MasterUserRole? @relation(fields: [userRoleId], references: [id])
   userRoleId String
@@ -1008,6 +1022,8 @@ model MasterKategoriApp {
   updatedAt DateTime @updatedAt
   name      String
   value     String?
+
+  blockedUsers BlockedUser[]
 }
 
 // ======================= EVENT ======================= //
@@ -1069,4 +1085,40 @@ model Sticker {
   jenisKelamin String?
 
   MasterEmotions MasterEmotions[] @relation("StikerEmotions")
+}
+
+model BlockedUser {
+  id        String   @id @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blockerId String // ID user yang memblokir
+  blockedId String // ID user yang diblokir
+
+  menuFeatureId String
+  menuFeature   MasterKategoriApp @relation(fields: [menuFeatureId], references: [id])
+
+  blocker User @relation("BlockedBy", fields: [blockerId], references: [id])
+  blocked User @relation("Blocking", fields: [blockedId], references: [id])
+
+  @@unique([blockerId, blockedId])
+}
+
+model TokenUserDevice {
+  id        String   @id @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  platform   String? // "ios" | "android"
+  deviceId   String? // UUID unik dari device (misal: dari expo-device)
+  model      String? // "iPhone15,4", "Pixel 7", dll
+  appVersion String? // "1.5.15" — sangat berguna saat debug
+
+  token  String  @db.Text
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@index([userId])
+  @@index([token]) // untuk pencarian cepat & deduplikasi
 }

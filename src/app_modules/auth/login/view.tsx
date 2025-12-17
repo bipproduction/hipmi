@@ -21,17 +21,24 @@ import { apiFetchLogin } from "../_lib/api_fetch_auth";
 
 export default function Login({ version }: { version: string }) {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
 
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState<string>("62"); // default ke Indonesia
+
   async function onLogin() {
-    const nomor = phone.substring(1);
+    console.log("phone >>", phone);
+
+    const nomor = phone;
     if (nomor.length <= 4) return setError(true);
+
+    const fixPhone = `${countryCode}${nomor}`;
+    console.log("fixPhone >>", fixPhone);
 
     try {
       setLoading(true);
-      const respone = await apiFetchLogin({ nomor: nomor });
+      const respone = await apiFetchLogin({ nomor: fixPhone });
 
       if (respone && respone.success) {
         localStorage.setItem("hipmi_auth_code_id", respone.kodeId);
@@ -72,16 +79,38 @@ export default function Login({ version }: { version: string }) {
             <Center>
               <Text c={MainColor.white}>Nomor telepon</Text>
             </Center>
+
             <PhoneInput
               countrySelectorStyleProps={{
                 buttonStyle: {
                   backgroundColor: MainColor.login,
                 },
               }}
-              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
               defaultCountry="id"
-              onChange={(val) => {
-                setPhone(val);
+              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
+              onChange={(fullPhone, meta) => {
+                const dialCode = meta.country.dialCode; // string, misal: "62"
+                let localNumber = fullPhone;
+
+                // Hapus kode negara dari awal string
+                if (fullPhone.startsWith(`+${dialCode}`)) {
+                  localNumber = fullPhone.slice(`+${dialCode}`.length);
+                }
+
+                // Bersihkan semua non-digit
+                localNumber = localNumber.replace(/\D/g, "");
+
+                // ✅ Filter khusus: untuk Indonesia (+62), hapus leading zero
+                if (dialCode === "62" && localNumber.startsWith("0")) {
+                  localNumber = localNumber.replace(/^0+/, ""); // hapus semua 0 di awal
+                }
+
+                // Simpan hasil akhir
+                setCountryCode(dialCode);
+                setPhone(localNumber);
+
+                // console.log("Country Code:", dialCode);
+                // console.log("Clean Local Number:", localNumber);
               }}
             />
 

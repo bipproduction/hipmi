@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app_modules/investasi/proses_transaksi/view.jsx", "src/app/api/investasi/midtrans/[id]/route.ts", "src/app_modules/job/create/TextEdit.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app_modules/investasi/proses_transaksi/view.jsx", "src/app/api/investasi/midtrans/[id]/route.ts", "src/app_modules/job/create/TextEdit.tsx", "src/app/api/mobile/forum/[id]/report-comment/route.ts"],
   "exclude": ["node_modules"]
 }

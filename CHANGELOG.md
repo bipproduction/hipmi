@@ -2,6 +2,222 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.28](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.27...v1.5.28) (2025-12-17)
+
+## [1.5.27](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.26...v1.5.27) (2025-12-17)
+
+## [1.5.26](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.25...v1.5.26) (2025-12-10)
+
+## [1.5.25](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.24...v1.5.25) (2025-12-09)
+
+## [1.5.24](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.22...v1.5.24) (2025-12-08)
+
+## [1.5.22](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.21...v1.5.22) (2025-12-03)
+
+## [1.5.21](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.20...v1.5.21) (2025-12-03)
+
+## [1.5.20](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.19...v1.5.20) (2025-12-02)
+
+## [1.5.19](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.18...v1.5.19) (2025-12-01)
+
+## [1.5.18](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.17...v1.5.18) (2025-11-28)
+
+## [1.5.17](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.16...v1.5.17) (2025-11-24)
+
+
+### Bug Fixes
+
+* delete all data user ([fb9515d](https://wibugit.wibudev.com/wibu/hipmi/commit/fb9515dfe465ef07d43460ca4e9bb31705ec48b8))
+
+## [1.5.16](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.15...v1.5.16) (2025-11-20)
+
+## [1.5.15](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.14...v1.5.15) (2025-11-18)
+
+## [1.5.14](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.13...v1.5.14) (2025-11-17)
+
+## [1.5.13](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.12...v1.5.13) (2025-11-17)
+
+## [1.5.12](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.10...v1.5.12) (2025-11-13)
+
+## [1.5.11](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.4.45...v1.5.11) (2025-11-07)
+
+## [1.5.10](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.9...v1.5.10) (2025-11-03)
+
+## [1.5.9](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.8...v1.5.9) (2025-10-30)
+
+## [1.5.8](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.7...v1.5.8) (2025-10-29)
+
+## [1.5.7](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.6...v1.5.7) (2025-10-28)
+
+## [1.5.6](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.5...v1.5.6) (2025-10-21)
+
+## [1.5.5](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.4...v1.5.5) (2025-10-20)
+
+## [1.5.4](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.3...v1.5.4) (2025-10-17)
+
+## [1.5.3](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.2...v1.5.3) (2025-10-16)
+
+## [1.5.2](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.1...v1.5.2) (2025-10-15)
+
+## [1.5.1](https://wibugit.wibudev.com/bip/hipmi/compare/v1.5.0...v1.5.1) (2025-10-14)
+
+## 1.5.0 (2025-10-09)
+
+
+### Features
+
+* admin app information ([bc10b80](https://wibugit.wibudev.com/bip/hipmi/commit/bc10b80139833966d3e39b52cabf577930552052))
+* admin sticker ([2a8c79f](https://wibugit.wibudev.com/bip/hipmi/commit/2a8c79fd09c3f7fd7ee58ac6896b17802dfe0147))
+* admin stiker ([e7858a2](https://wibugit.wibudev.com/bip/hipmi/commit/e7858a281223a81037219afec58e5f6b9e04be15))
+* **app / dev / login:** membuat page login ([91333b5](https://wibugit.wibudev.com/bip/hipmi/commit/91333b5c00b87da35a0d965f0678ff971484825b))
+* **app / dev / page:** modified file ([90c32b3](https://wibugit.wibudev.com/bip/hipmi/commit/90c32b345c1099c943a9b8f67b8aa257941484d9))
+* **app / dev / register:** membuat page register ([1e06aeb](https://wibugit.wibudev.com/bip/hipmi/commit/1e06aeb6998f00d77fa74849de11be182a0be676))
+* **dashboard admin:** membuat dashboard admin ([46da772](https://wibugit.wibudev.com/bip/hipmi/commit/46da772f3895bde770942c3d9044e6da0620ef1c))
+* **dashboard super admin:** membuat dashboard super admin ([c363736](https://wibugit.wibudev.com/bip/hipmi/commit/c3637366f9ebf24507c470714952ad2e572a0b0d))
+* **image:** menambahkan gambar logo ([c74bb6e](https://wibugit.wibudev.com/bip/hipmi/commit/c74bb6eceb401c55c3c297889fe43181406f3a22))
+* **landing page:** buat komponen landing page ([38cb10d](https://wibugit.wibudev.com/bip/hipmi/commit/38cb10da4ac8d68f1abd0163a0671036c15e1743))
+* **login:** - Membuat login page - Membuat register page ([b6cc83c](https://wibugit.wibudev.com/bip/hipmi/commit/b6cc83c004cacb2289c51491fce7ebc2b29e126f))
+* **src/app/page:** mengedit page ([ca66fde](https://wibugit.wibudev.com/bip/hipmi/commit/ca66fde1dc6751f3749cb1d582f7bbd299241318))
+* tambah dependensi 'jose' versi 5.9.2 pada package.json ([6ee43ed](https://wibugit.wibudev.com/bip/hipmi/commit/6ee43ed20faa273cbca0be948295e95d36bbd760))
+* tampilan upload stiker di admin ([fbea35e](https://wibugit.wibudev.com/bip/hipmi/commit/fbea35eef96a656e1b474959aa3fb8198c7d2b0e))
+
+
+### Bug Fixes
+
+* admin ([604077c](https://wibugit.wibudev.com/bip/hipmi/commit/604077cc8dda568951fa1cd1b8ddfe862e1d321d))
+* Admin ([74108c3](https://wibugit.wibudev.com/bip/hipmi/commit/74108c30969bd2c607b51f302209de91430e7792))
+* admin app info ([117dbe6](https://wibugit.wibudev.com/bip/hipmi/commit/117dbe6157fbb74d359db1c8baffe3c4985fab4a))
+* admin app info ([0cbcee8](https://wibugit.wibudev.com/bip/hipmi/commit/0cbcee87bd52f6a7b596e260841deef9d4615016))
+* admin collaboration ([039ffc5](https://wibugit.wibudev.com/bip/hipmi/commit/039ffc57b18d24968d854d06cd62fff13b769a6f))
+* admin donasi ([6ccdbf9](https://wibugit.wibudev.com/bip/hipmi/commit/6ccdbf9763c1ce8443a6a691b24817d6b80265c6))
+* admin donasi ([d624d61](https://wibugit.wibudev.com/bip/hipmi/commit/d624d61a33069a9c578a1af780bc2229dd3bad96))
+* admin forum ([aba2585](https://wibugit.wibudev.com/bip/hipmi/commit/aba258517db277fd85d043c3aa4df279a5ec232d))
+* admin investasi ([9b4a6fd](https://wibugit.wibudev.com/bip/hipmi/commit/9b4a6fdc1c49ea982bb5e166aa8b3f4f40b3a392))
+* admin job ([3aea046](https://wibugit.wibudev.com/bip/hipmi/commit/3aea0460462e87c30b0e7a939a24aaf5d9ce6978))
+* admin map ([8cedf7d](https://wibugit.wibudev.com/bip/hipmi/commit/8cedf7db61702dc67300fdd11570022d84b1d857))
+* Bug ([7e9dfce](https://wibugit.wibudev.com/bip/hipmi/commit/7e9dfce293bda5a4577ea16a4867e340b9883b3f))
+* button sticker ([3743008](https://wibugit.wibudev.com/bip/hipmi/commit/37430081d8718b4b2b06f5c3c09f13935bf413c4))
+* collaboration ([5030253](https://wibugit.wibudev.com/bip/hipmi/commit/5030253b07c1264229d066d18732d81e2636c5a6))
+* collaboration ([740ae44](https://wibugit.wibudev.com/bip/hipmi/commit/740ae447340ce48d168e0e8e7c14079b3cf61817))
+* collaboration ([bdff760](https://wibugit.wibudev.com/bip/hipmi/commit/bdff760f7021c624f8338da3af2d46c911b1dcff))
+* collaboration ([5007827](https://wibugit.wibudev.com/bip/hipmi/commit/5007827d51117105b879bf18f06da60db8c48ff4))
+* Cookies ([038c40a](https://wibugit.wibudev.com/bip/hipmi/commit/038c40a6fbc4062e1c3f1659ec0d1a4ab92205ae))
+* Cookies ([abaec2c](https://wibugit.wibudev.com/bip/hipmi/commit/abaec2c1c3be2a54975246e89cfe7047c962f2a8))
+* dashboard admin ([ac432d1](https://wibugit.wibudev.com/bip/hipmi/commit/ac432d1eb7b975d621889b0d2e13e366e806cf56))
+* Db Profile ([cf9355e](https://wibugit.wibudev.com/bip/hipmi/commit/cf9355e91f623171e7708d37a9ce8590ff473a44))
+* donasi ([f2c6940](https://wibugit.wibudev.com/bip/hipmi/commit/f2c694022e510ea99726cfffaf06b6cfffb808c1))
+* donasi ([1f1cca3](https://wibugit.wibudev.com/bip/hipmi/commit/1f1cca3520ff22b878e945383a580b32a3054a3d))
+* donasi ([e94090e](https://wibugit.wibudev.com/bip/hipmi/commit/e94090eb30c2f34af08816b3c4ad8ac4cbd360e8))
+* donasi ([bb65042](https://wibugit.wibudev.com/bip/hipmi/commit/bb650429b323670c85adc582eda8ff522bd4dd60))
+* donasi ([886d9f3](https://wibugit.wibudev.com/bip/hipmi/commit/886d9f37f4636576b8a89020537e13708f582431))
+* donasi ([709de95](https://wibugit.wibudev.com/bip/hipmi/commit/709de95b10650ae1472b75d73bdd0bf20306633e))
+* donasi ([9c5f005](https://wibugit.wibudev.com/bip/hipmi/commit/9c5f0053b6b834c67f170767e28dd9e04c5614a4))
+* donasi ([4fdfb6f](https://wibugit.wibudev.com/bip/hipmi/commit/4fdfb6f4b0548d78a712443ac24e37e933665d41))
+* donasi ([1b23c50](https://wibugit.wibudev.com/bip/hipmi/commit/1b23c50ff08f2bbb46ecfeec9d0c02c03f9230c1))
+* donasi ([0e4dda5](https://wibugit.wibudev.com/bip/hipmi/commit/0e4dda5356df96f4dc749c5a7d5613e378eb6096))
+* donasi ([72b6d23](https://wibugit.wibudev.com/bip/hipmi/commit/72b6d239fee3e90e812ab24192154e5e8910fccb))
+* Donasi ([517b2bb](https://wibugit.wibudev.com/bip/hipmi/commit/517b2bb9b0e256d31d7a10332a6e7880c58ad48f))
+* Donasi ([2335807](https://wibugit.wibudev.com/bip/hipmi/commit/2335807b427ee24e7a28ae78a3ca9dae981a79e2))
+* Donasi ([a798f9a](https://wibugit.wibudev.com/bip/hipmi/commit/a798f9a3bc9996811ca55e70ea407297e1f939d8))
+* drawer katalog ([eab293d](https://wibugit.wibudev.com/bip/hipmi/commit/eab293dd35a6f061cfa4675679de1ce68f506c3c))
+* dynamic error ([86bfbcb](https://wibugit.wibudev.com/bip/hipmi/commit/86bfbcb60e225adcba6504869cf8548370fc6750))
+* event ([6f686b6](https://wibugit.wibudev.com/bip/hipmi/commit/6f686b6abf4ba6201df632938e4024004fe749b3))
+* event ([02bbdfd](https://wibugit.wibudev.com/bip/hipmi/commit/02bbdfd5f6a2d299b8d527b9211f7b6ff598602f))
+* event ([fc38813](https://wibugit.wibudev.com/bip/hipmi/commit/fc388133a638d4288314dd3faeddfcce61fe7292))
+* Event ([45279cd](https://wibugit.wibudev.com/bip/hipmi/commit/45279cd37fb4b2a293012c9cb1a8d6e977d0edb3))
+* Event ([1f8bfcb](https://wibugit.wibudev.com/bip/hipmi/commit/1f8bfcbed924ec1b53cdcc42393884f554299c5b))
+* Event ([8f76067](https://wibugit.wibudev.com/bip/hipmi/commit/8f760673804d114c3f04ce65a648fa0ff5962822))
+* Event ([81543d6](https://wibugit.wibudev.com/bip/hipmi/commit/81543d678cb515b36f8393ee257b8a6a6c4a0834))
+* File view ([84b7b38](https://wibugit.wibudev.com/bip/hipmi/commit/84b7b381f62d2f69d8b1e9d7c2411175e5d48e38))
+* forum ([0de70b0](https://wibugit.wibudev.com/bip/hipmi/commit/0de70b038429a63be25b669ef6d8732e2312fd9d))
+* forum ([42cfe65](https://wibugit.wibudev.com/bip/hipmi/commit/42cfe650b565c02eb7ebf639ecef41c188ad4449))
+* forum ([512d170](https://wibugit.wibudev.com/bip/hipmi/commit/512d170c3e047848c9b26144533e50720e04950b))
+* forum admin ([4b8316c](https://wibugit.wibudev.com/bip/hipmi/commit/4b8316cc1311eb88840c029f1dfdb6a43e3a7f4f))
+* Image donasi ([0371ca5](https://wibugit.wibudev.com/bip/hipmi/commit/0371ca5e0137354bb0d7a89300aa112112cf194d))
+* investasi ([69c0abe](https://wibugit.wibudev.com/bip/hipmi/commit/69c0abed75cb7b777c7072969e8826663dd32fdc))
+* investasi ([7a95395](https://wibugit.wibudev.com/bip/hipmi/commit/7a95395fe9861997527d76f08073db8de4ba48aa))
+* Investasi ([5ff74b0](https://wibugit.wibudev.com/bip/hipmi/commit/5ff74b00f55751cc951b959f2d9bccda403158dc))
+* investasi: ([5c3fe55](https://wibugit.wibudev.com/bip/hipmi/commit/5c3fe551aeb57bdd24ad616f9cbe37c2d417efca))
+* Job ([1b58ba7](https://wibugit.wibudev.com/bip/hipmi/commit/1b58ba7d905f490fdba9e1d90e722faf251b2ae3))
+* Job ([aa612d2](https://wibugit.wibudev.com/bip/hipmi/commit/aa612d24bc7cb729db66841bd3a48379cf875f70))
+* Job ([30743b0](https://wibugit.wibudev.com/bip/hipmi/commit/30743b02ae0c2d0a83310af05711ed255000c7ce))
+* loading button tambah portofolio ([8823a01](https://wibugit.wibudev.com/bip/hipmi/commit/8823a01b067928cbeea195402f2bb454df8e8bea))
+* Map ([f23defd](https://wibugit.wibudev.com/bip/hipmi/commit/f23defd972fbd276fee546677dc5e9565651b4f4))
+* Map ([56548b4](https://wibugit.wibudev.com/bip/hipmi/commit/56548b425876a7fa9be49f2a290de6a1916609a1))
+* Middlerawe/1 ([cc690ee](https://wibugit.wibudev.com/bip/hipmi/commit/cc690eec0686e4306a440a8b38fffacb2c2b78c6))
+* Middlerawe/2 ([ac749f3](https://wibugit.wibudev.com/bip/hipmi/commit/ac749f3d9d348162a2b8e8c88091dce97f9cca27))
+* Middlerawe/3 ([10dee19](https://wibugit.wibudev.com/bip/hipmi/commit/10dee19f98b011de19a21e9ef4a5282e37ffdf38))
+* Middlerawe/4 ([0a03b05](https://wibugit.wibudev.com/bip/hipmi/commit/0a03b05d4e0d9c369844859cac8879ba5505efa7))
+* Middlerawe/5 ([6e5a9f7](https://wibugit.wibudev.com/bip/hipmi/commit/6e5a9f785a06f6b31b6010f8b89dfd146112a44a))
+* Middlerawe/6 ([b9e4b97](https://wibugit.wibudev.com/bip/hipmi/commit/b9e4b97b31f1f86cd3ee64c1a51827d3d724b1e7))
+* Middlerawe/7 ([13c855f](https://wibugit.wibudev.com/bip/hipmi/commit/13c855f2f64212857cb6c143f135d2fe160d9ee9))
+* middleware ([31124c5](https://wibugit.wibudev.com/bip/hipmi/commit/31124c5500d10a4d831c45c0da1a46a1dee995db))
+* Navbar admin ([6b8ace7](https://wibugit.wibudev.com/bip/hipmi/commit/6b8ace772c54aa00eebf9228da0d1543ed593d2d))
+* Navbar admin ([5fcb09b](https://wibugit.wibudev.com/bip/hipmi/commit/5fcb09b88906e74c2f2be76f5fd325daa48f5ae5))
+* nested layout ([c202cc8](https://wibugit.wibudev.com/bip/hipmi/commit/c202cc8ea08ce8cdb351136a47c2afe10afb14c9))
+* Notifikasi ([82f5b23](https://wibugit.wibudev.com/bip/hipmi/commit/82f5b237ae52dc087711452f4bd6baa7acce8a1f))
+* pencegahan error ([afe8014](https://wibugit.wibudev.com/bip/hipmi/commit/afe8014cc8b4ab7266f3c52918a6bc82bb62bc58))
+* Profile ([b13110b](https://wibugit.wibudev.com/bip/hipmi/commit/b13110be6f475df7d5b36909cdc8f92f80a62d57))
+* super admin ([5bc70ba](https://wibugit.wibudev.com/bip/hipmi/commit/5bc70baf96e792e1e1492027747f8352f2f80313))
+* test new github ([555b6e7](https://wibugit.wibudev.com/bip/hipmi/commit/555b6e76332d867fc72b51cc1163fd6911a63288))
+* update version ([3d6ec14](https://wibugit.wibudev.com/bip/hipmi/commit/3d6ec1410d0a54bad35dea2740101aaad589fdd7))
+* update version in package.json ([ca99de7](https://wibugit.wibudev.com/bip/hipmi/commit/ca99de7dd5a48dca66f33b3d63b6c278e0367c9d))
+* Upload image ([360ba26](https://wibugit.wibudev.com/bip/hipmi/commit/360ba267ec69404dd45bb7d6510fe6113d9087ab))
+* Upload image ([370e3ec](https://wibugit.wibudev.com/bip/hipmi/commit/370e3ec4e4c6e1f342c966feb7a65b62a09d2945))
+* user ([215accb](https://wibugit.wibudev.com/bip/hipmi/commit/215accbcaa989e43f43dfc5f400d5411013f4ef3))
+* User search & Event ([ca5c304](https://wibugit.wibudev.com/bip/hipmi/commit/ca5c30499a2630e5d8a8c87f569f2b50fa88ad6e))
+* validasi ([a6548f7](https://wibugit.wibudev.com/bip/hipmi/commit/a6548f7b364e403d5265a0015003021b5c11f004))
+* version 1.2.10 ([08eed15](https://wibugit.wibudev.com/bip/hipmi/commit/08eed15b798d549146b035ffd9a44cea5e55b283))
+* version 1.2.11 ([7afcc9c](https://wibugit.wibudev.com/bip/hipmi/commit/7afcc9ced02eafab1df669fd71fdbcd4556bb322))
+* version 1.2.12 ([932735f](https://wibugit.wibudev.com/bip/hipmi/commit/932735f9238db07b331b1b26328624247371c3d6))
+* version 1.2.6 ([13142f2](https://wibugit.wibudev.com/bip/hipmi/commit/13142f283d804fead233cf6bff6a41e4732a3ec0))
+* version 1.2.7 ([1b83de0](https://wibugit.wibudev.com/bip/hipmi/commit/1b83de0189b4581a8511cc58af2de0d5c613646b))
+* version 1.2.8 ([378b2c1](https://wibugit.wibudev.com/bip/hipmi/commit/378b2c19ff7a7fb07647c6a093d803d299c091f7))
+* version 1.2.8 ([23edb2d](https://wibugit.wibudev.com/bip/hipmi/commit/23edb2d6317f2a8344ac3190f492f718c05b65c9))
+* voting ([c057f20](https://wibugit.wibudev.com/bip/hipmi/commit/c057f20963df70f4ce2ac071007541678c6ff854))
+* Voting ([e65a8d3](https://wibugit.wibudev.com/bip/hipmi/commit/e65a8d30a2a70593f3e4268518ae4c0c542a02dd))
+* voting status ([9bb68b2](https://wibugit.wibudev.com/bip/hipmi/commit/9bb68b216fc444e390fccf7131af886bc6d12d60))
+* voting status ([e5e36a3](https://wibugit.wibudev.com/bip/hipmi/commit/e5e36a38893f21037688cd3153a57dc29ce1347e))
+
+## [1.4.45](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.44...v1.4.45) (2025-10-06)
+
+## [1.4.44](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.43...v1.4.44) (2025-10-02)
+
+## [1.4.43](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.42...v1.4.43) (2025-09-29)
+
+## [1.4.42](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.41...v1.4.42) (2025-09-24)
+
+## [1.4.41](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.40...v1.4.41) (2025-09-23)
+
+## [1.4.40](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.39...v1.4.40) (2025-09-22)
+
+## [1.4.39](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.38...v1.4.39) (2025-09-19)
+
+## [1.4.38](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.37...v1.4.38) (2025-09-18)
+
+## [1.4.37](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.36...v1.4.37) (2025-09-16)
+
+## [1.4.36](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.35...v1.4.36) (2025-09-15)
+
+## [1.4.35](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.34...v1.4.35) (2025-09-12)
+
+## [1.4.34](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.33...v1.4.34) (2025-09-01)
+
+## [1.4.33](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.32...v1.4.33) (2025-08-29)
+
+## [1.4.32](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.31...v1.4.32) (2025-08-29)
+
+## [1.4.31](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.30...v1.4.31) (2025-08-27)
+
+## [1.4.30](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.29...v1.4.30) (2025-08-26)
+
+## [1.4.29](https://wibugit.wibudev.com/bip/hipmi/compare/v1.4.28...v1.4.29) (2025-08-25)
+
+
+### Bug Fixes
+
+* test new github ([555b6e7](https://wibugit.wibudev.com/bip/hipmi/commit/555b6e76332d867fc72b51cc1163fd6911a63288))
+
 ## [1.4.28](https://github.com/bipproduction/hipmi/compare/v1.4.27...v1.4.28) (2025-06-16)
 
 ## [1.4.27](https://github.com/bipproduction/hipmi/compare/v1.4.26...v1.4.27) (2025-06-16)
