@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const { data } = await request.json();
-    const { fcmToken, title, body: notificationBody } = data;
+    const { fcmToken, title, body: notificationBody, userLoginId } = data;
 
     console.log("Data Notifikasi >>", data);
 
@@ -16,24 +16,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const message = {
-      token: fcmToken,
-      notification: {
-        title,
-        body: notificationBody || "",
+    const deviceToken = await prisma.tokenUserDevice.findMany({
+      where: {
+        isActive: true,
+        NOT: {
+          userId: userLoginId,
+        },
       },
-      data: {
-        sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
-        // contoh: senderId, type, etc.
-      },
-    };
+    });
 
-    console.log("[MSG]", message);
+    for (let i of deviceToken) {
+      const message = {
+        token: i.token,
+        notification: {
+          title,
+          body: notificationBody || "",
+        },
+        data: {
+          sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
+          // contoh: senderId, type, etc.
+        },
+      };
+      console.log("[MSG]", message);
 
-    const response = await adminMessaging.send(message);
-    console.log("✅ FCM sent:", response);
+      const response = await adminMessaging.send(message);
+      console.log("✅ FCM sent:", response);
+    }
 
-    return NextResponse.json({ success: true, messageId: response });
+    return NextResponse.json({
+      success: true,
+      message: "Notification sent successfully",
+    });
   } catch (error: any) {
     console.error("❌ FCM error:", error);
     return NextResponse.json(
