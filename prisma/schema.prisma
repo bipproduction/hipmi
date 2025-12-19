@@ -987,6 +987,7 @@ model Notifikasi {
   isRead      Boolean   @default(false)
   readAt      DateTime? // kapan user membaca notifikasi ini
   deepLink    String? // misal: "announcement/123", "user/profile/cmha6wb9w0001cfndwl9fcse6"
+  type        String?
 
   Role       MasterUserRole? @relation(fields: [userRoleId], references: [id])
   userRoleId String

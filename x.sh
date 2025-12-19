@@ -3,10 +3,13 @@ URL="http://localhost:3000"
 # curl -X GET -H "Authorization: Bearer $TOKEN" ${URL}/api/middleware
 # curl -X GET -H "Cookie: hipmi-key=$TOKEN; user_id=789" ${URL}/dev/home | tee test.html
 
-curl -X POST ${URL}/api/mobile/notifications \
+curl -X POST ${URL}/api/mobile/notification \
   -H "Content-Type: application/json" \
   -d '{
     "fcmToken": "cVmHm-3P4E-1vjt6AA9kSF:APA91bHTkHjGTLxrFsb6Le6bZmzboZhwMGYXU4p0FP9yEeXixLDXNKS4F5vLuZV3sRgSnjjQsPpLOgstVLHJB8VJTObctKLdN-CxAp4dnP7Jbc_mH53jWvs",
     "title": "Test dari Backend (App Router)!",
-    "body": "Berhasil di App Router!"
+    "body": "Berhasil di App Router!",
+    "userLoginId": "cmha7p6yc0000cfoe5w2e7gdr",
+    "type": "NOTIFICATION",
+    "kategoriApp": "PERCOBAAN"
   }'

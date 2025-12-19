@@ -24,6 +24,9 @@ async function POST(request: NextRequest) {
       },
     });
 
+
+    console.log("✅ EX", existing);
+
     let deviceToken;
 
     if (existing) {
