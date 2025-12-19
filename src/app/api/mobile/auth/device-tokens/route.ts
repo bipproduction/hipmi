@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib";
 
-export async function POST(request: NextRequest) {
+export { POST, GET };
+
+async function POST(request: NextRequest) {
   const { data } = await request.json();
   try {
     console.log("Data >>", JSON.stringify(data, null, 2));
 
-    const { userId, platform, deviceId, model, appVersion, fcmToken } =
-      data;
+    const { userId, platform, deviceId, model, appVersion, fcmToken } = data;
 
     if (!fcmToken) {
       return NextResponse.json({ error: "Missing Token" }, { status: 400 });
@@ -22,6 +23,9 @@ export async function POST(request: NextRequest) {
         id: true,
       },
     });
+
+
+    console.log("✅ EX", existing);
 
     let deviceToken;
 
@@ -55,6 +59,25 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: deviceToken });
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
+  }
+}
+
+async function GET(request: NextRequest) {
+  try {
+    const data = await prisma.tokenUserDevice.findMany({
+      where: {
+        isActive: true,
+      },
+    });
+
+    return NextResponse.json({ success: true, data });
+
+
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
