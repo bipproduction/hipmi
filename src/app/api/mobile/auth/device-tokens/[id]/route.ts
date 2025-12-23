@@ -8,10 +8,17 @@ async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
+  const { searchParams } = new URL(request.url);
+  const deviceId = searchParams.get("deviceId");
+
+  console.log("ID", id);
+  console.log("DEVICE ID", deviceId);
+
   try {
     const findFirst = await prisma.tokenUserDevice.findFirst({
       where: {
         userId: id,
+        deviceId: deviceId as any,
       },
     });
 

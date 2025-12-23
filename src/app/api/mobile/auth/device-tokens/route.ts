@@ -6,7 +6,6 @@ export { POST, GET };
 async function POST(request: NextRequest) {
   const { data } = await request.json();
   try {
-    console.log("Data >>", JSON.stringify(data, null, 2));
 
     const { userId, platform, deviceId, model, appVersion, fcmToken } = data;
 
