@@ -6,6 +6,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
+  console.log("User ID:", id);
 
   try {
     const data = await prisma.notifikasi.count({
@@ -28,7 +29,3 @@ export async function GET(
     });
   }
 }
-
-type Pilihan = "PENGIRIM" | "PENERIMA";
-
-const data: Pilihan = "PENERIMA";

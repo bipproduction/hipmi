@@ -12,7 +12,6 @@ type NotificationProp = {
   kategoriApp?: string;
   type?: string;
   deepLink?: string;
-  // sendTo: "user" | "admin" | "all";
 };
 
 export async function POST(request: NextRequest) {
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
       appId,
       status,
       deepLink,
-      // sendTo,
     } = data as NotificationProp;
 
     console.log("Notification Send >>", data);
@@ -75,7 +73,7 @@ export async function POST(request: NextRequest) {
     console.log("Find All User By Send To >>", findAllUserBySendTo);
 
     for (let a of findAllUserBySendTo) {
-      const responseCreateToAdmin = await createNotification({
+      const responseCreatedNotifications = await createNotification({
         title,
         type: type as string,
         createdAt: new Date(),
@@ -89,14 +87,11 @@ export async function POST(request: NextRequest) {
         recipientId: a.id,
       });
 
-      if (responseCreateToAdmin) {
+      if (responseCreatedNotifications) {
         const deviceToken = await prisma.tokenUserDevice.findMany({
           where: {
             userId: a.id,
             isActive: true,
-            // user: {
-            //   masterUserRoleId: "2",
-            // },
           },
         });
 
@@ -109,6 +104,8 @@ export async function POST(request: NextRequest) {
             },
             data: {
               sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
+              id: responseCreatedNotifications.id,
+              deepLink: deepLink || "",
               // contoh: senderId, type, etc.
             },
           };
@@ -123,193 +120,6 @@ export async function POST(request: NextRequest) {
         });
       }
     }
-
-    // if (sendTo === "admin") {
-    //   for (let a of findAllUserBySendTo) {
-    //     const responseCreateToAdmin = await createNotification({
-    //       title,
-    //       type: type as string,
-    //       createdAt: new Date(),
-    //       pesan: notificationBody || "",
-    //       appId: appId as string,
-    //       kategoriApp: kategoriApp as string,
-    //       userRoleId: findUserLogin.masterUserRoleId,
-    //       status: status,
-    //       deepLink: deepLink,
-    //       adminId: a.id,
-    //       userId: findUserLogin.id,
-    //     });
-
-    //     if (responseCreateToAdmin) {
-    //       const deviceToken = await prisma.tokenUserDevice.findMany({
-    //         where: {
-    //           userId: a.id,
-    //           isActive: true,
-    //           // user: {
-    //           //   masterUserRoleId: "2",
-    //           // },
-    //         },
-    //       });
-
-    //       for (let i of deviceToken) {
-    //         const message = {
-    //           token: i.token,
-    //           notification: {
-    //             title,
-    //             body: notificationBody || "",
-    //           },
-    //           data: {
-    //             sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
-    //             // contoh: senderId, type, etc.
-    //           },
-    //         };
-
-    //         const response = await adminMessaging.send(message);
-    //         console.log("✅ FCM sent:", response);
-    //       }
-    //     } else {
-    //       return NextResponse.json({
-    //         success: false,
-    //         message: "Failed to create notification",
-    //       });
-    //     }
-    //   }
-    // } else if (sendTo === "user") {
-    //   for (let a of findAllUserBySendTo) {
-    //     const responseCreateToUser = await createNotification({
-    //       title,
-    //       type: type as string,
-    //       createdAt: new Date(),
-    //       pesan: notificationBody || "",
-    //       appId: appId as string,
-    //       kategoriApp: kategoriApp as string,
-    //       userRoleId: findUserLogin.masterUserRoleId,
-    //       status: status,
-    //       deepLink: deepLink,
-    //       adminId: findUserLogin.id,
-    //       userId: a.id,
-    //     });
-
-    //     if (responseCreateToUser) {
-    //       const deviceToken = await prisma.tokenUserDevice.findMany({
-    //         where: {
-    //           userId: a.id,
-    //           isActive: true,
-    //           // user: {
-    //           //   masterUserRoleId: "1",
-    //           // },
-    //         },
-    //       });
-
-    //       for (let i of deviceToken) {
-    //         const message = {
-    //           token: i.token,
-    //           notification: {
-    //             title,
-    //             body: notificationBody || "",
-    //           },
-    //           data: {
-    //             sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
-    //             // contoh: senderId, type, etc.
-    //           },
-    //         };
-
-    //         const response = await adminMessaging.send(message);
-    //         console.log("✅ FCM sent:", response);
-    //       }
-    //     } else {
-    //       return NextResponse.json({
-    //         success: false,
-    //         message: "Failed to create notification",
-    //       });
-    //     }
-    //   }
-    // } else {
-    //   return NextResponse.json({
-    //     success: false,
-    //     message: "Invalid ' to ' value",
-    //   });
-    // }
-
-    // ================== BATAS ================== //
-    // const deviceToken = await prisma.tokenUserDevice.findMany({
-    //   where: {
-    //     isActive: true,
-    //     NOT: {
-    //       userId: findUserLogin.id,
-    //     },
-    //     user: {
-    //       masterUserRoleId: "1",
-    //     },
-    //   },
-    //   include: {
-    //     user: true,
-    //   },
-    // });
-
-    // console.log("Device Token >>", deviceToken);
-
-    // for (let i of deviceToken) {
-    //   const message = {
-    //     token: i.token,
-    //     notification: {
-    //       title,
-    //       body: notificationBody || "",
-    //     },
-    //     data: {
-    //       sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
-    //       // contoh: senderId, type, etc.
-    //     },
-    //   };
-
-    //   if (i.user?.masterUserRoleId === "1") {
-    //     const responseCreate = await createNotification({
-    //       title,
-    //       type: type as string,
-    //       createdAt: message.data.sentAt,
-    //       pesan: notificationBody || "",
-    //       appId: appId as string,
-    //       kategoriApp: kategoriApp as string,
-    //       userRoleId: findUserLogin.masterUserRoleId,
-    //       userId: findUserLogin.id,
-    //       status: status,
-    //       deepLink: deepLink,
-    //     });
-
-    //     if (responseCreate) {
-    //       const response = await adminMessaging.send(message);
-    //       console.log("✅ FCM sent:", response);
-    //     } else {
-    //       return NextResponse.json({
-    //         success: false,
-    //         message: "Failed to create notification",
-    //       });
-    //     }
-    //   } else {
-    //     const responseCreate = await createNotification({
-    //       title: title,
-    //       type: type as string,
-    //       createdAt: message.data.sentAt,
-    //       pesan: notificationBody || "",
-    //       appId: appId as string,
-    //       kategoriApp: kategoriApp as string,
-    //       userRoleId: findUserLogin.masterUserRoleId,
-    //       adminId: findUserLogin.id,
-    //       status: status,
-    //       deepLink: deepLink,
-    //     });
-
-    //     if (responseCreate) {
-    //       const response = await adminMessaging.send(message);
-    //       console.log("✅ FCM sent:", response);
-    //     } else {
-    //       return NextResponse.json({
-    //         success: false,
-    //         message: "Failed to create notification",
-    //       });
-    //     }
-    //   }
-    // }
 
     return NextResponse.json({
       success: true,
@@ -334,7 +144,6 @@ async function createNotification({
   userRoleId,
   status,
   deepLink,
-
   senderId,
   recipientId,
 }: {
@@ -362,7 +171,6 @@ async function createNotification({
       userRoleId,
       status,
       deepLink,
-
       senderId,
       recipientId,
     },
