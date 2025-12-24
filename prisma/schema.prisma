@@ -59,6 +59,10 @@ model User {
   acceptedTermsAt      DateTime?
   acceptedForumTermsAt DateTime?
   tokenUserDevices     TokenUserDevice[]
+
+  // For Mobile App
+  NotificationRecipient Notifikasi[] @relation("NotificationRecipient")
+  NotificationSender    Notifikasi[] @relation("NotificationSender")
 }
 
 model MasterUserRole {
@@ -587,7 +591,7 @@ model Donasi_Invoice {
 
   imageId      String?
   MasterBank   MasterBank? @relation(fields: [masterBankId], references: [id])
-  masterBankId String?     
+  masterBankId String?
 }
 
 model Donasi_Kabar {
@@ -974,28 +978,36 @@ model NomorAdmin {
 }
 
 model Notifikasi {
-  id          String    @id @default(cuid())
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          String   @id @default(cuid())
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   appId       String
   kategoriApp String
   pesan       String
   title       String?
   status      String?
-  
-  isRead      Boolean   @default(false)
-  readAt      DateTime? // kapan user membaca notifikasi ini
-  deepLink    String? // misal: "announcement/123", "user/profile/cmha6wb9w0001cfndwl9fcse6"
-  type        String?
+
+  isRead   Boolean   @default(false)
+  readAt   DateTime? // kapan user membaca notifikasi ini
+  deepLink String? // misal: "announcement/123", "user/profile/cmha6wb9w0001cfndwl9fcse6"
+  type     String?
 
   Role       MasterUserRole? @relation(fields: [userRoleId], references: [id])
-  userRoleId String
+  userRoleId String?
 
   User    User?   @relation("UserNotifikasi", fields: [userId], references: [id], map: "NotifikasiUser")
   userId  String?
   Admin   User?   @relation("AdminNotifikasi", fields: [adminId], references: [id], map: "NotifikasiAdmin")
   adminId String?
+
+  // Recipient (user who receives the notification)
+  recipient   User?   @relation("NotificationRecipient", fields: [recipientId], references: [id])
+  recipientId String?
+
+  // Sender (user who sent the notification)
+  sender   User?   @relation("NotificationSender", fields: [senderId], references: [id])
+  senderId String?
 }
 
 // MAPS

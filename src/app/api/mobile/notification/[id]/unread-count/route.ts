@@ -6,22 +6,21 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
-
-  console.log("Id >>", id);
+  console.log("User ID:", id);
 
   try {
-    const data = await prisma.notifikasi.findMany({
+    const data = await prisma.notifikasi.count({
       where: {
-        userId: id,
+        recipientId: id,
         isRead: false,
       },
     });
 
-    console.log("Data >>", data);
+    console.log("List Notification >>", data);
 
     return NextResponse.json({
       success: true,
-      data: data.length,
+      data: data,
     });
   } catch (error) {
     return NextResponse.json({
