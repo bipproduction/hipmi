@@ -108,10 +108,40 @@ export async function POST(request: NextRequest) {
               deepLink: deepLink || "",
               // contoh: senderId, type, etc.
             },
+            // Konfigurasi Android untuk prioritas tinggi
+            android: {
+              priority: "high" as const, // Kirim secepatnya, bahkan di doze mode untuk notifikasi penting
+              notification: {
+                channelId: "default", // Sesuaikan dengan channel yang kamu buat di Android
+                // Opsional: sesuaikan icon & warna
+                // icon: 'ic_notification',
+                // color: '#FFD700',
+              },
+              // FCM akan bangunkan app jika perlu
+              ttl: 0 as const, // Kirim secepatnya, jangan tunda
+            },
+            // Opsional: tambahkan untuk iOS juga
+            apns: {
+              payload: {
+                aps: {
+                  sound: "default" as const,
+                  // 'content-available': 1 as const, // jika butuh silent push
+                },
+              },
+            },
           };
 
-          const response = await adminMessaging.send(message);
-          console.log("✅ FCM sent:", response);
+          try {
+            const response = await adminMessaging.send(message);
+            console.log(
+              "✅ FCM sent successfully",
+              "Response:",
+              response
+            );
+          } catch (error: any) {
+            console.error("❌ FCM send failed:", error);
+            // Lanjutkan ke token berikutnya meski satu gagal
+          }
         }
       } else {
         return NextResponse.json({
