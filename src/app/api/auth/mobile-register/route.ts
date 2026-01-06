@@ -1,5 +1,6 @@
 import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
+import { adminMessaging } from "@/lib/firebase-admin";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -51,12 +52,6 @@ export async function POST(req: Request) {
         { status: 500 }
       );
 
-    // const token = await sessionCreate({
-    //   sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
-    //   encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
-    //   user: createUser as any,
-    // });
-
     const createOtpId = await prisma.kodeOtp.create({
       data: {
         nomor: data.nomor,
@@ -87,11 +82,90 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
+    // =========== START SEND NOTIFICATION =========== //
+
+    const findAllUserBySendTo = await prisma.user.findMany({
+      where: {
+        masterUserRoleId: "2",
+      },
+    });
+
+    console.log("Users to notify:", findAllUserBySendTo);
+
+    const dataNotification = {
+      title: "Pendaftaran Baru",
+      type: "announcement",
+      kategoriApp: "OTHER",
+      createdAt: new Date(),
+      pesan: "User baru telah melakukan registrasi. Ayo cek dan verifikasi!",
+      deepLink: `/admin/user-access/${createUser.id}`,
+      senderId: createUser.id,
+    };
+
+    for (let a of findAllUserBySendTo) {
+      const createdNotification = await prisma.notifikasi.create({
+        data: {
+          ...dataNotification,
+          recipientId: a.id,
+        },
+      });
+
+      if (createdNotification) {
+        const deviceToken = await prisma.tokenUserDevice.findMany({
+          where: {
+            userId: a.id,
+            isActive: true,
+          },
+        });
+
+        for (let i of deviceToken) {
+          const message = {
+            token: i.token,
+            notification: {
+              title: dataNotification.title,
+              body: dataNotification.pesan,
+            },
+            data: {
+              sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
+              id: createdNotification.id,
+              deepLink: dataNotification.deepLink,
+            },
+            // Konfigurasi Android untuk prioritas tinggi
+            android: {
+              priority: "high" as const, // Kirim secepatnya, bahkan di doze mode untuk notifikasi penting
+              notification: {
+                channelId: "default", // Sesuaikan dengan channel yang kamu buat di Android
+              },
+              ttl: 0 as const, // Kirim secepatnya, jangan tunda
+            },
+            // Opsional: tambahkan untuk iOS juga
+            apns: {
+              payload: {
+                aps: {
+                  sound: "default" as const,
+                  // 'content-available': 1 as const, // jika butuh silent push
+                },
+              },
+            },
+          };
+
+          try {
+            const response = await adminMessaging.send(message);
+            console.log("✅ FCM sent successfully", "Response:", response);
+          } catch (error: any) {
+            console.error("❌ FCM send failed:", error);
+            // Lanjutkan ke token berikutnya meski satu gagal
+          }
+        }
+      }
+    }
+
+    // =========== END SEND NOTIFICATION =========== //
+
     return NextResponse.json(
       {
         success: true,
         message: "Registrasi Berhasil",
-        // token: token,
         kodeId: createOtpId.id,
       },
       { status: 201 }

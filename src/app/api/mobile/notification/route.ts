@@ -3,7 +3,7 @@ import { prisma } from "@/lib";
 import { adminMessaging } from "@/lib/firebase-admin";
 import { NextRequest, NextResponse } from "next/server";
 
-type NotificationProp = {
+export type NotificationProp = {
   title: string;
   body: string;
   userLoginId: string;
@@ -134,12 +134,12 @@ export async function POST(request: NextRequest) {
           try {
             const response = await adminMessaging.send(message);
             console.log(
-              "✅ FCM sent successfully",
+              "✅ FCM sent to token:",
               "Response:",
               response
             );
           } catch (error: any) {
-            console.error("❌ FCM send failed:", error);
+            console.error("❌ FCM send failed for token:", i.token, error);
             // Lanjutkan ke token berikutnya meski satu gagal
           }
         }
