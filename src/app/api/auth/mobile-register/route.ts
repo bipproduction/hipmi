@@ -85,9 +85,8 @@ export async function POST(req: Request) {
     // =========== START SEND NOTIFICATION =========== //
 
     const findAllUserBySendTo = await prisma.user.findMany({
-      where: {
-        masterUserRoleId: "2",
-      },
+      where: { masterUserRoleId: "2" },
+      select: { id: true },
     });
 
     console.log("Users to notify:", findAllUserBySendTo);
