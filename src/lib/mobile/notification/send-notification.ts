@@ -2,6 +2,7 @@
 import { adminMessaging } from "@/lib/firebase-admin";
 import prisma from "@/lib/prisma";
 import { NotificationMobilePayload } from "../../../../types/type-mobile-notification";
+import _ from "lodash";
 
 /**
  * Kirim notifikasi ke satu user (semua device aktifnya)
@@ -20,15 +21,20 @@ export async function sendNotificationMobileToOneUser({
   payload: NotificationMobilePayload;
 }) {
   try {
+    const kategoriToNormalCase = _.lowerCase(payload.kategoriApp);
+    const titleFix = `${_.startCase(kategoriToNormalCase)}: ${payload.title}`;
+    console.log("titleFix", titleFix);
+
     // 1. Simpan notifikasi ke DB
     const notification = await prisma.notifikasi.create({
       data: {
-        title: payload.title,
+        title: titleFix,
         pesan: payload.body,
         deepLink: payload.deepLink,
         kategoriApp: payload.kategoriApp,
         recipientId: recipientId,
         senderId: senderId,
+        type: payload.type.trim(),
       },
     });
 
@@ -51,7 +57,7 @@ export async function sendNotificationMobileToOneUser({
           await adminMessaging.send({
             token,
             notification: {
-              title: payload.title,
+              title: titleFix,
               body: payload.body,
             },
             data: {

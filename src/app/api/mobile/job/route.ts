@@ -30,8 +30,8 @@ async function POST(request: Request) {
       recipientIds: adminUsers.map((user) => user.id),
       senderId: data.authorId,
       payload: {
-        title: "Job: Pengajuan Review",
-        body: data.title,
+        title: "Pengajuan Review",
+        body: "Terdapat pengajuan baru yang perlu direview",
         type: "announcement",
         deepLink: routeAdminMobile.jobByStatus({ status: "review" }),
         kategoriApp: "JOB",
