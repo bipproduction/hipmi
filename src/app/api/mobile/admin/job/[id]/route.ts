@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, PUT };
 
@@ -54,9 +56,13 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+
+  const { catatan, senderId } = data;
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const fixStatus = _.startCase(status as string);
+
 
   let fixData;
   try {
@@ -83,7 +89,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
         data: {
           masterStatusId: checkStatus.id,
-          catatan: data,
+          catatan: catatan,
         },
         select: {
           id: true,
@@ -94,6 +100,18 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
             },
           },
           title: true,
+        },
+      });
+
+      await sendNotificationMobileToOneUser({
+        recipientId: updt.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Pengajuan Review",
+          body: "Pengajuan data anda telah di tolak !",
+          type: "announcement",
+          kategoriApp: "JOB",
+          deepLink: routeUserMobile.jobByStatus({ status: "reject" }),
         },
       });
 
@@ -115,6 +133,18 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
             },
           },
           title: true,
+        },
+      });
+
+      await sendNotificationMobileToOneUser({
+        recipientId: updt.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Pengajuan Review",
+          body: "Selamat data anda telah terpublikasi",
+          type: "announcement",
+          kategoriApp: "JOB",
+          deepLink: routeUserMobile.jobByStatus({ status: "publish" }),
         },
       });
 
