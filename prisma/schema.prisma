@@ -982,9 +982,9 @@ model Notifikasi {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  appId       String
-  kategoriApp String
-  pesan       String
+  appId       String?
+  kategoriApp String?
+  pesan       String?
   title       String?
   status      String?
 

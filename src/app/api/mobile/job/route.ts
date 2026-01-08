@@ -1,3 +1,5 @@
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -14,6 +16,25 @@ async function POST(request: Request) {
         deskripsi: data.deskripsi,
         authorId: data.authorId,
         imageId: data.imageId || null,
+      },
+    });
+
+    // kirim notifikasi ke semua admin untuk mengetahui ada job baru yang harus di review
+
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2" },
+      select: { id: true },
+    });
+
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pengajuan Review",
+        body: "Terdapat pengajuan baru yang perlu direview",
+        type: "announcement",
+        deepLink: routeAdminMobile.jobByStatus({ status: "review" }),
+        kategoriApp: "JOB",
       },
     });
 
@@ -54,10 +75,10 @@ async function GET(request: Request) {
           MasterStatus: {
             name: "Publish",
           },
-        //   title: {
-        //     contains: search || "",
-        //     mode: "insensitive",
-        //   },
+          //   title: {
+          //     contains: search || "",
+          //     mode: "insensitive",
+          //   },
         },
         orderBy: {
           createdAt: "desc",
@@ -90,46 +111,46 @@ async function GET(request: Request) {
 
       fixData = data;
     } else if (category === "beranda") {
-     const data = await prisma.job.findMany({
-       where: {
-         isActive: true,
-         isArsip: false,
-         MasterStatus: {
-           name: "Publish",
-         },
-         title: {
-           contains: search || "",
-           mode: "insensitive",
-         },
-       },
-       orderBy: {
-         createdAt: "desc",
-       },
-       select: {
-         id: true,
-         title: true,
-         deskripsi: true,
-         authorId: true,
-         MasterStatus: {
-           select: {
-             name: true,
-           },
-         },
-         Author: {
-           select: {
-             id: true,
-             username: true,
-             Profile: {
-               select: {
-                 id: true,
-                 name: true,
-                 imageId: true,
-               },
-             },
-           },
-         },
-       },
-     });
+      const data = await prisma.job.findMany({
+        where: {
+          isActive: true,
+          isArsip: false,
+          MasterStatus: {
+            name: "Publish",
+          },
+          title: {
+            contains: search || "",
+            mode: "insensitive",
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          deskripsi: true,
+          authorId: true,
+          MasterStatus: {
+            select: {
+              name: true,
+            },
+          },
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageId: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
       fixData = data;
     }
