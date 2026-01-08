@@ -14,6 +14,7 @@ const routeAdminMobile = {
 const routeUserMobile = {
   home: `/(user)/home`,
   // JOB
+  jobDetailPublised: ({ id }: { id: string }) => `/job/${id}`,
   jobByStatus: ({ status }: { status?: StatusApp }) =>
     `/job/(tabs)/status?status=${status}`,
 };

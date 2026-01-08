@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
-import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  sendNotificationMobileToManyUser,
+  sendNotificationMobileToOneUser,
+} from "@/lib/mobile/notification/send-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { NotificationMobileBodyType } from "../../../../../../../types/type-mobile-notification";
 
 export { GET, PUT };
 
@@ -62,7 +66,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const fixStatus = _.startCase(status as string);
-
 
   let fixData;
   try {
@@ -145,6 +148,23 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           type: "announcement",
           kategoriApp: "JOB",
           deepLink: routeUserMobile.jobByStatus({ status: "publish" }),
+        },
+      });
+
+      const adminUsers = await prisma.user.findMany({
+        where: { masterUserRoleId: "1", NOT: { id: updt.authorId as any } },
+        select: { id: true },
+      });
+
+      await sendNotificationMobileToManyUser({
+        recipientIds: adminUsers.map((user) => user.id),
+        senderId: data.authorId,
+        payload: {
+          title: "Ada lowongan kerja baru",
+          body: `${updt.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          deepLink: routeUserMobile.jobDetailPublised({ id: id }),
+          kategoriApp: "JOB",
         },
       });
 

@@ -14,7 +14,9 @@ export type NotificationMobilePayload = {
 export type NotificationMobileTitleType =
   | (string & { __type: "NotificationMobileTitleType" })
   | "Pengajuan Review"
-  | "Review Selesai";
+  | "Review Selesai"
+  // to ALL user
+  | "Ada lowongan kerja baru"
 
 export type NotificationMobileBodyType =
   // USER
