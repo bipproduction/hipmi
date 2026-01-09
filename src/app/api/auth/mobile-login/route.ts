@@ -6,7 +6,6 @@ export async function POST(req: Request) {
   try {
     const codeOtp = randomOTP();
     const body = await req.json();
-    console.log("[Masuk API]", body);
     const { nomor } = body;
 
     const user = await prisma.user.findUnique({
@@ -14,9 +13,6 @@ export async function POST(req: Request) {
         nomor: nomor,
       },
     });
-
-    console.log(["cek user", user]);
-    console.log(["cek nomor", nomor]);
 
     if (!user)
       return NextResponse.json({
@@ -66,6 +62,7 @@ export async function POST(req: Request) {
         success: true,
         message: "Kode verifikasi terkirim",
         kodeId: createOtpId.id,
+        isAcceptTerms: user.termsOfServiceAccepted,
       },
       { status: 200 }
     );

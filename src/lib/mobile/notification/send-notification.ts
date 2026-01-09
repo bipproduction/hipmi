@@ -64,6 +64,7 @@ export async function sendNotificationMobileToOneUser({
               sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
               id: notification.id,
               deepLink: payload.deepLink,
+              recipientId: recipientId,
             },
             android: {
               priority: "high" as const,

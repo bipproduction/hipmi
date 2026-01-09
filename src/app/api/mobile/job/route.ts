@@ -22,7 +22,7 @@ async function POST(request: Request) {
     // kirim notifikasi ke semua admin untuk mengetahui ada job baru yang harus di review
 
     const adminUsers = await prisma.user.findMany({
-      where: { masterUserRoleId: "2" },
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
       select: { id: true },
     });
 

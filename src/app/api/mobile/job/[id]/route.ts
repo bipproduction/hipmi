@@ -13,6 +13,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       include: {
         Author: {
           select: {
+            id: true,
             username: true,
             nomor: true,
             Profile: {
