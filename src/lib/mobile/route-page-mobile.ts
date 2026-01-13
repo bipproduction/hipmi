@@ -9,12 +9,21 @@ const routeAdminMobile = {
     `/admin/job/${id}/${status}`,
   jobByStatus: ({ status }: { status: StatusApp }) =>
     `/admin/job/${status}/status`,
+
+  // EVENT
+  eventByStatus: ({ status }: { status: StatusApp }) =>
+    `/admin/event/${status}/status`,
 };
 
 const routeUserMobile = {
   home: `/(user)/home`,
   // JOB
-  jobDetailPublised: ({ id }: { id: string }) => `/job/${id}`,
   jobByStatus: ({ status }: { status?: StatusApp }) =>
     `/job/(tabs)/status?status=${status}`,
+  jobDetailPublised: ({ id }: { id: string }) => `/job/${id}`,
+
+  // EVENT
+  eventByStatus: ({ status }: { status?: StatusApp }) =>
+    `/event/(tabs)/status?status=${status}`,
+  eventDetailPublised: ({ id }: { id: string }) => `/event/${id}/publish`,
 };

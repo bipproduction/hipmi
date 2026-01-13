@@ -2,6 +2,7 @@ import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send
 import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 
 export { POST, GET };
 
@@ -30,8 +31,8 @@ async function POST(request: Request) {
       recipientIds: adminUsers.map((user) => user.id),
       senderId: data.authorId,
       payload: {
-        title: "Pengajuan Review",
-        body: "Terdapat pengajuan baru yang perlu direview",
+        title: "Pengajuan Review Baru",
+        body: `${create.title}` as NotificationMobileBodyType,
         type: "announcement",
         deepLink: routeAdminMobile.jobByStatus({ status: "review" }),
         kategoriApp: "JOB",
