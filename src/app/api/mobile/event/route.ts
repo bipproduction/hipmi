@@ -38,6 +38,7 @@ async function POST(request: Request) {
       select: { id: true },
     });
 
+    // SEND NOTIFICATION
     await sendNotificationMobileToManyUser({
       recipientIds: adminUsers.map((user) => user.id),
       senderId: data.authorId,

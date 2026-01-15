@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, DELETE, PUT, POST };
 
@@ -39,7 +45,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
     const listNamaVote = data?.Voting_DaftarNamaVote || [];
 
     for (let v of listNamaVote) {
-
       const kontributor = await prisma.voting_Kontributor.findMany({
         where: {
           voting_DaftarNamaVoteId: v.id,
@@ -89,7 +94,6 @@ async function DELETE(
         id: id,
       },
     });
-
 
     return NextResponse.json({
       success: true,
@@ -171,7 +175,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
       });
 
-
       if (!updateVoting)
         return NextResponse.json({ status: 400, message: "Gagal Update" });
     }
@@ -193,11 +196,12 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
 async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { chooseId, userId } = data;
 
   try {
-    const findData = await prisma.voting_DaftarNamaVote.findFirst({
+    const findDatapilihan = await prisma.voting_DaftarNamaVote.findFirst({
       where: {
-        id: data.chooseId,
+        id: chooseId,
       },
       select: {
         jumlah: true,
@@ -205,27 +209,31 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    if (!findData)
+    if (!findDatapilihan)
       return NextResponse.json({
         success: false,
         message: "Data tidak ditemukan",
       });
 
-    const updateData = await prisma.voting_DaftarNamaVote.update({
+    const updateDataPilihan = await prisma.voting_DaftarNamaVote.update({
       where: {
         id: data.chooseId,
       },
       data: {
-        jumlah: findData.jumlah + 1,
+        jumlah: findDatapilihan.jumlah + 1,
       },
     });
 
-
-    if (!updateData)
+    if (!updateDataPilihan)
       return NextResponse.json({
         success: false,
         message: "Gagal Update Data",
       });
+
+    const findVotingData = await prisma.voting.findUnique({
+      where: { id: id },
+      select: { authorId: true, title: true },
+    });
 
     const createKontributor = await prisma.voting_Kontributor.create({
       data: {
@@ -249,6 +257,21 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         success: false,
         message: "Gagal Menjadi Kontributor",
       });
+
+    // SEND NOTIFICATION
+    if (userId !== findVotingData?.authorId) {
+      await sendNotificationMobileToOneUser({
+        recipientId: findVotingData?.authorId as string,
+        senderId: userId,
+        payload: {
+          title: "User Melakukan Vote" as NotificationMobileTitleType,
+          body: `Salah satu user telah melakukan voting pada: ${findVotingData?.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          deepLink: routeUserMobile.votingDetailPublised({ id: id }),
+          kategoriApp: "VOTING",
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
