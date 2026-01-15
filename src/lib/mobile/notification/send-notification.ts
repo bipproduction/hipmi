@@ -43,7 +43,7 @@ export async function sendNotificationMobileToOneUser({
 
     // 2. Ambil semua token aktif milik penerima
     const tokens = await prisma.tokenUserDevice.findMany({
-      where: { userId: recipientId, isActive: true },
+      where: { userId: recipientId },
       select: { token: true, id: true },
     });
 
@@ -53,7 +53,6 @@ export async function sendNotificationMobileToOneUser({
     }
 
     // 3. Kirim FCM ke semua token
-
     await Promise.allSettled(
       tokens.map(async ({ token, id }) => {
         try {
@@ -80,12 +79,11 @@ export async function sendNotificationMobileToOneUser({
           });
         } catch (fcmError: any) {
           // Hapus token jika invalid
-          console.log("fcmError", fcmError);
-          if (fcmError.code === "messaging/invalid-registration-token") {
-            await prisma.tokenUserDevice.delete({ where: { id: id } });
-            console.log(`❌ Invalid token removed: ${token}`);
+          if (fcmError.code === "messaging/registration-token-not-registered") {
+            // Hapus token dari DB
+            await prisma.tokenUserDevice.delete({ where: { id } });
+            console.log(`🗑️ Invalid token removed: ${id}`);
           }
-          console.error(`FCM failed for token ${token}:`, fcmError.message);
         }
       })
     );

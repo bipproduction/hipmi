@@ -6,7 +6,7 @@ import {
   sendNotificationMobileToOneUser,
 } from "@/lib/mobile/notification/send-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
-import { NotificationMobileBodyType } from "../../../../../../../types/type-mobile-notification";
+import { NotificationMobileBodyType, NotificationMobileTitleType } from "../../../../../../../types/type-mobile-notification";
 
 export { GET, PUT };
 
@@ -110,8 +110,8 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         recipientId: updt.authorId as any,
         senderId: senderId,
         payload: {
-          title: "Pengajuan Review",
-          body: "Pengajuan data anda telah di tolak !",
+          title: "Pengajuan Review Ditolak",
+          body: "Mohon perbaiki data sesuai catatan penolakan !",
           type: "announcement",
           kategoriApp: "JOB",
           deepLink: routeUserMobile.jobByStatus({ status: "reject" }),
@@ -143,7 +143,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         recipientId: updt.authorId as any,
         senderId: senderId,
         payload: {
-          title: "Pengajuan Review",
+          title: "Review Selesai",
           body: "Selamat data anda telah terpublikasi",
           type: "announcement",
           kategoriApp: "JOB",
@@ -160,7 +160,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         recipientIds: adminUsers.map((user) => user.id),
         senderId: data.authorId,
         payload: {
-          title: "Ada lowongan kerja baru",
+          title: "Ada Lowongan Kerja Baru" as NotificationMobileTitleType,
           body: `${updt.title}` as NotificationMobileBodyType,
           type: "announcement",
           deepLink: routeUserMobile.jobDetailPublised({ id: id }),

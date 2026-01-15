@@ -1,5 +1,11 @@
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, POST };
 
@@ -13,17 +19,27 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         eventId: id,
         userId: userId,
       },
-
-      // select: {
-      //   Event: {
-      //     select: {
-      //       id: true,
-      //       title: true,
-      //       authorId: true,
-      //     },
-      //   },
-      // },
     });
+
+    const findEvent = await prisma.event.findUnique({
+      where: { id: id },
+      select: { authorId: true, title: true },
+    });
+
+    // SEND NOTIFICATION
+    if (userId !== findEvent?.authorId) {
+      await sendNotificationMobileToOneUser({
+        recipientId: findEvent?.authorId as string,
+        senderId: userId,
+        payload: {
+          title: "Peserta Baru Join" as NotificationMobileTitleType,
+          body: `Ada peserta baru dalam event: ${findEvent?.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          deepLink: routeUserMobile.eventDetailPublised({ id: id }),
+          kategoriApp: "EVENT",
+        },
+      });
+    }
 
     return NextResponse.json(
       {

@@ -1,7 +1,10 @@
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
+import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 
 export { GET, POST };
 
@@ -27,6 +30,24 @@ async function POST(request: Request) {
           },
         },
         authorId: true,
+      },
+    });
+
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
+      select: { id: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pengajuan Review Baru",
+        body: create.title as NotificationMobileBodyType,
+        type: "announcement",
+        deepLink: routeAdminMobile.eventByStatus({ status: "review" }),
+        kategoriApp: "EVENT",
       },
     });
 

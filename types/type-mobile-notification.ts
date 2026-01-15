@@ -13,18 +13,20 @@ export type NotificationMobilePayload = {
 
 export type NotificationMobileTitleType =
   | (string & { __type: "NotificationMobileTitleType" })
-  | "Pengajuan Review"
+  // Admin
+  | "Pengajuan Review Baru"
+  // USER
+  | "Pengajuan Review Ditolak"
   | "Review Selesai"
   // to ALL user
-  | "Ada lowongan kerja baru"
 
 export type NotificationMobileBodyType =
   // USER
   | (string & { __type: "NotificationMobileBodyType" })
-  | "Terdapat pengajuan baru yang perlu direview"
+  | "Ada pengajuan review" // tambah title
 
   // ADMIN
-  | "Pengajuan data anda telah di tolak !"
+  | "Mohon perbaiki data sesuai catatan penolakan !"
   | "Selamat data anda telah terpublikasi"
 
 export type TypeNotificationCategoryApp =

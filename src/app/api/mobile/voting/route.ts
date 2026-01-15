@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET };
 
@@ -40,6 +43,24 @@ async function POST(request: Request) {
           message: "Gagal Membuat List",
         });
     }
+
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
+      select: { id: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pengajuan Review Baru",
+        body: create.title as NotificationMobileBodyType,
+        type: "announcement",
+        deepLink: routeAdminMobile.votingByStatus({ status: "review" }),
+        kategoriApp: "VOTING",
+      },
+    });
 
     return NextResponse.json(
       {
@@ -125,8 +146,6 @@ async function GET(request: Request) {
       });
 
       fixData = data;
-
-      
     } else if (category === "contribution") {
       const data = await prisma.voting_Kontributor.findMany({
         orderBy: {
