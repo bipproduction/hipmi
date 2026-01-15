@@ -1,8 +1,12 @@
-import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
-import { adminMessaging } from "@/lib/firebase-admin";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../types/type-mobile-notification";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -84,12 +88,12 @@ export async function POST(req: Request) {
 
     // =========== START SEND NOTIFICATION =========== //
 
-    const findAllUserBySendTo = await prisma.user.findMany({
-      where: { masterUserRoleId: "2" },
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
       select: { id: true },
     });
 
-    console.log("Users to notify:", findAllUserBySendTo);
+    console.log("Users to notify:", adminUsers);
 
     const dataNotification = {
       title: "Pendaftaran Baru",
@@ -101,63 +105,17 @@ export async function POST(req: Request) {
       senderId: createUser.id,
     };
 
-    for (let a of findAllUserBySendTo) {
-      const createdNotification = await prisma.notifikasi.create({
-        data: {
-          ...dataNotification,
-          recipientId: a.id,
-        },
-      });
-
-      if (createdNotification) {
-        const deviceToken = await prisma.tokenUserDevice.findMany({
-          where: {
-            userId: a.id,
-            isActive: true,
-          },
-        });
-
-        for (let i of deviceToken) {
-          const message = {
-            token: i.token,
-            notification: {
-              title: dataNotification.title,
-              body: dataNotification.pesan,
-            },
-            data: {
-              sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
-              id: createdNotification.id,
-              deepLink: dataNotification.deepLink,
-            },
-            // Konfigurasi Android untuk prioritas tinggi
-            android: {
-              priority: "high" as const, // Kirim secepatnya, bahkan di doze mode untuk notifikasi penting
-              notification: {
-                channelId: "default", // Sesuaikan dengan channel yang kamu buat di Android
-              },
-              ttl: 0 as const, // Kirim secepatnya, jangan tunda
-            },
-            // Opsional: tambahkan untuk iOS juga
-            apns: {
-              payload: {
-                aps: {
-                  sound: "default" as const,
-                  // 'content-available': 1 as const, // jika butuh silent push
-                },
-              },
-            },
-          };
-
-          try {
-            const response = await adminMessaging.send(message);
-            console.log("✅ FCM sent successfully", "Response:", response);
-          } catch (error: any) {
-            console.error("❌ FCM send failed:", error);
-            // Lanjutkan ke token berikutnya meski satu gagal
-          }
-        }
-      }
-    }
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pendaftaran User Baru" as NotificationMobileTitleType,
+        body: "User baru telah melakukan registrasi. Ayo cek dan verifikasi!" as NotificationMobileBodyType,
+        type: "announcement",
+        deepLink: routeAdminMobile.userAccess({ id: createUser.id }),
+        kategoriApp: "OTHER",
+      },
+    });
 
     // =========== END SEND NOTIFICATION =========== //
 

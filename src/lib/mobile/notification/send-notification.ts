@@ -22,7 +22,10 @@ export async function sendNotificationMobileToOneUser({
 }) {
   try {
     const kategoriToNormalCase = _.lowerCase(payload.kategoriApp);
-    const titleFix = `${_.startCase(kategoriToNormalCase)}: ${payload.title}`;
+    const titleFix =
+      kategoriToNormalCase === "other"
+        ? payload.title
+        : `${_.startCase(kategoriToNormalCase)}: ${payload.title}`;
     console.log("titleFix", titleFix);
 
     // 1. Simpan notifikasi ke DB
