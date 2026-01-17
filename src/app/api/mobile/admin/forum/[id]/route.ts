@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, PUT };
 
@@ -78,6 +84,11 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
+  const data = await request.json();
+  const { senderId } = data;
+
+  console.log("SENDER", senderId);
+
   try {
     const data = await prisma.forum_Posting.update({
       where: {
@@ -85,6 +96,10 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       },
       data: {
         isActive: false,
+      },
+      select: {
+        authorId: true,
+        diskusi: true,
       },
     });
 
@@ -94,6 +109,19 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       },
       data: {
         isActive: false,
+      },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToOneUser({
+      recipientId: data?.authorId as string,
+      senderId: senderId,
+      payload: {
+        title: "Penghapusan Postingan" as NotificationMobileTitleType,
+        body: `Postingan anda telah dilaporkan: ${data?.diskusi}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "FORUM",
+        deepLink: routeUserMobile.forumPreviewReportPosting({ id: id }),
       },
     });
 

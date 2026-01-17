@@ -15,6 +15,9 @@ const routeAdminMobile = {
   // VOTING
   votingByStatus: ({ status }: { status: StatusApp }) =>
     `/admin/voting/${status}/status`,
+
+  // FORUM
+  forumPreviewReportPosting: `/admin/forum/report-posting`,
 };
 
 const routeUserMobile = {
@@ -33,4 +36,9 @@ const routeUserMobile = {
   votingByStatus: ({ status }: { status?: StatusApp }) =>
     `/voting/(tabs)/status?status=${status}`,
   votingDetailPublised: ({ id }: { id: string }) => `/voting/${id}`,
+
+  // FORUM
+  forumBeranda: `/forum`,
+  forumDetail: ({ id }: { id: string }) => `/forum/${id}`,
+  forumPreviewReportPosting: ({ id }: { id: string }) => `/forum/${id}/preview-report-posting`,
 };
