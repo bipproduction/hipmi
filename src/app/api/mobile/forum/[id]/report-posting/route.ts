@@ -1,17 +1,15 @@
-import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import {
-  sendNotificationMobileToManyUser,
-  sendNotificationMobileToOneUser,
+  sendNotificationMobileToManyUser
 } from "@/lib/mobile/notification/send-notification";
+import {
+  routeAdminMobile
+} from "@/lib/mobile/route-page-mobile";
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 import {
   NotificationMobileBodyType,
   NotificationMobileTitleType,
 } from "../../../../../../../types/type-mobile-notification";
-import {
-  routeAdminMobile,
-  routeUserMobile,
-} from "@/lib/mobile/route-page-mobile";
 
 export { POST };
 
@@ -20,9 +18,6 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
   const { authorId: reportedUserId, categoryId, description } = data;
-
-  console.log("[DATA]", data);
-  console.log("[ID]", id);
 
   try {
     // Postingan yang akan di report
@@ -111,39 +106,3 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
     });
   }
 }
-
-// async function GET(request: Request, { params }: { params: { id: string } }) {
-//   const { id } = params;
-
-//   try {
-//     const report = await prisma.forum_ReportPosting.findUnique({
-//       where: { id: id },
-//       select: {
-//         id: true,
-//         ForumMaster_KategoriReport: true,
-//         deskripsi: true,
-//         Forum_Posting: {
-//           select: {
-//             id: true,
-//             diskusi: true,
-//             authorId: true,
-//           },
-//         },
-//       },
-//     });
-
-//     return NextResponse.json({
-//       status: 200,
-//       success: true,
-//       data: report,
-//     });
-//   } catch (error) {
-//     console.log("[ERROR]", error);
-//     return NextResponse.json({
-//       status: 500,
-//       success: false,
-//       message: "Gagal mendapatkan report posting",
-//       reason: (error as Error).message,
-//     });
-//   }
-// }

@@ -87,10 +87,10 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const data = await request.json();
   const { senderId } = data;
 
-  console.log("SENDER", senderId);
+  console.log("SENDER POSTING", data);
 
   try {
-    const data = await prisma.forum_Posting.update({
+    const deactivePosting = await prisma.forum_Posting.update({
       where: {
         id: id,
       },
@@ -114,23 +114,23 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
 
     // SEND NOTIFICATION
     await sendNotificationMobileToOneUser({
-      recipientId: data?.authorId as string,
+      recipientId: deactivePosting?.authorId as string,
       senderId: senderId,
       payload: {
         title: "Penghapusan Postingan" as NotificationMobileTitleType,
-        body: `Postingan anda telah dilaporkan: ${data?.diskusi}` as NotificationMobileBodyType,
+        body: `Postingan anda telah dilaporkan: ${deactivePosting?.diskusi}` as NotificationMobileBodyType,
         type: "announcement",
         kategoriApp: "FORUM",
         deepLink: routeUserMobile.forumPreviewReportPosting({ id: id }),
       },
     });
 
-    console.log("[DEACTIVATE COMMENT]", deactivateComment);
+    console.log("[DEACTIVATE POSTINGAN & COMMENT]", deactivateComment);
     return NextResponse.json(
       {
         success: true,
         message: "Success deactivate posting",
-        data: data,
+        data: deactivePosting,
       },
       { status: 200 }
     );

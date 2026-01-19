@@ -18,6 +18,7 @@ const routeAdminMobile = {
 
   // FORUM
   forumPreviewReportPosting: `/admin/forum/report-posting`,
+  forumPreviewReportComment: `/admin/forum/report-comment`,
 };
 
 const routeUserMobile = {
@@ -41,4 +42,5 @@ const routeUserMobile = {
   forumBeranda: `/forum`,
   forumDetail: ({ id }: { id: string }) => `/forum/${id}`,
   forumPreviewReportPosting: ({ id }: { id: string }) => `/forum/${id}/preview-report-posting`,
+  forumPreviewReportComment: ({ id }: { id: string }) => `/forum/${id}/preview-report-comment`,
 };

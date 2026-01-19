@@ -7,23 +7,16 @@ export async function GET(
   const { id } = params;
 
   try {
-    const data = await prisma.forum_Posting.findUnique({
+    const data = await prisma.forum_Komentar.findUnique({
       where: {
         id: id,
       },
       select: {
         id: true,
-        diskusi: true,
+        komentar: true,
         isActive: true,
         createdAt: true,
-        authorId: true,
-        Author: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        Forum_ReportPosting: {
+        Forum_ReportKomentar: {
           select: {
             deskripsi: true,
             ForumMaster_KategoriReport: true,
