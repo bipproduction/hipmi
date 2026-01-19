@@ -1,6 +1,12 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, PUT };
 
@@ -82,21 +88,43 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
+  const data = await request.json();
+
+  console.log("SENDER Comment", data);
+
   try {
-    const deleteData = await prisma.forum_Komentar.update({
+    const deactiveComment = await prisma.forum_Komentar.update({
       where: {
         id: id,
       },
       data: {
         isActive: false,
       },
+      select: {
+        authorId: true,
+        komentar: true,
+      },
     });
 
+    // SEND NOTIFICATION
+    await sendNotificationMobileToOneUser({
+      recipientId: deactiveComment?.authorId as string,
+      senderId: data?.senderId,
+      payload: {
+        title: "Penghapusan Komentar" as NotificationMobileTitleType,
+        body: `Komentar anda telah dilaporkan: ${deactiveComment?.komentar}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "FORUM",
+        deepLink: routeUserMobile.forumPreviewReportComment({ id: id }),
+      },
+    });
+
+    console.log("[DEACTIVATE COMMENT]");
     return NextResponse.json(
       {
         success: true,
         message: "Success deactivate comment",
-        data: deleteData,
+        // data: deactiveComment,
       },
       { status: 200 }
     );

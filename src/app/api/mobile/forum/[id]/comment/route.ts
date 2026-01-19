@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET, DELETE };
 
 async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { comment, authorId } = data;
 
   console.log("[ID COMMENT]", id);
   console.log("[DATA COMMENT]", data);
@@ -14,8 +21,8 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
     const createComment = await prisma.forum_Komentar.create({
       data: {
         forum_PostingId: id,
-        komentar: data.comment,
-        authorId: data.authorId,
+        komentar: comment,
+        authorId: authorId,
       },
       select: {
         id: true,
@@ -38,6 +45,24 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    const findForum = await prisma.forum_Posting.findUnique({
+      where: { id: id },
+      select: { authorId: true, diskusi: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToOneUser({
+      recipientId: findForum?.authorId as string,
+      senderId: authorId,
+      payload: {
+        title: "Komentar Baru" as NotificationMobileTitleType,
+        body: `Ayo cek komentar pada postingan: ${findForum?.diskusi}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "FORUM",
+        deepLink: routeUserMobile.forumDetail({ id: id }),
+      },
+    });
+
     if (!createComment) {
       return NextResponse.json({
         status: 400,
@@ -52,7 +77,6 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       message: "Berhasil update data",
       data: createComment,
     });
-
   } catch (error) {
     console.log("[ERROR COMMENT]", error);
     return NextResponse.json({
@@ -114,7 +138,10 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   }
 }
 
-async function DELETE(request: Request, { params }: { params: { id: string } }) {
+async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
 
   try {
