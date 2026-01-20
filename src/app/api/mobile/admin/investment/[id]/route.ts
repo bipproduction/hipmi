@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import {
+  sendNotificationMobileToManyUser,
+  sendNotificationMobileToOneUser,
+} from "@/lib/mobile/notification/send-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
 
 export { GET, PUT };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
-  
+
   try {
     const data = await prisma.investasi.findUnique({
       where: {
@@ -78,14 +87,19 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { catatan, senderId } = data;
+
+  console.log("[DATA]", data);
+  console.log("[CATATAN]", catatan);
+  console.log("[SENDER ID]", senderId);
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
 
-  console.log("[=======Start Investment console=======]");
-  console.log("[ID]", id);
-  console.log("[DATA]", data);
-  console.log("[STATUS]", status);
-  console.log("[=======End Investment console=======]");
+  // console.log("[=======Start Investment console=======]");
+  // console.log("[ID]", id);
+  // console.log("[STATUS]", status);
+  // console.log("[=======End Investment console=======]");
 
   const publishTime = new Date();
 
@@ -96,8 +110,25 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           id: id,
         },
         data: {
-          catatan: data,
+          catatan: catatan,
           masterStatusInvestasiId: "4",
+        },
+        select: {
+          authorId: true,
+          title: true,
+        },
+      });
+
+      // SEND NOTIFICATION
+      await sendNotificationMobileToOneUser({
+        recipientId: updatedData.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Pengajuan Review Ditolak",
+          body: "Mohon perbaiki data sesuai catatan penolakan !",
+          type: "announcement",
+          kategoriApp: "INVESTASI",
+          deepLink: routeUserMobile.investmentByStatus({ status: "reject" }),
         },
       });
 
@@ -111,6 +142,41 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           masterStatusInvestasiId: "1",
           masterProgresInvestasiId: "1",
           countDown: publishTime,
+        },
+      });
+
+      // SEND NOTIFICAtION
+      await sendNotificationMobileToOneUser({
+        recipientId: updatedData.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Review Selesai",
+          body: `
+          Investasi kamu telah dipublikasikan !\n
+          ${updatedData.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "INVESTASI",
+          deepLink: routeUserMobile.investmentByStatus({ status: "publish" }),
+        },
+      });
+
+      const allUsers = await prisma.user.findMany({
+        where: {
+          NOT: { id: updatedData.authorId as any },
+          active: true,
+        },
+        select: { id: true },
+      });
+
+      await sendNotificationMobileToManyUser({
+        recipientIds: allUsers.map((user) => user.id),
+        senderId: senderId,
+        payload: {
+          title: "Ayo Cek Investasi Terbaru" as NotificationMobileTitleType,
+          body: `${updatedData.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "INVESTASI",
+          deepLink: routeUserMobile.investasiDetailPublish({ id: id }),
         },
       });
 

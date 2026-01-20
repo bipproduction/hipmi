@@ -19,6 +19,10 @@ const routeAdminMobile = {
   // FORUM
   forumPreviewReportPosting: `/admin/forum/report-posting`,
   forumPreviewReportComment: `/admin/forum/report-comment`,
+
+  // INVESTMENT
+  investmentByStatus: ({ status }: { status: StatusApp }) =>
+    `/admin/investment/${status}/status`,
 };
 
 const routeUserMobile = {
@@ -41,6 +45,13 @@ const routeUserMobile = {
   // FORUM
   forumBeranda: `/forum`,
   forumDetail: ({ id }: { id: string }) => `/forum/${id}`,
-  forumPreviewReportPosting: ({ id }: { id: string }) => `/forum/${id}/preview-report-posting`,
-  forumPreviewReportComment: ({ id }: { id: string }) => `/forum/${id}/preview-report-comment`,
+  forumPreviewReportPosting: ({ id }: { id: string }) =>
+    `/forum/${id}/preview-report-posting`,
+  forumPreviewReportComment: ({ id }: { id: string }) =>
+    `/forum/${id}/preview-report-comment`,
+
+  // INVESTMENT
+  investmentByStatus: ({ status }: { status?: StatusApp }) =>
+    `/investment/(tabs)/portofolio?status=${status}`,
+  investasiDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
 };
