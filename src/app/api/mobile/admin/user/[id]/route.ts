@@ -34,9 +34,15 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+
+  console.log("Received data:", data);
+  console.log("User ID:", id);
+  console.log("Category:", category);
 
   try {
-    if (data.active) {
+    if (category === "access") {
       const updateData = await prisma.user.update({
         where: {
           id: id,
@@ -47,7 +53,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       });
 
       console.log("[Update Active Berhasil]", updateData);
-    } else if (data.role) {
+    } else if (category === "role") {
       const fixName = _.startCase(data.role.replace(/_/g, " "));
 
       const checkRole = await prisma.masterUserRole.findFirst({
@@ -68,6 +74,12 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       });
 
       console.log("[Update Role Berhasil]", updateData);
+    } else {
+      return NextResponse.json({
+        status: 400,
+        success: false,
+        message: "Invalid category",
+      });
     }
 
     return NextResponse.json({

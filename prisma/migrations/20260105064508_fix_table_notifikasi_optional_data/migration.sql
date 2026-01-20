@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Notifikasi" ALTER COLUMN "appId" DROP NOT NULL,
+ALTER COLUMN "kategoriApp" DROP NOT NULL,
+ALTER COLUMN "pesan" DROP NOT NULL;

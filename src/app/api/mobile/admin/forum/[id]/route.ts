@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, PUT };
 
@@ -78,13 +84,22 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
+  const data = await request.json();
+  const { senderId } = data;
+
+  console.log("SENDER POSTING", data);
+
   try {
-    const data = await prisma.forum_Posting.update({
+    const deactivePosting = await prisma.forum_Posting.update({
       where: {
         id: id,
       },
       data: {
         isActive: false,
+      },
+      select: {
+        authorId: true,
+        diskusi: true,
       },
     });
 
@@ -97,12 +112,25 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    console.log("[DEACTIVATE COMMENT]", deactivateComment);
+    // SEND NOTIFICATION
+    await sendNotificationMobileToOneUser({
+      recipientId: deactivePosting?.authorId as string,
+      senderId: senderId,
+      payload: {
+        title: "Penghapusan Postingan" as NotificationMobileTitleType,
+        body: `Postingan anda telah dilaporkan: ${deactivePosting?.diskusi}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "FORUM",
+        deepLink: routeUserMobile.forumPreviewReportPosting({ id: id }),
+      },
+    });
+
+    console.log("[DEACTIVATE POSTINGAN & COMMENT]", deactivateComment);
     return NextResponse.json(
       {
         success: true,
         message: "Success deactivate posting",
-        data: data,
+        data: deactivePosting,
       },
       { status: 200 }
     );

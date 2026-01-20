@@ -1,13 +1,13 @@
 [
   {
-    "name": "default_user",
+    "name": "demo_user",
     "nomor": "6282340374412",
     "masterUserRoleId": "1",
     "active": true,
     "termsOfServiceAccepted": false
   },
   {
-    "name": "admin_911",
+    "name": "demo_admin",
     "nomor": "6281339158911",
     "masterUserRoleId": "3",
     "active": true,

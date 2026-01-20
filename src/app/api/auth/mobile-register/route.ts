@@ -1,7 +1,12 @@
-import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../types/type-mobile-notification";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -51,12 +56,6 @@ export async function POST(req: Request) {
         { status: 500 }
       );
 
-    // const token = await sessionCreate({
-    //   sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
-    //   encodedKey: process.env.NEXT_PUBLIC_BASE_TOKEN_KEY!,
-    //   user: createUser as any,
-    // });
-
     const createOtpId = await prisma.kodeOtp.create({
       data: {
         nomor: data.nomor,
@@ -87,11 +86,43 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
+    // =========== START SEND NOTIFICATION =========== //
+
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
+      select: { id: true },
+    });
+
+    console.log("Users to notify:", adminUsers);
+
+    const dataNotification = {
+      title: "Pendaftaran Baru",
+      type: "announcement",
+      kategoriApp: "OTHER",
+      createdAt: new Date(),
+      pesan: "User baru telah melakukan registrasi. Ayo cek dan verifikasi!",
+      deepLink: `/admin/user-access/${createUser.id}`,
+      senderId: createUser.id,
+    };
+
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pendaftaran User Baru" as NotificationMobileTitleType,
+        body: "User baru telah melakukan registrasi. Ayo cek dan verifikasi!" as NotificationMobileBodyType,
+        type: "announcement",
+        deepLink: routeAdminMobile.userAccess({ id: createUser.id }),
+        kategoriApp: "OTHER",
+      },
+    });
+
+    // =========== END SEND NOTIFICATION =========== //
+
     return NextResponse.json(
       {
         success: true,
         message: "Registrasi Berhasil",
-        // token: token,
         kodeId: createOtpId.id,
       },
       { status: 201 }

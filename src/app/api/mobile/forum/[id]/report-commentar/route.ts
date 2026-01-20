@@ -1,5 +1,11 @@
 import { prisma } from "@/lib";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
 
 export { POST };
 
@@ -7,44 +13,70 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
   let fixData;
   const { id } = params;
   const { data } = await request.json();
-  console.log("[DATA]", data);
-  console.log("[ID]", id);
+  const { authorId: reportedUserId, categoryId, description } = data;
 
   try {
-    const content = await prisma.forum_Komentar.findUnique({
-      where: {
-        id: id,
-      },
+    // Komentar yang di report
+    const findComment = await prisma.forum_Komentar.findUnique({
+      where: { id: id },
+      select: { authorId: true, komentar: true },
     });
 
-    const reportList = await prisma.forumMaster_KategoriReport.findUnique({
+    // List admin untuk dikirim notifikasi
+    const adminUsers = await prisma.user.findMany({
       where: {
-        id: data.categoryId,
+        masterUserRoleId: "2",
+        NOT: { id: findComment?.authorId as any },
       },
+      select: { id: true },
     });
 
-    const msg = `Report Komentar: "${content?.komentar}" dengan kategori \n\n\n${reportList?.title} : \n\n${reportList?.deskripsi}`;
-    const res = await fetch(
-      `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=6282340374412&text=${msg}`,
-      { cache: "no-cache" }
-    );
-
-    if (data.categoryId) {
-      fixData = await prisma.forum_ReportKomentar.create({
+    if (categoryId) {
+      const createdReport = await prisma.forum_ReportKomentar.create({
         data: {
           forum_KomentarId: id,
-          userId: data.authorId,
-          forumMaster_KategoriReportId: data.categoryId as any,
+          userId: reportedUserId,
+          forumMaster_KategoriReportId: categoryId,
         },
       });
+
+      //SEND NOTIFICATION
+      await sendNotificationMobileToManyUser({
+        recipientIds: adminUsers.map((user) => user.id),
+        senderId: reportedUserId,
+        payload: {
+          title: "Laporan Dari User" as NotificationMobileTitleType,
+          body: `Report terhadap komentar, ${findComment?.komentar}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "FORUM",
+          deepLink: routeAdminMobile.forumPreviewReportComment,
+        },
+      });
+
+      fixData = createdReport;
     } else {
-      fixData = await prisma.forum_ReportKomentar.create({
+      const createdReport = await prisma.forum_ReportKomentar.create({
         data: {
           forum_KomentarId: id,
-          userId: data.authorId,
-          deskripsi: data.description,
+          userId: reportedUserId,
+          deskripsi: description,
         },
       });
+
+      //SEND NOTIFICATION
+      await sendNotificationMobileToManyUser({
+        recipientIds: adminUsers.map((user) => user.id),
+        senderId: reportedUserId,
+        payload: {
+          title: "Laporan Dari User" as NotificationMobileTitleType,
+          body: `Report terhadap komentar, ${findComment?.komentar}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "FORUM",
+          deepLink: routeAdminMobile.forumPreviewReportComment,
+        },
+      });
+
+      fixData = createdReport;
     }
 
     if (!fixData) {

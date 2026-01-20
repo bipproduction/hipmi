@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import {
+  sendNotificationMobileToManyUser,
+  sendNotificationMobileToOneUser,
+} from "@/lib/mobile/notification/send-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { NotificationMobileBodyType, NotificationMobileTitleType } from "../../../../../../../types/type-mobile-notification";
 
 export { GET, PUT };
 
@@ -54,6 +60,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+
+  const { catatan, senderId } = data;
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const fixStatus = _.startCase(status as string);
@@ -83,7 +92,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
         data: {
           masterStatusId: checkStatus.id,
-          catatan: data,
+          catatan: catatan,
         },
         select: {
           id: true,
@@ -94,6 +103,18 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
             },
           },
           title: true,
+        },
+      });
+
+      await sendNotificationMobileToOneUser({
+        recipientId: updt.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Pengajuan Review Ditolak",
+          body: "Mohon perbaiki data sesuai catatan penolakan !",
+          type: "announcement",
+          kategoriApp: "JOB",
+          deepLink: routeUserMobile.jobByStatus({ status: "reject" }),
         },
       });
 
@@ -115,6 +136,35 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
             },
           },
           title: true,
+        },
+      });
+
+      await sendNotificationMobileToOneUser({
+        recipientId: updt.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Review Selesai",
+          body: "Selamat data anda telah terpublikasi",
+          type: "announcement",
+          kategoriApp: "JOB",
+          deepLink: routeUserMobile.jobByStatus({ status: "publish" }),
+        },
+      });
+
+      const adminUsers = await prisma.user.findMany({
+        where: { masterUserRoleId: "1", NOT: { id: updt.authorId as any } },
+        select: { id: true },
+      });
+
+      await sendNotificationMobileToManyUser({
+        recipientIds: adminUsers.map((user) => user.id),
+        senderId: data.authorId,
+        payload: {
+          title: "Ada Lowongan Kerja Baru" as NotificationMobileTitleType,
+          body: `${updt.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          deepLink: routeUserMobile.jobDetailPublised({ id: id }),
+          kategoriApp: "JOB",
         },
       });
 

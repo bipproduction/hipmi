@@ -1,0 +1,119 @@
+// lib/notifications/send-notification.ts
+import { adminMessaging } from "@/lib/firebase-admin";
+import prisma from "@/lib/prisma";
+import { NotificationMobilePayload } from "../../../../types/type-mobile-notification";
+import _ from "lodash";
+
+/**
+ * Kirim notifikasi ke satu user (semua device aktifnya)
+ * @param recipientId - ID penerima
+ * @param senderId - ID pengirim
+ * @param payload - Data notifikasi
+ */
+
+export async function sendNotificationMobileToOneUser({
+  recipientId,
+  senderId,
+  payload,
+}: {
+  recipientId: string;
+  senderId: string;
+  payload: NotificationMobilePayload;
+}) {
+  try {
+    const kategoriToNormalCase = _.lowerCase(payload.kategoriApp);
+    const titleFix =
+      kategoriToNormalCase === "other"
+        ? payload.title
+        : `${_.startCase(kategoriToNormalCase)}: ${payload.title}`;
+    console.log("titleFix", titleFix);
+
+    // 1. Simpan notifikasi ke DB
+    const notification = await prisma.notifikasi.create({
+      data: {
+        title: titleFix,
+        pesan: payload.body,
+        deepLink: payload.deepLink,
+        kategoriApp: payload.kategoriApp,
+        recipientId: recipientId,
+        senderId: senderId,
+        type: payload.type.trim(),
+      },
+    });
+
+    // 2. Ambil semua token aktif milik penerima
+    const tokens = await prisma.tokenUserDevice.findMany({
+      where: { userId: recipientId },
+      select: { token: true, id: true },
+    });
+
+    if (tokens.length === 0) {
+      console.warn(`No active tokens found for user ${recipientId}`);
+      return;
+    }
+
+    // 3. Kirim FCM ke semua token
+    await Promise.allSettled(
+      tokens.map(async ({ token, id }) => {
+        try {
+          await adminMessaging.send({
+            token,
+            notification: {
+              title: titleFix,
+              body: payload.body,
+            },
+            data: {
+              sentAt: new Date().toISOString(), // ✅ Simpan metadata di data
+              id: notification.id,
+              deepLink: payload.deepLink,
+              recipientId: recipientId,
+            },
+            android: {
+              priority: "high" as const,
+              notification: { channelId: "default" },
+              ttl: 0 as const,
+            },
+            apns: {
+              payload: { aps: { sound: "default" as const } },
+            },
+          });
+        } catch (fcmError: any) {
+          // Hapus token jika invalid
+          if (fcmError.code === "messaging/registration-token-not-registered") {
+            // Hapus token dari DB
+            await prisma.tokenUserDevice.delete({ where: { id } });
+            console.log(`🗑️ Invalid token removed: ${id}`);
+          }
+        }
+      })
+    );
+
+    console.log(`✅ Notification sent to user ${recipientId}`);
+  } catch (error) {
+    console.error("Failed to send notification:", error);
+    throw error; // biarkan caller handle error
+  }
+}
+
+/**
+ * Kirim notifikasi ke banyak user
+ */
+export async function sendNotificationMobileToManyUser({
+  recipientIds,
+  senderId,
+  payload,
+}: {
+  recipientIds: string[];
+  senderId: string;
+  payload: NotificationMobilePayload;
+}) {
+  await Promise.allSettled(
+    recipientIds.map((id) =>
+      sendNotificationMobileToOneUser({
+        recipientId: id,
+        senderId: senderId,
+        payload: payload,
+      })
+    )
+  );
+}

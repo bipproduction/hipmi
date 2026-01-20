@@ -1,19 +1,51 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { NotificationMobileBodyType, NotificationMobileTitleType } from "../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET };
 
 async function POST(request: Request) {
   const { data } = await request.json();
   console.log("[DATA]", data);
+  const { diskusi, authorId } = data;
 
   try {
     const create = await prisma.forum_Posting.create({
       data: {
-        diskusi: data.diskusi,
-        authorId: data.authorId,
+        diskusi: diskusi,
+        authorId: authorId,
         forumMaster_StatusPostingId: 1,
+      },
+    });
+
+    if (!create) {
+      return NextResponse.json({
+        success: false,
+        message: "Gagal memposting",
+        status: 400,
+      });
+    }
+
+    const allUsers = await prisma.user.findMany({
+      where: {
+        id: { not: authorId },
+      },
+      select: { id: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToManyUser({
+      recipientIds: allUsers.map((user) => user.id),
+      senderId: authorId,
+      payload: {
+        title: "Ada Diskusi Baru" as NotificationMobileTitleType,
+        body: `${diskusi}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "FORUM",
+        deepLink: routeUserMobile.forumBeranda,
       },
     });
 
@@ -42,7 +74,6 @@ async function GET(request: Request) {
   const page = searchParams.get("page");
   const takeData = 5;
   const skipData = (Number(page) - 1) * takeData;
-
 
   // console.log("authorId", authorId);
   // console.log("userLoginId", userLoginId);
@@ -83,7 +114,7 @@ async function GET(request: Request) {
             notIn: blockUserId,
           },
         },
-        
+
         select: {
           id: true,
           diskusi: true,
@@ -128,13 +159,12 @@ async function GET(request: Request) {
 
       fixData = newData;
     } else if (category === "forumku") {
-
       const count = await prisma.forum_Posting.count({
         where: {
           isActive: true,
           authorId: authorId,
         },
-      })
+      });
 
       const data = await prisma.forum_Posting.findMany({
         take: page ? takeData : undefined,
@@ -191,7 +221,7 @@ async function GET(request: Request) {
       const dataFix = {
         data: newData,
         count,
-      }
+      };
 
       fixData = dataFix;
     } else {
