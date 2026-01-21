@@ -1,6 +1,12 @@
 import { prisma } from "@/lib";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileTitleType,
+  NotificationMobileBodyType,
+} from "../../../../../../../types/type-mobile-notification";
 
 export { POST, GET, PUT };
 
@@ -49,7 +55,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const authorId = searchParams.get("authorId");
 
   console.log("[ID INVOICE]", id);
-  
 
   let fixData;
 
@@ -198,7 +203,48 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         statusInvoiceId: checkStatus.id,
         imageId: data.imageId,
       },
+      select: {
+        investasiId: true,
+      },
     });
+
+    if (fixStatus === "Proses") {
+      // kirim notif ke author investasi
+      const findInvestasi = await prisma.investasi.findUnique({
+        where: {
+          id: update.investasiId as any,
+        },
+        select: {
+          title: true,
+          authorId: true,
+        },
+      });
+
+      const findUsers = await prisma.user.findMany({
+        where: {
+          masterUserRoleId: "2",
+          active: true,
+          NOT: { id: findInvestasi?.authorId as any },
+        },
+        select: { id: true },
+      });
+
+      // SEND NOTIFICATION
+      await sendNotificationMobileToManyUser({
+        recipientIds: findUsers.map((user) => user.id),
+        senderId: data.authorId,
+        payload: {
+          title: "Ada Investor Baru !" as NotificationMobileTitleType,
+          body: `Cek data investor pada ${findInvestasi?.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "INVESTASI",
+          deepLink: routeAdminMobile.investmentDetailPublish({
+            id: update.investasiId as string,
+            status: "publish",
+          }),
+        },
+      });
+    }
 
     console.log("[UPDATE]", update);
 

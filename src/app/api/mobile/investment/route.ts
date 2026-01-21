@@ -2,6 +2,9 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import moment from "moment";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET };
 
@@ -9,12 +12,14 @@ async function POST(request: Request) {
   const { data } = await request.json();
   console.log(["DATA INVESTASI"], data);
 
+  const fixTitle = _.startCase(data.title)
+
   try {
     const create = await prisma.investasi.create({
       data: {
         masterStatusInvestasiId: "2",
         authorId: data.authorId,
-        title: _.startCase(data.title),
+        title: fixTitle,
         targetDana: data.targetDana,
         hargaLembar: data.hargaLembar,
         totalLembar: data.totalLembar,
@@ -29,6 +34,24 @@ async function POST(request: Request) {
     });
 
     console.log("[CREATE INVESTASI]", create);
+
+    const adminUsers = await prisma.user.findMany({
+      where: { masterUserRoleId: "2", NOT: { id: data.authorId } },
+      select: { id: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToManyUser({
+      recipientIds: adminUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Pengajuan Review Baru",
+        body: fixTitle as NotificationMobileBodyType,
+        type: "announcement",
+        deepLink: routeAdminMobile.investmentByStatus({ status: "review" }),
+        kategoriApp: "INVESTASI",
+      },
+    });
 
     return NextResponse.json({
       status: 201,
