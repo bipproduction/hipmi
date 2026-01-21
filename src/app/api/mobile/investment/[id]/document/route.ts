@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
 
 export { POST, GET, DELETE };
 
@@ -10,7 +15,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
   console.log("[POST DOCUMENT DATA]", data);
 
   try {
-    const create = await prisma.dokumenInvestasi.upsert({
+    const createdDocs = await prisma.dokumenInvestasi.upsert({
       where: {
         id: id,
       },
@@ -23,9 +28,42 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         title: data.title,
         fileId: data.fileId,
       },
+      select: {
+        investasiId: true,
+        investasi: {
+          select: {
+            title: true,
+          },
+        },
+      },
     });
 
-    if (!create)
+    const findInvestor = await prisma.investasi_Invoice.findMany({
+      where: {
+        investasiId: id,
+        StatusInvoice: {
+          name: "Berhasil",
+        },
+      },
+    });
+
+    // SEND NOTIFICATION
+    // await sendNotificationMobileToManyUser({
+    //   recipientIds: findInvestor.map((user) => user.id),
+    //   senderId: data.authorId,
+    //   payload: {
+    //     title: "Cek Dokumen" as NotificationMobileTitleType,
+    //     body: `Ada informasi dokumen yang di\\\  ${createdDocs.investasi?.title}` as NotificationMobileBodyType,
+    //     type: "announcement",
+    //     kategoriApp: "INVESTASI",
+    //     deepLink: routeAdminMobile.investmentDetailPublish({
+    //       id: update.investasiId as string,
+    //       status: "publish",
+    //     }),
+    //   },
+    // });
+
+    if (!createdDocs)
       return NextResponse.json({
         status: 201,
         success: true,
@@ -93,7 +131,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
 async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
 
@@ -111,9 +149,9 @@ async function DELETE(
         headers: {
           Authorization: `Bearer ${process.env.WS_APIKEY}`,
         },
-      }
+      },
     );
-    
+
     return NextResponse.json({
       status: 200,
       success: true,

@@ -21,8 +21,14 @@ const routeAdminMobile = {
   forumPreviewReportComment: `/admin/forum/report-comment`,
 
   // INVESTMENT
-  investmentByStatus: ({ status }: { status: StatusApp }) =>
-    `/admin/investment/${status}/status`,
+  investmentByStatus: ({ status }: { status: StatusApp }) => `/admin/investment/${status}/status`,
+  investmentDetailPublish: ({
+    id,
+    status,
+  }: {
+    id: string;
+    status: StatusApp;
+  }) => `/admin/investment/${id}/${status}`,
 };
 
 const routeUserMobile = {
@@ -51,7 +57,8 @@ const routeUserMobile = {
     `/forum/${id}/preview-report-comment`,
 
   // INVESTMENT
-  investmentByStatus: ({ status }: { status?: StatusApp }) =>
+  investmentPortofolioByStatus: ({ status }: { status?: StatusApp }) =>
     `/investment/(tabs)/portofolio?status=${status}`,
   investasiDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
+  investasiTransaction: `/investment/(tabs)/transaction`
 };

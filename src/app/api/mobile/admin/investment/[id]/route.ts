@@ -128,7 +128,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           body: "Mohon perbaiki data sesuai catatan penolakan !",
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investmentByStatus({ status: "reject" }),
+          deepLink: routeUserMobile.investmentPortofolioByStatus({ status: "reject" }),
         },
       });
 
@@ -151,12 +151,10 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         senderId: senderId,
         payload: {
           title: "Review Selesai",
-          body: `
-          Investasi kamu telah dipublikasikan !\n
-          ${updatedData.title}` as NotificationMobileBodyType,
+          body: `Investasi kamu telah dipublikasikan ! ${updatedData.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investmentByStatus({ status: "publish" }),
+          deepLink: routeUserMobile.investmentPortofolioByStatus({ status: "publish" }),
         },
       });
 

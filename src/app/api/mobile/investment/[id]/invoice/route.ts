@@ -204,8 +204,8 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         imageId: data.imageId,
       },
       select: {
-        investasiId: true
-      }
+        investasiId: true,
+      },
     });
 
     if (fixStatus === "Proses") {
@@ -229,6 +229,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         select: { id: true },
       });
 
+      // SEND NOTIFICATION
       await sendNotificationMobileToManyUser({
         recipientIds: findUsers.map((user) => user.id),
         senderId: data.authorId,
@@ -237,7 +238,10 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           body: `Cek data investor pada ${findInvestasi?.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeAdminMobile.investmentByStatus({ status: "publish" }),
+          deepLink: routeAdminMobile.investmentDetailPublish({
+            id: update.investasiId as string,
+            status: "publish",
+          }),
         },
       });
     }
