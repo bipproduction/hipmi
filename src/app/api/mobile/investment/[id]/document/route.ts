@@ -5,6 +5,7 @@ import {
   NotificationMobileBodyType,
   NotificationMobileTitleType,
 } from "../../../../../../../types/type-mobile-notification";
+import { routeAdminMobile, routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET, DELETE };
 
@@ -33,10 +34,13 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         investasi: {
           select: {
             title: true,
+            authorId: true,
           },
         },
       },
     });
+
+    console.log("[CREATED DOCS]", createdDocs);
 
     const findInvestor = await prisma.investasi_Invoice.findMany({
       where: {
@@ -45,23 +49,27 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
           name: "Berhasil",
         },
       },
+      select: {
+        authorId: true,
+      },
     });
 
+    console.log("[FIND INVESTOR]", findInvestor);
+
     // SEND NOTIFICATION
-    // await sendNotificationMobileToManyUser({
-    //   recipientIds: findInvestor.map((user) => user.id),
-    //   senderId: data.authorId,
-    //   payload: {
-    //     title: "Cek Dokumen" as NotificationMobileTitleType,
-    //     body: `Ada informasi dokumen yang di\\\  ${createdDocs.investasi?.title}` as NotificationMobileBodyType,
-    //     type: "announcement",
-    //     kategoriApp: "INVESTASI",
-    //     deepLink: routeAdminMobile.investmentDetailPublish({
-    //       id: update.investasiId as string,
-    //       status: "publish",
-    //     }),
-    //   },
-    // });
+    await sendNotificationMobileToManyUser({
+      recipientIds: findInvestor.map((e) => e.authorId!),
+      senderId: createdDocs.investasi?.authorId as string,
+      payload: {
+        title: "Cek Dokumen" as NotificationMobileTitleType,
+        body: `Ada dokumen terupdate pada ${createdDocs.investasi?.title}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "INVESTASI",
+        deepLink: routeUserMobile.investmentDetailPublish({
+          id: createdDocs.investasiId as string,
+        }),
+      },
+    });
 
     if (!createdDocs)
       return NextResponse.json({

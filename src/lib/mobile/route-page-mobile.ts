@@ -59,6 +59,6 @@ const routeUserMobile = {
   // INVESTMENT
   investmentPortofolioByStatus: ({ status }: { status?: StatusApp }) =>
     `/investment/(tabs)/portofolio?status=${status}`,
-  investasiDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
-  investasiTransaction: `/investment/(tabs)/transaction`
+  investmentDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
+  investmentTransaction: `/investment/(tabs)/transaction`
 };
