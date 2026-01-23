@@ -1,6 +1,12 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET, PUT };
 
@@ -33,6 +39,14 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
+    if (!create) {
+      return NextResponse.json({
+        status: 500,
+        success: false,
+        message: "Gagal membuat invoice",
+      });
+    }
+
     return NextResponse.json({
       status: 201,
       success: true,
@@ -48,7 +62,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       reason: (error as Error).message,
     });
   }
-} 
+}
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -65,7 +79,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         createdAt: true,
         donasiMaster_BankId: true,
         donasiMaster_StatusInvoiceId: true,
-MasterBank: true,
+        MasterBank: true,
         Donasi: {
           select: {
             id: true,
@@ -139,7 +153,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       });
     }
 
-    const update = await prisma.donasi_Invoice.update({
+    const updated = await prisma.donasi_Invoice.update({
       where: {
         id: id,
       },
@@ -164,7 +178,40 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    console.log("[UPDATE INVOICE]", update);
+    if (!updated) {
+      return NextResponse.json({
+        status: 500,
+        success: false,
+        message: "Gagal memperbarui data",
+      });
+    }
+
+    const findUsers = await prisma.user.findMany({
+      where: {
+        masterUserRoleId: "2",
+        active: true,
+        NOT: { id: updated?.Donasi?.authorId as string },
+      },
+      select: { id: true },
+    });
+
+    // SEND NOTIFICATION
+    await sendNotificationMobileToManyUser({
+      recipientIds: findUsers.map((user) => user.id),
+      senderId: data.authorId,
+      payload: {
+        title: "Ada Donasi Baru !" as NotificationMobileTitleType,
+        body: `Cek data investor pada ${updated?.Donasi?.title}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "DONASI",
+        deepLink: routeAdminMobile.donationDetailPublish({
+          id: updated?.Donasi?.id as string,
+          status: "publish",
+        }),
+      },
+    });
+
+    console.log("[UPDATE INVOICE]", updated);
 
     return NextResponse.json({
       status: 200,

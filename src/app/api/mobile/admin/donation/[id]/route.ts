@@ -1,6 +1,15 @@
+import {
+  sendNotificationMobileToManyUser,
+  sendNotificationMobileToOneUser,
+} from "@/lib/mobile/notification/send-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
 
 export { GET, PUT };
 
@@ -48,7 +57,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         DonasiMaster_StatusInvoice: {
           name: "Berhasil",
         },
-      },    
+      },
     });
 
     return NextResponse.json(
@@ -60,7 +69,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           donatur: successInvoice,
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -69,7 +78,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         message: "Error get detail Investasi",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -77,6 +86,10 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { catatan, senderId } = data;
+  console.log("[PUT CATATAN]", catatan);
+  console.log("[PUT SENDER ID]", senderId);
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const fixStatus = _.startCase(status as string);
@@ -102,7 +115,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           message: "Error update data event",
           reason: "Status not found",
         },
-        { status: 500 }
+        { status: 500 },
       );
 
     if (fixStatus === "Reject") {
@@ -111,8 +124,21 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           id: id,
         },
         data: {
-          catatan: data,
+          catatan: catatan,
           donasiMaster_StatusDonasiId: checkStatus.id,
+        },
+      });
+
+      // SEND NOTIFICATION
+      await sendNotificationMobileToOneUser({
+        recipientId: updateData.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Pengajuan Review Ditolak",
+          body: "Mohon perbaiki data sesuai catatan penolakan !",
+          type: "announcement",
+          kategoriApp: "DONASI",
+          deepLink: routeUserMobile.donationByStatus({ status: "reject" }),
         },
       });
 
@@ -128,6 +154,39 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         },
       });
 
+      // SEND NOTIFICAtION
+      await sendNotificationMobileToOneUser({
+        recipientId: updateData.authorId as any,
+        senderId: senderId,
+        payload: {
+          title: "Review Selesai",
+          body: `Donasi kamu telah dipublikasikan ! ${updateData.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "DONASI",
+          deepLink: routeUserMobile.donationByStatus({ status: "publish" }),
+        },
+      });
+
+      const allUsers = await prisma.user.findMany({
+        where: {
+          NOT: { id: updateData.authorId as any },
+          active: true,
+        },
+        select: { id: true },
+      });
+
+      await sendNotificationMobileToManyUser({
+        recipientIds: allUsers.map((user) => user.id),
+        senderId: senderId,
+        payload: {
+          title: "Ayo Cek Donasi Terbaru" as NotificationMobileTitleType,
+          body: `${updateData.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "DONASI",
+          deepLink: routeUserMobile.donationDetailPublish({ id: id }),
+        },
+      });
+
       fixData = updateData;
     }
 
@@ -137,7 +196,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         message: "Data Donasi Berhasil Diambil",
         data: data,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -146,7 +205,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         message: "Error get detail Investasi",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

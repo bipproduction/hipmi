@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import _ from "lodash";
+import { sendNotificationMobileToOneUser } from "@/lib/mobile/notification/send-notification";
+import { NotificationMobileBodyType, NotificationMobileTitleType } from "../../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { GET, PUT };
 
@@ -50,6 +53,7 @@ async function GET(req: Request, { params }: { params: { id: string } }) {
 interface DataType {
   donationId: string;
   nominal: number;
+  senderId: string;
 }
 
 async function PUT(req: Request, { params }: { params: { id: string } }) {
@@ -111,6 +115,9 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
       data: {
         donasiMaster_StatusInvoiceId: checkStatusTransaksi.id,
       },
+      select: {
+        authorId: true,
+      },
     });
 
     if (!updateInvoice) {
@@ -153,6 +160,38 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
         { status: 500 }
       );
     }
+
+      // SEND NOTIFICATION: to donatur
+          await sendNotificationMobileToOneUser({
+            recipientId: updateInvoice?.authorId as string,
+            senderId: data?.senderId || "",
+            payload: {
+              title: "Transaksi Berhasil" as NotificationMobileTitleType,
+              body: `Selamat anda menjadi donatur pada ${updateDonasi?.title}` as NotificationMobileBodyType,
+              type: "announcement",
+              kategoriApp: "DONASI",
+              deepLink: routeUserMobile.donationTransaction,
+            },
+          });
+    
+          // SEND NOTIFICATION: to creator
+          await sendNotificationMobileToOneUser({
+            recipientId: updateDonasi?.authorId as any,
+            senderId: data?.senderId || "",
+            payload: {
+              title: "Ada Donatur Baru !" as NotificationMobileTitleType,
+              body: `Cek daftar donatur pada ${updateDonasi?.title}` as NotificationMobileBodyType,
+              type: "announcement",
+              kategoriApp: "DONASI",
+              deepLink: routeUserMobile.donationDetailPublish({
+                id: updateDonasi?.id as string,
+              }),
+            },
+          });
+
+
+
+    
 
     return NextResponse.json(
       {
