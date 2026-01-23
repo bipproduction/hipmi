@@ -174,7 +174,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
           body: `${updatedData.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investasiDetailPublish({ id: id }),
+          deepLink: routeUserMobile.investmentDetailPublish({ id: id }),
         },
       });
 

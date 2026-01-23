@@ -29,8 +29,19 @@ const routeAdminMobile = {
     id: string;
     status: StatusApp;
   }) => `/admin/investment/${id}/${status}`,
+  
+  // DONATION
+  donationByStatus: ({ status }: { status: StatusApp }) => `/admin/donation/${status}/status`,
+  donationDetailPublish: ({
+    id,
+    status,
+  }: {
+    id: string;
+    status: StatusApp;
+  }) => `/admin/donation/${id}/${status}`,
 };
 
+// ================ ROUTER USER =================
 const routeUserMobile = {
   home: `/(user)/home`,
   // JOB
@@ -59,6 +70,12 @@ const routeUserMobile = {
   // INVESTMENT
   investmentPortofolioByStatus: ({ status }: { status?: StatusApp }) =>
     `/investment/(tabs)/portofolio?status=${status}`,
-  investasiDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
-  investasiTransaction: `/investment/(tabs)/transaction`
+  investmentDetailPublish: ({ id }: { id: string }) => `/investment/${id}`,
+  investmentTransaction: `/investment/(tabs)/transaction`,
+
+  // DONATION
+  donationByStatus: ({ status }: { status?: StatusApp }) =>
+    `/donation/(tabs)/status?status=${status}`,
+  donationDetailPublish: ({ id }: { id: string }) => `/donation/${id}`,
+  donationTransaction: `/donation/(tabs)/my-donation`,
 };

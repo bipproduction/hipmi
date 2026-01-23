@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { prisma } from "@/lib";
 import { NextResponse } from "next/server";
+import { sendNotificationInvestmentAddNews } from "@/lib/mobile/notification/notification-add-news-investment";
 
 export { POST, GET, DELETE };
 
@@ -21,6 +22,21 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
           deskripsi: data.deskripsi,
           imageId: data.imageId,
         },
+        select: {
+          investasiId: true,
+          investasi: {
+            select: {
+              title: true,
+              authorId: true,
+            },
+          },
+        },
+      });
+
+      await sendNotificationInvestmentAddNews({
+        invesmentId: createWithFile.investasiId,
+        senderId: createWithFile.investasi.authorId as string,
+        title: createWithFile.investasi.title,
       });
 
       fixData = createWithFile;
@@ -31,6 +47,21 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
           title: _.startCase(data.title),
           deskripsi: data.deskripsi,
         },
+        select: {
+          investasiId: true,
+          investasi: {
+            select: {
+              title: true,
+              authorId: true,
+            },
+          },
+        },
+      });
+
+      await sendNotificationInvestmentAddNews({
+        invesmentId: createWitOutFile.investasiId,
+        senderId: createWitOutFile.investasi.authorId as string,
+        title: createWitOutFile.investasi.title,
       });
 
       fixData = createWitOutFile;
@@ -111,7 +142,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
 async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   console.log("id", id);
