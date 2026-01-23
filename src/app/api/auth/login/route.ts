@@ -2,12 +2,13 @@ import { prisma } from "@/lib";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
+import { sendCodeOtp } from "@/lib/code-otp-sender";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
     return NextResponse.json(
       { success: false, message: "Method Not Allowed" },
-      { status: 405 }
+      { status: 405 },
     );
   }
 
@@ -26,29 +27,21 @@ export async function POST(req: Request) {
     if (!createOtpId)
       return NextResponse.json(
         { success: false, message: "Gagal mengirim kode OTP" },
-        { status: 400 }
+        { status: 400 },
       );
 
-    const msg = `HIPMI%20-%20Kode%20ini%20bersifat%20RAHASIA%20dan%20JANGAN%20DI%20BAGIKAN%20KEPADA%20SIAPAPUN%2C%20termasuk%20anggota%20ataupun%20pengurus%20HIPMI%20lainnya.%5Cn%5Cn%3E%3E%20Kode%20OTP%20anda%3A%20${codeOtp}.`;
-    // const encodedMsg = encodeURIComponent(msg);
+    const resSendCode = await sendCodeOtp({
+      nomor,
+      codeOtp: codeOtp.toString(),
+    });
 
-    const res = await fetch(
-      `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=${nomor}&text=${msg}`,
-      {
-        cache: "no-cache",
-        headers: {
-          Authorization: `Bearer ${process.env.WA_SERVER_TOKEN}`,
-        },
-      }
-    );
-
-    if (res.status !== 200)
+    if (resSendCode.status !== 200)
       return NextResponse.json(
         { success: false, message: "Nomor Whatsapp Tidak Aktif" },
-        { status: 400 }
+        { status: 400 },
       );
 
-    const sendWa = await res.text();
+    const sendWa = await resSendCode.text();
     console.log("WA Response:", sendWa);
 
     return NextResponse.json(
@@ -57,7 +50,7 @@ export async function POST(req: Request) {
         message: "Kode verifikasi terkirim",
         kodeId: createOtpId.id,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     backendLogger.log("Error Login", error);
@@ -67,7 +60,7 @@ export async function POST(req: Request) {
         message: "Terjadi masalah saat login",
         reason: error as Error,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

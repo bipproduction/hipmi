@@ -90,7 +90,7 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
           body: `Maaf transaksi kamu telah ditolak ! ${updt?.Investasi?.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investasiTransaction,
+          deepLink: routeUserMobile.investmentTransaction,
         },
       });
 
@@ -182,7 +182,7 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
           body: `Selamat anda menjadi investor pada investasi ${findInvestasi?.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investasiTransaction,
+          deepLink: routeUserMobile.investmentTransaction,
         },
       });
 
@@ -195,7 +195,7 @@ async function PUT(req: Request, { params }: { params: { id: string } }) {
           body: `Cek daftar investor pada ${findInvestasi?.title}` as NotificationMobileBodyType,
           type: "announcement",
           kategoriApp: "INVESTASI",
-          deepLink: routeUserMobile.investasiDetailPublish({
+          deepLink: routeUserMobile.investmentDetailPublish({
             id: findInvestasi?.id as string,
           }),
         },
