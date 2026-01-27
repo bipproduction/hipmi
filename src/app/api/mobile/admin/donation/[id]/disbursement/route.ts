@@ -1,11 +1,22 @@
+import { funFindDonaturList } from "@/lib/mobile/donation/find-donatur-list";
+import {
+  sendNotificationMobileToManyUser,
+  sendNotificationMobileToOneUser,
+} from "@/lib/mobile/notification/send-notification";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET };
 
 async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { data } = await request.json();
+  const { title, nominalCair, deskripsi, imageId, authorId } = data;
 
   try {
     const dataDonasi = await prisma.donasi.findUnique({
@@ -22,19 +33,19 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
       return NextResponse.json(
         {
           success: false,
-          message: "Pencarian Donasi Gagal",
-          reason: "Pencarian Donasi Gagal",
+          message: "DataPencarian Donasi Gagal",
+          reason: "Data Pencarian Donasi Gagal",
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     const createPencairan = await prisma.donasi_PencairanDana.create({
       data: {
         donasiId: id,
-        nominalCair: +data.nominalCair,
-        deskripsi: data.deskripsi,
-        title: data.title,
-        imageId: data.imageId,
+        nominalCair: +nominalCair,
+        deskripsi: deskripsi,
+        title: title,
+        imageId: imageId,
       },
     });
 
@@ -45,11 +56,11 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
           message: "Pencairan Dana Gagal",
           reason: "Pencairan Dana Gagal",
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     const hasilTotalPencairan =
-      Number(dataDonasi.totalPencairan) + Number(data.nominalCair);
+      Number(dataDonasi.totalPencairan) + Number(nominalCair);
     // const hasilAkumulasiPencairan = Number(dataDonasi.akumulasiPencairan) + 1;
 
     const countPencairan = await prisma.donasi_PencairanDana.count({
@@ -66,7 +77,46 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         akumulasiPencairan: countPencairan,
         totalPencairan: hasilTotalPencairan,
       },
+      select: {
+        authorId: true,
+        title: true,
+      },
     });
+
+    // ================= START SEND NOTIFICATION =================
+    await sendNotificationMobileToOneUser({
+      recipientId: updateDonasi?.authorId!,
+      senderId: authorId,
+      payload: {
+        title: "Pencairan Dana Berhasil" as NotificationMobileTitleType,
+        body: `Telah dilaksanakan pencairan dana untuk ${updateDonasi?.title}` as NotificationMobileBodyType,
+        type: "announcement",
+        kategoriApp: "DONASI",
+        deepLink: routeUserMobile.donationDetailPublish({
+          id: id,
+        }),
+      },
+    });
+
+    const recipientIds = await funFindDonaturList(id);
+
+    if (recipientIds.length > 0) {
+      await sendNotificationMobileToManyUser({
+        recipientIds,
+        senderId: authorId,
+        payload: {
+          title: "Pencarian Dana" as NotificationMobileTitleType,
+          body: `Update pencarian dana pada ${updateDonasi?.title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "DONASI",
+          deepLink: routeUserMobile.donationDetailPublish({
+            id: id,
+          }),
+        },
+      });
+    }
+
+    // ================= END SEND NOTIFICATION =================
 
     if (!updateDonasi)
       return NextResponse.json(
@@ -75,7 +125,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
           message: "Update Donasi Gagal",
           reason: "Update Donasi Gagal",
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     return NextResponse.json(
@@ -84,7 +134,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         message: "Pencairan Dana Berhasil",
         // data: data,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("[ERROR]", error);
@@ -94,7 +144,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         message: "Pencairan Dana Gagal",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -110,7 +160,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   console.log("[CATEGORY]", category);
   let fixData;
   try {
-
     if (category === "get-all") {
       fixData = await prisma.donasi_PencairanDana.findMany({
         take: page ? takeData : undefined,
@@ -140,7 +189,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           message: "Category tidak ditemukan",
           reason: "Category tidak ditemukan",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -150,7 +199,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         message: "Success get data disbursement",
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("[ERROR]", error);
@@ -160,7 +209,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         message: "Gagal mendapatkan data disbursement",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
