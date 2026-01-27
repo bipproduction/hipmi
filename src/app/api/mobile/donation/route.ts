@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
 
-export { POST };
+export { POST, GET };
 
 async function POST(request: Request) {
   const { data } = await request.json();
@@ -121,7 +121,7 @@ async function POST(request: Request) {
 }
 
 // GET ALL DATA DONASI
-export async function GET(request: Request) {
+async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
