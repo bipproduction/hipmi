@@ -1,25 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import _ from "lodash";
+import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../../../types/type-mobile-notification";
+import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { funFindDonaturList } from "@/lib/mobile/donation/find-donatur-list";
 
 export { POST, GET, PUT, DELETE };
 
 async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   const { data } = await request.json();
+  const { title, deskripsi, imageId } = data;
 
+  const senderId = await prisma.donasi.findUnique({
+    where: { id: id },
+    select: {
+      authorId: true,
+    },
+  });
 
   try {
     if (data && data?.imageId) {
       const createWithFile = await prisma.donasi_Kabar.create({
         data: {
-          title: data.title,
-          deskripsi: data.deskripsi,
+          title: title,
+          deskripsi: deskripsi,
           donasiId: id,
-          imageId: data.imageId,
+          imageId: imageId,
         },
       });
 
@@ -28,14 +42,33 @@ async function POST(
     } else {
       const create = await prisma.donasi_Kabar.create({
         data: {
-          title: data.title,
-          deskripsi: data.deskripsi,
+          title: title,
+          deskripsi: deskripsi,
           donasiId: id,
         },
       });
 
       if (!create)
         return NextResponse.json({ status: 400, message: "Gagal disimpan" });
+    }
+
+    const recipientIds = await funFindDonaturList(id);
+
+    // SEND NOTIFICATION
+    if (recipientIds.length > 0) {
+      await sendNotificationMobileToManyUser({
+        recipientIds,
+        senderId: senderId?.authorId!,
+        payload: {
+          title: "Berita terbaru" as NotificationMobileTitleType,
+          body: `Ada berita terupdate pada ${title}` as NotificationMobileBodyType,
+          type: "announcement",
+          kategoriApp: "DONASI",
+          deepLink: routeUserMobile.donationDetailPublish({
+            id: id,
+          }),
+        },
+      });
     }
 
     return NextResponse.json({
@@ -56,7 +89,7 @@ async function POST(
 
 async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
@@ -178,7 +211,7 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
 
 async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   try {
@@ -198,7 +231,7 @@ async function DELETE(
         headers: {
           Authorization: `Bearer ${process.env.WS_APIKEY}`,
         },
-      }
+      },
     );
 
     if (!deleteImage) {
