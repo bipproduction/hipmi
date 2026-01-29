@@ -2,7 +2,7 @@ import { prisma } from "@/lib";
 import { randomOTP } from "@/app_modules/auth/fun/rondom_otp";
 import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
-import { sendCodeOtp } from "@/lib/code-otp-sender";
+import { funSendToWhatsApp } from "@/lib/code-otp-sender";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nomor } = body;
 
-    const resSendCode = await sendCodeOtp({
+    const resSendCode = await funSendToWhatsApp({
       nomor,
       codeOtp: codeOtp.toString(),
     });
