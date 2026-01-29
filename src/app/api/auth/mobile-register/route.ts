@@ -7,7 +7,7 @@ import {
   NotificationMobileBodyType,
   NotificationMobileTitleType,
 } from "../../../../../types/type-mobile-notification";
-import { sendCodeOtp } from "@/lib/code-otp-sender";
+import { funSendToWhatsApp } from "@/lib/code-otp-sender";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
-   const resSendCode = await sendCodeOtp({
+   const resSendCode = await funSendToWhatsApp({
       nomor: data.nomor,
       codeOtp: codeOtp.toString(),
     });

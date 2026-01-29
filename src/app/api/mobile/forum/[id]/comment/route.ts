@@ -90,9 +90,15 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page"));
+  const takeData = 5
+  const skipData = page * takeData - takeData;
 
   try {
     const data = await prisma.forum_Komentar.findMany({
+      take: page ? takeData : undefined,
+      skip: page ? skipData : undefined,
       orderBy: {
         createdAt: "desc",
       },

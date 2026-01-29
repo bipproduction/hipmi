@@ -1,4 +1,5 @@
 import { prisma } from "@/lib";
+import { funSendToWhatsApp } from "@/lib/code-otp-sender";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -50,7 +51,24 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
         data: {
           active: data.active,
         },
+        select: {
+          nomor: true,
+        },
       });
+
+      if (data.active) {
+        const resSendCode = await funSendToWhatsApp({
+          nomor: updateData.nomor,
+          newMessage:
+            "Halo sahabat HIConnect, \nSelamat akun anda telah aktif ! \n\n*Pesan ini di kirim secara otomatis, tidak perlu di balas.",
+        });
+      } else {
+        const resSendCode = await funSendToWhatsApp({
+          nomor: updateData.nomor,
+          newMessage:
+            "Halo sahabat HIConnect, \nMohon maaf akun anda telah dinonaktifkan ! Hubungi admin untuk informasi lebih lanjut. \n\n*Pesan ini di kirim secara otomatis, tidak perlu di balas.",
+        });
+      }
 
       console.log("[Update Active Berhasil]", updateData);
     } else if (category === "role") {

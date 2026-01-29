@@ -5,8 +5,16 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
+    const page = Number(searchParams.get("page"));
+    const takeData = 10;
+    const skipData = page * takeData - takeData;
+
+    console.log("SEARCH", search);
+    console.log("PAGE", page);
 
     const data = await prisma.user.findMany({
+      take: page ? takeData : undefined,
+      skip: page ? skipData : undefined,
       orderBy: {
         username: "asc",
       },
@@ -43,16 +51,12 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Berhasil mendapatkan data",
-        data: data,
-      },
-      {
-        status: 200,
-      }
-    );
+    return NextResponse.json({
+      status: 200,
+      success: true,
+      message: "Berhasil mendapatkan data",
+      data: data,
+    });
   } catch (error) {
     return NextResponse.json(
       {
@@ -62,7 +66,7 @@ export async function GET(request: Request) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 
