@@ -16,7 +16,13 @@ export async function GET(
   const fixCategory = _.upperCase(category || "");
 
   try {
+    const page = Number(searchParams.get("page"));
+    const takeData = 10;
+    const skipData = page ? page * takeData - takeData : 0;
+
     const data = await prisma.notifikasi.findMany({
+      take: page ? takeData : undefined,
+      skip: page ? skipData : undefined,
       orderBy: {
         createdAt: "desc",
       },
@@ -26,12 +32,40 @@ export async function GET(
       },
     });
 
+    // Jika pagination digunakan, ambil juga total count untuk informasi
+    let totalCount;
+    let totalPages;
+    if (page) {
+      totalCount = await prisma.notifikasi.count({
+        where: {
+          recipientId: id,
+          kategoriApp: fixCategory,
+        },
+      });
+      totalPages = Math.ceil(totalCount / takeData);
+    }
+
     fixData = data;
 
-    return NextResponse.json({
+    const response = {
       success: true,
       data: fixData,
-    });
+    };
+
+    // Tambahkan metadata pagination jika parameter page disertakan
+    if (page) {
+      Object.assign(response, {
+        meta: {
+          page,
+          take: takeData,
+          skip: skipData,
+          total: totalCount,
+          totalPages,
+        },
+      });
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },

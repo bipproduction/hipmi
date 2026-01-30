@@ -1,13 +1,16 @@
 const sendCodeOtp = async ({
   nomor,
   codeOtp,
+  newMessage,
 }: {
   nomor: string;
-  codeOtp: string;
+  codeOtp?: string;
+  newMessage?: string;
 }) => {
-  const msg = `HIPMI%20-%20Kode%20ini%20bersifat%20RAHASIA%20dan%20JANGAN%20DI%20BAGIKAN%20KEPADA%20SIAPAPUN%2C%20termasuk%20anggota%20ataupun%20pengurus%20HIPMI%20lainnya.%20Kode%20OTP%20anda%3A%20${codeOtp}.`;
+  const msg = newMessage || `HIPMI - Kode ini bersifat RAHASIA dan JANGAN DI BAGIKAN KEPADA SIAPAPUN, termasuk anggota ataupun pengurus HIPMI lainnya.\n\n>> Kode OTP anda: ${codeOtp}.`;
+  const enCode = encodeURIComponent(msg);
   const res = await fetch(
-    `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=${nomor}&text=${msg}`,
+    `https://cld-dkr-prod-wajs-server.wibudev.com/api/wa/code?nom=${nomor}&text=${enCode}`,
     {
       cache: "no-cache",
       headers: {
@@ -25,4 +28,4 @@ const sendCodeOtp = async ({
   return res;
 };
 
-export { sendCodeOtp };
+export { sendCodeOtp as funSendToWhatsApp };
