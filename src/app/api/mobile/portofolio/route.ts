@@ -7,8 +7,13 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const page = parseInt(searchParams.get("page") || "1");
+    const take = 10; // Default 10 data
+    const skip = page * take - take;
 
     const data = await prisma.portofolio.findMany({
+      skip,
+      take,
       orderBy: {
         createdAt: "desc",
       },
@@ -18,22 +23,30 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       },
     });
 
-    if (!data)
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data tidak ditemukan",
-        },
-        { status: 404 }
-      );
+    // Hitung total data untuk informasi pagination
+    const total = await prisma.portofolio.count({
+      where: {
+        profileId: id,
+        active: true,
+      },
+    });
+
+    const totalPages = Math.ceil(total / take);
 
     return NextResponse.json(
       {
         success: true,
         message: "Berhasil mendapatkan data",
         data: data,
+        meta: {
+          page,
+          take,
+          skip,
+          total,
+          totalPages,
+        },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -42,7 +55,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         message: "API Error Get Data Potofolio",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -66,7 +79,10 @@ async function POST(request: Request) {
       },
     });
 
-    if (data.subBidang.length > 0 || data.subBidang.map((item: any) => item.id !== "")) {
+    if (
+      data.subBidang.length > 0 ||
+      data.subBidang.map((item: any) => item.id !== "")
+    ) {
       for (let i of data.subBidang) {
         const createSubBidang =
           await prisma.portofolio_BidangDanSubBidangBisnis.create({
@@ -84,7 +100,7 @@ async function POST(request: Request) {
               success: false,
               message: "Gagal membuat sub bidang bisnis",
             },
-            { status: 400 }
+            { status: 400 },
           );
       }
     }
@@ -95,7 +111,7 @@ async function POST(request: Request) {
           success: false,
           message: "Gagal membuat portofolio",
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     const createMedsos = await prisma.portofolio_MediaSosial.create({
@@ -115,7 +131,7 @@ async function POST(request: Request) {
           success: false,
           message: "Gagal menambahkan medsos",
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     return NextResponse.json(
@@ -124,7 +140,7 @@ async function POST(request: Request) {
         message: "Berhasil mendapatkan data",
         data: createPortofolio,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -133,7 +149,7 @@ async function POST(request: Request) {
         message: "API Error Post Data",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
