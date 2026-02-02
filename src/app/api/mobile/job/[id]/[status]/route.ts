@@ -1,3 +1,4 @@
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
 import { NextResponse } from "next/server";
@@ -11,6 +12,11 @@ async function GET(
   try {
     const { id, status } = params;
     const fixStatusName = _.startCase(status);
+
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page"));
+    const takeData = PAGINATION_DEFAULT_TAKE;
+    const skipData = page ? page * takeData - takeData : 0;
 
     const data = await prisma.job.findMany({
       orderBy: {
@@ -28,13 +34,20 @@ async function GET(
         id: true,
         title: true,
       },
+      take: takeData,
+      skip: skipData,
     });
+
 
     return NextResponse.json(
       {
         success: true,
         message: "Success get job",
         data: data,
+        pagination: {
+          currentPage: page,
+          dataPerPage: takeData,
+        },
       },
       { status: 200 }
     );
