@@ -1,5 +1,6 @@
 
-File utama: src/app/api/mobile/job/route.ts
+File utama: src/app/api/mobile/event/route.ts
+File refrensi: src/app/api/mobile/job/[id]/[status]/route.ts
 
 Terapkan pagination pada file "File utama" pada method GET
 Analisa juga file "File utama", jika belum memiliki page dari seachParams maka terapkan. Juga pastikan take dan skip sudah sesuai dengan pagination. Buat default nya menjadi 10 untuk take data
@@ -12,5 +13,7 @@ const skipData = page * takeData - takeData;
 dan penerapannya pada query
 take: page ? takeData : undefined,
 skip: page ? skipData : undefined,
+
+Anda bisa menggunakan refrensi dari "File refrensi" jika butuh pemahaman dengan tipe fitur yang sama
 
 Gunakan bahasa indonesia pada cli agar saya mudah membacanya.

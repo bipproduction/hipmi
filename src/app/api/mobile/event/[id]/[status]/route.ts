@@ -12,6 +12,11 @@ async function GET(
     const { id, status } = params;
     const fixStatusName = _.startCase(status);
 
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const takeData = 10;
+    const skipData = page * takeData - takeData;
+
     const data = await prisma.event.findMany({
       orderBy: {
         updatedAt: "desc",
@@ -37,13 +42,35 @@ async function GET(
         },
         authorId: true,
       },
+      take: takeData,
+      skip: skipData,
     });
+
+    // Get total count for pagination info
+    const totalCount = await prisma.event.count({
+      where: {
+        active: true,
+        authorId: id,
+        isArsip: false,
+        EventMaster_Status: {
+          name: fixStatusName,
+        },
+      },
+    });
+
+    const totalPages = Math.ceil(totalCount / takeData);
 
     return NextResponse.json(
       {
         success: true,
         message: "Success get event",
         data: data,
+        pagination: {
+          currentPage: page,
+          totalPages: totalPages,
+          totalData: totalCount,
+          dataPerPage: takeData,
+        },
       },
       { status: 200 }
     );

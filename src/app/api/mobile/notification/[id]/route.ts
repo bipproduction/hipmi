@@ -6,20 +6,22 @@ import { adminMessaging } from "@/lib/firebase-admin";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
+  console.log("ID", id);
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
-
-  let fixData;
   const fixCategory = _.upperCase(category || "");
 
-  try {
-    const page = Number(searchParams.get("page"));
-    const takeData = 10;
-    const skipData = page ? page * takeData - takeData : 0;
+  const page = Number(searchParams.get("page"));
+  console.log("page", page);
+  const takeData = 10;
+  const skipData = page * takeData - takeData;
 
+  let fixData;
+
+  try {
     const data = await prisma.notifikasi.findMany({
       take: page ? takeData : undefined,
       skip: page ? skipData : undefined,
@@ -69,14 +71,14 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
@@ -113,7 +115,7 @@ export async function PUT(
     console.error("Error marking notifications as read:", error);
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
