@@ -5,6 +5,7 @@ import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, POST };
 
@@ -77,7 +78,7 @@ async function GET(request: Request) {
     const category = searchParams.get("category");
     const userId = searchParams.get("userId");
     const page = Number(searchParams.get("page")) || 1;
-    const takeData = 5;
+    const takeData = PAGINATION_DEFAULT_TAKE;
     const skipData = page * takeData - takeData;
 
     console.log("[CAT]", category);
@@ -165,6 +166,7 @@ async function GET(request: Request) {
             userId: userId,
           },
           select: {
+            id: true,
             eventId: true,
             userId: true,
             Event: {

@@ -6,6 +6,7 @@ import {
   NotificationMobileTitleType,
 } from "../../../../../../../types/type-mobile-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, POST };
 
@@ -47,7 +48,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         message: "Success join event",
         data: createJoin,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -56,7 +57,7 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
         message: "Error join event",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -64,12 +65,17 @@ async function POST(request: Request, { params }: { params: { id: string } }) {
 async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const takeData = PAGINATION_DEFAULT_TAKE
+    const skipData = page * takeData - takeData;
 
     const data = await prisma.event_Peserta.findMany({
       where: {
         eventId: id,
       },
       select: {
+        id: true,
         eventId: true,
         userId: true,
         isPresent: true,
@@ -87,6 +93,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           },
         },
       },
+      take: takeData,
+      skip: skipData,
     });
 
     return NextResponse.json(
@@ -94,8 +102,14 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         success: true,
         message: "Success get participants",
         data: data,
+        meta: {
+          page,
+          take: takeData,
+          total: await prisma.event_Peserta.count({ where: { eventId: id } }),
+          totalPages: Math.ceil(await prisma.event_Peserta.count({ where: { eventId: id } }) / takeData),
+        },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -104,7 +118,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         message: "Error get participants",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

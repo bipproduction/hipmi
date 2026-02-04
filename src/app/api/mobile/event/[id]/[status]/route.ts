@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import _ from "lodash";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, PUT };
 
@@ -14,7 +15,7 @@ async function GET(
 
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page")) || 1;
-    const takeData = 10;
+    const takeData = PAGINATION_DEFAULT_TAKE
     const skipData = page * takeData - takeData;
 
     const data = await prisma.event.findMany({
