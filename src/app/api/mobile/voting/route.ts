@@ -4,6 +4,7 @@ import _ from "lodash";
 import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET };
 
@@ -87,8 +88,9 @@ async function GET(request: Request) {
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
   const userLoginId = searchParams.get("userLoginId");
-
-  console.log("userLoginId >>", userLoginId);
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page * takeData - takeData;
 
   let fixData;
 
@@ -123,6 +125,8 @@ async function GET(request: Request) {
             },
           },
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         include: {
           Voting_DaftarNamaVote: {
             orderBy: {
@@ -154,6 +158,8 @@ async function GET(request: Request) {
         where: {
           authorId: authorId,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         include: {
           Voting: {
             select: {
@@ -211,6 +217,8 @@ async function GET(request: Request) {
             mode: "insensitive",
           },
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         include: {
           Voting_DaftarNamaVote: {
             orderBy: {
@@ -249,6 +257,8 @@ async function GET(request: Request) {
             mode: "insensitive",
           },
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         include: {
           Voting_DaftarNamaVote: {
             orderBy: {

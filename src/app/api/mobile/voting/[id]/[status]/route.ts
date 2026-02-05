@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, PUT };
 
@@ -10,13 +11,11 @@ async function GET(
 ) {
   try {
     const { id, status } = params;
-    console.log("[ID]", id);
     const fixStatusName = _.startCase(status);
-    console.log("[STATUS]", fixStatusName);
 
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page")) || 1;
-    const takeData = 10;
+    const takeData = PAGINATION_DEFAULT_TAKE
     const skipData = page * takeData - takeData;
 
     let data;
@@ -101,9 +100,7 @@ async function PUT(
 ) {
   try {
     const { id, status } = params;
-    console.log("[ID]", id);
     const fixStatusName = _.startCase(status);
-    console.log("[STATUS]", fixStatusName);
 
     const checkData = await prisma.voting.findFirst({
       where: {
@@ -118,8 +115,6 @@ async function PUT(
         },
       },
     });
-
-    console.log("[CHECKDATA]", checkData);
 
     if (!checkData)
       return NextResponse.json({
@@ -154,8 +149,6 @@ async function PUT(
         voting_StatusId: checkStatus.id,
       },
     });
-
-    console.log("[UPDATE]", updateData);
 
     return NextResponse.json({
       success: true,
