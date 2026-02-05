@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET };
 
@@ -8,10 +9,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const authorId = searchParams.get("authorId");
   const category = searchParams.get("category");
-
-  console.log("[ID]", id);
-  console.log("[AUTHOR ID]", authorId);
-  console.log("[CATEGORY]", category);
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page ? page * takeData - takeData : 0;
 
   let fixData;
 
@@ -53,7 +53,10 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         where: {
           votingId: id,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
+          id: true,
           Voting_DaftarNamaVote: {
             select: {
               value: true,
@@ -74,8 +77,6 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           },
         },
       });
-
-      console.log("[LIST KONTRIBUTOR]", listKontributor);
 
       fixData = listKontributor;
     }
