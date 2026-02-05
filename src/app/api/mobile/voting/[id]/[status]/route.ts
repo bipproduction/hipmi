@@ -14,10 +14,31 @@ async function GET(
     const fixStatusName = _.startCase(status);
     console.log("[STATUS]", fixStatusName);
 
-    let fixData;
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const takeData = 10;
+    const skipData = page * takeData - takeData;
+
+    let data;
+    let totalCount;
 
     if (fixStatusName === "Publish") {
-      fixData = await prisma.voting.findMany({
+      data = await prisma.voting.findMany({
+        where: {
+          authorId: id,
+          isActive: true,
+          akhirVote: {
+            gte: new Date(),
+          },
+          Voting_Status: {
+            name: fixStatusName,
+          },
+        },
+        take: takeData,
+        skip: skipData,
+      });
+
+      totalCount = await prisma.voting.count({
         where: {
           authorId: id,
           isActive: true,
@@ -30,7 +51,18 @@ async function GET(
         },
       });
     } else {
-      fixData = await prisma.voting.findMany({
+      data = await prisma.voting.findMany({
+        where: {
+          authorId: id,
+          Voting_Status: {
+            name: fixStatusName,
+          },
+        },
+        take: takeData,
+        skip: skipData,
+      });
+
+      totalCount = await prisma.voting.count({
         where: {
           authorId: id,
           Voting_Status: {
@@ -40,10 +72,18 @@ async function GET(
       });
     }
 
+    const totalPages = Math.ceil(totalCount / takeData);
+
     return NextResponse.json({
       success: true,
       message: "Success get voting",
-      data: fixData,
+      data: data,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalData: totalCount,
+        dataPerPage: takeData,
+      },
     });
   } catch (error) {
     console.log("[ERROR]", error);

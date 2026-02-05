@@ -5,6 +5,7 @@ import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, POST };
 
@@ -76,11 +77,15 @@ async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const userId = searchParams.get("userId");
+    const page = Number(searchParams.get("page")) || 1;
+    const takeData = PAGINATION_DEFAULT_TAKE;
+    const skipData = page * takeData - takeData;
 
     console.log("[CAT]", category);
     console.log("[USER]", userId);
 
     let fixData;
+    let totalCount = 0;
 
     if (category === "beranda") {
       const allData = await prisma.event.findMany({
@@ -108,84 +113,96 @@ async function GET(request: Request) {
         }
       }
 
-      // const takeData = 10;
-      // const skipData = page * takeData - takeData;
-
-      const data = await prisma.event.findMany({
-        //   take: takeData,
-        //   skip: skipData,
-        orderBy: [
-          {
-            tanggal: "asc",
+      const [data, count] = await Promise.all([
+        prisma.event.findMany({
+          take: takeData,
+          skip: skipData,
+          orderBy: [
+            {
+              tanggal: "asc",
+            },
+          ],
+          where: {
+            active: true,
+            eventMaster_StatusId: "1",
+            isArsip: false,
           },
-        ],
-        where: {
-          active: true,
-          eventMaster_StatusId: "1",
-          isArsip: false,
-        },
-        select: {
-          id: true,
-          title: true,
-          deskripsi: true,
-          tanggal: true,
-          tanggalSelesai: true,
-          EventMaster_Status: {
-            select: {
-              name: true,
+          select: {
+            id: true,
+            title: true,
+            deskripsi: true,
+            tanggal: true,
+            tanggalSelesai: true,
+            EventMaster_Status: {
+              select: {
+                name: true,
+              },
+            },
+            authorId: true,
+            Author: {
+              include: {
+                Profile: true,
+              },
             },
           },
-          authorId: true,
-          Author: {
-            include: {
-              Profile: true,
-            },
+        }),
+        prisma.event.count({
+          where: {
+            active: true,
+            eventMaster_StatusId: "1",
+            isArsip: false,
           },
-        },
-      });
+        })
+      ]);
 
       fixData = data;
+      totalCount = count;
     } else if (category === "contribution") {
-      const data = await prisma.event_Peserta.findMany({
-        where: {
-          userId: userId,
-        },
-        select: {
-          eventId: true,
-          userId: true,
-          Event: {
-            select: {
-              id: true,
-              title: true,
-              tanggal: true,
-              Author: {
-                select: {
-                  id: true,
-                  username: true,
-                  Profile: {
-                    select: {
-                      id: true,
-                      name: true,
-                      imageId: true,
+      const [data, count] = await Promise.all([
+        prisma.event_Peserta.findMany({
+          take: takeData,
+          skip: skipData,
+          where: {
+            userId: userId,
+          },
+          select: {
+            id: true,
+            eventId: true,
+            userId: true,
+            Event: {
+              select: {
+                id: true,
+                title: true,
+                tanggal: true,
+                Author: {
+                  select: {
+                    id: true,
+                    username: true,
+                    Profile: {
+                      select: {
+                        id: true,
+                        name: true,
+                        imageId: true,
+                      },
                     },
                   },
                 },
-              },
-              Event_Peserta: {
-                take: 4,
-                orderBy: {
-                  createdAt: "desc",
-                },
-                select: {
-                  id: true,
-                  userId: true,
-                  User: {
-                    select: {
-                      Profile: {
-                        select: {
-                          id: true,
-                          name: true,
-                          imageId: true,
+                Event_Peserta: {
+                  take: 4,
+                  orderBy: {
+                    createdAt: "desc",
+                  },
+                  select: {
+                    id: true,
+                    userId: true,
+                    User: {
+                      select: {
+                        Profile: {
+                          select: {
+                            id: true,
+                            name: true,
+                            imageId: true,
+                          },
                         },
                       },
                     },
@@ -194,86 +211,109 @@ async function GET(request: Request) {
               },
             },
           },
-
-          // User: {
-          //   select: {
-          //     id: true,
-          //     username: true,
-          //     Profile: {
-          //       select: {
-          //         id: true,
-          //         name: true,
-          //         imageId: true,
-          //       },
-          //     },
-          //   },
-          // },
-        },
-      });
+        }),
+        prisma.event_Peserta.count({
+          where: {
+            userId: userId,
+          },
+        })
+      ]);
 
       fixData = data;
+      totalCount = count;
     } else if (category === "all-history") {
-      const data = await prisma.event.findMany({
-        orderBy: {
-          tanggal: "desc",
-        },
-        where: {
-          eventMaster_StatusId: "1",
-          isArsip: true,
-        },
-        select: {
-          id: true,
-          title: true,
-          tanggal: true,
-          deskripsi: true,
-          active: true,
-          authorId: true,
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: true,
+      const [data, count] = await Promise.all([
+        prisma.event.findMany({
+          take: takeData,
+          skip: skipData,
+          orderBy: {
+            tanggal: "desc",
+          },
+          where: {
+            eventMaster_StatusId: "1",
+            isArsip: true,
+          },
+          select: {
+            id: true,
+            title: true,
+            tanggal: true,
+            deskripsi: true,
+            active: true,
+            authorId: true,
+            Author: {
+              select: {
+                id: true,
+                username: true,
+                Profile: true,
+              },
             },
           },
-        },
-      });
+        }),
+        prisma.event.count({
+          where: {
+            eventMaster_StatusId: "1",
+            isArsip: true,
+          },
+        })
+      ]);
 
       fixData = data;
+      totalCount = count;
     } else if (category === "my-history") {
-      const data = await prisma.event.findMany({
-        orderBy: {
-          tanggal: "desc",
-        },
-        where: {
-          authorId: userId,
-          eventMaster_StatusId: "1",
-          isArsip: true,
-        },
-        select: {
-          id: true,
-          title: true,
-          tanggal: true,
-          deskripsi: true,
-          active: true,
-          authorId: true,
-          Author: {
-            select: {
-              id: true,
-              username: true,
-              Profile: true,
+      const [data, count] = await Promise.all([
+        prisma.event.findMany({
+          take: takeData,
+          skip: skipData,
+          orderBy: {
+            tanggal: "desc",
+          },
+          where: {
+            authorId: userId,
+            eventMaster_StatusId: "1",
+            isArsip: true,
+          },
+          select: {
+            id: true,
+            title: true,
+            tanggal: true,
+            deskripsi: true,
+            active: true,
+            authorId: true,
+            Author: {
+              select: {
+                id: true,
+                username: true,
+                Profile: true,
+              },
             },
           },
-        },
-      });
+        }),
+        prisma.event.count({
+          where: {
+            authorId: userId,
+            eventMaster_StatusId: "1",
+            isArsip: true,
+          },
+        })
+      ]);
 
       fixData = data;
+      totalCount = count;
     }
+
+    const totalPages = Math.ceil(totalCount / takeData);
 
     return NextResponse.json(
       {
         success: true,
         message: "Success get event",
         data: fixData,
+        pagination: {
+          currentPage: page,
+          totalPages: totalPages,
+          totalData: totalCount,
+          dataPerPage: takeData,
+        },
       },
       { status: 200 }
     );

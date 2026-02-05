@@ -1,28 +1,26 @@
-// const data = [
-//   {
-//     authorId: "clx8pl7r90005su4mldioo0v1",
-//     Donasi: {
-//       id: "clyr304q0000410ljvzms3mag",
-//       title: "Donasi Bencana Alam Aceh",
-//     },
-//   },
-//   {
-//     authorId: "clx8pl7r90005su4mldioo0v1",
-//     Donasi: {
-//       id: "clyr304q0000410ljvzms3mag",
-//       title: "Donasi Bencana Alam Aceh",
-//     },
-//   },
-//   {
-//     authorId: "clycka5eu0001ina3i1ssgze9",
-//     Donasi: {
-//       id: "clyr304q0000410ljvzms3mag",
-//       title: "Donasi Bencana Alam Aceh",
-//     },
-//   },
-// ];
+const { PrismaClient } = require('@prisma/client')
 
+const prisma = new PrismaClient()
 
-console.error("errornya disini klik aja",import.meta.url);
-console.log(new Set(data.map((d) => d.authorId)));
+async function main() {
+  const result = await prisma.notifikasi.updateMany({
+    where: {
+      recipientId: 'cmha7p6yc0000cfoe5w2e7gdr',
+    },
+    data: {
+      isRead: false,
+      readAt: null,
+    },
+  })
 
+  console.log(`✅ Rows affected: ${result.count}`)
+}
+
+main()
+  .catch((err) => {
+    console.error('❌ Error:', err)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
