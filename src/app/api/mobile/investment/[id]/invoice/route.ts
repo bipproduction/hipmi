@@ -7,6 +7,7 @@ import {
   NotificationMobileTitleType,
   NotificationMobileBodyType,
 } from "../../../../../../../types/type-mobile-notification";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET, PUT };
 
@@ -53,6 +54,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page ? page * takeData - takeData : 0;
 
   console.log("[ID INVOICE]", id);
 
@@ -103,6 +107,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           statusInvoiceId: "1",
           isActive: true,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           nominal: true,
@@ -129,6 +135,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         where: {
           authorId: authorId,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           statusInvoiceId: true,
