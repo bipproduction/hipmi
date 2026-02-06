@@ -6,6 +6,7 @@ import {
   NotificationMobileTitleType,
 } from "../../../../../../../types/type-mobile-notification";
 import { routeAdminMobile, routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET, DELETE };
 
@@ -98,6 +99,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE
+  const skipData =  page * takeData - takeData
 
   try {
     let fixData;
@@ -117,6 +121,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           investasiId: id,
           active: true,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
       });
     }
 

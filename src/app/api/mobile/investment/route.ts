@@ -5,6 +5,7 @@ import moment from "moment";
 import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET };
 
@@ -73,6 +74,9 @@ async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE
+  const skipData = page ? page * takeData - takeData : 0;
 
   console.log("[CATEGORY]", category);
   console.log("[AUTHOR ID]", authorId);
@@ -132,6 +136,8 @@ async function GET(request: Request) {
         where: {
           masterStatusInvestasiId: "1",
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           imageId: true,
@@ -156,6 +162,8 @@ async function GET(request: Request) {
           authorId: authorId,
           statusInvoiceId: "1",
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           investasiId: true,
