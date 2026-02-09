@@ -10,8 +10,14 @@ async function GET(
 ) {
   const { id, status } = params;
   const fixStatus = _.startCase(status);
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page")) || 1;
+  const takeData = 5
+  const skipData = page * takeData - takeData;
 
   let fixData;
+  let meta = null;
+  
   try {
     const checkStatus = await prisma.donasiMaster_StatusDonasi.findFirst({
       where: {
@@ -50,18 +56,38 @@ async function GET(
       orderBy: {
         updatedAt: "desc",
       },
+      take: takeData,
+      skip: skipData,
     });
+
+    const totalData = await prisma.donasi.count({
+      where: {
+        authorId: id,
+        donasiMaster_StatusDonasiId: checkStatus.id,
+        active: true,
+      },
+    });
+
+    const totalPages = Math.ceil(totalData / takeData);
 
     fixData = res.map((v: any) => ({
       ..._.omit(v, ["DonasiMaster_Durasi"]),
       nameDonasiDurasi: v.DonasiMaster_Durasi.name,
     }));
 
+    meta = {
+      currentPage: page,
+      totalData: totalData,
+      totalPage: totalPages,
+      dataPerPage: takeData,
+    };
+
     return NextResponse.json({
       status: 200,
       success: true,
       message: "Berhasil mendapatkan data",
       data: fixData,
+      ...(meta && { meta }),
     });
   } catch (error) {
     console.log("[ERROR]", error);
