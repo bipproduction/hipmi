@@ -50,6 +50,7 @@
     "@types/react-dom": "18.2.7",
     "@types/uuid": "^9.0.4",
     "autoprefixer": "10.4.14",
+    "axios": "^1.13.5",
     "bufferutil": "^4.0.8",
     "bun": "^1.1.38",
     "caniuse-lite": "^1.0.30001757",
