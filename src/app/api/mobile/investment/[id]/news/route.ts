@@ -2,6 +2,7 @@ import _ from "lodash";
 import { prisma } from "@/lib";
 import { NextResponse } from "next/server";
 import { sendNotificationInvestmentAddNews } from "@/lib/mobile/notification/notification-add-news-investment";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET, DELETE };
 
@@ -88,8 +89,13 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   console.log("id", id);
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
+  const page = Number(searchParams.get("page")) || 1;
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page * takeData - takeData;
 
   let fixData;
+  let meta = null;
+  
   try {
     if (category === "one-news") {
       const data = await prisma.beritaInvestasi.findFirst({
@@ -113,7 +119,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
 
       fixData = newData;
     } else if (category === "all-news") {
-      fixData = await prisma.beritaInvestasi.findMany({
+      const newsData = await prisma.beritaInvestasi.findMany({
         orderBy: {
           updatedAt: "desc",
         },
@@ -121,7 +127,27 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           investasiId: id,
           active: true,
         },
+        take: takeData,
+        skip: skipData,
       });
+
+      const totalData = await prisma.beritaInvestasi.count({
+        where: {
+          investasiId: id,
+          active: true,
+        },
+      });
+
+      const totalPages = Math.ceil(totalData / takeData);
+
+      fixData = newsData;
+      
+      meta = {
+        currentPage: page,
+        totalData: totalData,
+        totalPage: totalPages,
+        dataPerPage: takeData,
+      };
     }
 
     return NextResponse.json({
@@ -129,6 +155,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       success: true,
       message: "Berita berhasil diambil",
       data: fixData,
+      ...(meta && { meta }),
     });
   } catch (error) {
     console.log("[ERROR]", error);
