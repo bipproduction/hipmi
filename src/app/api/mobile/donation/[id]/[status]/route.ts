@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, PUT };
 
@@ -12,7 +13,7 @@ async function GET(
   const fixStatus = _.startCase(status);
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get("page")) || 1;
-  const takeData = 5
+  const takeData = PAGINATION_DEFAULT_TAKE
   const skipData = page * takeData - takeData;
 
   let fixData;

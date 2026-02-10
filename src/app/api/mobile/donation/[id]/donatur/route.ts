@@ -1,3 +1,4 @@
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -9,11 +10,12 @@ export async function GET(
     let fixData;
     const { id } = params;
     const { searchParams } = new URL(request.url);
-    const page = Number(searchParams.get("page"));
-    const takeData = 10;
+    const page = Number(searchParams.get("page")) || 1; // Default page 1 jika tidak ada atau invalid
+    const takeData = PAGINATION_DEFAULT_TAKE;
     const skipData = page * takeData - takeData;
 
-    fixData = await prisma.donasi_Invoice.findMany({
+    // Query data dengan pagination
+    const data = await prisma.donasi_Invoice.findMany({
       take: page ? takeData : undefined,
       skip: page ? skipData : undefined,
       orderBy: {
@@ -59,10 +61,31 @@ export async function GET(
       },
     });
 
+    // Hitung total data untuk pagination
+    const totalCount = await prisma.donasi_Invoice.count({
+      where: {
+        donasiId: id,
+        DonasiMaster_StatusInvoice: {
+          name: "Berhasil",
+        },
+      },
+    });
+
+    // Hitung total halaman
+    const totalPages = Math.ceil(totalCount / takeData);
+
+    fixData = data;
+
     return NextResponse.json({
       success: true,
       message: "Data berhasil diambil",
       data: fixData,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalData: totalCount,
+        dataPerPage: takeData,
+      },
     });
   } catch (error) {
     return NextResponse.json({
