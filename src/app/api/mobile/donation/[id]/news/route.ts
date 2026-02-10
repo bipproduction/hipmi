@@ -8,6 +8,7 @@ import {
 } from "../../../../../../../types/type-mobile-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 import { funFindDonaturList } from "@/lib/mobile/donation/find-donatur-list";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET, PUT, DELETE };
 
@@ -94,11 +95,16 @@ async function GET(
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
+  const page = Number(searchParams.get("page")) || 1; // Default page 1 jika tidak ada
+  const takeData = PAGINATION_DEFAULT_TAKE; // Default 10 data per halaman
+  const skipData = page * takeData - takeData;
+  
   let fixData;
+  let totalCount = 0; // Untuk menghitung total data
 
   try {
     if (category === "get-all") {
-      fixData = await prisma.donasi_Kabar.findMany({
+      const data = await prisma.donasi_Kabar.findMany({
         orderBy: {
           updatedAt: "desc",
         },
@@ -106,6 +112,8 @@ async function GET(
           donasiId: id,
           active: true,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           title: true,
@@ -113,6 +121,17 @@ async function GET(
           createdAt: true,
         },
       });
+
+      // Hitung total data untuk pagination
+      totalCount = await prisma.donasi_Kabar.count({
+        where: {
+          donasiId: id,
+          active: true,
+        },
+      });
+
+      fixData = data;
+
     } else if (category === "get-one") {
       const data = await prisma.donasi_Kabar.findUnique({
         where: {
@@ -135,11 +154,24 @@ async function GET(
       };
     }
 
+    // Hitung total halaman jika kategori adalah get-all
+    let pagination = undefined;
+    if (category === "get-all") {
+      const totalPages = Math.ceil(totalCount / takeData);
+      pagination = {
+        currentPage: page,
+        totalPages: totalPages,
+        totalData: totalCount,
+        dataPerPage: takeData,
+      };
+    }
+
     return NextResponse.json({
       status: 200,
       success: true,
       message: "Berhasil mengambil kabar",
       data: fixData,
+      pagination: pagination,
     });
   } catch (error) {
     console.error("[ERROR GET NEWS]", error);

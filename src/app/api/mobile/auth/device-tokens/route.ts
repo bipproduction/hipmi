@@ -4,13 +4,42 @@ import { prisma } from "@/lib";
 export { POST, GET };
 
 async function POST(request: NextRequest) {
-  const { data } = await request.json();
   try {
+    // Parse the request body - can accept either nested under 'data' or directly
+    const requestBody = await request.json();
+    
+    // Check if the data is nested under 'data' property (as described in the issue)
+    // or if it's directly in the request body (more common pattern)
+    const payload = requestBody.data ? requestBody.data : requestBody;
+    
+    const { userId, platform, deviceId, model, appVersion, fcmToken } = payload;
 
-    const { userId, platform, deviceId, model, appVersion, fcmToken } = data;
-
+    // Validate required fields
     if (!fcmToken) {
-      return NextResponse.json({ error: "Missing Token" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing FCM token", field: "fcmToken" }, 
+        { status: 400 }
+      );
+    }
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Missing user ID", field: "userId" }, 
+        { status: 400 }
+      );
+    }
+
+    // Verify that the user exists before creating/updating the device token
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true }
+    });
+
+    if (!userExists) {
+      return NextResponse.json(
+        { error: "User not found", field: "userId" }, 
+        { status: 404 }
+      );
     }
 
     const existing = await prisma.tokenUserDevice.findFirst({
@@ -23,7 +52,6 @@ async function POST(request: NextRequest) {
       },
     });
 
-
     console.log("✅ EX", existing);
 
     let deviceToken;
@@ -31,7 +59,7 @@ async function POST(request: NextRequest) {
     if (existing) {
       deviceToken = await prisma.tokenUserDevice.update({
         where: {
-          id: existing?.id,
+          id: existing.id,
         },
         data: {
           platform,
@@ -43,7 +71,7 @@ async function POST(request: NextRequest) {
         },
       });
     } else {
-      // Buat baru jika belum ada
+      // Create new device token record
       deviceToken = await prisma.tokenUserDevice.create({
         data: {
           token: fcmToken,
@@ -58,9 +86,16 @@ async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: deviceToken });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error registering device token:", error);
+    
+    // Return more informative error response
     return NextResponse.json(
-      { error: (error as Error).message },
+      { 
+        error: "Internal server error",
+        message: error.message || "An unexpected error occurred",
+        field: "server"
+      },
       { status: 500 }
     );
   }
