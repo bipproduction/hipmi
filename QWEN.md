@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-HIPMI (Himpunan Pengusaha Muda Indonesia) is a comprehensive Next.js-based web application built for the Indonesian Young Entrepreneurs Association. The project is a sophisticated platform that provides multiple business functionalities including investment management, donations, events, job listings, forums, voting systems, and collaborative projects.
+HIPMI (Himpunan Pengusaha Muya Indonesia) is a comprehensive Next.js-based web application built for the Indonesian Young Entrepreneurs Association. The project is a sophisticated platform that provides multiple business functionalities including investment management, donations, events, job listings, forums, voting systems, and collaborative projects.
 
 ### Key Technologies
 - **Framework**: Next.js 13+ (with App Router)

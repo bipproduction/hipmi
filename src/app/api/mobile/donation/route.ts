@@ -4,6 +4,7 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import { NotificationMobileBodyType } from "../../../../../types/type-mobile-notification";
 import { routeAdminMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET };
 
@@ -125,7 +126,12 @@ async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const authorId = searchParams.get("authorId");
+  const page = Number(searchParams.get("page")) || 1; // Default page 1 jika tidak ada
+  const takeData = PAGINATION_DEFAULT_TAKE; // Default 10 data per halaman
+  const skipData = page * takeData - takeData;
+  
   let fixData;
+  let totalCount = 0; // Untuk menghitung total data
 
   try {
     if (category === "beranda") {
@@ -137,6 +143,8 @@ async function GET(request: Request) {
           donasiMaster_StatusDonasiId: "1",
           active: true,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           imageId: true,
@@ -152,6 +160,14 @@ async function GET(request: Request) {
         },
       });
 
+      // Hitung total data untuk pagination
+      totalCount = await prisma.donasi.count({
+        where: {
+          donasiMaster_StatusDonasiId: "1",
+          active: true,
+        },
+      });
+
       fixData = data.map((v: any) => ({
         ..._.omit(v, ["DonasiMaster_Durasi"]),
         durasiDonasi: v.DonasiMaster_Durasi.name,
@@ -164,6 +180,8 @@ async function GET(request: Request) {
         where: {
           authorId: authorId,
         },
+        take: page ? takeData : undefined,
+        skip: page ? skipData : undefined,
         select: {
           id: true,
           nominal: true,
@@ -190,6 +208,13 @@ async function GET(request: Request) {
         },
       });
 
+      // Hitung total data untuk pagination
+      totalCount = await prisma.donasi_Invoice.count({
+        where: {
+          authorId: authorId,
+        },
+      });
+
       fixData = data.map((v: any) => ({
         ..._.omit(v, ["DonasiMaster_StatusInvoice", "Donasi"]),
         statusInvoice: v.DonasiMaster_StatusInvoice.name,
@@ -202,8 +227,21 @@ async function GET(request: Request) {
       }));
     }
 
+    // Hitung total halaman
+    const totalPages = Math.ceil(totalCount / takeData);
+
     return NextResponse.json(
-      { success: true, message: "Data berhasil diambil", data: fixData },
+      { 
+        success: true, 
+        message: "Data berhasil diambil", 
+        data: fixData,
+        pagination: {
+          currentPage: page,
+          totalPages: totalPages,
+          totalData: totalCount,
+          dataPerPage: takeData,
+        }
+      },
       { status: 200 }
     );
   } catch (error) {

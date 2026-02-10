@@ -1,5 +1,5 @@
 
-File utama: src/app/api/mobile/donation/[id]/[status]/route.ts
+File utama: src/app/api/mobile/donation/[id]/donatur/route.ts
 
 Terapkan pagination pada file "File utama" pada method GET
 Analisa juga file "File utama", jika belum memiliki page dari seachParams maka terapkan. Juga pastikan take dan skip sudah sesuai dengan pagination. Buat default nya menjadi 10 untuk take data
@@ -34,3 +34,12 @@ Buatkan auto input untuk method POST dengan data yang dibutuhkan sesuai dengan s
 - imageId: number ( cm60j9q3m000xc9dc584v8rh8 )
 
 Untuk sisa nya anda bisa bebas mengisi data tersebut.
+
+<!-- COMMIT & PUSH -->
+Branch: mobile-api/10-feb-26
+Jalankan perintah ini: git checkout -b "Branch"
+Setelah itu jalankan perintah ini: git add .
+Setelah itu jalankan perintah ini: git commit -m "
+<Berikan semua catatan perubahan pada branch ini, tampilan pada saya dan pastikan dalam bahasa indonesia. Saya akan cek baru saya akan berikan perintah push>
+"
+Setelah itu jalankan perintah ini: git push origin "Branch"
