@@ -9,30 +9,21 @@ declare global {
 let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
+  prisma = new PrismaClient({
+    // Reduce logging in production to improve performance
+    log: ['error', 'warn'],
+  });
 } else {
   if (!global.prisma) {
-    global.prisma = new PrismaClient();
+    global.prisma = new PrismaClient({
+      log: ['error', 'warn', 'info', 'query'], // More verbose logging in development
+    });
   }
   prisma = global.prisma;
 }
 
 // Tambahkan listener hanya jika belum ditambahkan sebelumnya
 if (!global.prismaListenersAdded) {
-  // Handle uncaught errors
-  process.on("uncaughtException", async (error) => {
-    console.error("Uncaught Exception:", error);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
-
-  // Handle unhandled promise rejections
-  process.on("unhandledRejection", async (error) => {
-    console.error("Unhandled Rejection:", error);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
-
   // Handle graceful shutdown
   process.on("SIGINT", async () => {
     console.log("Received SIGINT signal. Closing database connections...");
@@ -51,3 +42,4 @@ if (!global.prismaListenersAdded) {
 }
 
 export default prisma;
+export { prisma };
