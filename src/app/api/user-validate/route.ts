@@ -84,7 +84,7 @@ export async function GET(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
+  // Removed prisma.$disconnect() from here to prevent connection pool exhaustion
+  // Prisma connections are handled globally and shouldn't be disconnected on each request
 }
