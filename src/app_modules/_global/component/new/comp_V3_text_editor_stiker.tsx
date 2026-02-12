@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { IconMoodSmileFilled } from "@tabler/icons-react";
 import { listStiker } from "../../lib/stiker";
 import { UIGlobal_Modal } from "../../ui";
+import mqtt_client from "@/util/mqtt_client";
 
 const ReactQuill = dynamic(
   async () => {
@@ -248,10 +249,12 @@ function ButtonAction({ value, lengthData }: ButtonActionProps) {
         ComponentGlobal_NotifikasiBerhasil(create.message);
         router.back();
 
-        mqtt_client.publish(
-          "Forum_create_new",
-          JSON.stringify({ isNewPost: true, count: 1 })
-        );
+        if (typeof window !== 'undefined' && mqtt_client) {
+          mqtt_client.publish(
+            "Forum_create_new",
+            JSON.stringify({ isNewPost: true, count: 1 })
+          );
+        }
       } else {
         ComponentGlobal_NotifikasiGagal(create.message);
       }
