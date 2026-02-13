@@ -2,15 +2,24 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import _ from "lodash";
 import { Prisma } from "@prisma/client";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, POST };
 
 async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page"));
+    const takeData = PAGINATION_DEFAULT_TAKE;
+    const skipData = page * takeData - takeData;
+
+
     const data = await prisma.masterBidangBisnis.findMany({
       orderBy: {
         createdAt: "asc",
       },
+      take: page ? takeData : undefined,
+      skip: page ? skipData : undefined,
     });
 
     return NextResponse.json({
