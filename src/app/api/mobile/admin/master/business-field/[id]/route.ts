@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
+import { NextResponse } from "next/server";
 
 export { GET, PUT };
 
@@ -10,6 +11,10 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const subBidangId = searchParams.get("subBidangId");
+
+    const page = Number(searchParams.get("page")) || 1;
+    const takeData = PAGINATION_DEFAULT_TAKE;
+    const skipData = page * takeData - takeData;
 
     if (category === "all") {
       const bidang = await prisma.masterBidangBisnis.findUnique({
@@ -46,6 +51,16 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
       });
 
       fixData = subBidang;
+    } else if (category === "only-sub-bidang") {
+      const subBidang = await prisma.masterSubBidangBisnis.findMany({
+        where: {
+          masterBidangBisnisId: id,
+        },
+        take: takeData,
+        skip: skipData,
+      });
+
+      fixData = subBidang;
     }
 
     return NextResponse.json({
@@ -70,9 +85,6 @@ async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { data } = await request.json();
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
-
-  console.log("category", category);
-  console.log("data", data);
 
   try {
     if (category === "bidang") {
