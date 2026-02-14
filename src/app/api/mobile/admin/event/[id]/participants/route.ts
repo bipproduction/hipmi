@@ -1,9 +1,15 @@
-import { NextResponse } from "next/server";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export { GET };
 
 async function GET(request: Request, { params }: { params: { id: string } }) {
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page")) || 1;
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page * takeData - takeData;
+
   try {
     const { id } = params;
 
@@ -12,6 +18,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
         eventId: id,
       },
       select: {
+        id: true,
         eventId: true,
         userId: true,
         isPresent: true,
@@ -35,6 +42,8 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           },
         },
       },
+      take: page ? takeData : undefined,
+      skip: page ? skipData : undefined,
     });
 
     return NextResponse.json(
