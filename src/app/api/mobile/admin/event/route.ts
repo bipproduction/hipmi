@@ -1,7 +1,8 @@
-import _ from "lodash";
 import { prisma } from "@/lib";
-import { NextResponse } from "next/server";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
+import _ from "lodash";
 import moment from "moment";
+import { NextResponse } from "next/server";
 
 export { GET };
 
@@ -11,13 +12,12 @@ async function GET(request: Request) {
   const fixStatus = _.startCase(category || "");
 
   const search = searchParams.get("search");
-  const page = searchParams.get("page");
-  const takeData = 10;
-  const skipData = Number(page) * takeData - takeData;
+  const page = Number(searchParams.get("page")) || 1;
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page * takeData - takeData;
   let fixData;
 
-  console.log("[CATEGORY]", category);
-  //   console.log("[FIX STATUS]", fixStatus);
+ 
 
   try {
     if (category === "dashboard") {
@@ -71,7 +71,6 @@ async function GET(request: Request) {
         typeOfEvent,
       };
     } else if (category === "history") {
-      console.log("[HISTORY HERE]");
 
       const data = await prisma.event.findMany({
         take: page ? takeData : undefined,
@@ -151,21 +150,22 @@ async function GET(request: Request) {
           },
         },
         select: {
-            id: true,
-            title: true,
-            tanggal: true,
-            Author: {
-              select: {
-                id: true,
-                username: true,
-                Profile: {
-                  select: {
-                    name: true,
-                  },
+          id: true,
+          title: true,
+          tanggal: true,
+          tanggalSelesai: true,
+          Author: {
+            select: {
+              id: true,
+              username: true,
+              Profile: {
+                select: {
+                  name: true,
                 },
               },
             },
           },
+        },
       });
 
       fixData = data;
@@ -177,7 +177,7 @@ async function GET(request: Request) {
         message: `Success get data event ${category}`,
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.log(`[ERROR GET DATA EVENT: ${category}]`, error);
@@ -187,7 +187,7 @@ async function GET(request: Request) {
         message: `Error get data event ${category}`,
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
