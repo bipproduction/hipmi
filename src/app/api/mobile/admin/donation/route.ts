@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET };
 
@@ -9,11 +10,10 @@ async function GET(request: Request) {
   const category = searchParams.get("category");
   const page = searchParams.get("page");
   const search = searchParams.get("search");
-  const takeData = 10;
+  const takeData = PAGINATION_DEFAULT_TAKE;
   const skipData = Number(page) * takeData - takeData;
-  console.log("[CATEGORY]", category);
   let fixData;
-  
+
   try {
     if (category === "dashboard") {
       const publish = await prisma.donasi.count({
@@ -48,7 +48,7 @@ async function GET(request: Request) {
           where: {
             active: true,
           },
-        }
+        },
       );
 
       const categoryDonation = countCategoryDonation.length;
@@ -68,7 +68,6 @@ async function GET(request: Request) {
         },
       });
 
-      console.log("[STATUS]", checkStatus);
 
       if (!checkStatus) {
         return NextResponse.json(
@@ -77,7 +76,7 @@ async function GET(request: Request) {
             message: "Failed to get data donation",
             reason: "Status not found",
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -100,6 +99,12 @@ async function GET(request: Request) {
         select: {
           id: true,
           title: true,
+          target: true,
+          DonasiMaster_Durasi: {
+            select: {
+              name: true,
+            },
+          },
           Author: {
             select: {
               id: true,
@@ -109,7 +114,6 @@ async function GET(request: Request) {
         },
       });
 
-      console.log("[LIST]", fixData);
     }
 
     return NextResponse.json(
@@ -118,7 +122,7 @@ async function GET(request: Request) {
         message: `Success get data donation ${category}`,
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error get data donation:", error);
@@ -128,7 +132,7 @@ async function GET(request: Request) {
         message: "Failed to get data donation",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
