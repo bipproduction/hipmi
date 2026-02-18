@@ -10,6 +10,7 @@ import {
   NotificationMobileTitleType,
 } from "../../../../../../../../types/type-mobile-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { POST, GET };
 
@@ -154,7 +155,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const page = searchParams.get("page");
-  const takeData = 10;
+  const takeData = PAGINATION_DEFAULT_TAKE;
   const skipData = Number(page) * takeData - takeData;
 
   console.log("[CATEGORY]", category);
@@ -174,6 +175,7 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
           id: true,
           createdAt: true,
           nominalCair: true,
+          title: true,
         },
       });
     } else if (category === "get-one") {
