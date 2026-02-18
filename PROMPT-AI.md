@@ -1,5 +1,5 @@
 
-File utama: src/app/api/mobile/admin/event/[id]/participants/route.ts
+File utama: src/app/api/mobile/admin/donation/[id]/donatur/route.ts
 
 Terapkan pagination pada file "File utama" pada method GET
 Analisa juga file "File utama", jika belum memiliki page dari seachParams maka terapkan. Juga pastikan take dan skip sudah sesuai dengan pagination. Buat default nya menjadi 10 untuk take data
