@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET };
 
@@ -9,11 +10,8 @@ async function GET(request: Request) {
   const category = searchParams.get("category");
   const search = searchParams.get("search");
   const page = searchParams.get("page");
-  const takeData = 10;
+  const takeData = PAGINATION_DEFAULT_TAKE;
   const skipData = Number(page) * takeData - takeData;
-
-  console.log("[CATEGORY]", category);
-  console.log("[PAGE]", page);
 
   let fixData;
   try {
@@ -49,7 +47,6 @@ async function GET(request: Request) {
       };
     } else {
       const fixCategoryToStatus = _.startCase(category || "");
-      console.log("[STATUS]", fixCategoryToStatus);
 
       const data = await prisma.investasi.findMany({
         take: page ? takeData : undefined,
@@ -70,6 +67,12 @@ async function GET(request: Request) {
         select: {
           id: true,
           title: true,
+          targetDana: true,
+          MasterPencarianInvestor: {
+            select: {
+              name: true,
+            },
+          },
           author: {
             select: {
               id: true,

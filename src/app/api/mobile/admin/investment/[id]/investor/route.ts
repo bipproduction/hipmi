@@ -1,19 +1,20 @@
 import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     let fixData;
     const { id } = params;
     const { searchParams } = new URL(request.url);
-    const page = searchParams.get("page");
+    const page = Number(searchParams.get("page"));
     const status = searchParams.get("status");
-    const takeData = 10;
-    const skipData = Number(page) * takeData - takeData;
+    const takeData = PAGINATION_DEFAULT_TAKE;
+    const skipData = page * takeData - takeData;
 
     const fixStatus = _.startCase(status ? status : "");
 
@@ -43,6 +44,7 @@ export async function GET(
         id: true,
         Author: true,
         StatusInvoice: true,
+        nominal: true,
       },
     });
 
@@ -54,7 +56,7 @@ export async function GET(
         message: "Success get status transaksi",
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Eror get status transaksi", error);
@@ -64,7 +66,7 @@ export async function GET(
         message: "Error get status transaksi",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
