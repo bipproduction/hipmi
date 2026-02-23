@@ -28,13 +28,10 @@ export default function Login({ version }: { version: string }) {
   const [countryCode, setCountryCode] = useState<string>("62"); // default ke Indonesia
 
   async function onLogin() {
-    console.log("phone >>", phone);
-
     const nomor = phone;
     if (nomor.length <= 4) return setError(true);
 
     const fixPhone = `${countryCode}${nomor}`;
-    console.log("fixPhone >>", fixPhone);
 
     try {
       setLoading(true);
@@ -46,7 +43,6 @@ export default function Login({ version }: { version: string }) {
         router.push("/validasi", { scroll: false });
       } else {
         setLoading(false);
-        console.log("respone >>", respone);
         ComponentGlobal_NotifikasiPeringatan(respone?.message);
       }
     } catch (error) {
@@ -108,9 +104,6 @@ export default function Login({ version }: { version: string }) {
                 // Simpan hasil akhir
                 setCountryCode(dialCode);
                 setPhone(localNumber);
-
-                // console.log("Country Code:", dialCode);
-                // console.log("Clean Local Number:", localNumber);
               }}
             />
 
