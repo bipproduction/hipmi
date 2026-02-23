@@ -14,8 +14,6 @@ export async function POST(req: Request) {
   try {
     const { data } = await req.json();
 
-    console.log("data >>", data);
-
     const cekUsername = await prisma.user.findUnique({
       where: {
         username: data.username,

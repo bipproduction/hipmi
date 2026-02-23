@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
 import _ from "lodash";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET };
 
@@ -9,7 +10,7 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
   const category = searchParams.get("category");
   const search = searchParams.get("search");
   const page = searchParams.get("page");
-  const takeData = 10;
+  const takeData = PAGINATION_DEFAULT_TAKE;
   const skipData = Number(page) * takeData - takeData;
 
   let fixData;
@@ -79,7 +80,11 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
           _count: {
             select: {
               Forum_ReportPosting: true,
-              Forum_Komentar: true,
+              Forum_Komentar: {
+                where: {
+                  isActive: true,
+                },
+              },
             },
           },
         },
@@ -139,6 +144,14 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         },
       });
 
+      // Hitung count report untuk setiap Forum_Posting id
+      const countByPostingId = data.reduce((acc: any, item: any) => {
+        const key = item.Forum_Posting?.id;
+        if (!key) return acc;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+
       const filterLatest = (data: any) =>
         Object.values(
           data.reduce((acc: any, item: any) => {
@@ -151,10 +164,16 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
               acc[key] = item;
             }
             return acc;
-          }, {})
+          }, {}),
         );
 
-      fixData = filterLatest(data);
+      const filteredData = filterLatest(data);
+
+      // Tambahkan count ke setiap item
+      fixData = filteredData.map((item: any) => ({
+        ...item,
+        count: countByPostingId[item.Forum_Posting?.id] || 0,
+      }));
     } else if (category === "report_comment") {
       const data = await prisma.forum_ReportKomentar.findMany({
         take: page ? takeData : undefined,
@@ -193,6 +212,14 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         },
       });
 
+      // Hitung count report untuk setiap Forum_Komentar id
+      const countByKomentarId = data.reduce((acc: any, item: any) => {
+        const key = item.Forum_Komentar?.id;
+        if (!key) return acc;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+
       const filterLatest = (data: any) =>
         Object.values(
           data.reduce((acc: any, item: any) => {
@@ -205,10 +232,16 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
               acc[key] = item;
             }
             return acc;
-          }, {})
+          }, {}),
         );
 
-      fixData = filterLatest(data);
+      const filteredData = filterLatest(data);
+
+      // Tambahkan count ke setiap item
+      fixData = filteredData.map((item: any) => ({
+        ...item,
+        count: countByKomentarId[item.Forum_Komentar?.id] || 0,
+      }));
     } else {
       return NextResponse.json(
         {
@@ -216,7 +249,7 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
           message: "Invalid category",
           reason: "Invalid category",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -226,7 +259,7 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         message: `Success get data forum ${category}`,
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
@@ -235,7 +268,7 @@ async function GET(request: Request, { params }: { params: { name: string } }) {
         message: `Error get data forum ${category}`,
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

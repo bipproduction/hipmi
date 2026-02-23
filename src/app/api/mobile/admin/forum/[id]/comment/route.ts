@@ -7,6 +7,7 @@ import {
   NotificationMobileTitleType,
 } from "../../../../../../../../types/type-mobile-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export { GET, PUT };
 
@@ -14,9 +15,9 @@ async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
-  const page = searchParams.get("page");
-  const takeData = 10;
-  const skipData = Number(page) * takeData - takeData;
+  const page = Number(searchParams.get("page"));
+  const takeData = PAGINATION_DEFAULT_TAKE;
+  const skipData = page * takeData - takeData;
   const category = searchParams.get("category");
   let fixData;
   try {

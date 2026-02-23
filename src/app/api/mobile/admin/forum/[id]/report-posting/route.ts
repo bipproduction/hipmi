@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
+import { PAGINATION_DEFAULT_TAKE } from "@/lib/constans-value/constansValue";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = params;
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
   const page = searchParams.get("page");
-  const takeData = 10;
+  const takeData = PAGINATION_DEFAULT_TAKE;
   const skipData = Number(page) * takeData - takeData;
   let fixData;
 
@@ -60,7 +61,7 @@ export async function GET(
         message: "Success get list report posting",
         data: fixData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("[ERROR GET LIST REPORT POSTING]", error);
@@ -70,7 +71,7 @@ export async function GET(
         message: "Error get list report posting",
         reason: (error as Error).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
