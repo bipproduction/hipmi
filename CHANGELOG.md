@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.0](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.40...v1.6.0) (2026-02-23)
+
+
+### Features
+
+* Implementasi pagination pada endpoint mobile donation ([e89886e](https://wibugit.wibudev.com/wibu/hipmi/commit/e89886e1dbc8cb4d95e6cc7c2787fb22a1dcaf56))
+* Tambahkan pagination pada API mobile investasi ([a7694bd](https://wibugit.wibudev.com/wibu/hipmi/commit/a7694bd7d5d72b6499443faf99301faca730d3ed))
+* update mobile donation API and related dependencies ([934d6a3](https://wibugit.wibudev.com/wibu/hipmi/commit/934d6a3ef1015367bee85779796df4f11c5e779c))
+
 ## [1.5.40](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.39...v1.5.40) (2026-02-06)
 
 ## [1.5.39](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.5.38...v1.5.39) (2026-01-30)
