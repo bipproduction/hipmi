@@ -14,8 +14,6 @@ export async function POST(req: Request) {
   try {
     const { data } = await req.json();
 
-    console.log("data >>", data);
-
     const cekUsername = await prisma.user.findUnique({
       where: {
         username: data.username,
@@ -29,12 +27,12 @@ export async function POST(req: Request) {
       });
 
     // ✅ Validasi wajib setuju Terms
-    if (data.termsOfServiceAccepted !== true) {
-      return NextResponse.json({
-        success: false,
-        message: "You must agree to the Terms of Service",
-      });
-    }
+    // if (data.termsOfServiceAccepted !== true) {
+    //   return NextResponse.json({
+    //     success: false,
+    //     message: "You must agree to the Terms of Service",
+    //   });
+    // }
 
     const createUser = await prisma.user.create({
       data: {
