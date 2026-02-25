@@ -25,15 +25,21 @@ export default function WaitingRoom_View({
   const [isLoadingHome, setIsLoadingHome] = useState(false);
 
   async function onClickLogout() {
-    setLoading(true);
-    const res = await fetch(`/api/auth/logout?id=${userLoginId}`, {
-      method: "GET",
-    });
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/auth/logout?id=${userLoginId}`, {
+        method: "GET",
+      });
 
-    const result = await res.json();
-    if (res.status === 200) {
-      ComponentGlobal_NotifikasiBerhasil(result.message);
-      router.push("/", { scroll: false });
+      const result = await res.json();
+      if (res.status === 200) {
+        ComponentGlobal_NotifikasiBerhasil(result.message);
+        router.push("/", { scroll: false });
+      }
+    } catch (error) {
+      console.error("Error button to home", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -83,7 +89,8 @@ export default function WaitingRoom_View({
                   </Text>
                   <Text fw={"bold"} c={"white"} align="center">
                     Harap tunggu, Anda akan menerima pemberitahuan melalui
-                    Whatsapp setelah disetujui.
+                    Whatsapp setelah disetujui, untuk sementara anda bisa
+                    menunggu pada halaman ini atau keluar.
                   </Text>
                 </Stack>
                 {isAccess && (
@@ -110,6 +117,10 @@ export default function WaitingRoom_View({
                     Home
                   </Button>
                 )}
+
+                <Button color="red" loading={loading} onClick={onClickLogout}>
+                  Keluar
+                </Button>
               </Stack>
             )}
           </ComponentGlobal_CardStyles>
