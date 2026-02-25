@@ -11,5 +11,9 @@ declare namespace NodeJS {
     NEXT_PUBLIC_BASE_SESSION_KEY?: string;
     RESEND_APIKEY?: string;
     WA_SERVER_TOKEN?: string;
+    FIREBASE_ADMIN_PRIVATE_KEY?: string;
+    FIREBASE_ADMIN_CLIENT_EMAIL?: string;
+    FIREBASE_ADMIN_PROJECT_ID?: string;
+    NEXT_PUBLIC_API_URL?: string;
   }
 }
