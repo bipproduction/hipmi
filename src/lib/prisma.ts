@@ -8,6 +8,24 @@ declare global {
 
 let prisma: PrismaClient;
 
+// Validasi DATABASE_URL sebelum inisialisasi
+if (!process.env.DATABASE_URL) {
+  console.error('❌ ERROR: DATABASE_URL tidak ditemukan di environment variables!');
+  console.error('');
+  console.error('Current working directory:', process.cwd());
+  console.error('Available environment variables:', Object.keys(process.env).sort().join(', '));
+  console.error('');
+  console.error('Solusi:');
+  console.error('  1. Pastikan file .env ada dan berisi DATABASE_URL, ATAU');
+  console.error('  2. Set DATABASE_URL di system environment:');
+  console.error('     export DATABASE_URL="postgresql://user:pass@host:port/dbname"');
+  console.error('  3. Jika menggunakan systemd service, tambahkan di file service:');
+  console.error('     [Service]');
+  console.error('     Environment=DATABASE_URL=postgresql://...');
+  console.error('');
+  throw new Error('DATABASE_URL is required but not found in environment variables');
+}
+
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient({
     // Reduce logging in production to improve performance
