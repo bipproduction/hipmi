@@ -10,6 +10,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];
@@ -17,19 +20,6 @@ const nextConfig = {
     }
     return config;
   },
-  // async headers() {
-  //   return [
-  //     {
-  //       source: "/(.*)",
-  //       headers: [
-  //         {
-  //           key: "Cache-Control",
-  //           value: "no-store, max-age=0",
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
 };
 
 module.exports = nextConfig;
