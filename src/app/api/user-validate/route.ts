@@ -76,15 +76,27 @@ export async function GET(req: Request) {
       data: user,
     });
   } catch (error) {
-    console.error("Error in user validation:", error);
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : 'No stack';
+    
+    // Log detailed error for debugging
+    console.error("❌ [USER-VALIDATE] Error:", errorMsg);
+    console.error("❌ [USER-VALIDATE] Stack:", errorStack);
+    console.error("❌ [USER-VALIDATE] Time:", new Date().toISOString());
+    
+    // Check if it's a database connection error
+    if (errorMsg.includes("Prisma") || errorMsg.includes("database") || errorMsg.includes("connection")) {
+      console.error("❌ [USER-VALIDATE] Database connection error detected!");
+      console.error("❌ [USER-VALIDATE] DATABASE_URL exists:", !!process.env.DATABASE_URL);
+    }
+    
     return NextResponse.json(
       {
         success: false,
         message: "Terjadi kesalahan pada server",
+        error: process.env.NODE_ENV === 'development' ? errorMsg : 'Internal server error',
       },
       { status: 500 }
     );
   }
-  // Removed prisma.$disconnect() from here to prevent connection pool exhaustion
-  // Prisma connections are handled globally and shouldn't be disconnected on each request
 }

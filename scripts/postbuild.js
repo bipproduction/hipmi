@@ -57,8 +57,4 @@ if (fs.existsSync(envLocalSrc)) {
   console.log('✓ .env-local file copied to standalone output');
 }
 
-console.log('✅ Postbuild script completed!');
-console.log('');
-console.log('📋 Penting untuk Production:');
-console.log('   - Pastikan DATABASE_URL tersedia di environment server, ATAU');
-console.log('   - File .env sudah ter-copy ke /app/.env di server');
+console.log('✅ Build script completed!');

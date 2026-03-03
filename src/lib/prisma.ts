@@ -36,6 +36,40 @@ if (process.env.NODE_ENV === "production") {
       },
     },
   });
+
+  // Explicitly connect to database dengan retry
+  const maxRetries = 3;
+  let retryCount = 0;
+  
+  const connectWithRetry = async () => {
+    while (retryCount < maxRetries) {
+      try {
+        await prisma.$connect();
+        console.log('✅ PostgreSQL connected successfully');
+        return;
+      } catch (error) {
+        retryCount++;
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        console.error(`❌ PostgreSQL connection attempt ${retryCount}/${maxRetries} failed:`, errorMsg);
+        
+        if (retryCount >= maxRetries) {
+          console.error('❌ All database connection attempts failed. Application will continue but database operations will fail.');
+          throw error;
+        }
+        
+        // Wait before retry (exponential backoff)
+        const waitTime = Math.min(1000 * Math.pow(2, retryCount), 10000);
+        console.log(`⏳ Retrying in ${waitTime}ms...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
+    }
+  };
+
+  // Initialize connection (non-blocking)
+  connectWithRetry().catch(err => {
+    console.error('Failed to initialize database connection:', err);
+  });
+
 } else {
   if (!global.prisma) {
     global.prisma = new PrismaClient({
@@ -63,6 +97,14 @@ if (!global.prismaListenersAdded) {
     console.log("Received SIGTERM signal. Closing database connections...");
     await prisma.$disconnect();
     process.exit(0);
+  });
+
+  // Handle uncaught errors
+  process.on("uncaughtException", async (error) => {
+    if (error.message.includes("Prisma") || error.message.includes("database")) {
+      console.error("Uncaught database error:", error);
+      await prisma.$disconnect();
+    }
   });
 
   // Tandai bahwa listener sudah ditambahkan
