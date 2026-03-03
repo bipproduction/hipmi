@@ -12,11 +12,21 @@ if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient({
     // Reduce logging in production to improve performance
     log: ['error', 'warn'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 } else {
   if (!global.prisma) {
     global.prisma = new PrismaClient({
       log: ['error', 'warn', 'info', 'query'], // More verbose logging in development
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
     });
   }
   prisma = global.prisma;
