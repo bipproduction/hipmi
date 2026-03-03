@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.6](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.5...v1.6.6) (2026-03-03)
+
+
+### Bug Fixes
+
+* prisma connection exhaustion & firebase lazy init ([6dba07b](https://wibugit.wibudev.com/wibu/hipmi/commit/6dba07baac6a3ef7d264c13e378a905002401e1b))
+
 ## [1.6.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.4...v1.6.5) (2026-03-03)
 
 
