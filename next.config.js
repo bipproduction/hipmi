@@ -1,22 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  output: "standalone",
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
-  output: "standalone",
-  staticPageGenerationTimeout: 180, // tingkatkan menjadi 3 menit
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true
+    serverComponentsExternalPackages: ["@prisma/client", ".prisma/client"],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];
-      config.externals.push('@prisma/client');
+      config.externals.push("@prisma/client");
+      config.externals.push(".prisma/client");
     }
     return config;
   },

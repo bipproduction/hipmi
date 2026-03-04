@@ -43,9 +43,9 @@ const envSrc = path.join(__dirname, '../.env');
 const envDest = path.join(standaloneDir, '.env');
 if (fs.existsSync(envSrc)) {
   fs.copyFileSync(envSrc, envDest);
-  console.log('✓ .env file copied to standalone output');
+  // console.log('✓ .env file copied to standalone output');
 } else {
-  console.warn('⚠ .env file not found, skipping...');
+  // console.warn('⚠ .env file not found, skipping...');
   console.warn('  Pastikan DATABASE_URL di-set di system environment server!');
 }
 
@@ -54,7 +54,7 @@ const envLocalSrc = path.join(__dirname, '../.env-local');
 const envLocalDest = path.join(standaloneDir, '.env-local');
 if (fs.existsSync(envLocalSrc)) {
   fs.copyFileSync(envLocalSrc, envLocalDest);
-  console.log('✓ .env-local file copied to standalone output');
+  // console.log('✓ .env-local file copied to standalone output');
 }
 
 console.log('✅ Build script completed!');
