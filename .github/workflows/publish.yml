@@ -1,17 +1,26 @@
 name: Publish Docker to GHCR
+
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
       tag:
         description: "Image tag (e.g. v1.0.0)"
         required: true
-        default: "latest"
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   publish:
-    name: Build & Push to GHCR
+    name: Build & Push to GHCR (${{ github.event.inputs.environment }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,10 +38,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract tag name
-        id: meta
-        run: echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -46,6 +51,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ github.event.inputs.environment }}-${{ github.event.inputs.tag }}
+            type=raw,value=${{ github.event.inputs.environment }}-latest
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -53,8 +67,6 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           no-cache: true
