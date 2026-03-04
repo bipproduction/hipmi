@@ -4,9 +4,9 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is required but not found in environment variables");
-}
+// if (!process.env.DATABASE_URL) {
+//   throw new Error("DATABASE_URL is required but not found in environment variables");
+// }
 
 const prisma =
   global.prisma ??
