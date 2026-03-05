@@ -36,8 +36,6 @@ export async function GET(
         });
       }
 
-      await prisma.$disconnect();
-
       return NextResponse.json(
         { success: true, message: "Success get data document", data: fixData },
         { status: 200 }

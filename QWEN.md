@@ -120,14 +120,6 @@ The team follows a structured Git workflow:
    - `style`: Styling changes
    - `perf`: Performance improvements
 
-### Code Standards
-- TypeScript with strict mode enabled
-- Component header comments with file description, creator, date
-- Function comments with parameter and return value descriptions
-- Custom type interface comments
-- Error handling comments
-- Complex logic comments
-
 ### Commit Message Format
 ```
 type: Short description
@@ -138,6 +130,62 @@ Body:
 - Breaking changes if any
 
 References: #issue-number
+```
+
+**Example:**
+```
+feat: Tambahkan fitur kalkulator
+
+Deskripsi:
+- Menambahkan fungsi penambahan, pengurangan, perkalian, dan pembagian
+- Memperbolehkan pengguna untuk memasukkan dua angka dan melakukan operasi matematika
+
+Fixes #12
+```
+
+### Code Standards
+- TypeScript with strict mode enabled
+- Component header comments with file description, creator, date
+- Function comments with parameter and return value descriptions
+- Custom type interface comments
+- Error handling comments
+- Complex logic comments
+
+### Comment Standards
+
+**File Header:**
+```typescript
+/**
+ * Nama File: app.ts
+ * Deskripsi: Ini adalah file utama aplikasi.
+ * Pembuat: John Doe
+ * Tanggal: 27 Juli 2023
+ */
+```
+
+**Function Comments:**
+```typescript
+/**
+ * Fungsi untuk menambahkan dua angka.
+ * @param {number} a - Angka pertama.
+ * @param {number} b - Angka kedua.
+ * @returns {number} Hasil penjumlahan a dan b.
+ */
+function addNumbers(a: number, b: number): number {
+  return a + b;
+}
+```
+
+**Custom Type Comments:**
+```typescript
+/**
+ * Interface untuk merepresentasikan informasi pelanggan.
+ */
+interface Customer {
+  id: number; // ID pelanggan
+  name: string; // Nama pelanggan
+  age?: number; // Umur pelanggan (opsional)
+}
 ```
 
 ## Project Structure

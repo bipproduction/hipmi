@@ -49,14 +49,11 @@ export async function GET(
       });
     }
 
-    await prisma.$disconnect();
-
     return NextResponse.json(
       { success: true, message: "Success get data news", data: fixData },
       { status: 200 }
     );
   } catch (error) {
-    await prisma.$disconnect();
     backendLogger.error("Error get data news", error);
     return NextResponse.json(
       {

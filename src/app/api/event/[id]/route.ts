@@ -42,7 +42,5 @@ export async function GET(
       { success: false, message: "Gagal mendapatkan data" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

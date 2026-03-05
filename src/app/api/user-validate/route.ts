@@ -1,4 +1,5 @@
 import { decrypt } from "@/app/(auth)/_lib/decrypt";
+import { withRetry } from "@/lib/prisma-retry";
 import { prisma } from "@/lib";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -43,11 +44,16 @@ export async function GET(req: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: decrypted.id,
-      },
-    });
+    const user = await withRetry(
+      () =>
+        prisma.user.findUnique({
+          where: {
+            id: decrypted.id,
+          },
+        }),
+      undefined,
+      "validateUser"
+    );
 
     if (!user) {
       return NextResponse.json(
@@ -76,25 +82,44 @@ export async function GET(req: Request) {
       data: user,
     });
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-    const errorStack = error instanceof Error ? error.stack : 'No stack';
-    
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    const errorStack = error instanceof Error ? error.stack : "No stack";
+
     // Log detailed error for debugging
     console.error("❌ [USER-VALIDATE] Error:", errorMsg);
     console.error("❌ [USER-VALIDATE] Stack:", errorStack);
     console.error("❌ [USER-VALIDATE] Time:", new Date().toISOString());
-    
+
     // Check if it's a database connection error
-    if (errorMsg.includes("Prisma") || errorMsg.includes("database") || errorMsg.includes("connection")) {
-      console.error("❌ [USER-VALIDATE] Database connection error detected!");
-      console.error("❌ [USER-VALIDATE] DATABASE_URL exists:", !!process.env.DATABASE_URL);
+    if (
+      errorMsg.includes("Prisma") ||
+      errorMsg.includes("database") ||
+      errorMsg.includes("connection")
+    ) {
+      console.error(
+        "❌ [USER-VALIDATE] Database connection error detected!"
+      );
+      console.error(
+        "❌ [USER-VALIDATE] DATABASE_URL exists:",
+        !!process.env.DATABASE_URL
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Database connection error. Please try again.",
+          error: process.env.NODE_ENV === "development" ? errorMsg : "Internal server error",
+        },
+        { status: 503 }
+      );
     }
-    
+
     return NextResponse.json(
       {
         success: false,
         message: "Terjadi kesalahan pada server",
-        error: process.env.NODE_ENV === 'development' ? errorMsg : 'Internal server error',
+        error:
+          process.env.NODE_ENV === "development" ? errorMsg : "Internal server error",
       },
       { status: 500 }
     );
