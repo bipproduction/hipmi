@@ -21,13 +21,11 @@ export async function GET(request: Request) {
       },
     });
 
-    await prisma.$disconnect();
     return NextResponse.json(
       { success: true, message: "Berhasil mendapatkan data", data: res },
       { status: 200 }
     );
   } catch (error) {
-    await prisma.$disconnect();
     backendLogger.error("Error Get Master Status Transaksi >>", error);
     return NextResponse.json(
       {

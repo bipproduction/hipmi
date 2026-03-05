@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.8](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.7...v1.6.8) (2026-03-05)
+
+## [1.6.7](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.6...v1.6.7) (2026-03-04)
+
+## [1.6.6](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.5...v1.6.6) (2026-03-03)
+
+
+### Bug Fixes
+
+* prisma connection exhaustion & firebase lazy init ([6dba07b](https://wibugit.wibudev.com/wibu/hipmi/commit/6dba07baac6a3ef7d264c13e378a905002401e1b))
+
+## [1.6.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.4...v1.6.5) (2026-03-03)
+
+
+### Bug Fixes
+
+* error koneksi Prisma - DATABASE_URL tidak loaded di ([a658881](https://wibugit.wibudev.com/wibu/hipmi/commit/a6588818b5d8018b3a634e0ae0846e309569d370))
+
+## [1.6.4](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.3...v1.6.4) (2026-03-03)
+
+## [1.6.3](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.2...v1.6.3) (2026-03-03)
+
 ## [1.6.2](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.1...v1.6.2) (2026-02-25)
 
 ## [1.6.1](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.0...v1.6.1) (2026-02-25)

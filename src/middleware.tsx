@@ -66,10 +66,6 @@ export const middleware = async (req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || new URL(req.url).origin;
-  // Removed excessive logging that was causing high CPU usage
-  // const dbUrl = process.env.DATABASE_URL;
-  // console.log("DATABASE_URL >>", dbUrl);
-  // console.log("URL Access >>", req.url);
 
   // Handle CORS preflight
   const corsResponse = handleCors(req);

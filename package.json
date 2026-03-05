@@ -1,15 +1,16 @@
 {
   "name": "hipmi",
-  "version": "1.6.2",
+  "version": "1.6.8",
   "private": true,
   "prisma": {
     "seed": "bun prisma/seed.ts"
   },
   "scripts": {
     "dev": "next dev --experimental-https",
-    "build": "next build",
-    "build:dev": "next build",
+    "build": "prisma generate && next build",
+    "build:dev": "prisma generate && next build",
     "start": "next start",
+    "postbuild": "node scripts/postbuild.js",
     "lint": "next lint",
     "ver": "bunx commit-and-tag-version -- --prerelease"
   },

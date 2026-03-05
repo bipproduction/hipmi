@@ -1,44 +1,54 @@
 import { PrismaClient } from "@prisma/client";
 
-// Deklarasikan variabel global untuk menandai apakah listener sudah ditambahkan
+/**
+ * Instance global Prisma client untuk connection pooling
+ * Menggunakan pattern globalThis untuk mencegah multiple instance selama:
+ * - Hot module replacement (HMR) di development
+ * - Multiple import di seluruh aplikasi
+ * - Server-side rendering di Next.js
+ */
 declare global {
-  var prisma: PrismaClient;
-  var prismaListenersAdded: boolean; // Flag untuk menandai listener
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
 }
 
-let prisma: PrismaClient;
-
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient({
-    // Reduce logging in production to improve performance
-    log: ['error', 'warn'],
+// Konfigurasi connection pool via parameter query DATABASE_URL:
+// connection_limit=10&pool_timeout=20&connect_timeout=10
+const prisma =
+  globalThis.prisma ??
+  new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["error", "warn"]
+        : ["error"],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      log: ['error', 'warn', 'info', 'query'], // More verbose logging in development
-    });
-  }
-  prisma = global.prisma;
+
+// Hanya assign ke global di development untuk mencegah multiple instance saat HMR
+// Di production, ini di-skip karena tidak ada HMR
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prisma = prisma;
 }
 
-// Tambahkan listener hanya jika belum ditambahkan sebelumnya
-if (!global.prismaListenersAdded) {
-  // Handle graceful shutdown
-  process.on("SIGINT", async () => {
-    console.log("Received SIGINT signal. Closing database connections...");
-    await prisma.$disconnect();
-    process.exit(0);
-  });
+/**
+ * Handler graceful shutdown untuk koneksi Prisma
+ * Panggil ini HANYA saat terminasi process (SIGINT/SIGTERM)
+ * JANGAN panggil $disconnect() setelah query individual
+ */
+async function gracefulShutdown(): Promise<void> {
+  console.log("[Prisma] Menutup koneksi database...");
+  await prisma.$disconnect();
+  console.log("[Prisma] Semua koneksi ditutup");
+}
 
-  process.on("SIGTERM", async () => {
-    console.log("Received SIGTERM signal. Closing database connections...");
-    await prisma.$disconnect();
-    process.exit(0);
-  });
-
-  // Tandai bahwa listener sudah ditambahkan
-  global.prismaListenersAdded = true;
+// Register shutdown handlers (hanya di environment Node.js)
+if (typeof process !== "undefined") {
+  process.on("SIGINT", gracefulShutdown);
+  process.on("SIGTERM", gracefulShutdown);
 }
 
 export default prisma;

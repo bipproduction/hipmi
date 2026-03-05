@@ -30,13 +30,11 @@ export async function GET(request: Request) {
       fixData = false;
     }
 
-    await prisma.$disconnect();
     return NextResponse.json(
       { success: true, message: "Success get data", data: fixData },
       { status: 200 }
     );
   } catch (error) {
-    await prisma.$disconnect();
     backendLogger.error("Error get data detail event:", error);
     return NextResponse.json(
       {

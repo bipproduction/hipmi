@@ -1,3 +1,4 @@
+import { withRetry } from "@/lib/prisma-retry";
 import { prisma } from "@/lib";
 import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,28 +23,38 @@ export async function GET(
   let fixData;
 
   try {
-    const data = await prisma.notifikasi.findMany({
-      take: page ? takeData : undefined,
-      skip: page ? skipData : undefined,
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: {
-        recipientId: id,
-        kategoriApp: fixCategory,
-      },
-    });
+    const data = await withRetry(
+      () =>
+        prisma.notifikasi.findMany({
+          take: page ? takeData : undefined,
+          skip: page ? skipData : undefined,
+          orderBy: {
+            createdAt: "desc",
+          },
+          where: {
+            recipientId: id,
+            kategoriApp: fixCategory,
+          },
+        }),
+      undefined,
+      "getNotifications"
+    );
 
     // Jika pagination digunakan, ambil juga total count untuk informasi
     let totalCount;
     let totalPages;
     if (page) {
-      totalCount = await prisma.notifikasi.count({
-        where: {
-          recipientId: id,
-          kategoriApp: fixCategory,
-        },
-      });
+      totalCount = await withRetry(
+        () =>
+          prisma.notifikasi.count({
+            where: {
+              recipientId: id,
+              kategoriApp: fixCategory,
+            },
+          }),
+        undefined,
+        "countNotifications"
+      );
       totalPages = Math.ceil(totalCount / takeData);
     }
 
@@ -69,8 +80,23 @@ export async function GET(
 
     return NextResponse.json(response);
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error getting notifications:", error);
+
+    // Check if it's a database connection error
+    if (
+      errorMsg.includes("Prisma") ||
+      errorMsg.includes("database") ||
+      errorMsg.includes("connection")
+    ) {
+      return NextResponse.json(
+        { error: "Database connection error. Please try again." },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
-      { error: (error as Error).message },
+      { error: errorMsg },
       { status: 500 },
     );
   }

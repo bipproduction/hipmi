@@ -27,18 +27,18 @@ export async function GET(request: Request) {
         NOT: {
           Profile: null,
         },
-        OR: [
-          {
-            MasterUserRole: {
-              name: "User",
-            },
-          },
-          {
-            MasterUserRole: {
-              name: "Admin",
-            },
-          },
-        ],
+        // OR: [
+        //   {
+        //     MasterUserRole: {
+        //       name: "User",
+        //     },
+        //   },
+        //   {
+        //     MasterUserRole: {
+        //       name: "Admin",
+        //     },
+        //   },
+        // ],
       },
       include: {
         Profile: {
