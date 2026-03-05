@@ -13,6 +13,6 @@ import { generate_seeder } from "./../src/app_modules/_global/fun/generate_seede
     console.error("<< error seeder", e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  // .finally(async () => {
+  //   await prisma.$disconnect();
+  // });

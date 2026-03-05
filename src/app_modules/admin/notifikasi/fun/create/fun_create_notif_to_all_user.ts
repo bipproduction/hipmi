@@ -36,12 +36,10 @@ export default async function adminNotifikasi_funCreateToAllUser({
       },
     });
     if (!create) {
-      await prisma.$disconnect();
       return { status: 400, message: "Gagal mengirim notifikasi" };
     }
   }
 
-  await prisma.$disconnect();
   return {
     status: 201,
     message: "Berhasil mengirim notifikasi",

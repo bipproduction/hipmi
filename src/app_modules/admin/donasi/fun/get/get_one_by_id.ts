@@ -37,6 +37,5 @@ export async function AdminDonasi_getOneById(id: string) {
     },
   });
 
-  await prisma.$disconnect();
   return res;
 }
