@@ -24,8 +24,6 @@ const sendCodeOtp = async ({
     }),
   });
 
-  console.log("RES >>", res);
-
   return res;
 };
 

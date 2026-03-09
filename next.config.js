@@ -16,6 +16,21 @@ const nextConfig = {
     }
     return config;
   },
+
+  async headers() {
+    return [
+      {
+        source: "/.well-known/:path*",
+        headers: [
+          { key: "Content-Type", value: "application/json" },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
