@@ -49,6 +49,7 @@ const CONFIG: MiddlewareConfig = {
     "/auth/api/login",
     "/waiting-room",
     "/zCoba/*",
+    "/event/*/confirmation",
     "/aset/global/main_background.png",
     "/aset/logo/logo-hipmi.png",
     "/aset/logo/hiconnect.png",
