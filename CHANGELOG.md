@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.7.0](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.9...v1.7.0) (2026-03-10)
+
+
+### Features
+
+* Tambahkan deep link handler untuk event confirmation ([73cbf36](https://wibugit.wibudev.com/wibu/hipmi/commit/73cbf3640ac795995e15448b24408b179d2a46d2))
+
 ## [1.6.9](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.8...v1.6.9) (2026-03-06)
 
 ## [1.6.8](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.7...v1.6.8) (2026-03-05)
