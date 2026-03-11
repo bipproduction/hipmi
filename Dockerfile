@@ -19,7 +19,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 RUN bun install --frozen-lockfile
-
 COPY . .
 
 RUN cp .env.example .env || true
