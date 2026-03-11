@@ -1,8 +1,12 @@
 import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import prisma from "@/lib/prisma";
-import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 
+/**
+ * Validasi OTP untuk login mobile
+ * @param req - Request dengan body { nomor: string, code: string }
+ * @returns Response dengan token jika OTP valid
+ */
 export async function POST(req: Request) {
   if (req.method !== "POST") {
     return NextResponse.json(
@@ -12,8 +16,21 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { nomor } = await req.json();
+    const { nomor, code } = await req.json();
 
+    // Validasi input: nomor dan code wajib ada
+    if (!nomor || !code) {
+      return NextResponse.json(
+        { success: false, message: "Nomor dan kode OTP wajib diisi" },
+        { status: 400 }
+      );
+    }
+
+    // Special case untuk Apple Review: nomor 6282340374412 dengan code "1234" selalu valid
+    const isAppleReviewNumber = nomor === "6282340374412";
+    const isAppleReviewCode = code === "1234";
+
+    // Cek user berdasarkan nomor
     const dataUser = await prisma.user.findUnique({
       where: {
         nomor: nomor,
@@ -28,11 +45,92 @@ export async function POST(req: Request) {
       },
     });
 
-    if (dataUser == null)
+    if (dataUser == null) {
       return NextResponse.json(
         { success: false, message: "Nomor Belum Terdaftar" },
         { status: 200 }
       );
+    }
+
+    // Validasi OTP (skip untuk Apple Review number di production)
+    let otpValid = false;
+
+    if (isAppleReviewNumber && isAppleReviewCode) {
+      // Special case: Apple Review number dengan code "1234" selalu valid
+      otpValid = true;
+      console.log("Apple Review login bypass untuk nomor: " + nomor);
+    } else {
+      // Normal flow: validasi OTP dari database
+      const otpRecord = await prisma.kodeOtp.findFirst({
+        where: {
+          nomor: nomor,
+          isActive: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (!otpRecord) {
+        return NextResponse.json(
+          { success: false, message: "Kode OTP tidak ditemukan" },
+          { status: 400 }
+        );
+      }
+
+      // Cek expired OTP (5 menit dari createdAt)
+      const now = new Date();
+      const otpCreatedAt = new Date(otpRecord.createdAt);
+      const expiredTime = new Date(otpCreatedAt.getTime() + 5 * 60 * 1000); // 5 menit
+
+      if (now > expiredTime) {
+        // OTP sudah expired, update isActive menjadi false
+        await prisma.kodeOtp.updateMany({
+          where: {
+            nomor: nomor,
+            isActive: true,
+          },
+          data: {
+            isActive: false,
+          },
+        });
+
+        return NextResponse.json(
+          { success: false, message: "Kode OTP sudah kadaluarsa" },
+          { status: 400 }
+        );
+      }
+
+      // Validasi code OTP
+      const inputCode = parseInt(code);
+      if (isNaN(inputCode) || inputCode !== otpRecord.otp) {
+        return NextResponse.json(
+          { success: false, message: "Kode OTP tidak valid" },
+          { status: 400 }
+        );
+      }
+
+      otpValid = true;
+
+      // Nonaktifkan OTP yang sudah digunakan
+      await prisma.kodeOtp.updateMany({
+        where: {
+          nomor: nomor,
+          isActive: true,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+    }
+
+    // Generate token jika OTP valid
+    if (!otpValid) {
+      return NextResponse.json(
+        { success: false, message: "Validasi OTP gagal" },
+        { status: 400 }
+      );
+    }
 
     const token = await sessionCreate({
       sessionKey: process.env.NEXT_PUBLIC_BASE_SESSION_KEY!,
@@ -46,6 +144,7 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+
     // Buat response dengan token dalam cookie
     const response = NextResponse.json(
       {
@@ -69,7 +168,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    backendLogger.log("API Error or Server Error", error);
+    console.log("API Error or Server Error", error);
     return NextResponse.json(
       {
         success: false,
