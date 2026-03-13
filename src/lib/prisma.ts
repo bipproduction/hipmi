@@ -46,9 +46,14 @@ async function gracefulShutdown(): Promise<void> {
 }
 
 // Register shutdown handlers (hanya di environment Node.js)
+// Cegah duplikasi listener dengan cek listenerCount terlebih dahulu
 if (typeof process !== "undefined") {
-  process.on("SIGINT", gracefulShutdown);
-  process.on("SIGTERM", gracefulShutdown);
+  if (process.listenerCount("SIGINT") === 0) {
+    process.on("SIGINT", gracefulShutdown);
+  }
+  if (process.listenerCount("SIGTERM") === 0) {
+    process.on("SIGTERM", gracefulShutdown);
+  }
 }
 
 export default prisma;
