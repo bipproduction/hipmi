@@ -45,9 +45,10 @@ async function gracefulShutdown(): Promise<void> {
   console.log("[Prisma] Semua koneksi ditutup");
 }
 
-// Register shutdown handlers (hanya di environment Node.js)
+// Register shutdown handlers (hanya di environment Node.js server)
 // Cegah duplikasi listener dengan cek listenerCount terlebih dahulu
-if (typeof process !== "undefined") {
+// IMPORTANT: Bungkus dalam check untuk mencegah error di browser
+if (typeof process !== "undefined" && typeof process.listenerCount === "function") {
   if (process.listenerCount("SIGINT") === 0) {
     process.on("SIGINT", gracefulShutdown);
   }
