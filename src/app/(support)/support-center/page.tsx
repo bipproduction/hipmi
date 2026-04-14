@@ -98,7 +98,7 @@ export default function SupportCenter() {
               <Title>Support Center</Title>
             </Group>
             <Text align="center">
-              Send us a message and we'll get back to you as soon as possible.
+              Send us a message and we&apos;ll get back to you as soon as possible.
             </Text>
           </Stack>
         </Stack>
