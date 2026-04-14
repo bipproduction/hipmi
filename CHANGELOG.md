@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.7.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.4...v1.7.5) (2026-04-14)
+
+
+### Bug Fixes
+
+* override MIME type for PDF uploads & fix build errors ([38239c5](https://wibugit.wibudev.com/wibu/hipmi/commit/38239c52d6d083d0c6ee6fde94f09e16fa7201dd))
+
 ## [1.7.4](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.3...v1.7.4) (2026-03-30)
 
 ## [1.7.3](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.2...v1.7.3) (2026-03-27)
