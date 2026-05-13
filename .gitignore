@@ -57,6 +57,9 @@ certificates/
 *.key
 *.pem
 
+# Claude internal plans (tidak perlu di-push)
+.claude/docs/plans/
+
 # IDE and editor files
 .idea/
 .vscode/
