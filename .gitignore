@@ -69,3 +69,6 @@ certificates/
 .DS_Store
 Thumbs.db
 .qodo
+
+# Playwright MCP
+.playwright-mcp/
