@@ -66,3 +66,12 @@ certificates/
 .DS_Store
 Thumbs.db
 .qodo
+
+# Claude Code local config & tooling
+.claude/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+
+# Local docs / planning notes (not part of source)
+docs/
