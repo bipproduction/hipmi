@@ -150,25 +150,11 @@ export default function EditProfile() {
               backgroundColor: MainColor.white,
             },
           }}
-          withAsterisk
           label="Email"
           placeholder="email"
-          error={
-            data?.email === "" ? (
-              <ComponentGlobal_ErrorInput text="Masukan email " />
-            ) : data?.email?.length > 0 && !data?.email.match(emailRegex) ? (
-              <ComponentGlobal_ErrorInput text="Invalid email" />
-            ) : (
-              ""
-            )
-          }
+          description="Email hanya bisa diubah melalui login Google"
+          disabled
           value={data?.email}
-          onChange={(val) => {
-            setData({
-              ...data,
-              email: val.target.value,
-            });
-          }}
         />
 
         <TextInput

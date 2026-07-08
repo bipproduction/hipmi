@@ -129,6 +129,18 @@ export default function Login({ version }: { version: string }) {
             >
               LOGIN
             </Button>
+
+            <Button
+              variant="outline"
+              radius={"md"}
+              c={"white"}
+              style={{ borderColor: AccentColor.yellow }}
+              onClick={() => {
+                window.location.href = "/api/auth/google";
+              }}
+            >
+              Login dengan Google
+            </Button>
           </Stack>
 
           <Box pos={"fixed"} bottom={10}>

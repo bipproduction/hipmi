@@ -40,6 +40,7 @@ const CONFIG: MiddlewareConfig = {
     "/register",
     "/validasi",
     "/splash",
+    "/google-link",
     "/support-center",
     "/delete-account",
     "/invalid-user",

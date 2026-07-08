@@ -3,4 +3,5 @@ export const RouterAuth = {
   validasi: "/dev/auth/validasi/",
   register: "/dev/auth/register/",
   check_cookies: "/dev/check-cookies",
+  google_link: "/google-link",
 };

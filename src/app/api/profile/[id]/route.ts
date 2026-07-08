@@ -57,25 +57,14 @@ async function PUT(request: Request) {
     const body = await request.json();
     const { data } = body;
 
-    const cekEmail = await prisma.profile.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-
-    if (cekEmail && cekEmail.id != data.id)
-      return NextResponse.json(
-        { success: false, message: "Email sudah digunakan" },
-        { status: 400 }
-      );
-
+    // Email TIDAK diupdate di sini — hanya bisa diubah via login Google
+    // (lihat /api/auth/google-link). Field email di UI juga disabled.
     const updateData = await prisma.profile.update({
       where: {
         id: data.id,
       },
       data: {
         name: data.name,
-        email: data.email,
         alamat: data.alamat,
         jenisKelamin: data.jenisKelamin,
       },
