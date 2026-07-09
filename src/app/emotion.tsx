@@ -26,7 +26,7 @@ export default function RootStyleRegistry({
   ));
 
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="light" suppressHydrationWarning={true}>
       <head>
         <meta
           name="viewport"
