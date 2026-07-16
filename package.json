@@ -12,6 +12,8 @@
     "start": "next start",
     "postbuild": "node scripts/postbuild.js",
     "lint": "next lint",
+    "test": "bun test scripts/ test/",
+    "test:unit": "bun test test/unit/",
     "ver": "bunx commit-and-tag-version -- --prerelease"
   },
   "dependencies": {
