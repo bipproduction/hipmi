@@ -29,6 +29,7 @@
     "@mantine/next": "^6.0.17",
     "@mantine/notifications": "^6.0.17",
     "@mantine/tiptap": "^7.5.3",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@prisma/client": "^6.3.0",
     "@react-email/render": "^2.0.0",
     "@react-pdf/renderer": "^3.4.4",
@@ -109,7 +110,8 @@
     "wibu-pkg": "^1.0.3",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "yaml": "^2.3.2"
+    "yaml": "^2.3.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
