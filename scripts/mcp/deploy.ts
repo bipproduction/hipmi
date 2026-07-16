@@ -15,6 +15,7 @@ import { execSync } from 'node:child_process'
 import { z } from 'zod'
 import { PACKAGE_JSON, createGhHelpers, runPreflight } from './deploy-helpers'
 import { runDeployPipeline } from './deploy-pipeline'
+import { parseVersionData } from './version'
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -92,8 +93,7 @@ server.registerTool(
     if (BASE_URL) {
       try {
         const res = await fetch(`${BASE_URL}/api/version`, { signal: AbortSignal.timeout(8000) })
-        const json = (await res.json()) as { data?: string }
-        target = json.data ?? null
+        target = parseVersionData(await res.json())
       } catch (e) {
         targetError = String(e)
       }

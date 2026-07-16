@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
+import { bumpVersionString, parseVersionData } from './version'
 
 export const PACKAGE_JSON = 'package.json'
 
@@ -136,18 +137,7 @@ export function createGhHelpers(ghToken: string, ghRepo: string, baseUrl: string
   }
 
   function bumpVersion(type: 'patch' | 'minor' | 'major'): string {
-    const parts = readVersion().split('.').map(Number)
-    if (type === 'major') {
-      parts[0]++
-      parts[1] = 0
-      parts[2] = 0
-    } else if (type === 'minor') {
-      parts[1]++
-      parts[2] = 0
-    } else {
-      parts[2]++
-    }
-    const next = parts.join('.')
+    const next = bumpVersionString(readVersion(), type)
     const pkg = JSON.parse(readFileSync(pkgJson, 'utf8'))
     pkg.version = next
     writeFileSync(pkgJson, JSON.stringify(pkg, null, 2) + '\n')
@@ -198,8 +188,7 @@ export function createGhHelpers(ghToken: string, ghRepo: string, baseUrl: string
     while (Date.now() - start < timeoutMs) {
       try {
         const res = await fetch(`${baseUrl}/api/version`, { signal: AbortSignal.timeout(5000) })
-        const json = (await res.json()) as { data?: string }
-        if (json.data === expected) return true
+        if (parseVersionData(await res.json()) === expected) return true
       } catch {}
       await sleep(5000)
     }
