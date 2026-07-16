@@ -1,5 +1,6 @@
 import { sessionCreate } from "@/app/(auth)/_lib/session_create";
 import prisma from "@/lib/prisma";
+import { isAppleReviewBypass } from "@/app_modules/auth/_lib/apple_review_bypass";
 import { NextResponse } from "next/server";
 
 /**
@@ -26,9 +27,18 @@ export async function POST(req: Request) {
       );
     }
 
-    // Special case untuk Apple Review: nomor 6282340374412 dengan code "1234" selalu valid
-    const isAppleReviewNumber = nomor === "6282340374412";
-    const isAppleReviewCode = code === "1234";
+    // ─────────────────────────────────────────────────────────────────────────
+    // BACKDOOR APPLE REVIEW — WAJIB DIBACA sebelum mengubah.
+    // Melewati verifikasi OTP agar reviewer App Store bisa login tanpa menerima
+    // OTP. HANYA aktif jika env `ALLOW_APPLE_REVIEW_BYPASS=true` (default MATI).
+    // Logika & kredensial ada di @/app_modules/auth/_lib/apple_review_bypass.
+    // SOP lengkap: APPLE_REVIEW_BYPASS.md (root project).
+    // ─────────────────────────────────────────────────────────────────────────
+    const useReviewBypass = isAppleReviewBypass({
+      nomor,
+      code,
+      enabled: process.env.ALLOW_APPLE_REVIEW_BYPASS === "true",
+    });
 
     // Cek user berdasarkan nomor
     const dataUser = await prisma.user.findUnique({
@@ -55,10 +65,12 @@ export async function POST(req: Request) {
     // Validasi OTP (skip untuk Apple Review number di production)
     let otpValid = false;
 
-    if (isAppleReviewNumber && isAppleReviewCode) {
-      // Special case: Apple Review number dengan code "1234" selalu valid
+    if (useReviewBypass) {
+      // Bypass hanya jalan bila ALLOW_APPLE_REVIEW_BYPASS=true (lihat komentar di atas).
       otpValid = true;
-      console.log("Apple Review login bypass untuk nomor: " + nomor);
+      console.warn(
+        "[APPLE_REVIEW_BYPASS] OTP dilewati untuk nomor review — pastikan flag ini mati di produksi."
+      );
     } else {
       // Normal flow: validasi OTP dari database
       const otpRecord = await prisma.kodeOtp.findFirst({
