@@ -2,7 +2,10 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { sendNotificationMobileToManyUser } from "@/lib/mobile/notification/send-notification";
-import { NotificationMobileBodyType, NotificationMobileTitleType } from "../../../../../types/type-mobile-notification";
+import {
+  NotificationMobileBodyType,
+  NotificationMobileTitleType,
+} from "../../../../../types/type-mobile-notification";
 import { routeUserMobile } from "@/lib/mobile/route-page-mobile";
 
 export { POST, GET };
@@ -72,14 +75,8 @@ async function GET(request: Request) {
   const search = searchParams.get("search");
   const category = searchParams.get("category");
   const page = searchParams.get("page");
-  const takeData = 5;
+  const takeData = 10;
   const skipData = (Number(page) - 1) * takeData;
-
-  // console.log("authorId", authorId);
-  // console.log("userLoginId", userLoginId);
-  // console.log("search", search);
-  // console.log("category", category);
-  console.log("page", page);
 
   try {
     if (category === "beranda") {

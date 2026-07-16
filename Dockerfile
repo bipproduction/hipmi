@@ -1,11 +1,10 @@
 # ==============================
 # Stage 1: Builder
 # ==============================
-FROM node:20-bookworm-slim AS builder
+FROM oven/bun:1-debian AS builder
 
 WORKDIR /app
 
-# Install system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libc6 \
     git \
@@ -13,39 +12,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency files first (for better caching)
-COPY package.json package-lock.json* bun.lockb* ./
+COPY package.json bun.lockb* ./
 
 ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-# 🔥 Skip postinstall scripts (fix onnxruntime error)
-RUN npm install --legacy-peer-deps --ignore-scripts
-
-# Copy full source
+RUN bun install --frozen-lockfile
 COPY . .
 
-# Use .env.example as build env
-# (Pastikan file ini ada di project)
 RUN cp .env.example .env || true
 
-# Generate Prisma Client
 ENV PRISMA_CLI_BINARY_TARGETS=debian-openssl-3.0.x
-RUN npx prisma generate
+RUN bunx prisma generate
 
-# Build Next.js
-RUN npm run build
+RUN bun run build
 
 # ==============================
 # Stage 2: Runner (Production)
 # ==============================
-FROM node:20-bookworm-slim AS runner
+FROM oven/bun:1-debian AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PRISMA_CLI_BINARY_TARGETS=debian-openssl-3.0.x
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
@@ -55,10 +47,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN groupadd --system --gid 1001 nodejs \
     && useradd --system --uid 1001 --gid nodejs nextjs
 
-# Copy standalone output
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 RUN chown -R nextjs:nodejs /app
 
@@ -69,4 +65,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["bun", "start"]

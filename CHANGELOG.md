@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.7.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.4...v1.7.5) (2026-04-14)
+
+
+### Bug Fixes
+
+* override MIME type for PDF uploads & fix build errors ([38239c5](https://wibugit.wibudev.com/wibu/hipmi/commit/38239c52d6d083d0c6ee6fde94f09e16fa7201dd))
+
+## [1.7.4](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.3...v1.7.4) (2026-03-30)
+
+## [1.7.3](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.2...v1.7.3) (2026-03-27)
+
+## [1.7.2](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.1...v1.7.2) (2026-03-13)
+
+## [1.7.1](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.0...v1.7.1) (2026-03-11)
+
+## [1.7.0](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.9...v1.7.0) (2026-03-10)
+
+
+### Features
+
+* Tambahkan deep link handler untuk event confirmation ([73cbf36](https://wibugit.wibudev.com/wibu/hipmi/commit/73cbf3640ac795995e15448b24408b179d2a46d2))
+
 ## [1.6.9](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.8...v1.6.9) (2026-03-06)
 
 ## [1.6.8](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.6.7...v1.6.8) (2026-03-05)
