@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.8.0](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.5...v1.8.0) (2026-07-16)
+
+
+### Features
+
+* Google OAuth login dengan HIPMI session bridge
+
 ## [1.7.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.4...v1.7.5) (2026-04-14)
 
 
