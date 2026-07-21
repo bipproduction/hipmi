@@ -1,30 +1,22 @@
-import { prisma } from "@/lib";
-import backendLogger from "@/util/backendLogger";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  if (request.method !== "GET") {
-    return NextResponse.json(
-      { success: false, message: "Method not allowed" },
-      { status: 405 }
-    );
-  }
+/**
+ * DINONAKTIFKAN — celah keamanan (OTP disclosure).
+ *
+ * Endpoint lama ini mengembalikan record OTP lengkap (termasuk kode mentah)
+ * untuk id apa pun tanpa autentikasi. Dipakai alur verifikasi OTP sisi frontend
+ * yang kini digantikan Google Auth. File dipertahankan untuk jejak; handler
+ * menolak semua request dengan 410 Gone.
+ *
+ * Lihat: docs/audit (temuan #2).
+ */
+const DISABLED_MESSAGE =
+  "Endpoint verifikasi OTP telah dinonaktifkan. Gunakan login Google.";
 
-  try {
-    const { id } = params;
-    const data = await prisma.kodeOtp.findFirst({
-      where: {
-        id: id as string,
-      },
-    });
-
-    return NextResponse.json(data, { status: 200 });
-  } catch (error) {
-    backendLogger.error("Error get code otp", error); //(error);
-    return NextResponse.json(null, { status: 500 });
-  }
+export async function GET() {
+  return NextResponse.json(
+    { success: false, message: DISABLED_MESSAGE },
+    { status: 410 }
+  );
 }
