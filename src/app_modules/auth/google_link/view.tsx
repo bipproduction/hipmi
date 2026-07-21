@@ -98,6 +98,22 @@ export function GoogleLinkView() {
             value={phone}
             onChange={(val) => setPhone(val)}
             disabled={state === "CONFIRM_OVERRIDE"}
+            inputStyle={{
+              width: "100%",
+              height: 44,
+              fontSize: 14,
+              borderTopRightRadius: 8,
+              borderBottomRightRadius: 8,
+            }}
+            countrySelectorStyleProps={{
+              buttonStyle: {
+                height: 44,
+                borderTopLeftRadius: 8,
+                borderBottomLeftRadius: 8,
+                paddingInline: 8,
+              },
+            }}
+            style={{ width: "100%" }}
           />
 
           {isError && (
@@ -126,9 +142,11 @@ export function GoogleLinkView() {
               <Button
                 mt={"sm"}
                 fullWidth
-                radius={"md"}
+                h={44}
+                radius={8}
                 bg={MainColor.yellow}
                 c={"black"}
+                fw={600}
                 loading={loading}
                 onClick={() => submit({ confirmOverride: true })}
               >
@@ -139,10 +157,13 @@ export function GoogleLinkView() {
 
           {state !== "CONFIRM_OVERRIDE" && (
             <Button
-              radius={"md"}
+              fullWidth
+              h={44}
+              radius={8}
               bg={MainColor.yellow}
               color={"yellow"}
               c={"black"}
+              fw={600}
               loading={loading}
               loaderPosition="center"
               style={{ borderColor: AccentColor.yellow }}

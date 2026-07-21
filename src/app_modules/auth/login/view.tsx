@@ -1,61 +1,38 @@
 "use client";
 
-import {
-  AccentColor,
-  MainColor,
-} from "@/app_modules/_global/color/color_pallet";
-import ComponentGlobal_ErrorInput from "@/app_modules/_global/component/error_input";
-import {
-  ComponentGlobal_NotifikasiBerhasil,
-  ComponentGlobal_NotifikasiGagal,
-  ComponentGlobal_NotifikasiPeringatan,
-} from "@/app_modules/_global/notif_global";
+import { MainColor } from "@/app_modules/_global/color/color_pallet";
 import { UIGlobal_LayoutDefault } from "@/app_modules/_global/ui";
-import { clientLogger } from "@/util/clientLogger";
 import { Box, Button, Center, Group, Stack, Text, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
-import { apiFetchLogin } from "../_lib/api_fetch_auth";
+
+/** Logo "G" resmi Google (4 warna) sesuai panduan brand Google Sign-In. */
+function GoogleIcon() {
+  return (
+    <svg width={18} height={18} viewBox="0 0 48 48" aria-hidden="true">
+      <path
+        fill="#EA4335"
+        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+      />
+      <path
+        fill="#4285F4"
+        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+      />
+    </svg>
+  );
+}
 
 export default function Login({ version }: { version: string }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [isError, setError] = useState(false);
-
-  const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState<string>("62"); // default ke Indonesia
-
-  async function onLogin() {
-    const nomor = phone;
-    if (nomor.length <= 4) return setError(true);
-
-    const fixPhone = `${countryCode}${nomor}`;
-
-    try {
-      setLoading(true);
-      const respone = await apiFetchLogin({ nomor: fixPhone });
-
-      if (respone && respone.success) {
-        localStorage.setItem("hipmi_auth_code_id", respone.kodeId);
-        ComponentGlobal_NotifikasiBerhasil(respone.message, 2000);
-        router.push("/validasi", { scroll: false });
-      } else {
-        setLoading(false);
-        ComponentGlobal_NotifikasiPeringatan(respone?.message);
-      }
-    } catch (error) {
-      setLoading(false);
-      clientLogger.error("Error login:", error);
-      ComponentGlobal_NotifikasiGagal("Terjadi Kesalahan");
-    }
-  }
-
   return (
     <>
       <UIGlobal_LayoutDefault>
-        <Stack align="center" justify="center" h={"100vh"} spacing={100}>
+        <Stack align="center" justify="center" h={"100vh"} spacing={64}>
           <Stack spacing={0}>
             <Stack align="center" spacing={0}>
               <Title order={3} c={MainColor.yellow}>
@@ -71,75 +48,37 @@ export default function Login({ version }: { version: string }) {
               </Text>
             </Group>
           </Stack>
-          <Stack w={300}>
+          <Stack w={300} spacing={16}>
             <Center>
-              <Text c={MainColor.white}>Nomor telepon</Text>
+              <Text c={MainColor.white} fw={600} fz={12}>
+                Masuk dengan akun Google untuk melanjutkan
+              </Text>
             </Center>
 
-            <PhoneInput
-              countrySelectorStyleProps={{
-                buttonStyle: {
-                  backgroundColor: MainColor.login,
+            <Button
+              variant="white"
+              radius={"xl"}
+              size="md"
+              fullWidth
+              leftIcon={<GoogleIcon />}
+              styles={{
+                root: {
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid #DADCE0",
+                  height: 44,
+                  "&:hover": { backgroundColor: "#F7F8F8" },
+                },
+                label: {
+                  color: "#3C4043",
+                  fontWeight: 500,
+                  fontSize: 14,
                 },
               }}
-              defaultCountry="id"
-              inputStyle={{ width: "100%", backgroundColor: MainColor.login }}
-              onChange={(fullPhone, meta) => {
-                const dialCode = meta.country.dialCode; // string, misal: "62"
-                let localNumber = fullPhone;
-
-                // Hapus kode negara dari awal string
-                if (fullPhone.startsWith(`+${dialCode}`)) {
-                  localNumber = fullPhone.slice(`+${dialCode}`.length);
-                }
-
-                // Bersihkan semua non-digit
-                localNumber = localNumber.replace(/\D/g, "");
-
-                // ✅ Filter khusus: untuk Indonesia (+62), hapus leading zero
-                if (dialCode === "62" && localNumber.startsWith("0")) {
-                  localNumber = localNumber.replace(/^0+/, ""); // hapus semua 0 di awal
-                }
-
-                // Simpan hasil akhir
-                setCountryCode(dialCode);
-                setPhone(localNumber);
-              }}
-            />
-
-            {isError ? (
-              <ComponentGlobal_ErrorInput text="Masukan nomor telepon anda" />
-            ) : (
-              ""
-            )}
-
-            <Button
-              radius={"md"}
-              bg={MainColor.yellow}
-              color={"yellow"}
-              loading={loading ? true : false}
-              loaderPosition="center"
-              c={"black"}
-              style={{
-                borderColor: AccentColor.yellow,
-              }}
-              onClick={() => {
-                onLogin();
-              }}
-            >
-              LOGIN
-            </Button>
-
-            <Button
-              variant="outline"
-              radius={"md"}
-              c={"white"}
-              style={{ borderColor: AccentColor.yellow }}
               onClick={() => {
                 window.location.href = "/api/auth/google";
               }}
             >
-              Login dengan Google
+              Continue with Google
             </Button>
           </Stack>
 
