@@ -27,22 +27,35 @@ export default async function adminUserAccess_funEditAccess(
     const baseUrl = `${protocol}://${host}`;
     // const fullUrl = `${protocol}://${host}${path}`;
 
-    if (value === true) {
-      const message = `Hallo rekan HIPMI, Anda telah diberikan akses ke HIPMI Apps. Silakan mulai jelajahi fitur-fitur yang tersedia melalui link berikut: ${baseUrl}`;
-      const encodedMessage = encodeURIComponent(message);
+    if (value === true && nomor) {
+      // Notifikasi WA bersifat best-effort: kegagalan kirim tidak boleh
+      // menggagalkan update akses user yang sudah sukses di atas.
+      try {
+        const message = `Hallo rekan HIPMI, Anda telah diberikan akses ke HIPMI Apps. Silakan mulai jelajahi fitur-fitur yang tersedia melalui link berikut: ${baseUrl}`;
+        const encodedMessage = encodeURIComponent(message);
 
-      const res = await fetch(
-        `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMessage}
-      `
-      );
+        const res = await fetch(
+          `https://wa.wibudev.com/code?nom=${nomor}&text=${encodedMessage}`
+        );
 
-      if (!res.ok) {
-        backendLogger.error("Error send message", res);
+        // Server WA membalas plain text (mis. "Unknown subdomain") saat gagal,
+        // bukan JSON. Baca sebagai teks agar res.json() tidak melempar
+        // SyntaxError dan menggagalkan seluruh operasi.
+        const raw = await res.text();
+
+        if (!res.ok) {
+          backendLogger.error("Error send message", {
+            status: res.status,
+            body: raw,
+          });
+        } else {
+          backendLogger.info("Success send message", { body: raw });
+        }
+      } catch (waError) {
+        backendLogger.error("Error send message", {
+          message: (waError as Error).message,
+        });
       }
-
-      const result = await res.json();
-
-      backendLogger.info("Success send message", result);
     }
 
     if (!updt) return { status: 400, message: "Update gagal" };
