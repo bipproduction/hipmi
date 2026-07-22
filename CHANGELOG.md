@@ -9,6 +9,14 @@ All notable changes to this project will be documented in this file. See [commit
 
 * Google OAuth login dengan HIPMI session bridge
 
+
+### Bug Fixes
+
+* Nonaktifkan endpoint login & disclosure OTP (410 Gone)
+* Batasi bypass OTP Apple Review di balik env flag
+* Tangani respons WA non-JSON pada edit user-access
+* Redam hydration warning pada elemen html dari ekstensi browser
+
 ## [1.7.5](https://wibugit.wibudev.com/wibu/hipmi/compare/v1.7.4...v1.7.5) (2026-04-14)
 
 
