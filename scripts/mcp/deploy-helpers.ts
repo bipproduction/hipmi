@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { bumpVersionString, parseVersionData } from './version'
+import { scanDiffForCredentials, isSensitiveFile } from './deploy-scan'
 
 export const PACKAGE_JSON = 'package.json'
 
@@ -33,51 +34,16 @@ export function run(
 
 // ─── Credential scan ─────────────────────────────────────────────────────────
 
-const CREDENTIAL_PATTERNS: { name: string; regex: RegExp }[] = [
-  { name: 'anthropic_key', regex: /sk-ant-[a-zA-Z0-9\-_]{20,}/ },
-  { name: 'openai_key', regex: /sk-[a-zA-Z0-9]{48}/ },
-  { name: 'stripe_key', regex: /sk_(live|test)_[a-zA-Z0-9]{24,}/ },
-  { name: 'github_pat', regex: /ghp_[a-zA-Z0-9]{36,}/ },
-  { name: 'github_oauth', regex: /gho_[a-zA-Z0-9]{36,}/ },
-  { name: 'github_fine_grained', regex: /github_pat_[a-zA-Z0-9_]{22,}/ },
-  { name: 'slack_token', regex: /xox[baprs]-[a-zA-Z0-9\-]{20,}/ },
-  { name: 'google_api_key', regex: /AIza[a-zA-Z0-9\-_]{35}/ },
-  { name: 'google_oauth_token', regex: /ya29\.[a-zA-Z0-9\-_]{20,}/ },
-  { name: 'private_key_pem', regex: /-----BEGIN [A-Z ]+ PRIVATE KEY-----/ },
-  { name: 'db_url_with_creds', regex: /(postgres|mysql|mongodb|redis):\/\/[^:]+:[^@]+@/ },
-  { name: 'hardcoded_secret', regex: /(password|secret|token)\s*[:=]\s*["'][^"']{8,}["']/ },
-]
-
-const SENSITIVE_FILE_PATTERNS = [
-  /^\.env(\.|$)/,
-  /\.(pem|key|p12|pfx)$/,
-  /credentials\.json$/,
-  /service-account\.json$/,
-  /^id_rsa$/,
-  /^id_ed25519$/,
-]
-
 export function scanCredentials(branch: string): { ok: boolean; issues: { type: string; sample: string; count: number }[] } {
   const diff = run(`git diff origin/${branch}..HEAD -- . ":(exclude)*.lock" ":(exclude)package-lock.json"`)
-  const addedLines = (diff.ok ? diff.out : '').split('\n').filter((l) => l.startsWith('+') && !l.startsWith('+++'))
-  const content = addedLines.join('\n')
-  const issues: { type: string; sample: string; count: number }[] = []
-  for (const { name, regex } of CREDENTIAL_PATTERNS) {
-    const matches = content.match(new RegExp(regex.source, 'g')) ?? []
-    if (matches.length > 0) {
-      issues.push({ type: name, sample: (matches[0] ?? '').slice(0, 20) + '***', count: matches.length })
-    }
-  }
+  const issues = scanDiffForCredentials(diff.ok ? diff.out : '')
   return { ok: issues.length === 0, issues }
 }
 
 export function scanSensitiveFiles(branch: string): { ok: boolean; files: string[] } {
   const result = run(`git diff --name-only origin/${branch}..HEAD`)
   const files = result.ok ? result.out.split('\n').filter(Boolean) : []
-  const flagged = files.filter((f) => {
-    const base = f.split('/').pop() ?? f
-    return SENSITIVE_FILE_PATTERNS.some((p) => p.test(base))
-  })
+  const flagged = files.filter((f) => isSensitiveFile(f))
   return { ok: flagged.length === 0, files: flagged }
 }
 
