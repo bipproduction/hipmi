@@ -50,6 +50,9 @@ logs/frontend/*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma — jangan commit snapshot schema ad-hoc
+prisma/*.backup
+
 # certificates
 certificates/
 **/certificates/
