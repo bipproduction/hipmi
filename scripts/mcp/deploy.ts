@@ -6,7 +6,9 @@
  *           → gh workflow run re-pull.yml (deploy ke Portainer) → poll
  *           → verify GET /api/version cocok
  *
- * Env vars: STACK_NAME, BASE_URL, ENV, GH_TOKEN, GH_REPO
+ * Env vars (Bun auto-load .env). Menerima nama polos maupun ber-prefix STG_
+ * agar cocok dengan konvensi .env project: STG_STACK_NAME, STG_BASE_URL,
+ * GH_TOKEN, GH_REPO. ENV opsional (default 'stg').
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
@@ -19,12 +21,16 @@ import { parseVersionData } from './version'
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const STACK_NAME = process.env.STACK_NAME ?? 'base-template'
-const BASE_URL = (process.env.BASE_URL ?? '').replace(/\/$/, '')
+const STACK_NAME =
+  process.env.STACK_NAME ?? process.env.STG_STACK_NAME ?? 'base-template'
+const BASE_URL = (process.env.BASE_URL ?? process.env.STG_BASE_URL ?? '').replace(
+  /\/$/,
+  ''
+)
 const ENV = process.env.ENV ?? 'stg'
 const GH_TOKEN = process.env.GH_TOKEN ?? ''
 const GH_REPO =
-  process.env.GH_REPO ??
+  process.env.GH_REPO ||
   (() => {
     try {
       const url = execSync('git remote get-url origin', { encoding: 'utf8' }).trim()
